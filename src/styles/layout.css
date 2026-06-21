@@ -1,0 +1,243 @@
+/* --- LAYOUT GRID STRUCTURES --- */
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gap);
+  width: 100%;
+}
+
+.gateway-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--page-padding);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+}
+
+.card-deck {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+  width: 100%;
+  margin-top: var(--space-6);
+  z-index: 10;
+}
+
+.kpi-section {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  margin-top: var(--space-7);
+  margin-bottom: var(--space-5);
+  z-index: 10;
+}
+
+/* Printing Grid */
+.printing-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gap);
+}
+
+.product-catalog {
+  grid-column: span 7;
+}
+
+.print-estimator,
+.service-calculator {
+  grid-column: span 5;
+}
+
+.catalog-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+/* Marketplace Layout */
+.marketplace-layout {
+  display: flex;
+  gap: var(--grid-gap);
+  width: 100%;
+}
+
+.marketplace-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.marketplace-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.portal-layout-fixed-height .marketplace-main {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: var(--space-2);
+}
+
+.project-marketplace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--grid-gap);
+}
+
+/* Custom Dev Portal Layout */
+.custom-layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gap);
+}
+
+.video-library {
+  grid-column: span 7;
+}
+
+.consultation-card {
+  grid-column: span 5;
+}
+
+/* Project Detail Page Layout */
+.detail-page-layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-6);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.detail-left-column {
+  grid-column: span 8;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.detail-right-column {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+}
+
+.includes-prominent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.specifications-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+/* ==========================================================================
+   MEDIA QUERY BREAKPOINTS
+   ========================================================================== */
+
+@media (max-width: 1399px) {
+  .project-marketplace-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1200px) {
+  .detail-page-layout {
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 1024px) {
+  .marketplace-sidebar {
+    grid-column: span 4;
+  }
+
+  .marketplace-main {
+    grid-column: span 8;
+  }
+
+  .project-marketplace-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card-deck {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kpi-section {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+  }
+}
+
+@media (max-width: 991px) {
+  .detail-left-column {
+    grid-column: span 12;
+  }
+
+  .detail-right-column {
+    display: none;
+  }
+
+  .product-catalog,
+  .print-estimator,
+  .service-calculator,
+  .video-library,
+  .consultation-card {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 767px) {
+  .marketplace-layout {
+    flex-direction: column;
+  }
+
+  .marketplace-sidebar,
+  .marketplace-main {
+    grid-column: span 12;
+  }
+
+  .card-deck {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-section {
+    grid-template-columns: 1fr;
+  }
+
+  .project-marketplace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .includes-prominent-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .specifications-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .includes-prominent-grid {
+    grid-template-columns: 1fr;
+  }
+}

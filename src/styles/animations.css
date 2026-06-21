@@ -1,0 +1,51 @@
+@keyframes pulseViolet {
+  0% {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1.1;
+  }
+}
+
+@keyframes driftGlow {
+  0% {
+    top: 10%;
+    left: 15%;
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    top: 40%;
+    left: 55%;
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    top: 20%;
+    left: 70%;
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+}
+
+@keyframes pulseModel {
+  0% { opacity: 0.6; fill: rgba(59, 130, 246, 0.02); }
+  100% { opacity: 1; fill: rgba(59, 130, 246, 0.1); }
+}
+
+@keyframes traceRun {
+  to { stroke-dashoffset: -40; }
+}
+
+@keyframes floatAI {
+  0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 2px rgba(139, 92, 246, 0.3)); }
+  100% { transform: translateY(-3px) scale(1.08); filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.6)); }
+}
+
+@keyframes float-sparkle {
+  0% { transform: translateY(0) scale(1); opacity: 0.8; }
+  50% { transform: translateY(-4px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 0.8; }
+}

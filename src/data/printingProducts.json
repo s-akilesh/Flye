@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cat-gears",
+    "title": "Mechanical Gear Set",
+    "desc": "Precision gears assembly for robotics gearboxes and mechanical prototyping experiments.",
+    "price": 1999,
+    "category": "prototypes",
+    "iconType": "gears",
+    "status": "active"
+  },
+  {
+    "id": "cat-case",
+    "title": "Arduino Case Shell",
+    "desc": "Protective structural enclosure with precut access slots for telemetry boards.",
+    "price": 999,
+    "category": "prototypes",
+    "iconType": "case",
+    "status": "active"
+  },
+  {
+    "id": "cat-claw",
+    "title": "Robotic Arm Claw",
+    "desc": "Modular physical claw attachment printed in carbon-reinforced composite nylon.",
+    "price": 2999,
+    "category": "prototypes",
+    "iconType": "claw",
+    "status": "active"
+  },
+  {
+    "id": "cat-cone",
+    "title": "Navigation Cone Node",
+    "desc": "Sturdy orange safety node printed with high visibility weather-resistant ABS filament.",
+    "price": 499,
+    "category": "educational",
+    "iconType": "cone",
+    "status": "active"
+  }
+]

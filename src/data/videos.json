@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "title": "Custom PID Motor Control",
+    "description": "Learn how to tune PID parameters for accurate servo steering and DC motor velocity loops.",
+    "duration": "08:45 mins",
+    "tag": "TUTORIAL // 08 Min 45 Sec",
+    "youtubeUrl": "https://www.youtube.com/embed/placeholder1",
+    "thumbnail": "",
+    "category": "robotics",
+    "relatedProjects": ["proj-rover-car", "proj-gesture-robot"],
+    "featured": true,
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "title": "Arduino SPI Protocol Masterclass",
+    "description": "Deep dive into SPI bus communications, multiple slave select nodes, and register level configs.",
+    "duration": "12:20 mins",
+    "tag": "TUTORIAL // 12 Min 20 Sec",
+    "youtubeUrl": "https://www.youtube.com/embed/placeholder2",
+    "thumbnail": "",
+    "category": "arduino",
+    "relatedProjects": ["proj-smart-home", "proj-rfid-lock"],
+    "featured": true,
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "title": "Robotics Inverse Kinematics",
+    "description": "Calculate mechanical coordinate joint angles for robotic arm tracking paths dynamically.",
+    "duration": "15:10 mins",
+    "tag": "TUTORIAL // 15 Min 10 Sec",
+    "youtubeUrl": "https://www.youtube.com/embed/placeholder3",
+    "thumbnail": "",
+    "category": "robotics",
+    "relatedProjects": ["proj-rover-car", "proj-gesture-robot"],
+    "featured": false,
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "title": "Designing IoT Mesh Nodes",
+    "description": "Deploy local ESP8266 mesh networks that sync sensor parameters autonomously to cloud dashboards.",
+    "duration": "10:35 mins",
+    "tag": "TUTORIAL // 10 Min 35 Sec",
+    "youtubeUrl": "https://www.youtube.com/embed/placeholder4",
+    "thumbnail": "",
+    "category": "iot",
+    "relatedProjects": ["proj-weather-station", "proj-greenhouse"],
+    "featured": false,
+    "status": "active"
+  }
+]
