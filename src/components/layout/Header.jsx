@@ -1,9 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
+import { Button } from '../ui/Button';
 
 export const Header = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem('flyen_admin_access') === 'true');
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsAdmin(localStorage.getItem('flyen_admin_access') === 'true');
+    };
+
+    window.addEventListener('storage', checkAuth);
+    // Also periodically poll locally as standard React router navigation won't trigger storage event within the same tab
+    const interval = setInterval(checkAuth, 1000);
+
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('flyen_admin_access');
+    setIsAdmin(false);
+    navigate(ROUTES.ADMIN_ACCESS);
+  };
 
   return (
     <header>
@@ -14,14 +37,34 @@ export const Header = () => {
         <span className="logo-text">FLYEN</span>
       </div>
       
-      <div className="nav-controls">
-        <Link to={ROUTES.ADMIN_PROJECTS} className="btn-header" id="header-admin-btn" style={{ marginRight: 'var(--space-2)' }}>
-          Manage Kits
-        </Link>
-        <Link to={ROUTES.CONTACT} className="btn-header" id="header-contact-btn" style={{ marginRight: 'var(--space-2)' }}>
+      <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        {isAdmin && (
+          <Link to={ROUTES.ADMIN_DASHBOARD} className="btn-header" id="header-admin-btn" style={{ marginRight: 'var(--space-1)' }}>
+            Portal
+          </Link>
+        )}
+        
+        <Link to={ROUTES.CONTACT} className="btn-header" id="header-contact-btn">
           Contact
         </Link>
 
+        {isAdmin && (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleLogout}
+            style={{
+              padding: '6px 12px',
+              fontSize: '12px',
+              background: 'rgba(239, 68, 68, 0.1)',
+              color: 'var(--accent-crimson, #ef4444)',
+              border: '1px solid rgba(239, 68, 68, 0.2)',
+              marginLeft: 'var(--space-2)'
+            }}
+          >
+            Logout
+          </Button>
+        )}
       </div>
     </header>
   );

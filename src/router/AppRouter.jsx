@@ -12,6 +12,10 @@ import { Contact } from '../pages/Contact';
 import { ManageProjects } from '../pages/ManageProjects';
 import { AddProject } from '../pages/AddProject';
 import { EditProject } from '../pages/EditProject';
+import { ManageEnquiries } from '../pages/ManageEnquiries';
+import { AdminAccess } from '../pages/AdminAccess';
+import { AdminDashboard } from '../pages/AdminDashboard';
+import { ProtectedRoute } from '../components/layout/ProtectedRoute';
 
 export const AppRouter = () => {
   return (
@@ -25,9 +29,17 @@ export const AppRouter = () => {
             <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
             <Route path={ROUTES.VIDEOS} element={<LearningHub />} />
             <Route path={ROUTES.CONTACT} element={<Contact />} />
-            <Route path={ROUTES.ADMIN_PROJECTS} element={<ManageProjects />} />
-            <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<AddProject />} />
-            <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<EditProject />} />
+            
+            {/* Public Admin Entry */}
+            <Route path={ROUTES.ADMIN_ACCESS} element={<AdminAccess />} />
+
+            {/* Protected Admin Console Routes */}
+            <Route path={ROUTES.ADMIN_DASHBOARD} element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_PROJECTS} element={<ProtectedRoute><ManageProjects /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<ProtectedRoute><AddProject /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<ProtectedRoute><EditProject /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ProtectedRoute><ManageEnquiries /></ProtectedRoute>} />
+            
             <Route path="*" element={<Home />} />
           </Routes>
         </AnimatePresence>

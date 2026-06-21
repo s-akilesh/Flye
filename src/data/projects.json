@@ -45,7 +45,20 @@
     "featured": true,
     "downloads": 1420,
     "aiTrainingReferences": ["smart home", "relay control", "hc-05 wiring"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "The controller connects via Bluetooth to a smartphone app, reading commands to switch on/off electrical relays connected to home appliances and monitoring environmental temperature/humidity via the DHT11 sensor.",
+    "applications": [
+      "Wireless home appliance controller panels",
+      "Energy-saving home automation systems",
+      "Environmental climate control prototypes"
+    ],
+    "benefits": [
+      "High-voltage relay isolation design",
+      "Low-power Bluetooth communication link",
+      "Real-time room temperature tracking"
+    ],
+    "estimatedDelivery": "3-5 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-rover-car",
@@ -94,7 +107,20 @@
     "featured": true,
     "downloads": 980,
     "aiTrainingReferences": ["obstacle avoidance", "esp32 motor driver", "servo sweeps"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "Using an ultrasonic sensor mounted on a servo, the rover scans the area in front. The ESP32 processes distance readings and drives the DC motors via the L298N driver to steer away from obstacles.",
+    "applications": [
+      "Autonomous mapping robotics units",
+      "Exploratory search-and-rescue test vehicles",
+      "Collision avoidance test beds"
+    ],
+    "benefits": [
+      "Precise distance-based navigation",
+      "ESP32 high-performance controller board",
+      "Rugged dual-motor chassis structure"
+    ],
+    "estimatedDelivery": "4-6 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-weather-station",
@@ -142,7 +168,20 @@
     "featured": false,
     "downloads": 2400,
     "aiTrainingReferences": ["iot weather logging", "thingspeak api integration", "dht22 i2c"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "The NodeMCU ESP8266 reads local temperature, humidity, and barometric pressure sensors, formats the data, and uses its on-board Wi-Fi to upload the updates directly to a ThinkSpeak cloud channel.",
+    "applications": [
+      "Microclimate agricultural weather stations",
+      "Smart building air monitoring nodes",
+      "Remote weather telemetry loggers"
+    ],
+    "benefits": [
+      "Instant cloud dashboard setup",
+      "Highly accurate barometric readings",
+      "Local status LCD output"
+    ],
+    "estimatedDelivery": "3-5 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-gps-tracker",
@@ -190,7 +229,20 @@
     "featured": true,
     "downloads": 810,
     "aiTrainingReferences": ["neo-6m gps library", "sim800l AT commands", "sms cell tracking"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "The Neo-6M GPS module continuously reads coordinates from satellite constellations. The Arduino Nano processes this data and transmits periodic SMS alerts containing map links via the SIM800L module.",
+    "applications": [
+      "Commercial fleet location tracking",
+      "High-value asset security monitoring",
+      "Personal safety coordinate beaconing"
+    ],
+    "benefits": [
+      "Global GPS satellite coordinates tracking",
+      "Instant SMS map links coordinates",
+      "Independent backup battery system"
+    ],
+    "estimatedDelivery": "4-6 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-solar-tracker",
@@ -238,7 +290,20 @@
     "featured": false,
     "downloads": 1150,
     "aiTrainingReferences": ["ldr differential matching", "dual servo gimbal control", "solar tracking algorithm"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "Four LDR sensors positioned around a solar panel compare light levels. The Arduino servo loops adjust the horizontal and vertical servos until light is balanced, maximizing energy capture.",
+    "applications": [
+      "High-efficiency solar array positioning",
+      "Renewable clean energy lab research",
+      "Automatic sun-following gimbals"
+    ],
+    "benefits": [
+      "Dual-axis physical dynamic orientation",
+      "Up to 40% enhanced solar capture efficiency",
+      "Pre-calibrated light threshold code"
+    ],
+    "estimatedDelivery": "3-5 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-greenhouse",
@@ -287,7 +352,20 @@
     "featured": false,
     "downloads": 750,
     "aiTrainingReferences": ["capacitive soil moisture calibration", "relay pump switching", "serial bluetooth command parser"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "An Arduino monitors soil moisture levels. When the soil moisture probe reads dry values, the controller switches a relay to run the miniature water pump while streaming live data over Bluetooth.",
+    "applications": [
+      "Home indoor greenhouse systems",
+      "Small-scale smart irrigation nodes",
+      "Botany experimental monitoring"
+    ],
+    "benefits": [
+      "Automated water pump activation",
+      "Bluetooth wireless telemetry graphs",
+      "Capacitive corrosion-resistant soil sensor"
+    ],
+    "estimatedDelivery": "3-5 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-irrigation",
@@ -335,7 +413,20 @@
     "featured": false,
     "downloads": 1320,
     "aiTrainingReferences": ["analog read calibration", "soil probe threshold", "micro pump control"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "An analog soil moisture sensor feeds soil dryness indicators to an Arduino Nano. When thresholds are crossed, a water pump relay is triggered automatically until moisture returns to levels.",
+    "applications": [
+      "Automated home garden irrigation",
+      "Water-saving crop irrigation setups",
+      "Basic automation school experiments"
+    ],
+    "benefits": [
+      "Low-cost high-efficiency irrigation design",
+      "Simple hardware wiring configurations",
+      "Self-contained battery-powered capability"
+    ],
+    "estimatedDelivery": "2-4 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-rfid-lock",
@@ -384,7 +475,20 @@
     "featured": false,
     "downloads": 1650,
     "aiTrainingReferences": ["mfrc522 card match", "servo lock angle", "lcd print coordinate"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "The RC522 RFID module reads card signals at 13.56 MHz. If the UID matches approved tags, the Arduino triggers a servo to open a lock latch and prints verification status to the LCD.",
+    "applications": [
+      "Office secure entry checkpoints",
+      "Smart locker locking mechanisms",
+      "Student attendance monitoring stations"
+    ],
+    "benefits": [
+      "High-security digital RFID matching",
+      "Visual feedback LCD interface screen",
+      "Adjustable physical lock latch servo"
+    ],
+    "estimatedDelivery": "2-4 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-burglar-gsm",
@@ -432,7 +536,20 @@
     "featured": false,
     "downloads": 540,
     "aiTrainingReferences": ["pir sensor interrupt", "gsm serial AT initialization", "sms burglar message send"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "A PIR motion sensor monitors target zones. If movement is detected, the Arduino Nano triggers a local buzzer alarm and commands the SIM800L module to transmit alert SMS messages to the user.",
+    "applications": [
+      "Isolated cabin remote alarm systems",
+      "Warehouse security entry monitors",
+      "Anti-theft intruder alerts"
+    ],
+    "benefits": [
+      "Instant cellular SMS notification",
+      "Loud buzzer sound output warnings",
+      "Reliable wide-angle motion detection"
+    ],
+    "estimatedDelivery": "3-5 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-esp-camera",
@@ -480,7 +597,20 @@
     "featured": false,
     "downloads": 2100,
     "aiTrainingReferences": ["ov2640 configuration", "esp32-cam board manager", "mjpeg stream web server"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "The ESP32-CAM connects to a local Wi-Fi router and starts an HTTP MJPEG video stream server. Users connect to the camera IP address on any browser to view live camera footage.",
+    "applications": [
+      "Low-cost wireless home security cameras",
+      "Robotic vehicle live visual feedback",
+      "Miniature bird-box nature cameras"
+    ],
+    "benefits": [
+      "Direct browser live video streaming",
+      "Ultra-compact microcontroller footprint",
+      "External high-gain antenna support option"
+    ],
+    "estimatedDelivery": "3-5 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-gesture-robot",
@@ -529,7 +659,20 @@
     "featured": true,
     "downloads": 670,
     "aiTrainingReferences": ["mpu6050 roll pitch calculation", "nrf24l01 payload packaging", "motor speed differential steering"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "The glove-mounted MPU6050 accelerometer reads tilt angles. A transmitter Arduino sends wireless commands via nRF24L01 transceivers to the receiver Arduino on the motor chassis to steer.",
+    "applications": [
+      "Wearable human-machine interfaces",
+      "Wireless remote vehicle control setups",
+      "Accessible assistive robotics design"
+    ],
+    "benefits": [
+      "Intuitive Glove-controlled orientation",
+      "Robust 2.4GHz wireless telemetry link",
+      "Dynamic dual-axis coordinate navigation"
+    ],
+    "estimatedDelivery": "4-6 Business Days",
+    "whatsappNumber": "919876543210"
   },
   {
     "id": "proj-ultrasonic-radar",
@@ -577,6 +720,19 @@
     "featured": false,
     "downloads": 1820,
     "aiTrainingReferences": ["servo continuous sweep", "ultrasonic ping distance", "serial data packaging processing"],
-    "status": "active"
+    "status": "active",
+    "howItWorks": "An ultrasonic sensor sweeps a 180-degree arc using a micro servo. The Arduino Uno prints distance and angle values to the USB serial port, where a Processing app draws a visual radar map.",
+    "applications": [
+      "Collision monitoring radar designs",
+      "Laboratory sonar visualizer arrays",
+      "Interactive spatial distance plotters"
+    ],
+    "benefits": [
+      "180-degree dynamic sensor sweeps",
+      "Real-time graphic computer visualization",
+      "USB plug-and-play serial connectivity"
+    ],
+    "estimatedDelivery": "2-4 Business Days",
+    "whatsappNumber": "919876543210"
   }
 ]

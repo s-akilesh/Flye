@@ -12,10 +12,12 @@ import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
+import { useEnquiries } from '../hooks/useEnquiries';
 
 export const ProjectListing = () => {
   const navigate = useNavigate();
   const { projects } = useProjects();
+  const { addEnquiry } = useEnquiries();
   const {
     activeCategories,
     activeDifficulties,
@@ -48,6 +50,16 @@ export const ProjectListing = () => {
 
   // Cart Order Modal state
   const [orderedProject, setOrderedProject] = useState(null);
+  const [requestorName, setRequestorName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [orderStep, setOrderStep] = useState('input'); // 'input' | 'confirmed'
+
+  const handleOpenOrderModal = (proj) => {
+    setOrderedProject(proj);
+    setRequestorName('');
+    setContactNumber('');
+    setOrderStep('input');
+  };
 
   // Filter and sort projects using centralized hook
   const filteredList = useProjectFilters(
@@ -132,7 +144,7 @@ export const ProjectListing = () => {
           />
 
           {filteredList.length > 0 ? (
-            <ProjectGrid projects={filteredList} onRequestOrder={setOrderedProject} />
+            <ProjectGrid projects={filteredList} onRequestOrder={handleOpenOrderModal} />
           ) : (
             <div className="marketplace-empty-state active" id="marketplace-empty-state">
               <div className="empty-icon">📂</div>
@@ -190,40 +202,103 @@ export const ProjectListing = () => {
 
       {/* Successful Order Modal */}
       <Modal isOpen={orderedProject !== null} onClose={() => setOrderedProject(null)} className="modal-content purple">
-        <div className="modal-icon">
-          <svg viewBox="0 0 24 24">
-            <polyline points="20,6 9,17 4,12" />
-          </svg>
-        </div>
-        <h4 id="receipt-title">KIT ORDER ROUTED</h4>
-        <p>Your request has been logged successfully. Summary receipt details below.</p>
+        {orderStep === 'input' ? (
+          <>
+            <div className="modal-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+              </svg>
+            </div>
+            <h4>REQUEST PROJECT KIT</h4>
+            <p>Enter your details below to confirm your request for <strong>{orderedProject?.title}</strong>.</p>
 
-        {orderedProject && (
-          <div className="modal-receipt" id="receipt-meta">
-            <div className="receipt-row">
-              <span>PROJECT KIT:</span>
-              <span className="receipt-val">{orderedProject.title}</span>
+            <div style={{ margin: 'var(--space-3) 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', textAlign: 'left' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Your Name *</label>
+                <Input
+                  type="text"
+                  placeholder="e.g. John Doe"
+                  value={requestorName}
+                  onChange={(e) => setRequestorName(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Contact Number *</label>
+                <Input
+                  type="tel"
+                  placeholder="e.g. 9876543210"
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
+                  className="form-input"
+                  maxLength={15}
+                />
+              </div>
             </div>
-            <div className="receipt-row">
-              <span>TECH STACK:</span>
-              <span className="receipt-val">{orderedProject.technology}</span>
+
+            <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
+              <Button variant="secondary" className="modal-btn" style={{ flex: 1 }} onClick={() => setOrderedProject(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                className="modal-btn btn-submit-calc"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  if (!requestorName.trim()) {
+                    alert('Please enter your name.');
+                    return;
+                  }
+                  if (!contactNumber.trim() || contactNumber.replace(/\D/g, '').length < 10) {
+                    alert('Please enter a valid 10-digit contact number.');
+                    return;
+                  }
+                  addEnquiry({
+                    name: requestorName,
+                    mobile: contactNumber,
+                    projectId: orderedProject.id,
+                    projectTitle: orderedProject.title,
+                    price: orderedProject.price
+                  });
+                  setOrderStep('confirmed');
+                }}
+              >
+                Submit
+              </Button>
             </div>
-            <div className="receipt-row">
-              <span>LEVEL:</span>
-              <span className="receipt-val">{orderedProject.projectLevel} ({orderedProject.difficulty.toUpperCase()})</span>
+          </>
+        ) : (
+          <>
+            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)' }}>
+              <svg viewBox="0 0 24 24">
+                <polyline points="20,6 9,17 4,12" />
+              </svg>
             </div>
-            <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
-              <span>UNIT COST:</span>
-              <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>
-                ₹{orderedProject.price}
-              </span>
-            </div>
-          </div>
+            <h4>KIT REQUEST CONFIRMED</h4>
+            <p>Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.</p>
+
+            {orderedProject && (
+              <div className="modal-receipt" id="receipt-meta">
+                <div className="receipt-row">
+                  <span>PROJECT KIT:</span>
+                  <span className="receipt-val">{orderedProject.title}</span>
+                </div>
+                <div className="receipt-row">
+                  <span>CONTACT:</span>
+                  <span className="receipt-val">{contactNumber}</span>
+                </div>
+                <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
+                  <span>UNIT COST:</span>
+                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>₹{orderedProject.price}</span>
+                </div>
+              </div>
+            )}
+
+            <Button variant="secondary" className="modal-btn" onClick={() => setOrderedProject(null)} style={{ marginTop: 'var(--space-3)' }}>
+              Close
+            </Button>
+          </>
         )}
-
-        <Button variant="secondary" className="modal-btn" onClick={() => setOrderedProject(null)}>
-          Close
-        </Button>
       </Modal>
     </motion.section>
   );

@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
-import { ProjectOverview } from '../components/sections/ProjectOverview';
 import { RelatedProjects } from '../components/sections/RelatedProjects';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
+import { useEnquiries } from '../hooks/useEnquiries';
 
 export const ProjectDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { getProjectBySlug, getRelatedProjects, isLoading } = useProjects();
+  const { addEnquiry } = useEnquiries();
 
   const project = getProjectBySlug(slug);
 
@@ -22,24 +23,16 @@ export const ProjectDetails = () => {
   // Modals state
   const [modalType, setModalType] = useState(null); // 'order', 'expert', 'ai'
   const [aiQuery, setAiQuery] = useState('');
-  const [orderedProject, setOrderedProject] = useState(null);
-
-  // Request Kit modal state
-  const [mobileNumber, setMobileNumber] = useState('');
+  const [targetOrderProject, setTargetOrderProject] = useState(null);
+  const [requestorName, setRequestorName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
   const [orderStep, setOrderStep] = useState('input'); // 'input' | 'confirmed'
 
   const openOrderModal = () => {
-    setMobileNumber('');
+    setTargetOrderProject(project);
+    setRequestorName('');
+    setContactNumber('');
     setOrderStep('input');
-    setModalType('order');
-  };
-
-  const handleConfirmRequest = () => {
-    if (!mobileNumber.trim() || mobileNumber.replace(/\D/g, '').length < 10) {
-      alert('Please enter a valid 10-digit mobile number.');
-      return;
-    }
-    setOrderStep('confirmed');
   };
 
   // Scroll to top on slug change
@@ -123,7 +116,7 @@ export const ProjectDetails = () => {
           </Button>
           <div className="portal-title-area">
             <h2 id="detail-project-name">{title}</h2>
-            <p id="detail-project-subtitle">Engineering Kit Specifications Terminal</p>
+            <p id="detail-project-subtitle">{description}</p>
           </div>
         </div>
       </div>
@@ -174,32 +167,12 @@ export const ProjectDetails = () => {
               </div>
             </div>
 
-            {/* Inclusions & Overview */}
-            <ProjectOverview project={project} />
 
             {/* Full Description */}
             {fullDescription && (
               <div className="detail-section card-glass rich-text-content">
                 <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-3)' }}>Detailed Project Blueprint</h3>
                 <div dangerouslySetInnerHTML={{ __html: fullDescription }} />
-              </div>
-            )}
-
-            {/* Specifications Matrix */}
-            {Object.keys(specifications).length > 0 && (
-              <div className="detail-section card-glass">
-                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Technical Specifications Matrix</h3>
-                <div className="specifications-info-grid">
-                  {Object.entries(specifications).map(([key, val]) => {
-                    const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
-                    return (
-                      <div key={key} className="spec-detail-node">
-                        <span className="spec-detail-lbl">{label}</span>
-                        <span className="spec-detail-val">{val}</span>
-                      </div>
-                    );
-                  })}
-                </div>
               </div>
             )}
 
@@ -272,6 +245,90 @@ export const ProjectDetails = () => {
               </div>
             </div>
 
+            {/* Technical Diagrams & Schematic Files */}
+            {(project.images?.schematic || project.images?.circuit) && (
+              <div className="detail-section card-glass">
+                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Technical Diagrams & Files</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                  {project.images?.schematic && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'rgba(255,255,255,0.01)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '18px' }}>📐</span>
+                        <div>
+                          <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>Schematic Diagram</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Vector schematic drawing file</div>
+                        </div>
+                      </div>
+                      <a 
+                        href={project.images.schematic} 
+                        download={`Schematic_${project.slug}.svg`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="btn btn-secondary"
+                        style={{ padding: '6px 16px', fontSize: '12px', textDecoration: 'none' }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  )}
+                  {project.images?.circuit && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'rgba(255,255,255,0.01)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '18px' }}>🔌</span>
+                        <div>
+                          <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>Circuit Diagram</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Wiring and connections drawing file</div>
+                        </div>
+                      </div>
+                      <a 
+                        href={project.images.circuit} 
+                        download={`Circuit_${project.slug}.svg`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="btn btn-secondary"
+                        style={{ padding: '6px 16px', fontSize: '12px', textDecoration: 'none' }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Video Tutorial Card */}
+            {project.videoUrl && !project.videoUrl.includes('placeholder') && (
+              <div className="detail-section card-glass">
+                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Video Tutorial</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-4)', background: 'rgba(255,255,255,0.01)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ fontSize: '24px' }}>🎥</span>
+                    <div>
+                      <div 
+                        title={`${title} Video Tutorial Guide`}
+                        style={{ fontSize: '14px', fontWeight: '600', color: '#fff' }}
+                      >
+                        {(() => {
+                          const vTitle = `${title} Video Tutorial Guide`;
+                          return vTitle.length > 35 ? vTitle.substring(0, 32) + '...' : vTitle;
+                        })()}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Step-by-step build and debugging guide</div>
+                    </div>
+                  </div>
+                  <a 
+                    href={project.videoUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="btn btn-primary btn-submit-calc"
+                    style={{ padding: '8px 20px', fontSize: '12px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+                  >
+                    Watch Tutorial
+                  </a>
+                </div>
+              </div>
+            )}
+
 
             {/* AI support */}
             <div className="detail-section card-glass ai-detail-card" style={{ padding: 'var(--space-5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -304,7 +361,7 @@ export const ProjectDetails = () => {
                         </div>
                         <p className="review-text">"{rev.comment || 'No feedback provided.'}"</p>
                         <span className="reviewer-meta">
-                          {rev.institution || 'Verified Builder'} &bull; Verified Builder
+                          {rev.institution || 'Independent Builder'} &bull; Verified Builder
                         </span>
                       </div>
                     );
@@ -316,7 +373,16 @@ export const ProjectDetails = () => {
             </div>
 
             {/* Related project kits */}
-            <RelatedProjects relatedProjects={related} onRequestOrder={setOrderedProject} />
+            {/* Related project kits */}
+            <RelatedProjects
+              relatedProjects={related}
+              onRequestOrder={(proj) => {
+                setTargetOrderProject(proj);
+                setRequestorName('');
+                setContactNumber('');
+                setOrderStep('input');
+              }}
+            />
           </div>
 
           {/* Right Column Sticky Panel */}
@@ -352,9 +418,13 @@ export const ProjectDetails = () => {
               <div className="detail-price-box">
                 <div className="price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span className="price-val">₹{price}</span>
-                  <span className="availability-badge">✓ In Stock</span>
+                  <span className="availability-badge">
+                    {project.stockStatus === 'out-of-stock' ? '⚠ Out of Stock' : '✓ In Stock'}
+                  </span>
                 </div>
-                <p className="delivery-time" style={{ margin: 0 }}>Estimated Delivery: 3-5 Business Days</p>
+                <p className="delivery-time" style={{ margin: 0 }}>
+                  Estimated Delivery: {project.estimatedDelivery || '3-5 Business Days'}
+                </p>
               </div>
 
               <Button
@@ -377,7 +447,7 @@ export const ProjectDetails = () => {
                 Contact Expert
               </Button>
               <a
-                href="https://wa.me/1234567890"
+                href={`https://wa.me/${project.whatsappNumber || '1234567890'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-chip whatsapp width-100 justify-center"
@@ -413,72 +483,6 @@ export const ProjectDetails = () => {
       </div>
 
       {/* Modals Container */}
-
-      {/* 1. Request Kit Modal */}
-      <Modal isOpen={modalType === 'order'} onClose={() => setModalType(null)} className="modal-content purple">
-        {orderStep === 'input' ? (
-          <>
-            <div className="modal-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-              </svg>
-            </div>
-            <h4>REQUEST PROJECT KIT</h4>
-            <p>Enter your mobile number to confirm your kit request. Our team will contact you shortly.</p>
-
-            <div style={{ margin: 'var(--space-4) 0' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Mobile Number *</label>
-              <Input
-                type="tel"
-                placeholder="e.g. 9876543210"
-                value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
-                className="form-input"
-                style={{ textAlign: 'center', fontSize: '18px', letterSpacing: '2px' }}
-                maxLength={15}
-              />
-            </div>
-
-            <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-2)' }}>
-              <Button variant="secondary" className="modal-btn" style={{ flex: 1 }} onClick={() => setModalType(null)}>
-                Close
-              </Button>
-              <Button variant="primary" className="modal-btn btn-submit-calc" style={{ flex: 2 }} onClick={handleConfirmRequest}>
-                Confirm Request
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)' }}>
-              <svg viewBox="0 0 24 24">
-                <polyline points="20,6 9,17 4,12" />
-              </svg>
-            </div>
-            <h4>KIT REQUEST CONFIRMED</h4>
-            <p>Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{mobileNumber}</strong> shortly.</p>
-
-            <div className="modal-receipt">
-              <div className="receipt-row">
-                <span>PROJECT KIT:</span>
-                <span className="receipt-val">{title}</span>
-              </div>
-              <div className="receipt-row">
-                <span>CONTACT:</span>
-                <span className="receipt-val">{mobileNumber}</span>
-              </div>
-              <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
-                <span>UNIT COST:</span>
-                <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>₹{price}</span>
-              </div>
-            </div>
-
-            <Button variant="secondary" className="modal-btn" onClick={() => setModalType(null)} style={{ marginTop: 'var(--space-3)' }}>
-              Close
-            </Button>
-          </>
-        )}
-      </Modal>
 
       {/* 2. Expert Consultation Modal */}
       <Modal isOpen={modalType === 'expert'} onClose={() => setModalType(null)}>
@@ -549,42 +553,105 @@ export const ProjectDetails = () => {
         </div>
       </Modal>
 
-      {/* 4. Direct Order modal for Related Cards */}
-      <Modal isOpen={orderedProject !== null} onClose={() => setOrderedProject(null)} className="modal-content purple">
-        <div className="modal-icon">
-          <svg viewBox="0 0 24 24">
-            <polyline points="20,6 9,17 4,12" />
-          </svg>
-        </div>
-        <h4>KIT ORDER ROUTED</h4>
-        <p>Your request has been logged successfully. Summary receipt details below.</p>
+      {/* Unified Request Kit Modal */}
+      <Modal isOpen={targetOrderProject !== null} onClose={() => setTargetOrderProject(null)} className="modal-content purple">
+        {orderStep === 'input' ? (
+          <>
+            <div className="modal-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+              </svg>
+            </div>
+            <h4>REQUEST PROJECT KIT</h4>
+            <p>Enter your details below to confirm your request for <strong>{targetOrderProject?.title}</strong>.</p>
 
-        {orderedProject && (
-          <div className="modal-receipt">
-            <div className="receipt-row">
-              <span>PROJECT KIT:</span>
-              <span className="receipt-val">{orderedProject.title || 'Engineering Kit'}</span>
+            <div style={{ margin: 'var(--space-3) 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', textAlign: 'left' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Your Name *</label>
+                <Input
+                  type="text"
+                  placeholder="e.g. John Doe"
+                  value={requestorName}
+                  onChange={(e) => setRequestorName(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Contact Number *</label>
+                <Input
+                  type="tel"
+                  placeholder="e.g. 9876543210"
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
+                  className="form-input"
+                  maxLength={15}
+                />
+              </div>
             </div>
-            <div className="receipt-row">
-              <span>TECH STACK:</span>
-              <span className="receipt-val">{orderedProject.technology || 'Arduino'}</span>
+
+            <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
+              <Button variant="secondary" className="modal-btn" style={{ flex: 1 }} onClick={() => setTargetOrderProject(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                className="modal-btn btn-submit-calc"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  if (!requestorName.trim()) {
+                    alert('Please enter your name.');
+                    return;
+                  }
+                  if (!contactNumber.trim() || contactNumber.replace(/\D/g, '').length < 10) {
+                    alert('Please enter a valid 10-digit contact number.');
+                    return;
+                  }
+                  addEnquiry({
+                    name: requestorName,
+                    mobile: contactNumber,
+                    projectId: targetOrderProject.id,
+                    projectTitle: targetOrderProject.title,
+                    price: targetOrderProject.price
+                  });
+                  setOrderStep('confirmed');
+                }}
+              >
+                Submit
+              </Button>
             </div>
-            <div className="receipt-row">
-              <span>LEVEL:</span>
-              <span className="receipt-val">{(orderedProject.projectLevel || 'Engineering')} ({(orderedProject.difficulty || 'intermediate').toUpperCase()})</span>
+          </>
+        ) : (
+          <>
+            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)' }}>
+              <svg viewBox="0 0 24 24">
+                <polyline points="20,6 9,17 4,12" />
+              </svg>
             </div>
-            <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
-              <span>UNIT COST:</span>
-              <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>
-                ₹{orderedProject.price || 0}
-              </span>
-            </div>
-          </div>
+            <h4>KIT REQUEST CONFIRMED</h4>
+            <p>Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.</p>
+
+            {targetOrderProject && (
+              <div className="modal-receipt" id="receipt-meta">
+                <div className="receipt-row">
+                  <span>PROJECT KIT:</span>
+                  <span className="receipt-val">{targetOrderProject.title}</span>
+                </div>
+                <div className="receipt-row">
+                  <span>CONTACT:</span>
+                  <span className="receipt-val">{contactNumber}</span>
+                </div>
+                <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
+                  <span>UNIT COST:</span>
+                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>₹{targetOrderProject.price}</span>
+                </div>
+              </div>
+            )}
+
+            <Button variant="secondary" className="modal-btn" onClick={() => setTargetOrderProject(null)} style={{ marginTop: 'var(--space-3)' }}>
+              Close
+            </Button>
+          </>
         )}
-
-        <Button variant="secondary" className="modal-btn" onClick={() => setOrderedProject(null)}>
-          Close
-        </Button>
       </Modal>
     </motion.section>
   );

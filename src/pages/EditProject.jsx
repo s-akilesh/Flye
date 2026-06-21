@@ -359,7 +359,13 @@ export const EditProject = () => {
       components: finalComponents,
       relatedProjects,
       status: targetStatus,
-      featured
+      featured,
+      howItWorks: project.howItWorks || '',
+      applications: project.applications || [],
+      benefits: project.benefits || [],
+      estimatedDelivery: project.estimatedDelivery || '',
+      whatsappNumber: project.whatsappNumber || '',
+      stockStatus: project.stockStatus || 'in-stock'
     };
 
     try {

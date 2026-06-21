@@ -306,7 +306,20 @@ export const AddProject = () => {
       relatedProjects,
       stockStatus: 'in-stock',
       featured,
-      status: targetStatus
+      status: targetStatus,
+      howItWorks: 'This system reads sensor/input coordinates and communicates commands to actuator outputs.',
+      applications: [
+        'Educational physical setups for lab research',
+        'Custom prototyping designs for innovator kits',
+        'Academic engineering project implementations'
+      ],
+      benefits: [
+        'Ready-to-assemble structured components',
+        'Validated wiring diagrams and code bases',
+        '24/7 technical query troubleshooting support'
+      ],
+      estimatedDelivery: '3-5 Business Days',
+      whatsappNumber: '919876543210'
     };
 
     try {

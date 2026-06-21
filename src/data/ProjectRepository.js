@@ -27,11 +27,41 @@ const getStoredProjects = () => {
     projectsList = projectsData;
   }
 
-  // Ensure all loaded projects have a lastUpdated field (auto migration for preloaded records)
+  // Ensure all loaded projects have the new schema fields and a lastUpdated field (auto migration for preloaded records)
   let modified = false;
   const verifiedList = projectsList.map((p) => {
+    const defaultData = projectsData.find((d) => d.id === p.id);
+    let updated = false;
+
     if (!p.lastUpdated) {
       p.lastUpdated = '21/06/2026';
+      updated = true;
+    }
+
+    if (defaultData) {
+      if (!p.howItWorks && defaultData.howItWorks) {
+        p.howItWorks = defaultData.howItWorks;
+        updated = true;
+      }
+      if ((!p.applications || p.applications.length === 0) && defaultData.applications) {
+        p.applications = defaultData.applications;
+        updated = true;
+      }
+      if ((!p.benefits || p.benefits.length === 0) && defaultData.benefits) {
+        p.benefits = defaultData.benefits;
+        updated = true;
+      }
+      if (!p.estimatedDelivery && defaultData.estimatedDelivery) {
+        p.estimatedDelivery = defaultData.estimatedDelivery;
+        updated = true;
+      }
+      if (!p.whatsappNumber && defaultData.whatsappNumber) {
+        p.whatsappNumber = defaultData.whatsappNumber;
+        updated = true;
+      }
+    }
+
+    if (updated) {
       modified = true;
     }
     return p;

@@ -7,5 +7,8 @@ export const ROUTES = {
   CONTACT: '/contact',
   ADMIN_PROJECTS: '/admin/projects',
   ADMIN_ADD_PROJECT: '/admin/projects/add',
-  ADMIN_EDIT_PROJECT: '/admin/projects/edit/:slug'
+  ADMIN_EDIT_PROJECT: '/admin/projects/edit/:slug',
+  ADMIN_ENQUIRIES: '/admin/enquiries',
+  ADMIN_ACCESS: '/admin-access',
+  ADMIN_DASHBOARD: '/admin'
 };

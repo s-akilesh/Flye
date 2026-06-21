@@ -11,7 +11,7 @@ import { CATEGORY_LABELS } from '../constants/categories';
 
 export const ManageProjects = () => {
   const navigate = useNavigate();
-  const { allProjects, isLoading, duplicateProject, deleteProject } = useProjects();
+  const { allProjects, isLoading, duplicateProject, deleteProject, updateProject } = useProjects();
 
   // Search & Filter State
   const [search, setSearch] = useState('');
@@ -20,6 +20,9 @@ export const ManageProjects = () => {
   const [levelFilter, setLevelFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortField, setSortField] = useState('title');
+
+  // Bulk selection state
+  const [selectedIds, setSelectedIds] = useState([]);
 
   // Deletion Modal State
   const [projectToDelete, setProjectToDelete] = useState(null);
@@ -40,8 +43,58 @@ export const ManageProjects = () => {
     try {
       await deleteProject(projectToDelete.id);
       setProjectToDelete(null);
+      setSelectedIds((prev) => prev.filter((id) => id !== projectToDelete.id));
     } catch (e) {
       alert("Failed to delete project.");
+    }
+  };
+
+  // Bulk selection handlers
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(sortedList.map((p) => p.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkAction = async (action) => {
+    if (selectedIds.length === 0) {
+      alert("No projects selected.");
+      return;
+    }
+
+    if (action === 'delete') {
+      const confirmDelete = window.confirm(`Are you sure you want to permanently delete the ${selectedIds.length} selected project(s)?`);
+      if (!confirmDelete) return;
+    }
+
+    try {
+      if (action === 'delete') {
+        for (const id of selectedIds) {
+          await deleteProject(id);
+        }
+        alert("Selected projects deleted successfully.");
+      } else if (action === 'activate') {
+        for (const id of selectedIds) {
+          await updateProject(id, { status: 'active' });
+        }
+        alert("Selected projects activated successfully.");
+      } else if (action === 'archive') {
+        for (const id of selectedIds) {
+          await updateProject(id, { status: 'archived' });
+        }
+        alert("Selected projects archived successfully.");
+      }
+      setSelectedIds([]);
+    } catch (e) {
+      alert(`Failed to perform bulk action: ${action}`);
     }
   };
 
@@ -97,8 +150,8 @@ export const ManageProjects = () => {
             </svg>
           </Button>
           <div className="portal-title-area">
-            <h2>Project Master Data Table</h2>
-            <p>Visual database management panel for Flyen engineering kits</p>
+            <h2>Project Catalog Management</h2>
+            <p>Visual database management panel for Flyen engineering catalog</p>
           </div>
         </div>
         <div className="portal-header-meta">
@@ -113,6 +166,25 @@ export const ManageProjects = () => {
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        {/* KPI Cards */}
+        <div className="grid-12" style={{ gap: 'var(--space-4)' }}>
+          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Projects</span>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-blue)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.length}</h3>
+          </Card>
+          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Active Projects</span>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-emerald)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.filter(p => p.status === 'active').length}</h3>
+          </Card>
+          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Draft Projects</span>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-violet)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.filter(p => p.status === 'draft').length}</h3>
+          </Card>
+          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Featured Projects</span>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-amber)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.filter(p => p.featured).length}</h3>
+          </Card>
+        </div>
         {/* Toolbar & Filters */}
         <div className="card-glass" style={{ padding: 'var(--space-4)' }}>
           <div className="grid-12" style={{ gap: 'var(--space-4)', alignItems: 'end' }}>
@@ -197,6 +269,42 @@ export const ManageProjects = () => {
         </div>
 
         {/* Tabular Visual Grid */}
+        {/* Bulk Actions Banner */}
+        {selectedIds.length > 0 && (
+          <div className="card-glass" style={{ padding: 'var(--space-3) var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--accent-violet)', background: 'rgba(124, 58, 237, 0.05)' }}>
+            <span style={{ fontSize: '13px', color: '#fff', fontWeight: '500' }}>
+              Selected <strong style={{ color: 'var(--accent-violet)' }}>{selectedIds.length}</strong> project(s)
+            </span>
+            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handleBulkAction('activate')}
+                style={{ padding: '6px 12px', fontSize: '12px' }}
+              >
+                🟢 Activate
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handleBulkAction('archive')}
+                style={{ padding: '6px 12px', fontSize: '12px' }}
+              >
+                🔴 Archive
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => handleBulkAction('delete')}
+                style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+              >
+                🗑 Delete
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Tabular Visual Grid */}
         {isLoading ? (
           <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
             <h3>Loading database records...</h3>
@@ -206,6 +314,14 @@ export const ManageProjects = () => {
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th style={{ padding: 'var(--space-3) var(--space-2)', width: '40px' }}>
+                    <input
+                      type="checkbox"
+                      checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
+                      onChange={handleSelectAll}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </th>
                   <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Project Name</th>
                   <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Category</th>
                   <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Project Level</th>
@@ -221,8 +337,8 @@ export const ManageProjects = () => {
                 {sortedList.map((proj) => {
                   const statusColors = {
                     active: 'var(--accent-emerald)',
-                    draft: 'var(--accent-violet)',
-                    'coming-soon': 'var(--accent-amber)',
+                    draft: '#eab308',
+                    'coming-soon': 'var(--accent-blue)',
                     archived: 'var(--accent-crimson, #ef4444)'
                   };
 
@@ -233,6 +349,14 @@ export const ManageProjects = () => {
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.015)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
+                      <td style={{ padding: 'var(--space-3) var(--space-2)', width: '40px' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(proj.id)}
+                          onChange={() => handleSelectOne(proj.id)}
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </td>
                       <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
                         <div style={{ fontWeight: '600', color: '#fff', fontSize: '13px' }}>{proj.title}</div>
                         <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>slug: {proj.slug}</div>
@@ -263,7 +387,10 @@ export const ManageProjects = () => {
                       <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
                         <span
                           style={{
-                            padding: '2px 8px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '4px 10px',
                             borderRadius: '4px',
                             fontSize: '11px',
                             fontWeight: '600',
@@ -273,7 +400,10 @@ export const ManageProjects = () => {
                             color: statusColors[proj.status] || 'white'
                           }}
                         >
-                          {proj.status}
+                          <span style={{ fontSize: '10px' }}>
+                            {proj.status === 'active' ? '🟢' : proj.status === 'draft' ? '🟡' : proj.status === 'coming-soon' ? '🔵' : '🔴'}
+                          </span>
+                          {proj.status === 'coming-soon' ? 'COMING SOON' : proj.status}
                         </span>
                       </td>
                       <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px' }}>
