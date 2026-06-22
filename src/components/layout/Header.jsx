@@ -38,11 +38,9 @@ export const Header = () => {
       </div>
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-        {isAdmin && (
-          <Link to={ROUTES.ADMIN_DASHBOARD} className="btn-header" id="header-admin-btn" style={{ marginRight: 'var(--space-1)' }}>
-            Portal
-          </Link>
-        )}
+        <Link to={isAdmin ? ROUTES.ADMIN_DASHBOARD : ROUTES.ADMIN_ACCESS} className="btn-header" id="header-admin-btn">
+          Admin
+        </Link>
         
         <Link to={ROUTES.CONTACT} className="btn-header" id="header-contact-btn">
           Contact
