@@ -92,7 +92,7 @@ export const ProjectListing = () => {
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="portal-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: '40px', paddingRight: '40px', marginBottom: 'var(--space-4)' }}>
+      <div className="portal-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)', marginBottom: 'var(--space-4)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
             <svg viewBox="0 0 24 24">
@@ -119,7 +119,7 @@ export const ProjectListing = () => {
         </div>
       </div>
 
-      <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', paddingLeft: '40px', paddingRight: '40px' }}>
+      <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
         <Sidebar
           isOpen={isMobileFiltersOpen}
           onClose={() => setIsMobileFiltersOpen(false)}

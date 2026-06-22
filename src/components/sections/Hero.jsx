@@ -37,9 +37,10 @@ export const Hero = () => {
   return (
     <div className="system-title">
       <div className="subtitle">BUILD &bull; PRINT &bull; LEARN</div>
-      <h1>
-        From Concept to Creation <span className={transitionClass}>{words[currentIndex]}</span>
-      </h1>
+      <h1>From Concept to Creation</h1>
+      <div className="dynamic-word-wrapper">
+        <span className={`dynamic-word ${transitionClass}`}>{words[currentIndex]}</span>
+      </div>
       <p className="desc">
         Transform ideas into reality with custom 3D printing, electronic project kits, robotics solutions, premade projects, and expert technical guidance designed for students, makers, innovators, schools, and colleges.
       </p>

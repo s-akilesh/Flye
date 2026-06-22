@@ -43,20 +43,26 @@ export const SearchPanel = ({
             <line x1="4" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="2" />
             <line x1="4" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" />
           </svg>
-          Filters
+          <span className="btn-filter-text">Filters</span>
         </Button>
 
         {/* AI Finder Toggle Button */}
         <Button className="btn-ai-toggle" id="btn-ai-toggle" onClick={onOpenAIFinder}>
-          ✨ AI Finder
+          <span className="btn-ai-text">✨ AI Finder</span>
+          <span className="btn-ai-icon">✨</span>
         </Button>
 
         {/* Sorting selector */}
-        <Dropdown
-          options={sortOptions}
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-        />
+        <div className="sort-wrapper">
+          <svg className="sort-icon-svg" viewBox="0 0 24 24">
+            <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
+          </svg>
+          <Dropdown
+            options={sortOptions}
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          />
+        </div>
       </div>
     </div>
   );

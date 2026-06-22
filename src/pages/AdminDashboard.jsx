@@ -50,7 +50,7 @@ export const AdminDashboard = () => {
             className="card-glass hover-lift"
             onClick={() => navigate(ROUTES.ADMIN_PROJECTS)}
             style={{
-              padding: 'var(--space-5)',
+              padding: 'var(--space-4)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
@@ -79,7 +79,7 @@ export const AdminDashboard = () => {
             className="card-glass hover-lift"
             onClick={() => navigate(ROUTES.ADMIN_ENQUIRIES)}
             style={{
-              padding: 'var(--space-5)',
+              padding: 'var(--space-4)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',

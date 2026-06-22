@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Hero } from '../components/sections/Hero';
 import { NavigationCards } from '../components/sections/NavigationCards';
 import { KPISection } from '../components/sections/KPISection';
+import { Footer } from '../components/layout/Footer';
 
 export const Home = () => {
   return (
@@ -17,6 +18,7 @@ export const Home = () => {
       <Hero />
       <NavigationCards />
       <KPISection />
+      <Footer />
     </motion.main>
   );
 };

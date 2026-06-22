@@ -340,7 +340,7 @@ export const AddProject = () => {
       transition={{ duration: 0.4 }}
     >
       {/* Header with Relocated Actions */}
-      <div className="portal-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: '40px', paddingRight: '40px' }}>
+      <div className="portal-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} style={{ padding: '8px', minWidth: 'auto' }}>
             <svg viewBox="0 0 24 24">
@@ -365,7 +365,7 @@ export const AddProject = () => {
         </div>
       </div>
 
-      <div className="portal-content-flex" style={{ maxWidth: '100%', width: '100%', paddingLeft: '40px', paddingRight: '40px' }}>
+      <div className="portal-content-flex" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
         {/* Left Sticky Section Navigation */}
         <div className="portal-form-navigation">
           <button

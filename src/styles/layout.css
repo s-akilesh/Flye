@@ -202,6 +202,17 @@
 }
 
 @media (max-width: 767px) {
+  :root {
+    --page-padding: 24px !important;
+    --grid-gap: 12px !important;
+  }
+
+  .grid-12 {
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap);
+  }
+
   .marketplace-layout {
     flex-direction: column;
   }

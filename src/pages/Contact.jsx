@@ -45,16 +45,16 @@ export const Contact = () => {
         </div>
       </div>
 
-      <div className="portal-content printing-grid" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <div className="product-catalog">
-          <h3 style={{ marginBottom: 'var(--space-4)' }}>Contact Details</h3>
-          <p style={{ marginBottom: 'var(--space-5)' }}>Reach out to us directly for hardware inquiries, technical course integrations, or custom prototyping services.</p>
+      <div className="portal-content printing-grid">
+        <div className="product-catalog card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          <h3 style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: 'var(--space-3)', margin: 0 }}>Contact Details</h3>
+          <p style={{ margin: 0, color: 'var(--text-muted)' }}>Reach out to us directly for hardware inquiries, technical course integrations, or custom prototyping services.</p>
           
           <ContactChips />
         </div>
 
-        <div className="service-calculator">
-          <h3 style={{ marginBottom: 'var(--space-4)' }}>Send Message</h3>
+        <div className="service-calculator card-glass" style={{ padding: 'var(--space-4)' }}>
+          <h3 style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: 'var(--space-3)', marginBottom: 'var(--space-5)', margin: 0 }}>Send Message</h3>
           <form className="terminal-form" onSubmit={handleSubmit}>
             <div className="calc-row" style={{ marginBottom: 'var(--space-4)' }}>
               <label htmlFor="contact-name">Name</label>

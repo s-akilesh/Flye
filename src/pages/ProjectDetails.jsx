@@ -96,8 +96,8 @@ export const ProjectDetails = () => {
         style={{
           maxWidth: '100%',
           width: '100%',
-          paddingLeft: '40px',
-          paddingRight: '40px',
+          paddingLeft: 'var(--page-padding)',
+          paddingRight: 'var(--page-padding)',
           position: 'sticky',
           top: '68px',
           zIndex: 90,
@@ -121,7 +121,7 @@ export const ProjectDetails = () => {
         </div>
       </div>
 
-      <div className="portal-content id-detail-portal-content" style={{ maxWidth: '100%', width: '100%', paddingLeft: '40px', paddingRight: '40px' }}>
+      <div className="portal-content id-detail-portal-content" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
         <div className="detail-page-layout">
           {/* Left Column */}
           <div className="detail-left-column">
@@ -331,7 +331,7 @@ export const ProjectDetails = () => {
 
 
             {/* AI support */}
-            <div className="detail-section card-glass ai-detail-card" style={{ padding: 'var(--space-5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="detail-section card-glass ai-detail-card" style={{ padding: 'var(--space-4)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center' }}>
                 <span className="ai-sparkle">✨</span>
                 <div className="ai-title-desc">
