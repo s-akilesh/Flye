@@ -6,6 +6,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
+import { AdminToolbar } from '../components/ui/AdminToolbar';
 import { ROUTES } from '../constants/routes';
 
 export const ManageEnquiries = () => {
@@ -206,55 +207,55 @@ export const ManageEnquiries = () => {
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        {/* KPI Cards */}
-        <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', width: '100%' }}>
-          <Card style={{ flex: '1 1 180px', padding: 'var(--space-4)' }}>
+        {/* KPI Cards — 2-column grid */}
+        <div className="admin-kpi-grid">
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Enquiries</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text-primary)', margin: 'var(--space-2) 0 0 0' }}>{totalEnquiries}</h3>
           </Card>
-          <Card style={{ flex: '1 1 180px', padding: 'var(--space-4)' }}>
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟡 New Enquiries</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--color-warning)', margin: 'var(--space-2) 0 0 0' }}>{newCount}</h3>
           </Card>
-          <Card style={{ flex: '1 1 180px', padding: 'var(--space-4)' }}>
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🔵 Contacted</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-blue)', margin: 'var(--space-2) 0 0 0' }}>{contactedCount}</h3>
           </Card>
-          <Card style={{ flex: '1 1 180px', padding: 'var(--space-4)' }}>
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟣 Qualified</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-violet)', margin: 'var(--space-2) 0 0 0' }}>{qualifiedCount}</h3>
           </Card>
-          <Card style={{ flex: '1 1 180px', padding: 'var(--space-4)' }}>
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟢 Closed</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-emerald)', margin: 'var(--space-2) 0 0 0' }}>{closedCount}</h3>
           </Card>
         </div>
 
-        {/* Toolbar & Filters */}
-        <div className="card-glass" style={{ padding: 'var(--space-4)' }}>
-          <div className="grid-12" style={{ gap: 'var(--space-4)', alignItems: 'end' }}>
-            {/* Search */}
-            <div style={{ gridColumn: 'span 5' }} className="calc-row">
-              <label htmlFor="enquiry-search">Search Enquiries</label>
-              <Input
-                type="text"
-                id="enquiry-search"
-                className="form-input"
-                placeholder="Search by title, customer name, mobile..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            {/* Status Filter */}
-            <div style={{ gridColumn: 'span 3' }} className="calc-row">
+        {/* Toolbar: Search + Filter Icon + Sort Icon */}
+        <AdminToolbar
+          searchId="enquiry-search"
+          searchLabel="Search Enquiries"
+          searchPlaceholder="Search by title, customer name, mobile..."
+          searchValue={search}
+          onSearchChange={(e) => setSearch(e.target.value)}
+          activeFilterCount={
+            (statusFilter !== 'all' ? 1 : 0) +
+            (dateFilter !== 'all' ? 1 : 0)
+          }
+          sortValue={sortField}
+          onSortChange={(e) => setSortField(e.target.value)}
+          sortOptions={[
+            { value: 'date-desc', label: 'Newest First' },
+            { value: 'date-asc', label: 'Oldest First' },
+            { value: 'name', label: 'Customer Name' },
+            { value: 'title', label: 'Project Title' },
+          ]}
+        >
+          {/* Filter panel content */}
+          <div className="admin-filter-panel-grid">
+            <div className="calc-row">
               <label htmlFor="enquiry-status">Status</label>
-              <select
-                id="enquiry-status"
-                className="form-select"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
+              <select id="enquiry-status" className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                 <option value="all">All Statuses</option>
                 <option value="new">New</option>
                 <option value="contacted">Contacted</option>
@@ -262,40 +263,17 @@ export const ManageEnquiries = () => {
                 <option value="closed">Closed</option>
               </select>
             </div>
-
-            {/* Date Filter */}
-            <div style={{ gridColumn: 'span 2' }} className="calc-row">
-              <label htmlFor="enquiry-date">Date range</label>
-              <select
-                id="enquiry-date"
-                className="form-select"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-              >
+            <div className="calc-row">
+              <label htmlFor="enquiry-date">Date Range</label>
+              <select id="enquiry-date" className="form-select" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
                 <option value="all">All Dates</option>
                 <option value="today">Today</option>
                 <option value="7days">Last 7 Days</option>
                 <option value="30days">Last 30 Days</option>
               </select>
             </div>
-
-            {/* Sort Selection */}
-            <div style={{ gridColumn: 'span 2' }} className="calc-row">
-              <label htmlFor="enquiry-sort">Sort By</label>
-              <select
-                id="enquiry-sort"
-                className="form-select"
-                value={sortField}
-                onChange={(e) => setSortField(e.target.value)}
-              >
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-                <option value="name">Customer Name</option>
-                <option value="title">Project Title</option>
-              </select>
-            </div>
           </div>
-        </div>
+        </AdminToolbar>
 
         {/* Bulk Actions Banner */}
         {selectedIds.length > 0 && (
@@ -351,25 +329,25 @@ export const ManageEnquiries = () => {
         {/* Tabular Visual Grid */}
         {sortedList.length > 0 ? (
           <div className="card-glass" style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', width: '40px' }}>
+                  <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
                     <input
                       type="checkbox"
+                      className="tbl-checkbox"
                       checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
                       onChange={handleSelectAll}
-                      style={{ cursor: 'pointer' }}
                     />
                   </th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Project</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Customer Name</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Mobile Number</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Price</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Status</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Created Date</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Updated Date</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)', textAlign: 'right' }}>Actions</th>
+                  <th className="tbl-th" style={{ minWidth: '150px', maxWidth: '210px' }}>Project</th>
+                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '150px' }}>Customer Name</th>
+                  <th className="tbl-th" style={{ minWidth: '100px', maxWidth: '130px' }}>Mobile</th>
+                  <th className="tbl-th" style={{ minWidth: '80px',  maxWidth: '100px' }}>Price</th>
+                  <th className="tbl-th" style={{ minWidth: '140px', maxWidth: '160px' }}>Status</th>
+                  <th className="tbl-th" style={{ minWidth: '130px', maxWidth: '160px' }}>Created Date</th>
+                  <th className="tbl-th" style={{ minWidth: '130px', maxWidth: '160px' }}>Updated Date</th>
+                  <th className="tbl-th" style={{ minWidth: '170px', maxWidth: '190px', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -381,27 +359,27 @@ export const ManageEnquiries = () => {
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.015)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', width: '40px' }}>
+                      <td className="tbl-td tbl-cb-cell">
                         <input
                           type="checkbox"
+                          className="tbl-checkbox"
                           checked={selectedIds.includes(enq.id)}
                           onChange={() => handleSelectOne(enq.id)}
-                          style={{ cursor: 'pointer' }}
                         />
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: '#fff' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '600', color: '#fff' }}>
                         {enq.projectTitle}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px' }}>
                         {enq.name}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '100px', maxWidth: '130px' }}>
                         {enq.mobile}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '80px', maxWidth: '100px', fontWeight: '600', color: 'var(--text-main)' }}>
                         {enq.price ? `₹${enq.price}` : '-'}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
+                      <td className="tbl-td" style={{ minWidth: '140px', maxWidth: '160px' }}>
                         <select
                           className="form-select"
                           style={{
@@ -423,13 +401,13 @@ export const ManageEnquiries = () => {
                           <option value="closed" style={{ color: '#000' }}>🟢 Closed</option>
                         </select>
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', color: 'var(--text-muted)' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
                         {formatDate(enq.createdAt)}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', color: 'var(--text-muted)' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
                         {formatDate(enq.updatedAt)}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', textAlign: 'right' }}>
+                      <td className="tbl-td" style={{ minWidth: '170px', maxWidth: '190px', textAlign: 'right' }}>
                         <div style={{ display: 'inline-flex', gap: 'var(--space-1)' }}>
                           <Button
                             type="button"

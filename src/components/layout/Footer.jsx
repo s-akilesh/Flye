@@ -1,28 +1,43 @@
 import React from 'react';
+import { useSettings } from '../../hooks/useSettings';
+import { ContactChips } from '../sections/ContactChips';
 
 export const Footer = () => {
+  const { settings } = useSettings();
+
   return (
     <footer className="home-footer">
       <div className="home-footer-links">
-        <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="contact-chip whatsapp">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.45 5.467 0 9.911-4.441 9.913-9.913.002-2.651-1.02-5.143-2.878-7.001C16.444 1.83 13.955.808 11.312.808c-5.474 0-9.915 4.444-9.917 9.916-.002 1.554.43 3.076 1.25 4.43l-.973 3.548 3.642-.956-.268-.152zm11.31-7.142c-.3-.149-1.776-.876-2.052-.976-.275-.1-.476-.149-.675.15-.199.299-.773.976-.949 1.176-.175.199-.35.224-.65.075-.3-.15-1.265-.466-2.41-1.487-.89-.794-1.775-1.665-2.074-.175-.299-.019-.461.13-.61.135-.133.3-.349.45-.523.15-.174.2-.299.3-.499.1-.199.05-.374-.025-.523-.075-.149-.675-1.627-.925-2.226-.243-.584-.488-.507-.674-.517-.175-.01-.375-.01-.575-.01-.2 0-.526.075-.801.374-.275.299-1.05.1023-1.05 2.5 0 2.396 1.747 4.708 1.986 5.032.25.324 3.441 5.253 8.337 7.371 1.164.502 2.074.802 2.784 1.026 1.169.372 2.235.319 3.077.193.938-.14 1.776-.723 2.027-1.396.25-.674.25-1.246.175-1.396-.075-.149-.275-.249-.575-.398z"/></svg>
-          WhatsApp
-        </a>
-        <a href="tel:+1234567890" className="contact-chip">
-          <svg viewBox="0 0 24 24"><path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.4-5.1-3.8-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1-.3-1.1-.5-2.3-.5-3.5 0-.8-.7-1.5-1.5-1.5H4c-.8 0-1.5.7-1.5 1.5 0 10.2 8.3 18.5 18.5 18.5.8 0 1.5-.7 1.5-1.5v-3.8c0-.8-.7-1.5-1.5-1.5z"/></svg>
-          Call Us
-        </a>
-        <a href="mailto:info@flyenlabs.com" className="contact-chip">
-          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-          info@flyenlabs.com
-        </a>
-        <div className="contact-chip">
-          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-          Lab Sector 7, Tech City
-        </div>
+        <ContactChips />
       </div>
+
+      {(settings.instagramUrl || settings.youtubeUrl || settings.linkedinUrl || settings.facebookUrl) && (
+        <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center', margin: 'var(--space-4) 0' }}>
+          {settings.instagramUrl && (
+            <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className="contact-chip" style={{ padding: '8px' }}>
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+          )}
+          {settings.youtubeUrl && (
+            <a href={settings.youtubeUrl} target="_blank" rel="noopener noreferrer" className="contact-chip" style={{ padding: '8px' }}>
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+            </a>
+          )}
+          {settings.linkedinUrl && (
+            <a href={settings.linkedinUrl} target="_blank" rel="noopener noreferrer" className="contact-chip" style={{ padding: '8px' }}>
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            </a>
+          )}
+          {settings.facebookUrl && (
+            <a href={settings.facebookUrl} target="_blank" rel="noopener noreferrer" className="contact-chip" style={{ padding: '8px' }}>
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </a>
+          )}
+        </div>
+      )}
+
       <div className="home-footer-copyright">
-        &copy; {new Date().getFullYear()} Flyen Labs. All rights reserved.
+        &copy; {new Date().getFullYear()} {settings.companyName}. All rights reserved.
       </div>
     </footer>
   );

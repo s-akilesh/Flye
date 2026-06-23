@@ -9,12 +9,14 @@ import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
 import { useEnquiries } from '../hooks/useEnquiries';
+import { useSettings } from '../hooks/useSettings';
 
 export const ProjectDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { getProjectBySlug, getRelatedProjects, isLoading } = useProjects();
   const { addEnquiry } = useEnquiries();
+  const { settings } = useSettings();
 
   const project = getProjectBySlug(slug);
 
@@ -447,7 +449,7 @@ export const ProjectDetails = () => {
                 Contact Expert
               </Button>
               <a
-                href={`https://wa.me/${project.whatsappNumber || '1234567890'}`}
+                href={`https://wa.me/${settings.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-chip whatsapp width-100 justify-center"

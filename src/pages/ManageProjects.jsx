@@ -6,6 +6,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
+import { AdminToolbar } from '../components/ui/AdminToolbar';
 import { ROUTES } from '../constants/routes';
 import { CATEGORY_LABELS } from '../constants/categories';
 
@@ -166,82 +167,70 @@ export const ManageProjects = () => {
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        {/* KPI Cards */}
-        <div className="grid-12" style={{ gap: 'var(--space-4)' }}>
-          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+        {/* KPI Cards — 2-column grid */}
+        <div className="admin-kpi-grid">
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Projects</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-blue)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.length}</h3>
           </Card>
-          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Active Projects</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-emerald)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.filter(p => p.status === 'active').length}</h3>
           </Card>
-          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Draft Projects</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-violet)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.filter(p => p.status === 'draft').length}</h3>
           </Card>
-          <Card style={{ gridColumn: 'span 3', padding: 'var(--space-4)' }}>
+          <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Featured Projects</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-amber)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.filter(p => p.featured).length}</h3>
           </Card>
         </div>
-        {/* Toolbar & Filters */}
-        <div className="card-glass" style={{ padding: 'var(--space-4)' }}>
-          <div className="grid-12" style={{ gap: 'var(--space-4)', alignItems: 'end' }}>
-            {/* Search */}
-            <div style={{ gridColumn: 'span 4' }} className="calc-row">
-              <label htmlFor="admin-search">Search Projects</label>
-              <Input
-                type="text"
-                id="admin-search"
-                className="form-input"
-                placeholder="Title, technology, tags..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
 
-            {/* Category Filter */}
-            <div style={{ gridColumn: 'span 2' }} className="calc-row">
+        {/* Toolbar: Search + Filter Icon + Sort Icon */}
+        <AdminToolbar
+          searchId="admin-search"
+          searchLabel="Search Projects"
+          searchPlaceholder="Title, technology, tags..."
+          searchValue={search}
+          onSearchChange={(e) => setSearch(e.target.value)}
+          activeFilterCount={
+            (categoryFilter !== 'all' ? 1 : 0) +
+            (levelFilter !== 'all' ? 1 : 0) +
+            (statusFilter !== 'all' ? 1 : 0)
+          }
+          sortValue={sortField}
+          onSortChange={(e) => setSortField(e.target.value)}
+          sortOptions={[
+            { value: 'title', label: 'Title (A–Z)' },
+            { value: 'price-low', label: 'Price: Low to High' },
+            { value: 'price-high', label: 'Price: High to Low' },
+            { value: 'level', label: 'Project Level' },
+          ]}
+        >
+          {/* Filter panel content */}
+          <div className="admin-filter-panel-grid">
+            <div className="calc-row">
               <label htmlFor="admin-cat">Category</label>
-              <select
-                id="admin-cat"
-                className="form-select"
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-              >
+              <select id="admin-cat" className="form-select" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
                 <option value="all">All Categories</option>
                 {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
                 ))}
               </select>
             </div>
-
-            {/* Level Filter */}
-            <div style={{ gridColumn: 'span 2' }} className="calc-row">
+            <div className="calc-row">
               <label htmlFor="admin-level">Level</label>
-              <select
-                id="admin-level"
-                className="form-select"
-                value={levelFilter}
-                onChange={(e) => setLevelFilter(e.target.value)}
-              >
+              <select id="admin-level" className="form-select" value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}>
                 <option value="all">All Levels</option>
                 <option value="School">School</option>
                 <option value="Diploma">Diploma</option>
                 <option value="Engineering">Engineering</option>
               </select>
             </div>
-
-            {/* Status Filter */}
-            <div style={{ gridColumn: 'span 2' }} className="calc-row">
+            <div className="calc-row">
               <label htmlFor="admin-status">Status</label>
-              <select
-                id="admin-status"
-                className="form-select"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
+              <select id="admin-status" className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                 <option value="all">All Statuses</option>
                 <option value="active">Active</option>
                 <option value="draft">Draft</option>
@@ -249,24 +238,8 @@ export const ManageProjects = () => {
                 <option value="archived">Archived</option>
               </select>
             </div>
-
-            {/* Sort Selection */}
-            <div style={{ gridColumn: 'span 2' }} className="calc-row">
-              <label htmlFor="admin-sort">Sort By</label>
-              <select
-                id="admin-sort"
-                className="form-select"
-                value={sortField}
-                onChange={(e) => setSortField(e.target.value)}
-              >
-                <option value="title">Title</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="level">Project Level</option>
-              </select>
-            </div>
           </div>
-        </div>
+        </AdminToolbar>
 
         {/* Tabular Visual Grid */}
         {/* Bulk Actions Banner */}
@@ -311,26 +284,26 @@ export const ManageProjects = () => {
           </div>
         ) : sortedList.length > 0 ? (
           <div className="card-glass" style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', width: '40px' }}>
+                  <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
                     <input
                       type="checkbox"
+                      className="tbl-checkbox"
                       checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
                       onChange={handleSelectAll}
-                      style={{ cursor: 'pointer' }}
                     />
                   </th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Project Name</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Category</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Project Level</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Difficulty</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Price</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Status</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Featured</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)' }}>Last Updated</th>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--accent-blue)', textAlign: 'right' }}>Actions</th>
+                  <th className="tbl-th" style={{ minWidth: '160px', maxWidth: '220px' }}>Project Name</th>
+                  <th className="tbl-th" style={{ minWidth: '100px', maxWidth: '140px' }}>Category</th>
+                  <th className="tbl-th" style={{ minWidth: '100px', maxWidth: '130px' }}>Level</th>
+                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '140px' }}>Difficulty</th>
+                  <th className="tbl-th" style={{ minWidth: '80px',  maxWidth: '100px' }}>Price</th>
+                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '140px' }}>Status</th>
+                  <th className="tbl-th" style={{ minWidth: '70px',  maxWidth: '90px'  }}>Featured</th>
+                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '140px' }}>Last Updated</th>
+                  <th className="tbl-th" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -349,25 +322,25 @@ export const ManageProjects = () => {
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.015)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', width: '40px' }}>
+                      <td className="tbl-td tbl-cb-cell">
                         <input
                           type="checkbox"
+                          className="tbl-checkbox"
                           checked={selectedIds.includes(proj.id)}
                           onChange={() => handleSelectOne(proj.id)}
-                          style={{ cursor: 'pointer' }}
                         />
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
-                        <div style={{ fontWeight: '600', color: '#fff', fontSize: '13px' }}>{proj.title}</div>
-                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>slug: {proj.slug}</div>
+                      <td className="tbl-td" style={{ minWidth: '160px', maxWidth: '220px' }}>
+                        <div className="tbl-line-clamp-1" style={{ fontWeight: '600', color: '#fff', fontSize: '13px' }}>{proj.title}</div>
+                        <div className="tbl-line-clamp-1" style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>slug: {proj.slug}</div>
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', textTransform: 'capitalize' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '100px', maxWidth: '140px', textTransform: 'capitalize' }}>
                         {proj.category}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '100px', maxWidth: '130px' }}>
                         {proj.projectLevel}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px' }}>
+                      <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '140px' }}>
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                           <span
                             style={{
@@ -381,10 +354,10 @@ export const ManageProjects = () => {
                           {proj.difficulty.toUpperCase()}
                         </span>
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '80px', maxWidth: '100px', fontWeight: '600', color: 'var(--text-main)' }}>
                         ₹{proj.price}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
+                      <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '140px' }}>
                         <span
                           style={{
                             display: 'inline-flex',
@@ -406,17 +379,17 @@ export const ManageProjects = () => {
                           {proj.status === 'coming-soon' ? 'COMING SOON' : proj.status}
                         </span>
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px' }}>
+                      <td className="tbl-td" style={{ minWidth: '70px', maxWidth: '90px' }}>
                         {proj.featured ? (
                           <span style={{ color: 'var(--accent-amber)', fontWeight: '600' }}>★ Yes</span>
                         ) : (
                           <span style={{ color: 'var(--text-muted)' }}>No</span>
                         )}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', fontSize: '13px', color: 'var(--text-muted)' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '140px', color: 'var(--text-muted)' }}>
                         {proj.lastUpdated}
                       </td>
-                      <td style={{ padding: 'var(--space-3) var(--space-2)', textAlign: 'right' }}>
+                      <td className="tbl-td" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>
                         <div style={{ display: 'inline-flex', gap: 'var(--space-1)' }}>
                           <Button
                             type="button"

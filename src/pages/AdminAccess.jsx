@@ -5,9 +5,11 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
+import { useSettings } from '../hooks/useSettings';
 
 export const AdminAccess = () => {
   const navigate = useNavigate();
+  const { settings } = useSettings();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -23,7 +25,7 @@ export const AdminAccess = () => {
     setError('');
 
     // Authenticate password
-    if (password === 'admin123') {
+    if (password === settings.adminPassword) {
       localStorage.setItem('flyen_admin_access', 'true');
       // Dispatch storage event manually so the Header component detects it instantly
       window.dispatchEvent(new Event('storage'));

@@ -120,6 +120,18 @@ export const AddProject = () => {
     };
   }, []);
 
+  // Auto-scroll horizontal active tab stepper on mobile
+  useEffect(() => {
+    const activeTab = document.querySelector('.portal-form-navigation .nav-sec-btn.active');
+    if (activeTab) {
+      activeTab.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [activeSection]);
+
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -352,7 +364,7 @@ export const AddProject = () => {
             <p>Scaffold a project module and publish it to the catalog</p>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)}>
             Cancel
           </Button>
@@ -919,6 +931,19 @@ export const AddProject = () => {
             </div>
           </div>
         </form>
+      </div>
+
+      {/* Mobile Sticky Action Bar */}
+      <div className="mobile-sticky-actions">
+        <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} className="btn-mobile-action">
+          Cancel
+        </Button>
+        <Button variant="secondary" onClick={() => handleSaveProject('draft')} className="btn-mobile-action">
+          Draft
+        </Button>
+        <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-mobile-action btn-submit-calc">
+          Save Project
+        </Button>
       </div>
     </motion.section>
   );
