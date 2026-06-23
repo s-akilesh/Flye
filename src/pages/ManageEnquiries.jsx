@@ -286,7 +286,6 @@ export const ManageEnquiries = () => {
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🔴 Rejected</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-crimson, #ef4444)', margin: 'var(--space-2) 0 0 0' }}>{rejectedCount}</h3>
           </Card>
-          </Card>
         </div>
 
         {/* Toolbar: Search + Filter Icon + Sort Icon */}
