@@ -11,5 +11,6 @@ export const ROUTES = {
   ADMIN_ENQUIRIES: '/admin/enquiries',
   ADMIN_SETTINGS: '/admin/settings',
   ADMIN_ACCESS: '/admin-access',
-  ADMIN_DASHBOARD: '/admin'
+  ADMIN_DASHBOARD: '/admin',
+  ADMIN_LOGIN: '/admin-login'
 };

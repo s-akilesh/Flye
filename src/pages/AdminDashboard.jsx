@@ -4,15 +4,19 @@ import { motion } from 'framer-motion';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { ROUTES } from '../constants/routes';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem('flyen_admin_access');
-    // Dispatch storage event so the Header component detects it instantly
-    window.dispatchEvent(new Event('storage'));
-    navigate(ROUTES.ADMIN_ACCESS);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate(ROUTES.ADMIN_LOGIN || '/admin-login');
+    } catch (e) {
+      console.error('Logout failed:', e);
+    }
   };
 
   return (

@@ -1,33 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
 import { Button } from '../ui/Button';
 import { useSettings } from '../../hooks/useSettings';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 export const Header = () => {
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const [isAdmin, setIsAdmin] = useState(localStorage.getItem('flyen_admin_access') === 'true');
+  const { user, logout } = useAuth();
 
-  useEffect(() => {
-    const checkAuth = () => {
-      setIsAdmin(localStorage.getItem('flyen_admin_access') === 'true');
-    };
-
-    window.addEventListener('storage', checkAuth);
-    // Also periodically poll locally as standard React router navigation won't trigger storage event within the same tab
-    const interval = setInterval(checkAuth, 1000);
-
-    return () => {
-      window.removeEventListener('storage', checkAuth);
-      clearInterval(interval);
-    };
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('flyen_admin_access');
-    setIsAdmin(false);
-    navigate(ROUTES.ADMIN_ACCESS);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate(ROUTES.ADMIN_LOGIN || '/admin-login');
+    } catch (e) {
+      console.error('Logout failed:', e);
+    }
   };
 
   return (
@@ -40,11 +29,11 @@ export const Header = () => {
       </div>
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-        <Link to={isAdmin ? ROUTES.ADMIN_DASHBOARD : ROUTES.ADMIN_ACCESS} className="btn-header" id="header-admin-btn">
+        <Link to={user ? ROUTES.ADMIN_DASHBOARD : (ROUTES.ADMIN_LOGIN || '/admin-login')} className="btn-header" id="header-admin-btn">
           Admin
         </Link>
         
-        {isAdmin && (
+        {user && (
           <Link to={ROUTES.ADMIN_SETTINGS} className="btn-header" id="header-settings-btn" style={{ padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Settings">
             <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3"></circle>
@@ -57,7 +46,7 @@ export const Header = () => {
           Contact
         </Link>
 
-        {isAdmin && (
+        {user && (
           <Button
             type="button"
             variant="ghost"

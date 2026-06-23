@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { ROUTES } from '../constants/routes';
 import { MainLayout } from '../components/layout/MainLayout';
@@ -13,10 +13,11 @@ import { ManageProjects } from '../pages/ManageProjects';
 import { AddProject } from '../pages/AddProject';
 import { EditProject } from '../pages/EditProject';
 import { ManageEnquiries } from '../pages/ManageEnquiries';
-import { AdminAccess } from '../pages/AdminAccess';
 import { AdminDashboard } from '../pages/AdminDashboard';
 import { AdminSettings } from '../pages/AdminSettings';
-import { ProtectedRoute } from '../components/layout/ProtectedRoute';
+import { ProtectedRoute } from '../components/auth/ProtectedRoute.jsx';
+import { AuthProvider } from '../context/AuthContext.jsx';
+import { AdminLogin } from '../pages/AdminLogin.jsx';
 import { MaintenancePage } from '../pages/MaintenancePage';
 import { useSettings } from '../hooks/useSettings';
 
@@ -35,33 +36,38 @@ const MaintenanceGate = ({ children }) => {
 export const AppRouter = () => {
   return (
     <BrowserRouter>
-      <MainLayout>
-        <MaintenanceGate>
-          <AnimatePresence mode="wait">
-            <Routes>
-              <Route path={ROUTES.HOME} element={<Home />} />
-              <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
-              <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
-              <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
-              <Route path={ROUTES.VIDEOS} element={<LearningHub />} />
-              <Route path={ROUTES.CONTACT} element={<Contact />} />
-              
-              {/* Public Admin Entry */}
-              <Route path={ROUTES.ADMIN_ACCESS} element={<AdminAccess />} />
+      <AuthProvider>
+        <MainLayout>
+          <MaintenanceGate>
+            <AnimatePresence mode="wait">
+              <Routes>
+                <Route path={ROUTES.HOME} element={<Home />} />
+                <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
+                <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
+                <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
+                <Route path={ROUTES.VIDEOS} element={<LearningHub />} />
+                <Route path={ROUTES.CONTACT} element={<Contact />} />
+                
+                {/* Redirect Legacy Admin Access to Admin Login */}
+                <Route path={ROUTES.ADMIN_ACCESS} element={<Navigate to={ROUTES.ADMIN_LOGIN || '/admin-login'} replace />} />
+                
+                {/* Admin Login Route */}
+                <Route path={ROUTES.ADMIN_LOGIN || '/admin-login'} element={<AdminLogin />} />
 
-              {/* Protected Admin Console Routes */}
-              <Route path={ROUTES.ADMIN_DASHBOARD} element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-              <Route path={ROUTES.ADMIN_PROJECTS} element={<ProtectedRoute><ManageProjects /></ProtectedRoute>} />
-              <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<ProtectedRoute><AddProject /></ProtectedRoute>} />
-              <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<ProtectedRoute><EditProject /></ProtectedRoute>} />
-              <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ProtectedRoute><ManageEnquiries /></ProtectedRoute>} />
-              <Route path={ROUTES.ADMIN_SETTINGS} element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
-              
-              <Route path="*" element={<Home />} />
-            </Routes>
-          </AnimatePresence>
-        </MaintenanceGate>
-      </MainLayout>
+                {/* Protected Admin Console Routes */}
+                <Route path={ROUTES.ADMIN_DASHBOARD} element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+                <Route path={ROUTES.ADMIN_PROJECTS} element={<ProtectedRoute><ManageProjects /></ProtectedRoute>} />
+                <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<ProtectedRoute><AddProject /></ProtectedRoute>} />
+                <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<ProtectedRoute><EditProject /></ProtectedRoute>} />
+                <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ProtectedRoute><ManageEnquiries /></ProtectedRoute>} />
+                <Route path={ROUTES.ADMIN_SETTINGS} element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
+                
+                <Route path="*" element={<Home />} />
+              </Routes>
+            </AnimatePresence>
+          </MaintenanceGate>
+        </MainLayout>
+      </AuthProvider>
     </BrowserRouter>
   );
 };
