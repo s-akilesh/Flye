@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEnquiries } from '../hooks/useEnquiries';
@@ -9,9 +9,28 @@ import { Input } from '../components/ui/Input';
 import { AdminToolbar } from '../components/ui/AdminToolbar';
 import { ROUTES } from '../constants/routes';
 
+const Toast = ({ message, type }) => {
+  if (!message) return null;
+  const colors = {
+    success: { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', text: 'var(--accent-emerald)' },
+    error: { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.2)', text: 'var(--accent-crimson, #ef4444)' },
+    info: { bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.2)', text: 'var(--accent-violet)' },
+  };
+  const c = colors[type] || colors.info;
+  return (
+    <div style={{
+      padding: 'var(--space-3) var(--space-4)', borderRadius: '8px',
+      background: c.bg, border: `1px solid ${c.border}`, color: c.text,
+      fontSize: '13px', fontWeight: '600', marginBottom: 'var(--space-4)'
+    }}>
+      {message}
+    </div>
+  );
+};
+
 export const ManageEnquiries = () => {
   const navigate = useNavigate();
-  const { enquiries, updateEnquiry, deleteEnquiry } = useEnquiries();
+  const { enquiries, updateEnquiry, deleteEnquiry, isLoading, isProcessing } = useEnquiries();
 
   // Search & Filter State
   const [search, setSearch] = useState('');
@@ -33,9 +52,21 @@ export const ManageEnquiries = () => {
   const [editStatus, setEditStatus] = useState('new');
   const [editNotes, setEditNotes] = useState('');
 
+  // Toast State
+  const [toast, setToast] = useState({ message: '', type: 'success' });
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast({ message: '', type: 'success' }), 3500);
+  };
+
   // Status Change handlers (inline table dropdown)
-  const handleStatusChange = (id, newStatus) => {
-    updateEnquiry(id, { status: newStatus });
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await updateEnquiry(id, { status: newStatus });
+      showToast(`✅ Status updated to: ${statusLabels[newStatus] || newStatus}`, 'success');
+    } catch (e) {
+      showToast("❌ Failed to update status.", "error");
+    }
   };
 
   // Open Edit modal helper
@@ -46,22 +77,31 @@ export const ManageEnquiries = () => {
   };
 
   // Save changes inside Edit modal
-  const handleSaveEditChanges = () => {
+  const handleSaveEditChanges = async () => {
     if (!enquiryToEdit) return;
-    updateEnquiry(enquiryToEdit.id, {
-      status: editStatus,
-      notes: editNotes
-    });
-    setEnquiryToEdit(null);
-    alert('Enquiry details updated successfully.');
+    try {
+      await updateEnquiry(enquiryToEdit.id, {
+        status: editStatus,
+        notes: editNotes
+      });
+      setEnquiryToEdit(null);
+      showToast('✅ Enquiry details updated successfully.', 'success');
+    } catch (e) {
+      showToast("❌ Failed to update enquiry.", "error");
+    }
   };
 
   // Delete Action Handler
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (!enquiryToDelete) return;
-    deleteEnquiry(enquiryToDelete.id);
-    setSelectedIds((prev) => prev.filter((id) => id !== enquiryToDelete.id));
-    setEnquiryToDelete(null);
+    try {
+      await deleteEnquiry(enquiryToDelete.id);
+      setSelectedIds((prev) => prev.filter((id) => id !== enquiryToDelete.id));
+      setEnquiryToDelete(null);
+      showToast('✅ Enquiry deleted successfully.', 'success');
+    } catch (e) {
+      showToast("❌ Failed to delete enquiry.", "error");
+    }
   };
 
   // Bulk selection handlers
@@ -79,9 +119,9 @@ export const ManageEnquiries = () => {
     );
   };
 
-  const handleBulkAction = (action) => {
+  const handleBulkAction = async (action) => {
     if (selectedIds.length === 0) {
-      alert("No enquiries selected.");
+      showToast("⚠️ No enquiries selected.", "info");
       return;
     }
 
@@ -89,18 +129,27 @@ export const ManageEnquiries = () => {
       const confirmDelete = window.confirm(`Are you sure you want to permanently delete the ${selectedIds.length} selected enquiry/enquiries?`);
       if (!confirmDelete) return;
 
-      selectedIds.forEach((id) => {
-        deleteEnquiry(id);
-      });
-      alert("Selected enquiries deleted successfully.");
+      try {
+        for (const id of selectedIds) {
+          await deleteEnquiry(id);
+        }
+        showToast("✅ Selected enquiries deleted successfully.", "success");
+        setSelectedIds([]);
+      } catch (e) {
+        showToast("❌ Failed to delete some enquiries.", "error");
+      }
     } else {
       // status updates
-      selectedIds.forEach((id) => {
-        updateEnquiry(id, { status: action });
-      });
-      alert(`Selected enquiries status updated to: ${action}`);
+      try {
+        for (const id of selectedIds) {
+          await updateEnquiry(id, { status: action });
+        }
+        showToast(`✅ Selected enquiries status updated to: ${statusLabels[action] || action}`, "success");
+        setSelectedIds([]);
+      } catch (e) {
+        showToast("❌ Failed to update status for some enquiries.", "error");
+      }
     }
-    setSelectedIds([]);
   };
 
   // Filter Logic
@@ -159,21 +208,24 @@ export const ManageEnquiries = () => {
   const totalEnquiries = enquiries.length;
   const newCount = enquiries.filter((e) => e.status === 'new' || !e.status).length;
   const contactedCount = enquiries.filter((e) => e.status === 'contacted').length;
-  const qualifiedCount = enquiries.filter((e) => e.status === 'qualified').length;
-  const closedCount = enquiries.filter((e) => e.status === 'closed').length;
+  const quotedCount = enquiries.filter((e) => e.status === 'quoted').length;
+  const completedCount = enquiries.filter((e) => e.status === 'completed').length;
+  const rejectedCount = enquiries.filter((e) => e.status === 'rejected').length;
 
   const statusColors = {
     new: '#eab308',
     contacted: 'var(--accent-blue)',
-    qualified: 'var(--accent-violet)',
-    closed: 'var(--accent-emerald)'
+    quoted: 'var(--accent-violet)',
+    completed: 'var(--accent-emerald)',
+    rejected: 'var(--accent-crimson, #ef4444)'
   };
 
   const statusLabels = {
     new: '🟡 New',
     contacted: '🔵 Contacted',
-    qualified: '🟣 Qualified',
-    closed: '🟢 Closed'
+    quoted: '🟣 Quoted',
+    completed: '🟢 Completed',
+    rejected: '🔴 Rejected'
   };
 
   const formatDate = (isoStr) => {
@@ -207,6 +259,7 @@ export const ManageEnquiries = () => {
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        <Toast message={toast.message} type={toast.type} />
         {/* KPI Cards — 2-column grid */}
         <div className="admin-kpi-grid">
           <Card style={{ padding: 'var(--space-4)' }}>
@@ -215,19 +268,24 @@ export const ManageEnquiries = () => {
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟡 New Enquiries</span>
-            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--color-warning)', margin: 'var(--space-2) 0 0 0' }}>{newCount}</h3>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: '#eab308', margin: 'var(--space-2) 0 0 0' }}>{newCount}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🔵 Contacted</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-blue)', margin: 'var(--space-2) 0 0 0' }}>{contactedCount}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟣 Qualified</span>
-            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-violet)', margin: 'var(--space-2) 0 0 0' }}>{qualifiedCount}</h3>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟣 Quoted</span>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-violet)', margin: 'var(--space-2) 0 0 0' }}>{quotedCount}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟢 Closed</span>
-            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-emerald)', margin: 'var(--space-2) 0 0 0' }}>{closedCount}</h3>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟢 Completed</span>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-emerald)', margin: 'var(--space-2) 0 0 0' }}>{completedCount}</h3>
+          </Card>
+          <Card style={{ padding: 'var(--space-4)' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🔴 Rejected</span>
+            <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-crimson, #ef4444)', margin: 'var(--space-2) 0 0 0' }}>{rejectedCount}</h3>
+          </Card>
           </Card>
         </div>
 
@@ -259,8 +317,9 @@ export const ManageEnquiries = () => {
                 <option value="all">All Statuses</option>
                 <option value="new">New</option>
                 <option value="contacted">Contacted</option>
-                <option value="qualified">Qualified</option>
-                <option value="closed">Closed</option>
+                <option value="quoted">Quoted</option>
+                <option value="completed">Completed</option>
+                <option value="rejected">Rejected</option>
               </select>
             </div>
             <div className="calc-row">
@@ -287,6 +346,7 @@ export const ManageEnquiries = () => {
                 variant="secondary"
                 onClick={() => handleBulkAction('new')}
                 style={{ padding: '6px 12px', fontSize: '12px' }}
+                disabled={isProcessing}
               >
                 🟡 Mark New
               </Button>
@@ -295,30 +355,43 @@ export const ManageEnquiries = () => {
                 variant="secondary"
                 onClick={() => handleBulkAction('contacted')}
                 style={{ padding: '6px 12px', fontSize: '12px' }}
+                disabled={isProcessing}
               >
                 🔵 Mark Contacted
               </Button>
               <Button
                 type="button"
                 variant="secondary"
-                onClick={() => handleBulkAction('qualified')}
+                onClick={() => handleBulkAction('quoted')}
                 style={{ padding: '6px 12px', fontSize: '12px' }}
+                disabled={isProcessing}
               >
-                🟣 Mark Qualified
+                🟣 Mark Quoted
               </Button>
               <Button
                 type="button"
                 variant="secondary"
-                onClick={() => handleBulkAction('closed')}
+                onClick={() => handleBulkAction('completed')}
                 style={{ padding: '6px 12px', fontSize: '12px' }}
+                disabled={isProcessing}
               >
-                🟢 Mark Closed
+                🟢 Mark Completed
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handleBulkAction('rejected')}
+                style={{ padding: '6px 12px', fontSize: '12px' }}
+                disabled={isProcessing}
+              >
+                🔴 Mark Rejected
               </Button>
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => handleBulkAction('delete')}
                 style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                disabled={isProcessing}
               >
                 🗑 Delete
               </Button>
@@ -327,7 +400,11 @@ export const ManageEnquiries = () => {
         )}
 
         {/* Tabular Visual Grid */}
-        {sortedList.length > 0 ? (
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
+            <h3>Loading database records...</h3>
+          </div>
+        ) : sortedList.length > 0 ? (
           <div className="card-glass" style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
             <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
@@ -359,7 +436,7 @@ export const ManageEnquiries = () => {
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.015)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <td className="tbl-td tbl-cb-cell">
+                      <td className="tbl-td" style={{ width: '36px', minWidth: '36px' }}>
                         <input
                           type="checkbox"
                           className="tbl-checkbox"
@@ -367,16 +444,16 @@ export const ManageEnquiries = () => {
                           onChange={() => handleSelectOne(enq.id)}
                         />
                       </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '600', color: '#fff' }}>
-                        {enq.projectTitle}
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '500', color: 'var(--accent-blue)' }}>
+                        {enq.projectTitle || 'General Consultation'}
                       </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px' }}>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px', color: '#fff' }}>
                         {enq.name}
                       </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '100px', maxWidth: '130px' }}>
+                      <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '130px', color: 'var(--text-muted)' }}>
                         {enq.mobile}
                       </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '80px', maxWidth: '100px', fontWeight: '600', color: 'var(--text-main)' }}>
+                      <td className="tbl-td" style={{ minWidth: '80px',  maxWidth: '100px', color: 'var(--accent-emerald)', fontWeight: '600' }}>
                         {enq.price ? `₹${enq.price}` : '-'}
                       </td>
                       <td className="tbl-td" style={{ minWidth: '140px', maxWidth: '160px' }}>
@@ -394,11 +471,13 @@ export const ManageEnquiries = () => {
                           }}
                           value={enq.status || 'new'}
                           onChange={(e) => handleStatusChange(enq.id, e.target.value)}
+                          disabled={isProcessing}
                         >
                           <option value="new" style={{ color: '#000' }}>🟡 New</option>
                           <option value="contacted" style={{ color: '#000' }}>🔵 Contacted</option>
-                          <option value="qualified" style={{ color: '#000' }}>🟣 Qualified</option>
-                          <option value="closed" style={{ color: '#000' }}>🟢 Closed</option>
+                          <option value="quoted" style={{ color: '#000' }}>🟣 Quoted</option>
+                          <option value="completed" style={{ color: '#000' }}>🟢 Completed</option>
+                          <option value="rejected" style={{ color: '#000' }}>🔴 Rejected</option>
                         </select>
                       </td>
                       <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
@@ -414,6 +493,7 @@ export const ManageEnquiries = () => {
                             variant="ghost"
                             onClick={() => setActiveEnquiry(enq)}
                             style={{ padding: '4px 8px', fontSize: '12px' }}
+                            disabled={isProcessing}
                           >
                             View
                           </Button>
@@ -422,6 +502,7 @@ export const ManageEnquiries = () => {
                             variant="secondary"
                             onClick={() => handleOpenEditModal(enq)}
                             style={{ padding: '4px 8px', fontSize: '12px' }}
+                            disabled={isProcessing}
                           >
                             Edit
                           </Button>
@@ -430,6 +511,7 @@ export const ManageEnquiries = () => {
                             variant="ghost"
                             onClick={() => setEnquiryToDelete(enq)}
                             style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent-crimson, #ef4444)' }}
+                            disabled={isProcessing}
                           >
                             Delete
                           </Button>
@@ -529,8 +611,9 @@ export const ManageEnquiries = () => {
               >
                 <option value="new">🟡 New</option>
                 <option value="contacted">🔵 Contacted</option>
-                <option value="qualified">🟣 Qualified</option>
-                <option value="closed">🟢 Closed</option>
+                <option value="quoted">🟣 Quoted</option>
+                <option value="completed">🟢 Completed</option>
+                <option value="rejected">🔴 Rejected</option>
               </select>
             </div>
 
@@ -544,13 +627,14 @@ export const ManageEnquiries = () => {
                 placeholder="Log customer updates, callback summaries..."
                 value={editNotes}
                 onChange={(e) => setEditNotes(e.target.value)}
+                disabled={isProcessing}
               />
             </div>
           </div>
         )}
 
         <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-5)' }}>
-          <Button variant="secondary" style={{ flex: 1 }} onClick={() => setEnquiryToEdit(null)}>
+          <Button variant="secondary" style={{ flex: 1 }} onClick={() => setEnquiryToEdit(null)} disabled={isProcessing}>
             Cancel
           </Button>
           <Button
@@ -558,31 +642,33 @@ export const ManageEnquiries = () => {
             className="btn-submit-calc"
             style={{ flex: 1 }}
             onClick={handleSaveEditChanges}
+            disabled={isProcessing}
           >
-            Save Changes
+            {isProcessing ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal isOpen={enquiryToDelete !== null} onClose={() => setEnquiryToDelete(null)}>
+      <Modal isOpen={enquiryToDelete !== null} onClose={() => !isProcessing && setEnquiryToDelete(null)}>
         <div className="modal-icon" style={{ borderColor: 'var(--accent-crimson, #ef4444)', color: 'var(--accent-crimson, #ef4444)' }}>
           ⚠️
         </div>
         <h4>DELETE ENQUIRY RECORD</h4>
         <p style={{ margin: 'var(--space-3) 0' }}>
           Are you sure you want to permanently delete the enquiry from <strong>{enquiryToDelete?.name}</strong>?
-          This operation deletes it from local storage and cannot be undone.
+          This operation deletes it from the database and cannot be undone.
         </p>
         <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center', marginTop: 'var(--space-4)' }}>
           <Button
             variant="ghost"
             onClick={handleDeleteConfirm}
             style={{ background: 'var(--accent-crimson, #ef4444)', color: 'white' }}
+            disabled={isProcessing}
           >
-            Confirm Delete
+            {isProcessing ? 'Deleting...' : 'Confirm Delete'}
           </Button>
-          <Button variant="secondary" onClick={() => setEnquiryToDelete(null)}>
+          <Button variant="secondary" onClick={() => setEnquiryToDelete(null)} disabled={isProcessing}>
             Cancel
           </Button>
         </div>

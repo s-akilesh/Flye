@@ -93,7 +93,7 @@ export const AdminDashboard = () => {
                 Manage Enquiries
               </h3>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: 'var(--space-2)', lineHeight: '1.5' }}>
-                Audit customer kit fabrication requests, manage lead statuses (New, Contacted, Qualified, Closed), log callback callback notes, and track request volumes.
+                Audit customer kit fabrication requests, manage lead statuses (New, Contacted, Quoted, Completed, Rejected), log callback callback notes, and track request volumes.
               </p>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

@@ -15,7 +15,7 @@ export const ProjectDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { getProjectBySlug, getRelatedProjects, isLoading } = useProjects();
-  const { addEnquiry } = useEnquiries();
+  const { addEnquiry, isProcessing } = useEnquiries();
   const { settings } = useSettings();
 
   const project = getProjectBySlug(slug);
@@ -592,14 +592,15 @@ export const ProjectDetails = () => {
             </div>
 
             <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
-              <Button variant="secondary" className="modal-btn" style={{ flex: 1 }} onClick={() => setTargetOrderProject(null)}>
+              <Button variant="secondary" onClick={() => setTargetOrderProject(null)} disabled={isProcessing}>
                 Cancel
               </Button>
               <Button
                 variant="primary"
                 className="modal-btn btn-submit-calc"
                 style={{ flex: 1 }}
-                onClick={() => {
+                disabled={isProcessing}
+                onClick={async () => {
                   if (!requestorName.trim()) {
                     alert('Please enter your name.');
                     return;
@@ -608,17 +609,21 @@ export const ProjectDetails = () => {
                     alert('Please enter a valid 10-digit contact number.');
                     return;
                   }
-                  addEnquiry({
-                    name: requestorName,
-                    mobile: contactNumber,
-                    projectId: targetOrderProject.id,
-                    projectTitle: targetOrderProject.title,
-                    price: targetOrderProject.price
-                  });
-                  setOrderStep('confirmed');
+                  try {
+                    await addEnquiry({
+                      name: requestorName,
+                      mobile: contactNumber,
+                      projectId: targetOrderProject.id,
+                      projectTitle: targetOrderProject.title,
+                      price: targetOrderProject.price
+                    });
+                    setOrderStep('confirmed');
+                  } catch (err) {
+                    alert("Failed to submit request: " + (err.message || err));
+                  }
                 }}
               >
-                Submit
+                {isProcessing ? 'Submitting...' : 'Submit'}
               </Button>
             </div>
           </>
