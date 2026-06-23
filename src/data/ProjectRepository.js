@@ -1,6 +1,4 @@
-import projectsData from './projects.json';
-
-const LOCAL_STORAGE_KEY = 'flyen_projects';
+import { supabase } from '../lib/supabase.js';
 
 // Helper to generate a URL-friendly slug
 const generateSlug = (title) => {
@@ -12,96 +10,66 @@ const generateSlug = (title) => {
     .replace(/^-+|-+$/g, '');
 };
 
-// Helper to get data from local storage or initialize it
-const getStoredProjects = () => {
-  const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-  let projectsList = [];
-  if (stored) {
-    try {
-      projectsList = JSON.parse(stored);
-    } catch (e) {
-      console.error("Failed to parse projects from localStorage", e);
-      projectsList = projectsData;
-    }
-  } else {
-    projectsList = projectsData;
-  }
-
-  // Ensure all loaded projects have the new schema fields and a lastUpdated field (auto migration for preloaded records)
-  let modified = false;
-  const verifiedList = projectsList.map((p) => {
-    const defaultData = projectsData.find((d) => d.id === p.id);
-    let updated = false;
-
-    if (!p.lastUpdated) {
-      p.lastUpdated = '21/06/2026';
-      updated = true;
-    }
-
-    if (defaultData) {
-      if (!p.howItWorks && defaultData.howItWorks) {
-        p.howItWorks = defaultData.howItWorks;
-        updated = true;
-      }
-      if ((!p.applications || p.applications.length === 0) && defaultData.applications) {
-        p.applications = defaultData.applications;
-        updated = true;
-      }
-      if ((!p.benefits || p.benefits.length === 0) && defaultData.benefits) {
-        p.benefits = defaultData.benefits;
-        updated = true;
-      }
-      if (!p.estimatedDelivery && defaultData.estimatedDelivery) {
-        p.estimatedDelivery = defaultData.estimatedDelivery;
-        updated = true;
-      }
-      if (!p.whatsappNumber && defaultData.whatsappNumber) {
-        p.whatsappNumber = defaultData.whatsappNumber;
-        updated = true;
-      }
-    }
-
-    if (updated) {
-      modified = true;
-    }
-    return p;
-  });
-
-  if (modified || !stored) {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(verifiedList));
-  }
-  return verifiedList;
-};
-
-const saveStoredProjects = (projects) => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(projects));
-};
-
 export const ProjectRepository = {
   getAll: async () => {
-    return getStoredProjects();
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*');
+    if (error) {
+      console.error("Failed to load projects from Supabase", error);
+      throw error;
+    }
+    return data || [];
   },
 
   getById: async (id) => {
-    const list = getStoredProjects();
-    return list.find((p) => p.id === id) || null;
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error) {
+      if (error.code === 'PGRST116') return null; // PostgREST code for single row not found
+      console.error(`Failed to get project by ID ${id} from Supabase`, error);
+      throw error;
+    }
+    return data;
   },
 
   getBySlug: async (slug) => {
-    const list = getStoredProjects();
-    return list.find((p) => p.slug === slug) || null;
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      console.error(`Failed to get project by slug ${slug} from Supabase`, error);
+      throw error;
+    }
+    return data;
   },
 
   create: async (project) => {
-    const list = getStoredProjects();
     const id = 'proj-' + Math.random().toString(36).substring(2, 9);
-    const slug = generateSlug(project.title);
+    const baseSlug = generateSlug(project.title);
 
     // Ensure slug uniqueness
-    let uniqueSlug = slug;
+    let uniqueSlug = baseSlug;
     let counter = 1;
-    while (list.some((p) => p.slug === uniqueSlug)) {
-      uniqueSlug = `${slug}-${counter}`;
+    while (true) {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('id')
+        .eq('slug', uniqueSlug);
+      if (error) {
+        console.error("Error checking slug uniqueness in Supabase", error);
+        throw error;
+      }
+      if (!data || data.length === 0) {
+        break;
+      }
+      uniqueSlug = `${baseSlug}-${counter}`;
       counter++;
     }
 
@@ -114,62 +82,104 @@ export const ProjectRepository = {
       lastUpdated: new Date().toLocaleDateString('en-IN')
     };
 
-    list.push(newProject);
-    saveStoredProjects(list);
-    return newProject;
+    const { data, error } = await supabase
+      .from('projects')
+      .insert(newProject)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Failed to create project in Supabase", error);
+      throw error;
+    }
+    return data;
   },
 
   update: async (id, updatedFields) => {
-    const list = getStoredProjects();
-    
     let newSlug = updatedFields.slug;
     if (updatedFields.title) {
       const baseSlug = generateSlug(updatedFields.title);
       newSlug = baseSlug;
       let counter = 1;
-      while (list.some((p) => p.slug === newSlug && p.id !== id)) {
+      while (true) {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('id')
+          .eq('slug', newSlug)
+          .neq('id', id);
+        if (error) {
+          console.error("Error checking slug uniqueness in Supabase during update", error);
+          throw error;
+        }
+        if (!data || data.length === 0) {
+          break;
+        }
         newSlug = `${baseSlug}-${counter}`;
         counter++;
       }
     }
 
-    const updatedList = list.map((p) => {
-      if (p.id === id) {
-        return {
-          ...p,
-          ...updatedFields,
-          slug: newSlug || p.slug,
-          lastUpdated: new Date().toLocaleDateString('en-IN')
-        };
-      }
-      return p;
-    });
+    const updatePayload = {
+      ...updatedFields,
+      slug: newSlug || updatedFields.slug,
+      lastUpdated: new Date().toLocaleDateString('en-IN')
+    };
 
-    saveStoredProjects(updatedList);
-    return updatedList.find((p) => p.id === id) || null;
+    // Remove system-managed properties to avoid constraint/insert-only errors
+    delete updatePayload.created_at;
+    delete updatePayload.updated_at;
+
+    const { data, error } = await supabase
+      .from('projects')
+      .update(updatePayload)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error(`Failed to update project ${id} in Supabase`, error);
+      throw error;
+    }
+    return data;
   },
 
   delete: async (id) => {
-    const list = getStoredProjects();
-    const filtered = list.filter((p) => p.id !== id);
-    saveStoredProjects(filtered);
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', id);
+    if (error) {
+      console.error(`Failed to delete project ${id} from Supabase`, error);
+      throw error;
+    }
   },
 
   duplicate: async (id) => {
-    const list = getStoredProjects();
-    const original = list.find((p) => p.id === id);
+    const original = await ProjectRepository.getById(id);
     if (!original) throw new Error(`Project with ID ${id} not found`);
 
     const dupTitle = `${original.title} (Copy)`;
     const baseSlug = generateSlug(dupTitle);
     let uniqueSlug = baseSlug;
     let counter = 1;
-    while (list.some((p) => p.slug === uniqueSlug)) {
+    while (true) {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('id')
+        .eq('slug', uniqueSlug);
+      if (error) {
+        console.error("Error checking slug uniqueness in Supabase during duplicate", error);
+        throw error;
+      }
+      if (!data || data.length === 0) {
+        break;
+      }
       uniqueSlug = `${baseSlug}-${counter}`;
       counter++;
     }
 
     const newId = 'proj-' + Math.random().toString(36).substring(2, 9);
+    
     const duplicated = {
       ...original,
       id: newId,
@@ -181,8 +191,20 @@ export const ProjectRepository = {
       lastUpdated: new Date().toLocaleDateString('en-IN')
     };
 
-    list.push(duplicated);
-    saveStoredProjects(list);
-    return duplicated;
+    // Remove system-managed fields
+    delete duplicated.created_at;
+    delete duplicated.updated_at;
+
+    const { data, error } = await supabase
+      .from('projects')
+      .insert(duplicated)
+      .select()
+      .single();
+
+    if (error) {
+      console.error(`Failed to duplicate project ${id} in Supabase`, error);
+      throw error;
+    }
+    return data;
   }
 };

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { supabase } from './lib/supabase';
 import { AppRouter } from './router/AppRouter';
 import { SettingsProvider } from './context/SettingsContext';
 import { CartProvider } from './context/CartContext';
@@ -10,6 +11,18 @@ import { ProjectProvider } from './context/ProjectContext';
 import { EnquiryProvider } from './context/EnquiryContext';
 
 export default function App() {
+  useEffect(() => {
+    async function testConnection() {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+
+      console.log('DATA:', data)
+      console.log('ERROR:', error)
+    }
+
+    testConnection()
+  }, [])
   return (
     <SettingsProvider>
       <UserProvider>

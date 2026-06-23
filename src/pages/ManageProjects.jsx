@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
 import { Card } from '../components/ui/Card';
@@ -10,8 +10,28 @@ import { AdminToolbar } from '../components/ui/AdminToolbar';
 import { ROUTES } from '../constants/routes';
 import { CATEGORY_LABELS } from '../constants/categories';
 
+const Toast = ({ message, type }) => {
+  if (!message) return null;
+  const colors = {
+    success: { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', text: 'var(--accent-emerald)' },
+    error: { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.2)', text: 'var(--accent-crimson, #ef4444)' },
+    info: { bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.2)', text: 'var(--accent-violet)' },
+  };
+  const c = colors[type] || colors.info;
+  return (
+    <div style={{
+      padding: 'var(--space-3) var(--space-4)', borderRadius: '8px',
+      background: c.bg, border: `1px solid ${c.border}`, color: c.text,
+      fontSize: '13px', fontWeight: '600', marginBottom: 'var(--space-4)'
+    }}>
+      {message}
+    </div>
+  );
+};
+
 export const ManageProjects = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { allProjects, isLoading, duplicateProject, deleteProject, updateProject } = useProjects();
 
   // Search & Filter State
@@ -28,25 +48,49 @@ export const ManageProjects = () => {
   // Deletion Modal State
   const [projectToDelete, setProjectToDelete] = useState(null);
 
+  // Toast & Processing States
+  const [toast, setToast] = useState({ message: '', type: 'success' });
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast({ message: '', type: 'success' }), 3500);
+  };
+
+  // Consume redirect toast messages from react-router-dom state
+  useEffect(() => {
+    if (location.state?.toastMessage) {
+      showToast(location.state.toastMessage, location.state.toastType || 'success');
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   // Duplicate Action Handler
   const handleDuplicate = async (id) => {
+    setIsProcessing(true);
     try {
       const duplicated = await duplicateProject(id);
-      alert(`Project duplicated successfully! Created copy: "${duplicated.title}"`);
+      showToast(`✅ Project duplicated successfully! Created copy: "${duplicated.title}"`, 'success');
     } catch (e) {
-      alert("Failed to duplicate project.");
+      showToast("❌ Failed to duplicate project.", "error");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   // Delete Action Handler
   const handleDeleteConfirm = async () => {
     if (!projectToDelete) return;
+    setIsProcessing(true);
     try {
       await deleteProject(projectToDelete.id);
-      setProjectToDelete(null);
       setSelectedIds((prev) => prev.filter((id) => id !== projectToDelete.id));
+      showToast(`✅ Project "${projectToDelete.title}" deleted successfully!`, 'success');
+      setProjectToDelete(null);
     } catch (e) {
-      alert("Failed to delete project.");
+      showToast("❌ Failed to delete project.", "error");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -67,7 +111,7 @@ export const ManageProjects = () => {
 
   const handleBulkAction = async (action) => {
     if (selectedIds.length === 0) {
-      alert("No projects selected.");
+      showToast("⚠️ No projects selected.", "info");
       return;
     }
 
@@ -76,26 +120,29 @@ export const ManageProjects = () => {
       if (!confirmDelete) return;
     }
 
+    setIsProcessing(true);
     try {
       if (action === 'delete') {
         for (const id of selectedIds) {
           await deleteProject(id);
         }
-        alert("Selected projects deleted successfully.");
+        showToast("✅ Selected projects deleted successfully.", "success");
       } else if (action === 'activate') {
         for (const id of selectedIds) {
           await updateProject(id, { status: 'active' });
         }
-        alert("Selected projects activated successfully.");
+        showToast("✅ Selected projects activated successfully.", "success");
       } else if (action === 'archive') {
         for (const id of selectedIds) {
           await updateProject(id, { status: 'archived' });
         }
-        alert("Selected projects archived successfully.");
+        showToast("✅ Selected projects archived successfully.", "success");
       }
       setSelectedIds([]);
     } catch (e) {
-      alert(`Failed to perform bulk action: ${action}`);
+      showToast(`❌ Failed to perform bulk action: ${action}`, "error");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -160,6 +207,7 @@ export const ManageProjects = () => {
             variant="primary"
             onClick={() => navigate(ROUTES.ADMIN_ADD_PROJECT)}
             id="btn-admin-add-kit"
+            disabled={isProcessing}
           >
             + Add New Kit
           </Button>
@@ -167,6 +215,7 @@ export const ManageProjects = () => {
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        <Toast message={toast.message} type={toast.type} />
         {/* KPI Cards — 2-column grid */}
         <div className="admin-kpi-grid">
           <Card style={{ padding: 'var(--space-4)' }}>
@@ -254,6 +303,7 @@ export const ManageProjects = () => {
                 variant="secondary"
                 onClick={() => handleBulkAction('activate')}
                 style={{ padding: '6px 12px', fontSize: '12px' }}
+                disabled={isProcessing}
               >
                 🟢 Activate
               </Button>
@@ -262,6 +312,7 @@ export const ManageProjects = () => {
                 variant="secondary"
                 onClick={() => handleBulkAction('archive')}
                 style={{ padding: '6px 12px', fontSize: '12px' }}
+                disabled={isProcessing}
               >
                 🔴 Archive
               </Button>
@@ -270,6 +321,7 @@ export const ManageProjects = () => {
                 variant="ghost"
                 onClick={() => handleBulkAction('delete')}
                 style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                disabled={isProcessing}
               >
                 🗑 Delete
               </Button>
@@ -412,6 +464,7 @@ export const ManageProjects = () => {
                             variant="secondary"
                             onClick={() => handleDuplicate(proj.id)}
                             style={{ padding: '4px 8px', fontSize: '12px' }}
+                            disabled={isProcessing}
                           >
                             Copy
                           </Button>
@@ -420,6 +473,7 @@ export const ManageProjects = () => {
                             variant="ghost"
                             onClick={() => setProjectToDelete(proj)}
                             style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent-crimson, #ef4444)' }}
+                            disabled={isProcessing}
                           >
                             Delete
                           </Button>
@@ -442,24 +496,25 @@ export const ManageProjects = () => {
       </div>
 
       {/* Delete Confirmation Modal */}
-      <Modal isOpen={projectToDelete !== null} onClose={() => setProjectToDelete(null)}>
+      <Modal isOpen={projectToDelete !== null} onClose={() => !isProcessing && setProjectToDelete(null)}>
         <div className="modal-icon" style={{ borderColor: 'var(--accent-crimson, #ef4444)', color: 'var(--accent-crimson, #ef4444)' }}>
           ⚠️
         </div>
         <h4>DELETE PROJECT KIT</h4>
         <p style={{ margin: 'var(--space-3) 0' }}>
           Are you sure you want to permanently delete <strong>{projectToDelete?.title}</strong>?
-          This operation deletes it from local storage and cannot be undone.
+          This operation deletes it from the database and cannot be undone.
         </p>
         <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center', marginTop: 'var(--space-4)' }}>
           <Button
             variant="ghost"
             onClick={handleDeleteConfirm}
             style={{ background: 'var(--accent-crimson, #ef4444)', color: 'white' }}
+            disabled={isProcessing}
           >
-            Confirm Delete
+            {isProcessing ? 'Deleting...' : 'Confirm Delete'}
           </Button>
-          <Button variant="secondary" onClick={() => setProjectToDelete(null)}>
+          <Button variant="secondary" onClick={() => setProjectToDelete(null)} disabled={isProcessing}>
             Cancel
           </Button>
         </div>

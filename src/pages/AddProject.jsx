@@ -13,6 +13,7 @@ export const AddProject = () => {
   const { allProjects, addProject } = useProjects();
 
   // Basic Info State
+  const [isSaving, setIsSaving] = useState(false);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [description, setDescription] = useState('');
@@ -264,12 +265,13 @@ export const AddProject = () => {
       return;
     }
 
+    setIsSaving(true);
     // Clean Dynamic Components
     const finalComponents = componentsList.map((c) => c.trim()).filter((c) => c !== '');
     
     // Clean Dynamic Resources
     const finalResources = resourcesList
-      .map((r) => ({
+       .map((r) => ({
         name: r.name.trim(),
         type: r.type,
         size: r.size.trim() || 'Link',
@@ -336,10 +338,15 @@ export const AddProject = () => {
 
     try {
       await addProject(projectPayload);
-      alert(`Project kit successfully saved as ${targetStatus}!`);
-      navigate(ROUTES.ADMIN_PROJECTS);
+      navigate(ROUTES.ADMIN_PROJECTS, {
+        state: {
+          toastMessage: `✅ Project kit successfully saved as ${targetStatus}!`,
+          toastType: 'success'
+        }
+      });
     } catch (err) {
-      alert("Error creating project kit.");
+      alert("Error creating project kit: " + (err.message || err));
+      setIsSaving(false);
     }
   };
 
@@ -365,14 +372,14 @@ export const AddProject = () => {
           </div>
         </div>
         <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-          <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)}>
+          <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} disabled={isSaving}>
             Cancel
           </Button>
-          <Button variant="secondary" onClick={() => handleSaveProject('draft')}>
-            Save as Draft
+          <Button variant="secondary" onClick={() => handleSaveProject('draft')} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save as Draft'}
           </Button>
-          <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-submit-calc">
-            Save Project
+          <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-submit-calc" disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save Project'}
           </Button>
         </div>
       </div>
@@ -938,11 +945,11 @@ export const AddProject = () => {
         <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} className="btn-mobile-action">
           Cancel
         </Button>
-        <Button variant="secondary" onClick={() => handleSaveProject('draft')} className="btn-mobile-action">
-          Draft
+        <Button variant="secondary" onClick={() => handleSaveProject('draft')} className="btn-mobile-action" disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Draft'}
         </Button>
-        <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-mobile-action btn-submit-calc">
-          Save Project
+        <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-mobile-action btn-submit-calc" disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Publish'}
         </Button>
       </div>
     </motion.section>

@@ -16,6 +16,7 @@ export const EditProject = () => {
   const project = getProjectBySlug(urlSlug);
 
   // Basic Info State
+  const [isSaving, setIsSaving] = useState(false);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [description, setDescription] = useState('');
@@ -325,6 +326,7 @@ export const EditProject = () => {
       return;
     }
 
+    setIsSaving(true);
     // Clean Dynamic Components
     const finalComponents = componentsList.map((c) => c.trim()).filter((c) => c !== '');
     
@@ -362,30 +364,42 @@ export const EditProject = () => {
       badge: badge.trim(),
       searchKeywords: finalKeywords,
       images: {
-        main: thumbnailPreview || project.images?.main || 'src/assets/projects/smart-home/main.svg',
+        main: thumbnailPreview || 'src/assets/projects/smart-home/main.svg',
         schematic: schematicUrl.trim() || 'src/assets/projects/smart-home/schematic.svg',
         circuit: circuitUrl.trim() || 'src/assets/projects/smart-home/circuit.svg'
       },
       videoUrl: videoUrl.trim() || 'https://www.youtube.com/embed/placeholder',
       resources: finalResources,
       components: finalComponents,
+      specifications: {
+        controller: technology.trim() || 'Arduino Uno',
+        sensors: 'Standard sensor configuration',
+        communication: category === 'iot' ? 'Wi-Fi' : category === 'gps-gsm' ? 'GSM' : 'None',
+        operatingVoltage: '5V DC',
+        programmingLanguage: 'C++'
+      },
       relatedProjects,
-      status: targetStatus,
-      featured,
       howItWorks: project.howItWorks || '',
       applications: project.applications || [],
       benefits: project.benefits || [],
       estimatedDelivery: project.estimatedDelivery || '',
       whatsappNumber: project.whatsappNumber || '',
-      stockStatus: project.stockStatus || 'in-stock'
+      stockStatus: project.stockStatus || 'in-stock',
+      featured,
+      status: targetStatus
     };
 
     try {
       await updateProject(project.id, projectPayload);
-      alert(`Project kit successfully updated as ${targetStatus}!`);
-      navigate(ROUTES.ADMIN_PROJECTS);
+      navigate(ROUTES.ADMIN_PROJECTS, {
+        state: {
+          toastMessage: `✅ Project kit successfully updated as ${targetStatus}!`,
+          toastType: 'success'
+        }
+      });
     } catch (err) {
-      alert("Error updating project kit.");
+      alert("Error updating project kit: " + (err.message || err));
+      setIsSaving(false);
     }
   };
 
@@ -411,14 +425,14 @@ export const EditProject = () => {
           </div>
         </div>
         <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-          <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)}>
+          <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} disabled={isSaving}>
             Cancel
           </Button>
-          <Button variant="secondary" onClick={() => handleSaveProject('draft')}>
-            Save as Draft
+          <Button variant="secondary" onClick={() => handleSaveProject('draft')} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save as Draft'}
           </Button>
-          <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-submit-calc">
-            Save Changes
+          <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-submit-calc" disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </div>
@@ -986,11 +1000,11 @@ export const EditProject = () => {
         <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} className="btn-mobile-action">
           Cancel
         </Button>
-        <Button variant="secondary" onClick={() => handleSaveProject('draft')} className="btn-mobile-action">
-          Draft
+        <Button variant="secondary" onClick={() => handleSaveProject('draft')} className="btn-mobile-action" disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Draft'}
         </Button>
-        <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-mobile-action btn-submit-calc">
-          Save Changes
+        <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-mobile-action btn-submit-calc" disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
     </motion.section>
