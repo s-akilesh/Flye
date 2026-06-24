@@ -13,11 +13,13 @@ import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
 import { useEnquiries } from '../hooks/useEnquiries';
+import { useToast } from '../context/ToastContext';
 
 export const ProjectListing = () => {
   const navigate = useNavigate();
   const { projects } = useProjects();
   const { addEnquiry, isProcessing } = useEnquiries();
+  const { showToast } = useToast();
   const {
     activeCategories,
     activeDifficulties,
@@ -247,11 +249,11 @@ export const ProjectListing = () => {
                 disabled={isProcessing}
                 onClick={async () => {
                   if (!requestorName.trim()) {
-                    alert('Please enter your name.');
+                    showToast('Please enter your name.', 'error');
                     return;
                   }
                   if (!contactNumber.trim() || contactNumber.replace(/\D/g, '').length < 10) {
-                    alert('Please enter a valid 10-digit contact number.');
+                    showToast('Please enter a valid 10-digit contact number.', 'error');
                     return;
                   }
                   try {
@@ -264,7 +266,7 @@ export const ProjectListing = () => {
                     });
                     setOrderStep('confirmed');
                   } catch (err) {
-                    alert("Failed to submit request: " + (err.message || err));
+                    showToast("Failed to submit request: " + (err.message || err), "error");
                   }
                 }}
               >

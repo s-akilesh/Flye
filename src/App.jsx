@@ -9,6 +9,7 @@ import { UserProvider } from './context/UserContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ProjectProvider } from './context/ProjectContext';
 import { EnquiryProvider } from './context/EnquiryContext';
+import { ToastProvider } from './context/ToastContext';
 
 export default function App() {
   useEffect(() => {
@@ -24,23 +25,25 @@ export default function App() {
     testConnection()
   }, [])
   return (
-    <SettingsProvider>
-      <UserProvider>
-        <ProjectProvider>
-          <EnquiryProvider>
-            <CartProvider>
-              <CompareProvider>
-                <AIProvider>
-                  <WishlistProvider>
-                    <AppRouter />
-                  </WishlistProvider>
-                </AIProvider>
-              </CompareProvider>
-            </CartProvider>
-          </EnquiryProvider>
-        </ProjectProvider>
-      </UserProvider>
-    </SettingsProvider>
+    <ToastProvider>
+      <SettingsProvider>
+        <UserProvider>
+          <ProjectProvider>
+            <EnquiryProvider>
+              <CartProvider>
+                <CompareProvider>
+                  <AIProvider>
+                    <WishlistProvider>
+                      <AppRouter />
+                    </WishlistProvider>
+                  </AIProvider>
+                </CompareProvider>
+              </CartProvider>
+            </EnquiryProvider>
+          </ProjectProvider>
+        </UserProvider>
+      </SettingsProvider>
+    </ToastProvider>
   );
 }
 

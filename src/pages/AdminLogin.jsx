@@ -6,10 +6,12 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
   const { user, login } = useAuth();
+  const { showToast } = useToast();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,11 +37,14 @@ export const AdminLogin = () => {
     try {
       await login(email, password);
       setSuccess('Access granted. Authenticating portal session...');
+      showToast('Login successful. Welcome back.', 'success');
       setTimeout(() => {
         navigate(ROUTES.ADMIN_DASHBOARD);
       }, 1000);
     } catch (err) {
-      setError(err?.message || 'Invalid administrator email or password.');
+      const errMsg = err?.message || 'Invalid administrator email or password.';
+      setError(errMsg);
+      showToast(errMsg, 'error');
       setIsSubmitting(false);
     }
   };

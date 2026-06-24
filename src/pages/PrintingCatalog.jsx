@@ -6,6 +6,7 @@ import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
 import { usePrintingProducts } from '../hooks/usePrintingProducts';
+import { useToast } from '../context/ToastContext';
 
 const SVG_MAP = {
   gears: <polygon points="32,8 56,22 56,50 32,58 8,50 8,22" stroke="currentColor" strokeWidth="1.5" fill="none" />,
@@ -22,6 +23,7 @@ const SVG_MAP = {
 export const PrintingCatalog = () => {
   const navigate = useNavigate();
   const { printingProducts } = usePrintingProducts();
+  const { showToast } = useToast();
 
   // State
   const [activeTab, setActiveTab] = useState('all');
@@ -84,7 +86,7 @@ export const PrintingCatalog = () => {
   const validateAndSetFile = (file) => {
     const ext = file.name.split('.').pop().toLowerCase();
     if (!['stl', 'obj', '3mf'].includes(ext)) {
-      alert("Please upload an STL, OBJ, or 3MF model file.");
+      showToast("Please upload an STL, OBJ, or 3MF model file.", "error");
       return;
     }
     setUploadedFile(file);
@@ -92,7 +94,7 @@ export const PrintingCatalog = () => {
 
   const handleInitProject = () => {
     if (!uploadedFile) {
-      alert("Please select or drag an STL model file to begin estimation.");
+      showToast("Please select or drag an STL model file to begin estimation.", "error");
       return;
     }
 

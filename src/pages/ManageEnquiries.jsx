@@ -7,30 +7,15 @@ import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
 import { AdminToolbar } from '../components/ui/AdminToolbar';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../constants/routes';
-
-const Toast = ({ message, type }) => {
-  if (!message) return null;
-  const colors = {
-    success: { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', text: 'var(--accent-emerald)' },
-    error: { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.2)', text: 'var(--accent-crimson, #ef4444)' },
-    info: { bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.2)', text: 'var(--accent-violet)' },
-  };
-  const c = colors[type] || colors.info;
-  return (
-    <div style={{
-      padding: 'var(--space-3) var(--space-4)', borderRadius: '8px',
-      background: c.bg, border: `1px solid ${c.border}`, color: c.text,
-      fontSize: '13px', fontWeight: '600', marginBottom: 'var(--space-4)'
-    }}>
-      {message}
-    </div>
-  );
-};
+import { exportEnquiriesToExcel } from '../utils/excel.js';
 
 export const ManageEnquiries = () => {
   const navigate = useNavigate();
   const { enquiries, updateEnquiry, deleteEnquiry, isLoading, isProcessing } = useEnquiries();
+  const { showToast } = useToast();
 
   // Search & Filter State
   const [search, setSearch] = useState('');
@@ -43,6 +28,12 @@ export const ManageEnquiries = () => {
 
   // Deletion Modal State
   const [enquiryToDelete, setEnquiryToDelete] = useState(null);
+  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
+
+  // Export Confirmation State
+  const [showExportAllConfirm, setShowExportAllConfirm] = useState(false);
+  const [showExportScopeConfirm, setShowExportScopeConfirm] = useState(false);
+  const [exportScope, setExportScope] = useState('selected');
 
   // View Modal State
   const [activeEnquiry, setActiveEnquiry] = useState(null);
@@ -52,11 +43,13 @@ export const ManageEnquiries = () => {
   const [editStatus, setEditStatus] = useState('new');
   const [editNotes, setEditNotes] = useState('');
 
-  // Toast State
-  const [toast, setToast] = useState({ message: '', type: 'success' });
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast({ message: '', type: 'success' }), 3500);
+  const handleExportEnquiries = () => {
+    if (selectedIds.length === 0) {
+      setShowExportAllConfirm(true);
+    } else {
+      setExportScope('selected');
+      setShowExportScopeConfirm(true);
+    }
   };
 
   // Status Change handlers (inline table dropdown)
@@ -126,29 +119,31 @@ export const ManageEnquiries = () => {
     }
 
     if (action === 'delete') {
-      const confirmDelete = window.confirm(`Are you sure you want to permanently delete the ${selectedIds.length} selected enquiry/enquiries?`);
-      if (!confirmDelete) return;
+      setShowBulkDeleteConfirm(true);
+      return;
+    }
 
-      try {
+    await executeBulkAction(action);
+  };
+
+  const executeBulkAction = async (action) => {
+    try {
+      if (action === 'delete') {
         for (const id of selectedIds) {
           await deleteEnquiry(id);
         }
         showToast("✅ Selected enquiries deleted successfully.", "success");
         setSelectedIds([]);
-      } catch (e) {
-        showToast("❌ Failed to delete some enquiries.", "error");
-      }
-    } else {
-      // status updates
-      try {
+      } else {
+        // status updates
         for (const id of selectedIds) {
           await updateEnquiry(id, { status: action });
         }
         showToast(`✅ Selected enquiries status updated to: ${statusLabels[action] || action}`, "success");
         setSelectedIds([]);
-      } catch (e) {
-        showToast("❌ Failed to update status for some enquiries.", "error");
       }
+    } catch (e) {
+      showToast(action === 'delete' ? "❌ Failed to delete some enquiries." : "❌ Failed to update status for some enquiries.", "error");
     }
   };
 
@@ -238,7 +233,7 @@ export const ManageEnquiries = () => {
 
   return (
     <motion.section
-      className="portal-section"
+      className="portal-section page-container"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
@@ -256,10 +251,20 @@ export const ManageEnquiries = () => {
             <p>Visual log of customer requests for project kit fabrications</p>
           </div>
         </div>
+        <div className="portal-header-meta">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleExportEnquiries}
+            style={{ fontSize: '13px', padding: '8px 16px' }}
+            disabled={isProcessing}
+          >
+            📤 Export Excel
+          </Button>
+        </div>
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        <Toast message={toast.message} type={toast.type} />
         {/* KPI Cards — 2-column grid */}
         <div className="admin-kpi-grid">
           <Card style={{ padding: 'var(--space-4)' }}>
@@ -307,6 +312,12 @@ export const ManageEnquiries = () => {
             { value: 'name', label: 'Customer Name' },
             { value: 'title', label: 'Project Title' },
           ]}
+          onReset={() => {
+            setSearch('');
+            setStatusFilter('all');
+            setDateFilter('all');
+            setSortField('date-desc');
+          }}
         >
           {/* Filter panel content */}
           <div className="admin-filter-panel-grid">
@@ -648,30 +659,92 @@ export const ManageEnquiries = () => {
         </div>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
-      <Modal isOpen={enquiryToDelete !== null} onClose={() => !isProcessing && setEnquiryToDelete(null)}>
-        <div className="modal-icon" style={{ borderColor: 'var(--accent-crimson, #ef4444)', color: 'var(--accent-crimson, #ef4444)' }}>
-          ⚠️
-        </div>
-        <h4>DELETE ENQUIRY RECORD</h4>
-        <p style={{ margin: 'var(--space-3) 0' }}>
-          Are you sure you want to permanently delete the enquiry from <strong>{enquiryToDelete?.name}</strong>?
-          This operation deletes it from the database and cannot be undone.
-        </p>
-        <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center', marginTop: 'var(--space-4)' }}>
-          <Button
-            variant="ghost"
-            onClick={handleDeleteConfirm}
-            style={{ background: 'var(--accent-crimson, #ef4444)', color: 'white' }}
-            disabled={isProcessing}
-          >
-            {isProcessing ? 'Deleting...' : 'Confirm Delete'}
-          </Button>
-          <Button variant="secondary" onClick={() => setEnquiryToDelete(null)} disabled={isProcessing}>
-            Cancel
-          </Button>
-        </div>
-      </Modal>
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={enquiryToDelete !== null}
+        onClose={() => setEnquiryToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Enquiry Record"
+        message={enquiryToDelete ? `Are you sure you want to permanently delete the enquiry from "${enquiryToDelete.name}"? This operation cannot be undone.` : ''}
+        confirmLabel="Delete"
+        isDanger={true}
+        isLoading={isProcessing}
+      />
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showBulkDeleteConfirm}
+        onClose={() => setShowBulkDeleteConfirm(false)}
+        onConfirm={() => {
+          executeBulkAction('delete');
+          setShowBulkDeleteConfirm(false);
+        }}
+        title="Delete Selected Records"
+        message={`Are you sure you want to permanently delete the ${selectedIds.length} selected enquiry/enquiries? This operation cannot be undone.`}
+        confirmLabel="Delete"
+        isDanger={true}
+        isLoading={isProcessing}
+      />
+
+      {/* Export All Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showExportAllConfirm}
+        onClose={() => setShowExportAllConfirm(false)}
+        onConfirm={() => {
+          exportEnquiriesToExcel(sortedList);
+          showToast("✅ Filtered enquiries exported successfully!", "success");
+          setShowExportAllConfirm(false);
+        }}
+        title="Export Filtered Records"
+        message="Are you sure you want to export all currently filtered records?"
+        confirmLabel="Export"
+      />
+
+      {/* Export Scope Choice Dialog */}
+      <ConfirmDialog
+        isOpen={showExportScopeConfirm}
+        onClose={() => setShowExportScopeConfirm(false)}
+        onConfirm={() => {
+          if (exportScope === 'selected') {
+            const selected = sortedList.filter(e => selectedIds.includes(e.id));
+            exportEnquiriesToExcel(selected);
+            showToast(`✅ Exported ${selected.length} selected enquiry/enquiries!`, "success");
+          } else {
+            exportEnquiriesToExcel(sortedList);
+            showToast("✅ Exported all filtered enquiries!", "success");
+          }
+          setShowExportScopeConfirm(false);
+        }}
+        title="Export Enquiries"
+        message={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+            <p style={{ margin: 0 }}>Choose export scope:</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-1)' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  name="exportScope"
+                  value="selected"
+                  checked={exportScope === 'selected'}
+                  onChange={() => setExportScope('selected')}
+                />
+                <span>Export selected records ({selectedIds.length})</span>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  name="exportScope"
+                  value="all"
+                  checked={exportScope === 'all'}
+                  onChange={() => setExportScope('all')}
+                />
+                <span>Export all filtered records ({sortedList.length})</span>
+              </label>
+            </div>
+          </div>
+        }
+        confirmLabel="Continue"
+      />
     </motion.section>
   );
 };

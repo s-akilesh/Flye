@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
+import { useToast } from '../context/ToastContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { RichTextEditor } from '../components/ui/RichTextEditor';
@@ -11,6 +12,7 @@ import { CATEGORY_LABELS } from '../constants/categories';
 export const AddProject = () => {
   const navigate = useNavigate();
   const { allProjects, addProject } = useProjects();
+  const { showToast } = useToast();
 
   // Basic Info State
   const [isSaving, setIsSaving] = useState(false);
@@ -43,7 +45,7 @@ export const AddProject = () => {
   const handleThumbnailUpload = (file) => {
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image is too large! Maximum allowed size is 5MB.');
+      showToast('Image is too large! Maximum allowed size is 5MB.', 'error');
       return;
     }
     setThumbnailFile(file);
@@ -188,7 +190,7 @@ export const AddProject = () => {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("File is too large! Maximum allowed size is 5MB.");
+      showToast("File is too large! Maximum allowed size is 5MB.", "error");
       return;
     }
 
@@ -261,7 +263,7 @@ export const AddProject = () => {
   // Parameterized Save Project flow
   const handleSaveProject = async (targetStatus) => {
     if (!title.trim() || !description.trim()) {
-      alert("Please fill in the required fields (Title, Short Description).");
+      showToast("Please fill in the required fields (Title, Short Description).", "error");
       return;
     }
 
@@ -345,7 +347,7 @@ export const AddProject = () => {
         }
       });
     } catch (err) {
-      alert("Error creating project kit: " + (err.message || err));
+      showToast("Error creating project kit: " + (err.message || err), "error");
       setIsSaving(false);
     }
   };

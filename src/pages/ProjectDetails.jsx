@@ -10,6 +10,7 @@ import { Input } from '../components/ui/Input';
 import { ROUTES } from '../constants/routes';
 import { useEnquiries } from '../hooks/useEnquiries';
 import { useSettings } from '../hooks/useSettings';
+import { useToast } from '../context/ToastContext';
 
 export const ProjectDetails = () => {
   const { slug } = useParams();
@@ -17,6 +18,7 @@ export const ProjectDetails = () => {
   const { getProjectBySlug, getRelatedProjects, isLoading } = useProjects();
   const { addEnquiry, isProcessing } = useEnquiries();
   const { settings } = useSettings();
+  const { showToast } = useToast();
 
   const project = getProjectBySlug(slug);
 
@@ -466,7 +468,7 @@ export const ProjectDetails = () => {
       </div>
 
       {/* Sticky Bottom CTA bar for Mobile viewports */}
-      <div className="mobile-sticky-cta-bar" id="mobile-sticky-cta-bar" style={{ display: 'flex' }}>
+      <div className="mobile-sticky-cta-bar" id="mobile-sticky-cta-bar">
         <div className="mobile-cta-price-box">
           <span className="mobile-price-lbl">Unit Cost:</span>
           <span className="mobile-price-val" id="mobile-detail-price">
@@ -546,7 +548,7 @@ export const ProjectDetails = () => {
             variant="none"
             className="btn-ai-submit"
             onClick={() => {
-              alert("Query submitted to AI Assistant!");
+              showToast("Query submitted to AI Assistant!", "success");
               setModalType(null);
             }}
           >
@@ -602,11 +604,11 @@ export const ProjectDetails = () => {
                 disabled={isProcessing}
                 onClick={async () => {
                   if (!requestorName.trim()) {
-                    alert('Please enter your name.');
+                    showToast('Please enter your name.', 'error');
                     return;
                   }
                   if (!contactNumber.trim() || contactNumber.replace(/\D/g, '').length < 10) {
-                    alert('Please enter a valid 10-digit contact number.');
+                    showToast('Please enter a valid 10-digit contact number.', 'error');
                     return;
                   }
                   try {
@@ -619,7 +621,7 @@ export const ProjectDetails = () => {
                     });
                     setOrderStep('confirmed');
                   } catch (err) {
-                    alert("Failed to submit request: " + (err.message || err));
+                    showToast("Failed to submit request: " + (err.message || err), "error");
                   }
                 }}
               >

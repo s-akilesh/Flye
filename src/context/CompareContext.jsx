@@ -1,13 +1,15 @@
 import React, { createContext, useContext, useState } from 'react';
+import { useToast } from './ToastContext';
 
 const CompareContext = createContext();
 
 export const CompareProvider = ({ children }) => {
   const [compareList, setCompareList] = useState([]);
+  const { showToast } = useToast();
 
   const addToCompare = (project) => {
     if (compareList.length >= 3) {
-      alert("You can compare a maximum of 3 projects at once.");
+      showToast("You can compare a maximum of 3 projects at once.", "warning");
       return;
     }
     if (!compareList.find((p) => p.id === project.id)) {

@@ -22,3 +22,16 @@ export const Home = () => {
     </motion.main>
   );
 };
+
+import { supabase } from '../lib/supabase'
+
+async function testConnection() {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+
+  console.log('DATA:', data)
+  console.log('ERROR:', error)
+}
+
+testConnection()

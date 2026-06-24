@@ -52,7 +52,7 @@ export const ProjectRepository = {
 
   create: async (project) => {
     const id = 'proj-' + Math.random().toString(36).substring(2, 9);
-    const baseSlug = generateSlug(project.title);
+    const baseSlug = project.slug ? generateSlug(project.slug) : generateSlug(project.title);
 
     // Ensure slug uniqueness
     let uniqueSlug = baseSlug;

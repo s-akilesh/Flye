@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
+import { useToast } from '../context/ToastContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { RichTextEditor } from '../components/ui/RichTextEditor';
@@ -12,6 +13,7 @@ export const EditProject = () => {
   const { slug: urlSlug } = useParams();
   const navigate = useNavigate();
   const { allProjects, getProjectBySlug, updateProject, isLoading } = useProjects();
+  const { showToast } = useToast();
   
   const project = getProjectBySlug(urlSlug);
 
@@ -45,7 +47,7 @@ export const EditProject = () => {
   const handleThumbnailUpload = (file) => {
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image is too large! Maximum allowed size is 5MB.');
+      showToast('Image is too large! Maximum allowed size is 5MB.', 'error');
       return;
     }
     // Convert to Base64 so it persists across page reloads in localStorage
@@ -249,7 +251,7 @@ export const EditProject = () => {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("File is too large! Maximum allowed size is 5MB.");
+      showToast("File is too large! Maximum allowed size is 5MB.", "error");
       return;
     }
 
@@ -322,7 +324,7 @@ export const EditProject = () => {
   // Parameterized Save Project flow
   const handleSaveProject = async (targetStatus) => {
     if (!title.trim() || !description.trim()) {
-      alert("Please fill in the required fields (Title, Short Description).");
+      showToast("Please fill in the required fields (Title, Short Description).", "error");
       return;
     }
 
@@ -398,7 +400,7 @@ export const EditProject = () => {
         }
       });
     } catch (err) {
-      alert("Error updating project kit: " + (err.message || err));
+      showToast("Error updating project kit: " + (err.message || err), "error");
       setIsSaving(false);
     }
   };

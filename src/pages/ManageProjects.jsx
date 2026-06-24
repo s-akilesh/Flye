@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
@@ -7,32 +7,17 @@ import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
 import { AdminToolbar } from '../components/ui/AdminToolbar';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../constants/routes';
 import { CATEGORY_LABELS } from '../constants/categories';
-
-const Toast = ({ message, type }) => {
-  if (!message) return null;
-  const colors = {
-    success: { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', text: 'var(--accent-emerald)' },
-    error: { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.2)', text: 'var(--accent-crimson, #ef4444)' },
-    info: { bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.2)', text: 'var(--accent-violet)' },
-  };
-  const c = colors[type] || colors.info;
-  return (
-    <div style={{
-      padding: 'var(--space-3) var(--space-4)', borderRadius: '8px',
-      background: c.bg, border: `1px solid ${c.border}`, color: c.text,
-      fontSize: '13px', fontWeight: '600', marginBottom: 'var(--space-4)'
-    }}>
-      {message}
-    </div>
-  );
-};
+import { exportProjectsToExcel, downloadProjectTemplate, parseImportedProjects, generateSlugHelper } from '../utils/excel.js';
 
 export const ManageProjects = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { allProjects, isLoading, duplicateProject, deleteProject, updateProject } = useProjects();
+  const { allProjects, isLoading, duplicateProject, deleteProject, updateProject, addProject, refreshProjects } = useProjects();
+  const { showToast } = useToast();
 
   // Search & Filter State
   const [search, setSearch] = useState('');
@@ -47,14 +32,197 @@ export const ManageProjects = () => {
 
   // Deletion Modal State
   const [projectToDelete, setProjectToDelete] = useState(null);
+  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
 
-  // Toast & Processing States
-  const [toast, setToast] = useState({ message: '', type: 'success' });
+  // Export Confirmation State
+  const [showExportAllConfirm, setShowExportAllConfirm] = useState(false);
+  const [showExportScopeConfirm, setShowExportScopeConfirm] = useState(false);
+  const [exportScope, setExportScope] = useState('selected');
+
+  // Processing States
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast({ message: '', type: 'success' }), 3500);
+  // Excel Import & Export States
+  const fileInputRef = useRef(null);
+  const [importPreview, setImportPreview] = useState(null);
+
+  const handleExportProjects = () => {
+    if (selectedIds.length === 0) {
+      setShowExportAllConfirm(true);
+    } else {
+      setExportScope('selected');
+      setShowExportScopeConfirm(true);
+    }
+  };
+
+  const handleDownloadTemplate = () => {
+    downloadProjectTemplate();
+  };
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleImportProjects = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsProcessing(true);
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const XLSX = await import('xlsx');
+        const data = new Uint8Array(evt.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        
+        if (workbook.SheetNames.length === 0) {
+          showToast("❌ Excel workbook is empty.", "error");
+          setIsProcessing(false);
+          return;
+        }
+
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        // Safety limit check
+        if (jsonData.length > 100) {
+          showToast("❌ Maximum upload limit exceeded. Please limit your file to 100 rows.", "error");
+          setIsProcessing(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
+        }
+
+        if (jsonData.length === 0) {
+          showToast("❌ No rows found in the spreadsheet.", "error");
+          setIsProcessing(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
+        }
+
+        const normalizedRows = parseImportedProjects(jsonData);
+
+        const validRows = [];
+        const invalidRows = [];
+        const errors = [];
+
+        normalizedRows.forEach((row) => {
+          const rowErrors = [];
+
+          if (!row.title || row.title.trim() === '') {
+            rowErrors.push("Missing Title");
+          }
+          if (!row.description || row.description.trim() === '') {
+            rowErrors.push("Missing Description");
+          }
+
+          // Validate slug uniqueness
+          const computedSlug = row.slug || (row.title ? generateSlugHelper(row.title) : '');
+          
+          if (computedSlug) {
+            const slugExistsInDB = allProjects.some((p) => p.slug === computedSlug);
+            const slugExistsInBatch = validRows.some((vr) => vr.slug === computedSlug);
+
+            if (slugExistsInDB) {
+              rowErrors.push(`Duplicate slug '${computedSlug}' (already exists in database)`);
+            } else if (slugExistsInBatch) {
+              rowErrors.push(`Duplicate slug '${computedSlug}' (exists elsewhere in import file)`);
+            }
+          } else {
+            rowErrors.push("Unable to generate valid slug from title");
+          }
+
+          if (rowErrors.length > 0) {
+            invalidRows.push({ ...row, errors: rowErrors });
+            errors.push(`Row ${row.rowIndex}: ${rowErrors.join(', ')}`);
+          } else {
+            validRows.push({ ...row, slug: computedSlug });
+          }
+        });
+
+        setImportPreview({
+          total: jsonData.length,
+          valid: validRows,
+          invalid: invalidRows,
+          errors
+        });
+      } catch (err) {
+        showToast("❌ Failed to parse Excel file.", "error");
+        console.error(err);
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  const handleConfirmImport = async () => {
+    if (!importPreview || importPreview.valid.length === 0) return;
+
+    setIsProcessing(true);
+    let successCount = 0;
+    let failCount = 0;
+    const finalErrors = [...importPreview.errors];
+
+    for (const row of importPreview.valid) {
+      const payload = {
+        title: row.title,
+        description: row.description,
+        fullDescription: row.fullDescription || '',
+        price: row.price,
+        currency: row.currency,
+        projectLevel: row.projectLevel,
+        difficulty: row.difficulty,
+        technology: row.technology,
+        category: row.category,
+        buildTime: row.buildTime,
+        features: row.features,
+        badge: row.badge,
+        searchKeywords: row.searchKeywords,
+        images: {
+          main: 'src/assets/projects/smart-home/main.svg',
+          schematic: 'src/assets/projects/smart-home/schematic.svg',
+          circuit: 'src/assets/projects/smart-home/circuit.svg'
+        },
+        videoUrl: row.videoUrl || '',
+        resources: row.resources,
+        components: row.components,
+        specifications: row.specifications,
+        relatedProjects: [],
+        stockStatus: row.stockStatus,
+        featured: row.featured,
+        status: row.status,
+        howItWorks: row.howItWorks,
+        applications: row.applications,
+        benefits: row.benefits,
+        estimatedDelivery: row.estimatedDelivery,
+        whatsappNumber: row.whatsappNumber,
+        slug: row.slug
+      };
+
+      try {
+        await addProject(payload);
+        successCount++;
+      } catch (err) {
+        failCount++;
+        finalErrors.push(`Row ${row.rowIndex}: Database save failed (${err.message || err})`);
+      }
+    }
+
+    showToast(`✅ Successfully imported ${successCount} projects!${failCount > 0 ? ` ${failCount} failed.` : ''}`, successCount > 0 ? 'success' : 'error');
+    
+    if (refreshProjects) await refreshProjects();
+
+    setImportPreview(null);
+    setIsProcessing(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleCancelImport = () => {
+    setImportPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   // Consume redirect toast messages from react-router-dom state
@@ -63,7 +231,7 @@ export const ManageProjects = () => {
       showToast(location.state.toastMessage, location.state.toastType || 'success');
       window.history.replaceState({}, document.title);
     }
-  }, [location]);
+  }, [location, showToast]);
 
   // Duplicate Action Handler
   const handleDuplicate = async (id) => {
@@ -116,10 +284,14 @@ export const ManageProjects = () => {
     }
 
     if (action === 'delete') {
-      const confirmDelete = window.confirm(`Are you sure you want to permanently delete the ${selectedIds.length} selected project(s)?`);
-      if (!confirmDelete) return;
+      setShowBulkDeleteConfirm(true);
+      return;
     }
 
+    await executeBulkAction(action);
+  };
+
+  const executeBulkAction = async (action) => {
     setIsProcessing(true);
     try {
       if (action === 'delete') {
@@ -184,7 +356,7 @@ export const ManageProjects = () => {
 
   return (
     <motion.section
-      className="portal-section"
+      className="portal-section page-container"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
@@ -202,12 +374,44 @@ export const ManageProjects = () => {
             <p>Visual database management panel for Flyen engineering catalog</p>
           </div>
         </div>
-        <div className="portal-header-meta">
+        <div className="portal-header-meta" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+          <Button
+            variant="secondary"
+            onClick={handleDownloadTemplate}
+            disabled={isProcessing}
+            style={{ fontSize: '13px', padding: '8px 16px' }}
+          >
+            📥 Template
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={handleExportProjects}
+            disabled={isProcessing}
+            style={{ fontSize: '13px', padding: '8px 16px' }}
+          >
+            📤 Export Excel
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={triggerFileInput}
+            disabled={isProcessing}
+            style={{ fontSize: '13px', padding: '8px 16px' }}
+          >
+            📁 Import Excel
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".xlsx, .xls"
+            onChange={handleImportProjects}
+            style={{ display: 'none' }}
+          />
           <Button
             variant="primary"
             onClick={() => navigate(ROUTES.ADMIN_ADD_PROJECT)}
             id="btn-admin-add-kit"
             disabled={isProcessing}
+            style={{ fontSize: '13px', padding: '8px 16px' }}
           >
             + Add New Kit
           </Button>
@@ -215,7 +419,6 @@ export const ManageProjects = () => {
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        <Toast message={toast.message} type={toast.type} />
         {/* KPI Cards — 2-column grid */}
         <div className="admin-kpi-grid">
           <Card style={{ padding: 'var(--space-4)' }}>
@@ -256,6 +459,13 @@ export const ManageProjects = () => {
             { value: 'price-high', label: 'Price: High to Low' },
             { value: 'level', label: 'Project Level' },
           ]}
+          onReset={() => {
+            setSearch('');
+            setCategoryFilter('all');
+            setLevelFilter('all');
+            setStatusFilter('all');
+            setSortField('title');
+          }}
         >
           {/* Filter panel content */}
           <div className="admin-filter-panel-grid">
@@ -495,30 +705,185 @@ export const ManageProjects = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
-      <Modal isOpen={projectToDelete !== null} onClose={() => !isProcessing && setProjectToDelete(null)}>
-        <div className="modal-icon" style={{ borderColor: 'var(--accent-crimson, #ef4444)', color: 'var(--accent-crimson, #ef4444)' }}>
-          ⚠️
-        </div>
-        <h4>DELETE PROJECT KIT</h4>
-        <p style={{ margin: 'var(--space-3) 0' }}>
-          Are you sure you want to permanently delete <strong>{projectToDelete?.title}</strong>?
-          This operation deletes it from the database and cannot be undone.
-        </p>
-        <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center', marginTop: 'var(--space-4)' }}>
-          <Button
-            variant="ghost"
-            onClick={handleDeleteConfirm}
-            style={{ background: 'var(--accent-crimson, #ef4444)', color: 'white' }}
-            disabled={isProcessing}
-          >
-            {isProcessing ? 'Deleting...' : 'Confirm Delete'}
-          </Button>
-          <Button variant="secondary" onClick={() => setProjectToDelete(null)} disabled={isProcessing}>
-            Cancel
-          </Button>
-        </div>
-      </Modal>
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={projectToDelete !== null}
+        onClose={() => setProjectToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Project Kit"
+        message={projectToDelete ? `Are you sure you want to permanently delete "${projectToDelete.title}"? This operation cannot be undone.` : ''}
+        confirmLabel="Delete"
+        isDanger={true}
+        isLoading={isProcessing}
+      />
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showBulkDeleteConfirm}
+        onClose={() => setShowBulkDeleteConfirm(false)}
+        onConfirm={() => {
+          executeBulkAction('delete');
+          setShowBulkDeleteConfirm(false);
+        }}
+        title="Delete Selected Records"
+        message={`Are you sure you want to permanently delete the ${selectedIds.length} selected project(s)? This operation cannot be undone.`}
+        confirmLabel="Delete"
+        isDanger={true}
+        isLoading={isProcessing}
+      />
+
+      {/* Export All Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showExportAllConfirm}
+        onClose={() => setShowExportAllConfirm(false)}
+        onConfirm={() => {
+          exportProjectsToExcel(allProjects);
+          showToast("✅ All projects exported successfully!", "success");
+          setShowExportAllConfirm(false);
+        }}
+        title="Export All Records"
+        message="Are you sure you want to export all records?"
+        confirmLabel="Export"
+      />
+
+      {/* Export Scope Choice Dialog */}
+      <ConfirmDialog
+        isOpen={showExportScopeConfirm}
+        onClose={() => setShowExportScopeConfirm(false)}
+        onConfirm={() => {
+          if (exportScope === 'selected') {
+            const selected = allProjects.filter(p => selectedIds.includes(p.id));
+            exportProjectsToExcel(selected);
+            showToast(`✅ Exported ${selected.length} selected project(s)!`, "success");
+          } else {
+            exportProjectsToExcel(allProjects);
+            showToast("✅ Exported all projects!", "success");
+          }
+          setShowExportScopeConfirm(false);
+        }}
+        title="Export Projects"
+        message={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+            <p style={{ margin: 0 }}>Choose export scope:</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-1)' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  name="exportScope"
+                  value="selected"
+                  checked={exportScope === 'selected'}
+                  onChange={() => setExportScope('selected')}
+                />
+                <span>Export selected records ({selectedIds.length})</span>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  name="exportScope"
+                  value="all"
+                  checked={exportScope === 'all'}
+                  onChange={() => setExportScope('all')}
+                />
+                <span>Export all records ({allProjects.length})</span>
+              </label>
+            </div>
+          </div>
+        }
+        confirmLabel="Continue"
+      />
+
+      {/* Import Preview Modal */}
+      {importPreview && (
+        <Modal isOpen={importPreview !== null} onClose={handleCancelImport} style={{ maxWidth: '600px' }}>
+          <div style={{ textAlign: 'center', padding: 'var(--space-2)' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: 'var(--space-4)', color: 'var(--accent-violet)' }}>
+              📊 Excel Import Preview
+            </h3>
+            
+            <div 
+              className="card-glass" 
+              style={{ 
+                padding: 'var(--space-4)', 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(3, 1fr)', 
+                gap: 'var(--space-3)', 
+                textAlign: 'center', 
+                marginBottom: 'var(--space-5)' 
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Total Rows</span>
+                <strong style={{ fontSize: '20px', color: '#fff' }}>{importPreview.total}</strong>
+              </div>
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Valid Rows</span>
+                <strong style={{ fontSize: '20px', color: 'var(--accent-emerald)' }}>{importPreview.valid.length}</strong>
+              </div>
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Invalid Rows</span>
+                <strong style={{ fontSize: '20px', color: importPreview.invalid.length > 0 ? 'var(--accent-crimson, #ef4444)' : 'var(--text-muted)' }}>
+                  {importPreview.invalid.length}
+                </strong>
+              </div>
+            </div>
+
+            {/* Validation Errors Console */}
+            {importPreview.errors && importPreview.errors.length > 0 && (
+              <div 
+                style={{ 
+                  textAlign: 'left', 
+                  maxHeight: '180px', 
+                  overflowY: 'auto', 
+                  background: 'rgba(239, 68, 68, 0.04)', 
+                  border: '1px solid rgba(239, 68, 68, 0.15)', 
+                  borderRadius: '6px', 
+                  padding: 'var(--space-3)', 
+                  marginBottom: 'var(--space-5)' 
+                }}
+              >
+                <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--accent-crimson, #ef4444)', display: 'block', marginBottom: 'var(--space-2)' }}>
+                  Validation Errors Encountered:
+                </span>
+                <ul style={{ fontSize: '11px', color: 'var(--text-muted)', listStyle: 'disc', paddingLeft: 'var(--space-4)', margin: 0 }}>
+                  {importPreview.errors.map((err, idx) => (
+                    <li key={idx} style={{ marginBottom: '4px' }}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {importPreview.valid.length === 0 ? (
+              <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: 'var(--space-5)' }}>
+                No valid rows found to import. Please correct the validation errors in your spreadsheet and try again.
+              </p>
+            ) : (
+              <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: 'var(--space-5)' }}>
+                Click **Confirm Import** to save the {importPreview.valid.length} valid project kit(s) to the database. Invalid rows will be skipped.
+              </p>
+            )}
+
+            <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
+              <Button 
+                variant="secondary" 
+                onClick={handleCancelImport} 
+                style={{ flex: 1 }}
+                disabled={isProcessing}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="primary" 
+                className="btn-submit-calc"
+                onClick={handleConfirmImport} 
+                style={{ flex: 1 }}
+                disabled={isProcessing || importPreview.valid.length === 0}
+              >
+                {isProcessing ? 'Importing...' : `Confirm Import (${importPreview.valid.length})`}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </motion.section>
   );
 };
