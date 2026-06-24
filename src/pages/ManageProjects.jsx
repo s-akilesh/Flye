@@ -70,7 +70,6 @@ export const ManageProjects = () => {
     if (!file) return;
 
     setIsProcessing(true);
-    const reader = new FileReader();
     reader.onload = async (evt) => {
       try {
         const XLSX = await import('xlsx');

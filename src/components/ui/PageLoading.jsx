@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const PageLoading = ({ message = 'LOADING SECURE PORTAL...' }) => {
+export const PageLoading = ({ message = 'LOADING PORTAL...' }) => {
   return (
     <div 
       style={{ 
@@ -8,53 +8,46 @@ export const PageLoading = ({ message = 'LOADING SECURE PORTAL...' }) => {
         flexDirection: 'column',
         alignItems: 'center', 
         justifyContent: 'center', 
-        minHeight: 'calc(100vh - 160px)',
-        gap: '16px',
-        background: 'transparent',
-        fontFamily: 'Inter, sans-serif'
+        minHeight: '60vh',
+        gap: '24px',
+        background: 'transparent'
       }}
     >
       <div style={{ position: 'relative', width: '56px', height: '56px' }}>
-        {/* Outer pulse glow */}
-        <div 
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: '50%',
-            border: '2px solid var(--accent-violet)',
-            opacity: 0.15,
-            animation: 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite'
-          }}
-        />
-        {/* Spinner SVG */}
-        <svg 
-          viewBox="0 0 24 24" 
-          style={{
-            width: '100%',
-            height: '100%',
-            animation: 'spin 1s linear infinite',
-            stroke: 'var(--accent-violet)',
-            fill: 'none',
-            strokeWidth: '2.5',
-            strokeLinecap: 'round',
-            position: 'relative',
-            zIndex: 1
-          }}
-        >
-          <circle cx="12" cy="12" r="10" stroke="rgba(139, 92, 246, 0.1)" />
-          <path d="M12 2a10 10 0 0 1 10 10" />
-        </svg>
+        {/* Outer Glow Ring */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: '50%',
+          border: '2px solid transparent',
+          borderTopColor: 'var(--accent-violet, #8b5cf6)',
+          borderBottomColor: 'var(--accent-blue, #3b82f6)',
+          animation: 'spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite',
+          boxShadow: '0 0 15px rgba(139, 92, 246, 0.25)'
+        }} />
+        
+        {/* Inner Counter-Rotating Ring */}
+        <div style={{
+          position: 'absolute',
+          inset: '6px',
+          borderRadius: '50%',
+          border: '2px solid transparent',
+          borderLeftColor: 'var(--accent-blue, #3b82f6)',
+          borderRightColor: 'var(--accent-emerald, #10b981)',
+          animation: 'spin-reverse 1s linear infinite',
+          opacity: 0.8
+        }} />
       </div>
 
       <p 
         style={{ 
-          color: 'var(--text-muted)', 
+          color: 'var(--text-muted, #94a3b8)', 
           fontSize: '12px', 
           fontWeight: '600',
           letterSpacing: '1.5px',
           textTransform: 'uppercase',
           margin: 0,
-          animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+          animation: 'pulse 1.8s ease-in-out infinite'
         }}
       >
         {message}
@@ -65,15 +58,13 @@ export const PageLoading = ({ message = 'LOADING SECURE PORTAL...' }) => {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-        @keyframes ping {
-          75%, 100% {
-            transform: scale(1.4);
-            opacity: 0;
-          }
+        @keyframes spin-reverse {
+          0% { transform: rotate(360deg); }
+          100% { transform: rotate(0deg); }
         }
         @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: .5; }
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 1; }
         }
       `}</style>
     </div>

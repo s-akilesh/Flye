@@ -9,10 +9,6 @@ import { ProjectDetails } from '../pages/ProjectDetails';
 import { PrintingCatalog } from '../pages/PrintingCatalog';
 import { LearningHub } from '../pages/LearningHub';
 import { Contact } from '../pages/Contact';
-import { ProtectedRoute } from '../components/auth/ProtectedRoute.jsx';
-import { AuthProvider } from '../context/AuthContext.jsx';
-import { MaintenancePage } from '../pages/MaintenancePage';
-import { useSettings } from '../hooks/useSettings';
 import { PageLoading } from '../components/ui/PageLoading';
 
 // Lazy Load Admin Pages
@@ -23,6 +19,11 @@ const EditProject = React.lazy(() => import('../pages/EditProject').then(module 
 const ManageEnquiries = React.lazy(() => import('../pages/ManageEnquiries').then(module => ({ default: module.ManageEnquiries })));
 const AdminSettings = React.lazy(() => import('../pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 const AdminLogin = React.lazy(() => import('../pages/AdminLogin.jsx').then(module => ({ default: module.AdminLogin })));
+
+import { ProtectedRoute } from '../components/auth/ProtectedRoute.jsx';
+import { AuthProvider } from '../context/AuthContext.jsx';
+import { MaintenancePage } from '../pages/MaintenancePage';
+import { useSettings } from '../hooks/useSettings';
 
 const MaintenanceGate = ({ children }) => {
   const { settings } = useSettings();
