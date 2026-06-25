@@ -92,11 +92,11 @@ export const NavigationCards = () => {
       />
 
       <CardWrapper
-        route={ROUTES.VIDEOS}
+        route={ROUTES.LEARNING || '/learning'}
         subtitle="Videos and Consultation"
         title="Projects & Development"
         desc="High-grade engineering tutorials, detailed circuit schematics, custom code repositories, and expert implementation guidance."
-        ctaText="Watch & Learn"
+        ctaText="Enter Workspace"
         vectorSvg={
           <div className="vector-code-window">
             <div style={{ display: 'flex', gap: '3px', marginBottom: '5px' }}>

@@ -12,5 +12,10 @@ export const ROUTES = {
   ADMIN_SETTINGS: '/admin/settings',
   ADMIN_ACCESS: '/admin-access',
   ADMIN_DASHBOARD: '/admin',
-  ADMIN_LOGIN: '/admin-login'
+  ADMIN_LOGIN: '/admin-login',
+  LEARNING: '/learning',
+  LEARNING_WORKSPACE: '/learning/workspace',
+  LEARNING_FUNDAMENTALS: '/learning/fundamentals',
+  LEARNING_COMPONENTS: '/learning/components',
+  LEARNING_COMPONENT_DETAILS: '/learning/components/:slug'
 };

@@ -20,6 +20,13 @@ const ManageEnquiries = React.lazy(() => import('../pages/ManageEnquiries').then
 const AdminSettings = React.lazy(() => import('../pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 const AdminLogin = React.lazy(() => import('../pages/AdminLogin.jsx').then(module => ({ default: module.AdminLogin })));
 
+// Lazy Load Learning Workspace Pages & Layout
+const LearningLayout = React.lazy(() => import('../components/layout/LearningLayout').then(module => ({ default: module.LearningLayout })));
+const EngineeringWorkspace = React.lazy(() => import('../pages/learning/EngineeringWorkspace').then(module => ({ default: module.EngineeringWorkspace })));
+const Fundamentals = React.lazy(() => import('../pages/learning/Fundamentals').then(module => ({ default: module.Fundamentals })));
+const ComponentLibrary = React.lazy(() => import('../pages/learning/ComponentLibrary').then(module => ({ default: module.ComponentLibrary })));
+const ComponentDetails = React.lazy(() => import('../pages/learning/ComponentDetails').then(module => ({ default: module.ComponentDetails })));
+
 import { ProtectedRoute } from '../components/auth/ProtectedRoute.jsx';
 import { AuthProvider } from '../context/AuthContext.jsx';
 import { MaintenancePage } from '../pages/MaintenancePage';
@@ -50,8 +57,17 @@ export const AppRouter = () => {
                   <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
                   <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
                   <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
-                  <Route path={ROUTES.VIDEOS} element={<LearningHub />} />
                   <Route path={ROUTES.CONTACT} element={<Contact />} />
+                  <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
+                  
+                  {/* Learning Workspace Platform */}
+                  <Route path={ROUTES.LEARNING} element={<Navigate to={ROUTES.LEARNING_WORKSPACE} replace />} />
+                  <Route element={<LearningLayout />}>
+                    <Route path={ROUTES.LEARNING_WORKSPACE} element={<EngineeringWorkspace />} />
+                    <Route path={ROUTES.LEARNING_FUNDAMENTALS} element={<Fundamentals />} />
+                    <Route path={ROUTES.LEARNING_COMPONENTS} element={<ComponentLibrary />} />
+                    <Route path={ROUTES.LEARNING_COMPONENT_DETAILS} element={<ComponentDetails />} />
+                  </Route>
                   
                   {/* Redirect Legacy Admin Access to Admin Login */}
                   <Route path={ROUTES.ADMIN_ACCESS} element={<Navigate to={ROUTES.ADMIN_LOGIN || '/admin-login'} replace />} />
