@@ -17,6 +17,9 @@
     "react-router-dom": "^6.23.1",
     "xlsx": "^0.18.5"
   },
+  "overrides": {
+    "esbuild": "npm:esbuild-wasm@0.27.7"
+  },
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

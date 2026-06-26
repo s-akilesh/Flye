@@ -7,10 +7,10 @@ export const Fundamentals = () => {
 
   return (
     <div>
-      <header className="workspace-page-header">
+      <div className="workspace-page-header">
         <h1>Electrical Basics</h1>
         <p>Master core electrical concepts visually and conceptually before diving into technical terms.</p>
-      </header>
+      </div>
 
       {/* Concept Selector Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '16px', marginBottom: '32px' }}>

@@ -37,7 +37,7 @@ export const ComponentLibrary = () => {
 
   return (
     <div>
-      <header className="workspace-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="workspace-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1>Explore Components</h1>
           <p>Click any component to open the illustration workspace and take it apart.</p>
@@ -58,7 +58,7 @@ export const ComponentLibrary = () => {
             style={{ paddingLeft: '32px' }}
           />
         </div>
-      </header>
+      </div>
 
       {/* Category Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>

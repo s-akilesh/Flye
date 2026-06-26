@@ -1,23 +1,39 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 export const SettingsContext = createContext();
 
 const LOCAL_STORAGE_KEY = 'flyen_settings';
 
 export const DEFAULT_SETTINGS = {
-  companyName: 'Flyen',
-  companyTagline: 'Build. Learn. Innovate.',
-  contactEmail: 'info@flyenlabs.com',
-  contactPhone: '+1234567890',
-  whatsappNumber: '1234567890',
-  companyAddress: 'Lab Sector 7, Tech City',
+  companyName: '',
+  companyTagline: '',
+  contactEmail: '',
+  contactPhone: '',
+  whatsappNumber: '',
+  companyAddress: '',
   instagramUrl: '',
   youtubeUrl: '',
   linkedinUrl: '',
   facebookUrl: '',
+  twitterUrl: '',
+  githubUrl: '',
+  websiteUrl: '',
   currency: 'INR',
   maintenanceMode: false,
   adminPassword: 'admin123',
+  websiteLogo: '',
+  websiteFavicon: '',
+  footerText: '',
+  copyrightText: '',
+  notificationEmail: '',
+  replyToEmail: '',
+  profilePhoto: '',
+  profileName: '',
+  profileEmail: '',
+  profilePhone: '',
+  profileDesignation: '',
+  lastPasswordChanged: 'June 2026',
+  lastLogin: 'Just now',
 };
 
 const loadSettings = () => {

@@ -18,10 +18,10 @@ export const EngineeringWorkspace = () => {
 
   return (
     <div>
-      <header className="workspace-page-header">
+      <div className="workspace-page-header">
         <h1>Engineering Workspace</h1>
         <p>Interactive playground to explore and master practical electronics.</p>
-      </header>
+      </div>
 
       <div className="workspace-dashboard-grid">
         {/* Left Column (Main Focus) */}

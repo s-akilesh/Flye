@@ -330,19 +330,39 @@
 }
 
 /* Interactive Component Details Page Shell */
+.component-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+  height: calc(100vh - 144px); /* 100vh - 80px (header) - 64px (padding) */
+  overflow: hidden;
+}
+
+/* Hide scrollbar on the parent main container specifically when this view is open */
+.learning-workspace-content:has(.component-details-container) {
+  overflow: hidden;
+}
+
 .component-details-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: var(--space-6, 32px);
+  flex-grow: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .details-left-pane {
   grid-column: span 5;
   display: flex;
   flex-direction: column;
-  gap: var(--space-5, 24px);
-  position: sticky;
-  top: 112px;
+  gap: var(--space-4, 16px);
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+.details-left-pane::-webkit-scrollbar {
+  display: none; /* Hide scrollbar Chrome/Safari */
 }
 
 .details-right-pane {
@@ -350,11 +370,29 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-6, 32px);
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 8px; /* space for scrollbar */
+}
+
+/* Styled scrollbar for right side pane */
+.details-right-pane::-webkit-scrollbar {
+  width: 6px;
+}
+.details-right-pane::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.01);
+}
+.details-right-pane::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+.details-right-pane::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.3);
 }
 
 /* Component Illustration Engine ("Take It Apart") */
 .illustration-stage {
-  height: 480px;
+  height: 400px; /* Reduced from 480px to fit better on standard laptops */
   background: rgba(5, 5, 8, 0.4);
   border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
   border-radius: 12px;
@@ -683,18 +721,30 @@
     grid-column: span 12;
   }
 
+  .component-details-container {
+    height: auto;
+    overflow: visible;
+  }
+
   .component-details-grid {
     display: flex;
     flex-direction: column;
+    height: auto;
+    overflow: visible;
   }
 
   .details-left-pane {
     position: static;
     width: 100%;
+    height: auto;
+    overflow: visible;
   }
 
   .details-right-pane {
     width: 100%;
+    height: auto;
+    overflow: visible;
+    padding-right: 0;
   }
 
   .learning-cards-grid {
@@ -705,3 +755,210 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   Redesign Enhancements (Variant Selector, Sticky Pane, Visual Cards)
+   ========================================================================== */
+
+.workspace-family-selector-container {
+  background: var(--surface-card, rgba(20, 20, 30, 0.75));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.variant-chips-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.variant-chips-list::-webkit-scrollbar {
+  display: none;
+}
+
+.variant-chip {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
+  color: var(--text-secondary, #9ca3af);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s var(--transition-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.variant-chip:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary, #f9fafb);
+  border-color: var(--border-active, rgba(255, 255, 255, 0.16));
+}
+
+.variant-chip.active {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: var(--accent-violet, #8b5cf6);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
+}
+
+.product-visual-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-4, 16px);
+}
+
+.product-visual-card {
+  grid-column: span 6;
+  position: relative;
+  height: 240px;
+  background: rgba(5, 5, 8, 0.5);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-visual-card:hover, .product-visual-card.active {
+  border-color: var(--accent-blue, #3b82f6);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.product-illustration-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.product-svg {
+  width: 120px;
+  height: 120px;
+  transition: transform 0.4s ease;
+}
+
+.product-svg .outer-case {
+  stroke: var(--text-tertiary, #6b7280);
+  fill: rgba(255, 255, 255, 0.02);
+  transition: opacity 0.3s ease, fill 0.3s ease;
+}
+
+.product-svg .pcb-circuit {
+  opacity: 0;
+  transform: scale(0.95);
+  transform-origin: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.product-svg .pcb-board {
+  fill: rgba(30, 41, 59, 0.6);
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.product-svg .pcb-traces {
+  stroke: rgba(255, 255, 255, 0.05);
+}
+
+.product-svg .pcb-cpu {
+  fill: rgba(15, 23, 42, 0.8);
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.product-svg .part-cap, .product-svg .part-res, .product-svg .part-led {
+  stroke: rgba(255, 255, 255, 0.2);
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.product-visual-card:hover .product-svg, .product-visual-card.active .product-svg {
+  transform: scale(1.05);
+}
+
+.product-visual-card:hover .outer-case, .product-visual-card.active .outer-case {
+  opacity: 0.15;
+}
+
+.product-visual-card:hover .pcb-circuit, .product-visual-card.active .pcb-circuit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.product-svg .active-highlight {
+  stroke: var(--accent-blue, #3b82f6) !important;
+  fill: rgba(59, 130, 246, 0.3) !important;
+  filter: drop-shadow(0 0 8px var(--accent-blue, #3b82f6));
+  animation: pulse-glow-highlight 1.5s infinite alternate;
+}
+
+@keyframes pulse-glow-highlight {
+  0% {
+    filter: drop-shadow(0 0 4px var(--accent-blue, #3b82f6));
+    opacity: 0.8;
+  }
+  100% {
+    filter: drop-shadow(0 0 12px var(--accent-blue, #3b82f6)) brightness(1.2);
+    opacity: 1;
+  }
+}
+
+.product-info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(3, 3, 5, 0.95) 70%, rgba(3, 3, 5, 0) 100%);
+  padding: 16px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.product-visual-card:hover .product-info-overlay, .product-visual-card.active .product-info-overlay {
+  transform: translateY(0);
+}
+
+.product-overlay-title {
+  font-size: 9px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-blue, #3b82f6);
+}
+
+.product-overlay-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary, #f9fafb);
+  margin: 0;
+}
+
+.product-overlay-desc {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary, #9ca3af);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .product-visual-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-visual-card {
+    grid-column: span 12;
+  }
+}
+
+

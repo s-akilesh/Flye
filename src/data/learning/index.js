@@ -1,13 +1,18 @@
 import { fundamentalsData } from './fundamentals';
-import { capacitorData } from './components/capacitor';
-import { resistorData } from './components/resistor';
-import { ledData } from './components/led';
+import { capacitorFamily } from './components/capacitor';
+import { resistorFamily } from './components/resistor';
+import { ledFamily } from './components/led';
 
-const componentsData = [
-  capacitorData,
-  resistorData,
-  ledData
+const families = [
+  capacitorFamily,
+  resistorFamily,
+  ledFamily
 ];
+
+// Flat list of all component variants
+const componentsData = families.reduce((acc, family) => {
+  return acc.concat(family.variants);
+}, []);
 
 export const LearningRepository = {
   // Fundamentals
@@ -15,13 +20,18 @@ export const LearningRepository = {
     return fundamentalsData;
   },
 
-  // Components
+  // Components (all individual variants)
   getComponents: () => {
     return componentsData;
   },
 
   getComponentBySlug: (slug) => {
     return componentsData.find(c => c.slug === slug) || null;
+  },
+
+  // Get the parent family container for a given variant slug
+  getFamilyBySlug: (slug) => {
+    return families.find(f => f.variants.some(v => v.slug === slug)) || null;
   },
 
   getCategories: () => {
