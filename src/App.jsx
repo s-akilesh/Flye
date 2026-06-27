@@ -10,6 +10,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import { ProjectProvider } from './context/ProjectContext';
 import { EnquiryProvider } from './context/EnquiryContext';
 import { ToastProvider } from './context/ToastContext';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 export default function App() {
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function App() {
                   <AIProvider>
                     <WishlistProvider>
                       <AppRouter />
+                      <SpeedInsights />
                     </WishlistProvider>
                   </AIProvider>
                 </CompareProvider>
