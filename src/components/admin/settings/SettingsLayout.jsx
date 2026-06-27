@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '../../ui/Button';
 import { ConfirmDialog } from '../../ui/ConfirmDialog';
 
@@ -15,6 +15,18 @@ export const SettingsLayout = ({
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
+
+  // Prevent browser reload/close with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
 
   const handleNavigateClick = (action) => {
     if (isDirty) {
@@ -54,8 +66,20 @@ export const SettingsLayout = ({
         >
           Settings
         </span>
+        {categoryName && (
+          <>
+            <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+            <span 
+              onClick={() => handleNavigateClick(onCancel)}
+              style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
+              className="breadcrumb-link"
+            >
+              {categoryName}
+            </span>
+          </>
+        )}
         <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-        <span style={{ color: 'var(--accent-violet)' }}>{categoryName}</span>
+        <span style={{ color: 'var(--accent-violet)' }}>{title}</span>
       </div>
 
       {/* Page Header */}

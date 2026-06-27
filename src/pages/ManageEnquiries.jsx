@@ -558,6 +558,14 @@ export const ManageEnquiries = () => {
                 <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Project Title:</span>
                 <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: '#fff' }}>{activeEnquiry.projectTitle}</span>
               </div>
+              {activeEnquiry.notes && activeEnquiry.notes.includes('Selected Kit:') && (
+                <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
+                  <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>Requested Kit:</span>
+                  <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: 'bold', color: 'var(--accent-violet)' }}>
+                    {activeEnquiry.notes.replace('Selected Kit: ', '')}
+                  </span>
+                </div>
+              )}
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
                 <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Project Price:</span>
                 <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>{activeEnquiry.price ? `₹${activeEnquiry.price}` : '-'}</span>

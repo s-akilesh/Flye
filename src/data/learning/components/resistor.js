@@ -9,6 +9,13 @@ export const resistorFamily = {
       category: 'Passive Components',
       description: 'A component that resists the flow of electricity by a fixed, unchanging amount.',
       status: 'completed',
+      mission: 'Learn how resistors limit current and divide voltage.',
+      prerequisites: ['electricity-basics'],
+      learningOutcomes: ['What is a resistor', 'How to read color bands', "Ohm's Law basics"],
+      typicalValue: '1kΩ',
+      polarity: 'Non-polarized',
+      difficulty: 'Beginner',
+      learningTime: '5 min',
       symbolSvg: `
         <svg viewBox="0 0 80 40" width="60" height="40" stroke="currentColor" stroke-width="2.5" fill="none">
           <line x1="5" y1="20" x2="25" y2="20" />
@@ -146,6 +153,13 @@ export const resistorFamily = {
       category: 'Passive Components',
       description: 'A resistor whose resistance can be adjusted by turning a dial. Commonly used as volume controls.',
       status: 'new',
+      mission: 'Learn how to adjust resistance dynamically.',
+      prerequisites: ['fixed-resistor'],
+      learningOutcomes: ['How variable resistors work', 'Potentiometer basics', 'Controlling voltage output'],
+      typicalValue: '10kΩ',
+      polarity: 'Non-polarized',
+      difficulty: 'Beginner',
+      learningTime: '7 min',
       symbolSvg: `
         <svg viewBox="0 0 80 40" width="60" height="40" stroke="currentColor" stroke-width="2.5" fill="none">
           <line x1="5" y1="20" x2="25" y2="20" />

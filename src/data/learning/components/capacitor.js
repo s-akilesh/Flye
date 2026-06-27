@@ -9,6 +9,13 @@ export const capacitorFamily = {
       category: 'Passive Components',
       description: 'A component that stores a large amount of electrical energy in a liquid. It has a positive and a negative side.',
       status: 'continue',
+      mission: 'Learn why capacitors store energy and where they are used.',
+      prerequisites: ['electricity-basics', 'voltage-basics', 'current-basics'],
+      learningOutcomes: ['What is a capacitor', 'Why polarity matters', 'Where capacitors are used', 'How capacitors store energy'],
+      typicalValue: '100µF',
+      polarity: 'Polarized',
+      difficulty: 'Beginner',
+      learningTime: '10 min',
       symbolSvg: `
         <svg viewBox="0 0 40 60" width="40" height="60" stroke="currentColor" stroke-width="2.5" fill="none">
           <line x1="20" y1="5" x2="20" y2="25" />
@@ -209,12 +216,59 @@ export const capacitorFamily = {
           answer: 'Circuits will get noisy. Microcontrollers might reset randomly, and speakers will make a loud hum.'
         }
       ],
-      applications: [
-        { id: 'phone-charger', role: 'Smoothing Power', desc: 'Smoothes electrical ripples. It makes the voltage steady before charging your phone.' },
-        { id: 'motherboard', role: 'CPU Stabilizer', desc: 'Extra power reservoir. It gives quick energy to the computer brain so it does not crash.' },
-        { id: 'arduino', role: 'Voltage Dip Filter', desc: 'Power helper. It keeps the board running smoothly when motors draw too much power.' },
-        { id: 'amplifier', role: 'Sound Filter', desc: 'Sound filter. It blocks static hums so your music sounds clean.' }
+      workingSteps: [
+        { title: 'Charge', desc: 'When connected to a power source, electrons flow and gather on the negative plate, creating an electric field across the insulator.' },
+        { title: 'Store Energy', desc: 'The insulator stops electrons from crossing, holding them in place. The energy is stored in the electric field between plates.' },
+        { title: 'Discharge', desc: 'When the power source is removed and a path is provided, the stored electrons rush out to power the load instantly.' }
       ],
+      applications: [
+        {
+          id: 'phone-charger',
+          title: 'Phone Charger',
+          role: 'Power Smoothing',
+          desc: 'Smoothes electrical ripples. It makes the voltage steady before charging your phone.',
+          whyHere: 'It smooths out the messy AC-to-DC conversion, ensuring your phone receives a clean, steady 5V.',
+          whatIfFails: 'The charger will output high electrical noise. Your phone screen might glitch, battery health will degrade, or charging will stop entirely.'
+        },
+        {
+          id: 'motherboard',
+          title: 'Motherboard',
+          role: 'CPU Stabilizer',
+          desc: 'Extra power reservoir. It gives quick energy to the computer brain so it does not crash.',
+          whyHere: 'CPU power demands spike in nanoseconds. The capacitor discharges instantly to cover these spikes.',
+          whatIfFails: 'The CPU will suffer from sudden voltage drops, causing random blue screens, system freezes, or sudden restarts.'
+        },
+        {
+          id: 'arduino',
+          title: 'Arduino Board',
+          role: 'Voltage Dip Filter',
+          desc: 'Power helper. It keeps the board running smoothly when motors draw too much power.',
+          whyHere: 'When motors start, they draw a large surge of current that dips the main power rail.',
+          whatIfFails: 'The main controller chip will experience a brownout reset, restarting your code from the beginning repeatedly.'
+        },
+        {
+          id: 'amplifier',
+          title: 'Audio Amplifier',
+          role: 'Sound Filter',
+          desc: 'Sound filter. It blocks static hums so your music sounds clean.',
+          whyHere: 'Filters out low-frequency AC ripples from the power supply that would otherwise bleed into the audio signal.',
+          whatIfFails: 'Your speakers will output a constant, annoying low-pitched hum (50Hz/60Hz) that drowns out your music.'
+        }
+      ],
+      relationshipChain: ['Battery', 'Resistor', 'Capacitor', 'LED'],
+      relatedConnections: [
+        { from: 'Resistor', to: 'Capacitor', desc: 'Controls how fast the capacitor charges' },
+        { from: 'Capacitor', to: 'LED', desc: 'Supplies smooth energy to prevent flickering' }
+      ],
+      miniProject: {
+        title: 'Automatic Street Light',
+        desc: 'Build a circuit that automatically turns an LED on when it gets dark.',
+        components: ['Capacitor', 'Resistor', 'LDR', 'LED']
+      },
+      nextLearning: {
+        name: 'Resistor',
+        slug: 'fixed-resistor'
+      },
       quickSummary: [
         'Acts like a tiny battery that charges and discharges instantly.',
         'Makes messy voltages steady and clean.',

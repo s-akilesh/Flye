@@ -1,186 +1,301 @@
-import React, { useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { ROUTES } from '../constants/routes';
 import { useSettings } from '../hooks/useSettings';
+import { SETTINGS_METADATA } from '../constants/settingsMetadata';
 
-// Lazy load settings form subcomponents for performance optimization
-const WebsiteSettings = React.lazy(() => import('../components/admin/settings/WebsiteSettings').then(m => ({ default: m.WebsiteSettings })));
-const SocialMediaSettings = React.lazy(() => import('../components/admin/settings/SocialMediaSettings').then(m => ({ default: m.SocialMediaSettings })));
-const ContactEmailSettings = React.lazy(() => import('../components/admin/settings/ContactEmailSettings').then(m => ({ default: m.ContactEmailSettings })));
-const SecuritySettings = React.lazy(() => import('../components/admin/settings/SecuritySettings').then(m => ({ default: m.SecuritySettings })));
-const ProfileSettings = React.lazy(() => import('../components/admin/settings/ProfileSettings').then(m => ({ default: m.ProfileSettings })));
+// Dynamic lazy imports mapping for bundler-safe code splitting
+const COMPONENT_MAPPING = {
+  WebsiteBranding: React.lazy(() => import('../components/admin/settings/WebsiteBranding').then(m => ({ default: m.WebsiteBranding }))),
+  ContactInfo: React.lazy(() => import('../components/admin/settings/ContactInfo').then(m => ({ default: m.ContactInfo }))),
+  FooterSettings: React.lazy(() => import('../components/admin/settings/FooterSettings').then(m => ({ default: m.FooterSettings }))),
+  PasswordSettings: React.lazy(() => import('../components/admin/settings/PasswordSettings').then(m => ({ default: m.PasswordSettings }))),
+  AccessStats: React.lazy(() => import('../components/admin/settings/AccessStats').then(m => ({ default: m.AccessStats }))),
+  EmailRouting: React.lazy(() => import('../components/admin/settings/EmailRouting').then(m => ({ default: m.EmailRouting }))),
+  SocialNetworks: React.lazy(() => import('../components/admin/settings/SocialNetworks').then(m => ({ default: m.SocialNetworks }))),
+  AdminProfile: React.lazy(() => import('../components/admin/settings/AdminProfile').then(m => ({ default: m.AdminProfile }))),
+  SMTPSettings: React.lazy(() => import('../components/admin/settings/SMTPSettings').then(m => ({ default: m.SMTPSettings }))),
+  SystemPrefs: React.lazy(() => import('../components/admin/settings/SystemPrefs').then(m => ({ default: m.SystemPrefs }))),
+};
 
 export const AdminSettings = () => {
   const navigate = useNavigate();
   const { settings } = useSettings();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const activeCategory = searchParams.get('category');
+  // Search States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
-  // Metadata configuration forSettings categories (Order prioritized by daily usage frequency)
-  const SETTING_CATEGORIES = useMemo(() => [
-    {
-      id: 'website',
-      icon: '🌐',
-      title: 'Website Settings',
-      description: 'Configure website branding, logos, tags, and contact details.',
-      status: (settings.companyName && settings.contactEmail && settings.websiteLogo) ? 'configured' : 'attention',
-      component: WebsiteSettings
-    },
-    {
-      id: 'social',
-      icon: '📱',
-      title: 'Social Media',
-      description: 'Manage handle URLs and connection states for Facebook, Instagram, etc.',
-      status: (settings.facebookUrl || settings.instagramUrl || settings.linkedinUrl || settings.youtubeUrl || settings.twitterUrl || settings.githubUrl || settings.websiteUrl) ? 'configured' : 'attention',
-      component: SocialMediaSettings
-    },
-    {
-      id: 'email',
-      icon: '📧',
-      title: 'Contact & Email',
-      description: 'Routing for contact inquiries, automated alerts, and SMTP configs.',
-      status: (settings.contactEmail || settings.notificationEmail || settings.replyToEmail) ? 'configured' : 'attention',
-      component: ContactEmailSettings
-    },
-    {
-      id: 'security',
-      icon: '🔐',
-      title: 'Security & Password',
-      description: 'Change admin portal password and review device/session logs.',
-      status: settings.adminPassword ? 'configured' : 'attention',
-      component: SecuritySettings
-    },
-    {
-      id: 'profile',
-      icon: '👤',
-      title: 'Profile Settings',
-      description: 'Update full name, designation, contact info, and profile avatar.',
-      status: (settings.profileName && settings.profileEmail) ? 'configured' : 'attention',
-      component: ProfileSettings
-    },
-    {
-      id: 'notifications',
-      icon: '🔔',
-      title: 'Notifications',
-      description: 'Preferences for alerts, push integrations, and automated reports.',
-      status: 'coming_soon'
-    },
-    {
-      id: 'users',
-      icon: '👥',
-      title: 'User Management',
-      description: 'Add administrative roles, edit permissions, and track audit logs.',
-      status: 'coming_soon'
-    },
-    {
-      id: 'billing',
-      icon: '💳',
-      title: 'Subscription & Billing',
-      description: 'Check subscription status, view invoices, and upgrade features.',
-      status: 'coming_soon'
+  // Accordion States (Default first category open)
+  const [expandedCategory, setExpandedCategory] = useState('website');
+
+  const activePage = searchParams.get('page');
+
+  // Debounce search query input (150ms) to prevent render lags
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Expand categories containing search results automatically
+  const isSearchMode = debouncedQuery.trim() !== '';
+
+  const activeRow = useMemo(() => {
+    if (!activePage) return null;
+    for (const cat of SETTINGS_METADATA) {
+      const found = cat.rows.find(r => r.id === activePage);
+      if (found) {
+        return { ...found, categoryTitle: cat.title };
+      }
     }
-  ], [settings]);
+    return null;
+  }, [activePage]);
 
-  const activeItem = useMemo(() => {
-    return SETTING_CATEGORIES.find(c => c.id === activeCategory) || null;
-  }, [activeCategory, SETTING_CATEGORIES]);
+  // Filter settings tree based on search query matching Title, Description, and Keywords
+  const filteredCategories = useMemo(() => {
+    const query = debouncedQuery.toLowerCase().trim();
+    if (!query) return SETTINGS_METADATA;
 
-  const ActiveFormComponent = activeItem?.component || null;
+    return SETTINGS_METADATA.map(cat => {
+      const matchingRows = cat.rows.filter(row => {
+        const titleMatch = row.title.toLowerCase().includes(query);
+        const descMatch = row.description.toLowerCase().includes(query);
+        const keywordMatch = row.keywords.some(kw => kw.toLowerCase().includes(query));
+        return titleMatch || descMatch || keywordMatch;
+      });
+
+      return {
+        ...cat,
+        rows: matchingRows
+      };
+    }).filter(cat => cat.rows.length > 0);
+  }, [debouncedQuery]);
 
   const handleBack = () => {
+    // Preserve the current expanded category state when returning
     setSearchParams({});
   };
+
+  const handleToggleCategory = (catId) => {
+    if (isSearchMode) return; // All are forced open during search
+    setExpandedCategory(prev => prev === catId ? null : catId);
+  };
+
+  const handleNavigateToPage = (rowId) => {
+    setSearchParams({ page: rowId });
+  };
+
+  // Status computation rendering
+  const renderStatusTag = (status) => {
+    if (status === 'coming_soon') {
+      return <span className="settings-status-tag tag-soon">Coming Soon</span>;
+    }
+    if (status === 'attention') {
+      return <span className="settings-status-tag tag-attention">⚠️ Needs Attention</span>;
+    }
+    return <span className="settings-status-tag tag-configured">✓ Configured</span>;
+  };
+
+  const ActiveFormComponent = activeRow ? COMPONENT_MAPPING[activeRow.component] : null;
 
   return (
     <motion.section
       className="portal-section"
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 15 }}
-      transition={{ duration: 0.4 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.3 }}
     >
-      {/* Main Settings Header (Only shows on Settings Hub Landing page) */}
-      {!ActiveFormComponent && (
-        <div className="portal-header" style={{ marginBottom: 'var(--space-5)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            <Button
-              variant="secondary"
-              className="btn-back"
-              onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
-              style={{ padding: '8px', minWidth: 'auto' }}
-            >
-              <svg viewBox="0 0 24 24">
-                <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
-              </svg>
-            </Button>
-            <div className="portal-title-area">
-              <h2>Platform Settings</h2>
-              <p>Centralized configuration hub for the Flyen platform</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Content Rendering Block */}
-      <div className="portal-content">
-        {ActiveFormComponent ? (
-          <Suspense fallback={<div style={{ padding: 'var(--space-5)', color: 'var(--text-muted)', fontSize: '13px' }}>Loading form...</div>}>
+      {ActiveFormComponent ? (
+        /* Render Selected Form Screen dynamically */
+        <div className="portal-content">
+          <Suspense fallback={<div style={{ padding: 'var(--space-5)', color: 'var(--text-muted)', fontSize: '13px' }}>Loading settings page...</div>}>
             <ActiveFormComponent onBack={handleBack} />
           </Suspense>
-        ) : (
-          /* Settings Hub Grid of Category Cards */
-          <div className="settings-hub-grid">
-            {SETTING_CATEGORIES.map((item) => {
-              const isComingSoon = item.status === 'coming_soon';
-              return (
-                <div
-                  key={item.id}
-                  className={`settings-hub-card ${isComingSoon ? 'disabled' : ''}`}
-                  onClick={() => {
-                    if (isComingSoon) {
-                      alert(`${item.title} settings will be available in a future update!`);
-                    } else {
-                      setSearchParams({ category: item.id });
-                    }
+        </div>
+      ) : (
+        /* Settings List Landing Page */
+        <>
+          <div className="portal-header" style={{ marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+              <Button
+                variant="secondary"
+                className="btn-back"
+                onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
+                style={{ padding: '8px', minWidth: 'auto' }}
+              >
+                <svg viewBox="0 0 24 24" style={{ width: '16px', height: '16px', fill: 'currentColor' }}>
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+              </Button>
+              <div className="portal-title-area">
+                <h2 style={{ fontSize: '24px', fontWeight: '800', margin: 0 }}>Platform Settings</h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                  Manage credentials, routing rules, configurations and website details.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="portal-content">
+            {/* Global Search Bar (centered) */}
+            <div style={{ marginBottom: 'var(--space-5)', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ position: 'relative', width: '100%', maxWidth: '640px' }}>
+                <input
+                  type="text"
+                  className="settings-search-bar"
+                  placeholder="Search settings (e.g. logo, password, email)..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px 12px 40px',
+                    fontSize: '13px',
+                    color: 'var(--text-primary)',
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '8px',
+                    outline: 'none',
+                    transition: 'all 0.2s ease',
                   }}
-                >
-                  {isComingSoon && <span className="settings-card-badge">Soon</span>}
-                  
-                  <div className="settings-card-icon">
-                    {item.icon}
-                  </div>
+                />
+                <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)', fontSize: '14px' }}>
+                  🔍
+                </span>
+                {searchQuery && (
+                  <button
+                    onClick={() => { setSearchQuery(''); setDebouncedQuery(''); }}
+                    style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '12px' }}
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
 
-                  <div className="settings-card-title-row">
-                    <h3 className="settings-card-title">{item.title}</h3>
-                    {!isComingSoon && <span className="settings-card-arrow">→</span>}
-                  </div>
+            {/* Accordion Categorized Rows List */}
+            {filteredCategories.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                {filteredCategories.map((cat) => {
+                  const isOpen = isSearchMode || expandedCategory === cat.id;
 
-                  <p className="settings-card-desc">{item.description}</p>
-
-                  {!isComingSoon && (
-                    <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span 
+                  return (
+                    <div key={cat.id} className="settings-accordion-section" style={{ border: '1px solid var(--border-subtle)', borderRadius: '8px', background: 'rgba(255,255,255,0.01)', overflow: 'hidden' }}>
+                      
+                      {/* Accordion Category Header */}
+                      <div
+                        className="settings-accordion-header"
+                        onClick={() => handleToggleCategory(cat.id)}
                         style={{
-                          fontSize: '10px',
-                          fontWeight: '750',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px',
-                          color: item.status === 'configured' ? 'var(--accent-emerald)' : 'var(--accent-amber, #f59e0b)'
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: 'var(--space-3) var(--space-4)',
+                          background: 'rgba(255,255,255,0.015)',
+                          cursor: isSearchMode ? 'default' : 'pointer',
+                          userSelect: 'none',
+                          borderBottom: isOpen ? '1px solid var(--border-subtle)' : 'none',
+                          transition: 'background 0.2s ease'
                         }}
                       >
-                        {item.status === 'configured' ? '✅ Configured' : '⚠ Needs Attention'}
-                      </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ fontSize: '16px' }}>{cat.icon}</span>
+                          <span style={{ fontSize: '13px', fontWeight: '700', color: '#fff', letterSpacing: '0.5px' }}>
+                            {cat.title}
+                          </span>
+                        </div>
+                        {!isSearchMode && (
+                          <span style={{ fontSize: '10px', color: 'var(--text-dim)', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}>
+                            ▼
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Accordion Children Rows */}
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0 }}
+                            animate={{ height: 'auto' }}
+                            exit={{ height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            style={{ overflow: 'hidden' }}
+                          >
+                            <div className="settings-list-container">
+                              {cat.rows.map((row) => (
+                                <div
+                                  key={row.id}
+                                  className="settings-list-row"
+                                  onClick={() => handleNavigateToPage(row.id)}
+                                >
+                                  <div className="settings-row-left">
+                                    <span className="settings-row-icon">{cat.icon}</span>
+                                    <div className="settings-row-info">
+                                      <h4>{row.title}</h4>
+                                      <p>{row.description}</p>
+                                    </div>
+                                  </div>
+                                  <div className="settings-row-right">
+                                    {renderStatusTag(row.status(settings))}
+                                    <span className="settings-row-arrow">→</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
                     </div>
-                  )}
+                  );
+                })}
+              </div>
+            ) : (
+              /* suggestions-driven empty state */
+              <div className="settings-empty-state">
+                <div style={{ fontSize: '28px', marginBottom: 'var(--space-3)' }}>🔍</div>
+                <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
+                  No settings found
+                </h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '0 0 var(--space-4) 0' }}>
+                  We couldn't find any results matching "{debouncedQuery}"
+                </p>
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 'var(--space-3)', width: '100%', maxWidth: '320px', margin: '0 auto' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Try searching for:
+                  </span>
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '8px' }}>
+                    {['Website', 'Email', 'Password', 'Social'].map(sug => (
+                      <button
+                        key={sug}
+                        className="sug-chip"
+                        onClick={() => setSearchQuery(sug)}
+                        style={{
+                          fontSize: '11px',
+                          color: 'var(--text-secondary)',
+                          background: 'rgba(255,255,255,0.03)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: '6px',
+                          padding: '4px 10px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        {sug}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              );
-            })}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </motion.section>
   );
 };

@@ -1,19 +1,32 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useMemo, useEffect } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
 import { LearningRepository } from '../../data/learning';
 
 // Import subcomponents
+import { ComponentHero } from '../../components/learning/ComponentHero';
+import { ComponentVariants } from '../../components/learning/ComponentVariants';
 import { ComponentOverview } from '../../components/learning/ComponentOverview';
-import { ComponentInside } from '../../components/learning/ComponentInside';
-import { ComponentLearningCards } from '../../components/learning/ComponentLearningCards';
+import { ComponentSpecifications } from '../../components/learning/ComponentSpecifications';
+import { ComponentTakeApart } from '../../components/learning/ComponentTakeApart';
+import { ComponentWorkingPrinciple } from '../../components/learning/ComponentWorkingPrinciple';
 import { ComponentApplications } from '../../components/learning/ComponentApplications';
-import { ComponentQuickSummary } from '../../components/learning/ComponentQuickSummary';
-import { ComponentFutureModules } from '../../components/learning/ComponentFutureModules';
+import { ComponentCommonMistakes } from '../../components/learning/ComponentCommonMistakes';
+import { ComponentRelatedComponents } from '../../components/learning/ComponentRelatedComponents';
+import { ComponentNextLearning } from '../../components/learning/ComponentNextLearning';
+
+const STAGES = [
+  { id: 'learn', label: '① Learn', num: 1 },
+  { id: 'explore', label: '② Explore', num: 2 },
+  { id: 'understand', label: '③ Understand', num: 3 },
+  { id: 'real-world', label: '④ Real World', num: 4 },
+  { id: 'build', label: '⑤ Build', num: 5 }
+];
 
 export const ComponentDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Load component data
   const componentData = useMemo(() => {
@@ -25,61 +38,40 @@ export const ComponentDetails = () => {
     return LearningRepository.getFamilyBySlug(slug);
   }, [slug]);
 
-  // Workspace Interactivity States
-  const [isExploded, setIsExploded] = useState(false);
-  const [selectedPartId, setSelectedPartId] = useState(null);
+  // Resolve roadmap breadcrumbs info
+  const roadmapInfo = useMemo(() => {
+    const lookupId = family ? family.id : slug;
+    return LearningRepository.getRoadmapComponent(lookupId);
+  }, [family, slug]);
 
-  // Reset states if slug changes
-  useEffect(() => {
-    setIsExploded(false);
-    setSelectedPartId(null);
-  }, [slug]);
+  // Resolve active stage
+  const activeStageId = searchParams.get('stage') || 'learn';
+  const activeStage = useMemo(() => {
+    return STAGES.find(s => s.id === activeStageId) || STAGES[0];
+  }, [activeStageId]);
 
-  if (!componentData) {
-    return (
-      <div className="workspace-card" style={{ padding: '64px 32px', textAlign: 'center', opacity: 0.8 }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '8px' }}>
-          Component Not Found
-        </h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-          We couldn't find a learning module for "{slug}". Explore our component library for available topics.
-        </p>
-        <button 
-          className="cta-button" 
-          onClick={() => navigate(ROUTES.LEARNING_COMPONENTS)}
-        >
-          Back to Library
-        </button>
-      </div>
-    );
-  }
-
-  const handlePartClick = (partId) => {
-    if (selectedPartId === partId) {
-      setSelectedPartId(null);
-    } else {
-      setSelectedPartId(partId);
-      // Scroll right-side "Take It Apart Details" section into view
-      const detailEl = document.getElementById('take-it-apart-details-section');
-      if (detailEl) {
-        detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }
+  const setStage = (id) => {
+    setSearchParams({ stage: id });
   };
 
-  const selectedPart = componentData.parts?.find(p => p.id === selectedPartId) || null;
+  // Reset stage to learn when slug changes
+  useEffect(() => {
+    setStage('learn');
+  }, [slug]);
 
-  return (
-    <div className="component-details-container">
-      
-      {/* 1. Component Family & Variant Selector (Breadcrumb Selector) */}
-      <div className="workspace-family-selector-container">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+  // Placeholder screen if component does not exist in active database (Coming Soon)
+  if (!componentData) {
+    const roadmapComp = LearningRepository.getRoadmapComponent(slug);
+    
+    return (
+      <div style={{ paddingBottom: 'var(--space-8)', maxWidth: '1000px', margin: '0 auto' }}>
+        {/* Breadcrumbs */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'var(--space-4)' }}>
           <button 
             className="product-btn" 
-            onClick={() => navigate(ROUTES.LEARNING_COMPONENTS)}
+            onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}
             style={{ padding: '6px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title="Back to Component Library"
+            title="Back to Workspace"
           >
             <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
               <line x1="19" y1="12" x2="5" y2="12" />
@@ -87,225 +79,264 @@ export const ComponentDetails = () => {
             </svg>
           </button>
           
-          <div className="family-breadcrumbs" style={{ fontSize: '11px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ color: 'var(--text-muted)' }}>{componentData.category}</span>
-            <span style={{ color: 'var(--border-active)', opacity: 0.5 }}>/</span>
-            <span style={{ color: 'var(--accent-violet)' }}>{family ? family.name : componentData.name}</span>
-          </div>
-        </div>
-
-        {family && family.variants && family.variants.length > 1 && (
-          <div className="variant-chips-list" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', flexWrap: 'wrap' }}>
-            {family.variants.map((v) => {
-              const isActive = v.slug === slug;
-              const displayName = v.name
-                .replace(' Capacitor', '')
-                .replace(' Resistor', '')
-                .replace(' Diode', '')
-                .replace('Light Emitting Diode', 'LED');
-              return (
-                <button
-                  key={v.slug}
-                  className={`variant-chip ${isActive ? 'active' : ''}`}
-                  onClick={() => navigate(`${ROUTES.LEARNING_COMPONENTS}/${v.slug}`)}
-                >
-                  {displayName}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* 2. Main Two-Column Layout */}
-      <div className="component-details-grid">
-        
-        {/* LEFT COLUMN: Sticky Illustration Panel */}
-        <div className="details-left-pane">
-          
-          {/* Component Image / Take It Apart Illustration */}
-          <ComponentInside 
-            component={componentData}
-            isExploded={isExploded}
-            setIsExploded={setIsExploded}
-            selectedPartId={selectedPartId}
-            onPartClick={handlePartClick}
-          />
-
-          {/* Action Buttons Directly Below Image */}
-          <div style={{ display: 'flex', gap: '12px' }}>
-            {componentData.parts && componentData.parts.length > 0 && (
-              <button 
-                className={`cta-button ${isExploded ? 'secondary' : ''}`}
-                style={{ flex: 1, fontSize: '12px', padding: '10px' }}
-                onClick={() => setIsExploded(!isExploded)}
-              >
-                {isExploded ? 'Assemble Component' : 'Take It Apart'}
-              </button>
+          <div className="family-breadcrumbs" style={{ fontSize: '11px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <span style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
+              Engineering Workspace
+            </span>
+            <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+            {roadmapComp && (
+              <>
+                <span style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
+                  {roadmapComp.levelTitle}
+                </span>
+                <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+                <span style={{ color: 'var(--text-muted)' }}>
+                  {roadmapComp.categoryName}
+                </span>
+                <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+              </>
             )}
-            <button 
-              className="cta-button secondary"
-              style={{ flex: 1, fontSize: '12px', padding: '10px' }}
-              onClick={() => {
-                const section = document.getElementById('where-you-see-this-section');
-                if (section) section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-              }}
-            >
-              Working Principle
-            </button>
-          </div>
-
-          {/* Component Title & Metadata Badge */}
-          <div style={{ padding: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-subtle)', borderRadius: '12px' }}>
-            <h1 style={{ fontSize: '22px', fontWeight: '800', margin: '0 0 6px 0', color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
-              {componentData.name}
-            </h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-tertiary)' }}>
-                {componentData.category}
-              </span>
-              <span className={`status-badge ${componentData.status}`}>
-                {componentData.status === 'completed' && 'Mastered'}
-                {componentData.status === 'continue' && 'Active'}
-                {componentData.status === 'new' && 'New'}
-              </span>
-            </div>
+            <span style={{ color: 'var(--accent-violet)' }}>{roadmapComp ? roadmapComp.name : slug}</span>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Scrollable Widgets list */}
-        <div className="details-right-pane">
-          
-          {/* A. Specifications */}
-          <ComponentOverview component={componentData} />
+        {/* Informative placeholder workspace card */}
+        <div className="workspace-card" style={{ padding: '48px var(--space-6)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', border: '1px dashed var(--border-subtle)', background: 'rgba(255,255,255,0.005)' }}>
+          <div style={{ fontSize: '40px' }}>⏳</div>
+          <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#fff', margin: 0 }}>
+            {roadmapComp ? roadmapComp.name : slug} Workspace Coming Soon
+          </h2>
+          <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', maxWidth: '500px', margin: 0, lineHeight: '1.5' }}>
+            {roadmapComp ? roadmapComp.description : ''} This learning workspace module is currently under active development. In the next stage, we will integrate interactive vector illustration sheets, dynamic parts inspection, and complete lab tests.
+          </p>
 
-          {/* B. Overview Description */}
-          <section className="workspace-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <span style={{ fontSize: '10px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'var(--accent-violet)' }}>
-              Overview
-            </span>
-            <h3 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>What is it?</h3>
-            <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
-              {componentData.description}
-            </p>
-          </section>
-
-          {/* C. Applications (general uses list) */}
-          <section className="workspace-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <span style={{ fontSize: '10px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'var(--accent-violet)' }}>
-              General Applications
-            </span>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {componentData.applications?.map((app, idx) => (
-                <div 
-                  key={idx} 
-                  style={{ 
-                    padding: '8px 12px', 
-                    background: 'rgba(255,255,255,0.02)', 
-                    border: '1px solid var(--border-subtle)', 
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    color: 'var(--text-secondary)'
-                  }}
-                >
-                  ⚙️ {app.role || app.product}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* D. Take It Apart Details (Specific details of active part selected on left) */}
-          <section 
-            className="workspace-card" 
-            id="take-it-apart-details-section"
-            style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          <button 
+            className="cta-button" 
+            style={{ marginTop: '16px' }}
+            onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <span style={{ fontSize: '10px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'var(--accent-violet)' }}>
-                  Interactive Inspection
-                </span>
-                <h3 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>Take It Apart Details</h3>
-              </div>
-              {selectedPartId && (
-                <button 
-                  className="product-btn" 
-                  onClick={() => setSelectedPartId(null)}
-                  style={{ fontSize: '11px', padding: '4px 8px' }}
-                >
-                  Reset View
-                </button>
-              )}
-            </div>
-
-            {selectedPart ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--accent-blue)' }}>🔬 Active Part:</span>
-                  <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{selectedPart.name}</span>
-                </div>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
-                  {selectedPart.description}
-                </p>
-                <div className="learning-cards-grid">
-                  {selectedPart.cards?.map((card, idx) => (
-                    <div key={idx} className="learning-card">
-                      <h4 className="learning-card-question">{card.question}</h4>
-                      <p className="learning-card-answer">{card.answer}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.06)', borderRadius: '8px', background: 'rgba(255,255,255,0.003)' }}>
-                <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', margin: 0 }}>
-                  Click any labeled part of the component on the left side to inspect its internal materials and secrets.
-                </p>
-              </div>
-            )}
-          </section>
-
-          {/* E. Learning Cards (General Q&A, always visible) */}
-          <ComponentLearningCards component={componentData} />
-
-          {/* F. Where You See This (Redesigned visual product grid) */}
-          <ComponentApplications component={componentData} />
-
-          {/* G. Common Mistakes */}
-          {componentData.commonMistakes && componentData.commonMistakes.length > 0 && (
-            <section className="workspace-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div>
-                <span style={{ fontSize: '10px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'var(--accent-red, #ef4444)' }}>
-                  Pitfalls & Warnings
-                </span>
-                <h3 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>Common Mistakes</h3>
-              </div>
-              <div className="learning-cards-grid">
-                {componentData.commonMistakes.map((mistake, idx) => (
-                  <div 
-                    key={idx} 
-                    className="learning-card" 
-                    style={{ 
-                      background: 'rgba(239, 68, 68, 0.015)', 
-                      borderColor: 'rgba(239, 68, 68, 0.08)' 
-                    }}
-                  >
-                    <h4 className="learning-card-question" style={{ color: 'var(--accent-red, #ef4444)' }}>{mistake.question}</h4>
-                    <p className="learning-card-answer">{mistake.answer}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* H. Quick Summary */}
-          <ComponentQuickSummary component={componentData} />
-
-          {/* I. Future Modules */}
-          <ComponentFutureModules />
+            Return to Learning Journey
+          </button>
         </div>
       </div>
+    );
+  }
+
+  const renderStageContent = () => {
+    switch (activeStage.id) {
+      case 'learn':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <ComponentHero component={componentData} onPrerequisiteClick={(prereq) => alert(`Prerequisite: ${prereq}`)} />
+            <ComponentVariants family={family} currentSlug={slug} />
+            <ComponentOverview component={componentData} />
+            <ComponentSpecifications component={componentData} />
+          </div>
+        );
+      case 'explore':
+        return <ComponentTakeApart component={componentData} />;
+      case 'understand':
+        return <ComponentWorkingPrinciple component={componentData} />;
+      case 'real-world':
+        return <ComponentApplications component={componentData} />;
+      case 'build':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <ComponentCommonMistakes component={componentData} />
+            <ComponentRelatedComponents component={componentData} />
+            <ComponentNextLearning component={componentData} />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="component-details-container" style={{ paddingBottom: 'var(--space-8)', maxWidth: '1000px', margin: '0 auto' }}>
+      
+      {/* 1. Breadcrumbs Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+        <button 
+          className="product-btn" 
+          onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}
+          style={{ padding: '6px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          title="Back to Workspace"
+        >
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12,19 5,12 12,5" />
+          </svg>
+        </button>
+        
+        <div className="family-breadcrumbs" style={{ fontSize: '11px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+          <span style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
+            Engineering Workspace
+          </span>
+          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+          {roadmapInfo && (
+            <>
+              <span style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
+                {roadmapInfo.levelTitle}
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+              <span style={{ color: 'var(--text-muted)' }}>
+                {roadmapInfo.categoryName}
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+            </>
+          )}
+          <span 
+            style={{ color: 'var(--text-muted)', cursor: family ? 'pointer' : 'default' }}
+            onClick={() => family && navigate(`${ROUTES.LEARNING_COMPONENTS}/${family.id}`)}
+          >
+            {family ? family.name : componentData.name}
+          </span>
+          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+          <span style={{ color: 'var(--accent-violet)' }}>{componentData.name}</span>
+        </div>
+      </div>
+
+      {/* 2. Journey Milestone Tracker (Duolingo Style Progress Header) */}
+      <div 
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          background: 'rgba(255,255,255,0.01)', 
+          border: '1px solid var(--border-subtle)', 
+          borderRadius: '12px', 
+          padding: '16px 24px', 
+          marginBottom: '24px',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '14px', fontWeight: '850', color: '#fff', letterSpacing: '-0.3px' }}>
+            {componentData.name}
+          </span>
+          <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '12px' }}>➔</span>
+          <span style={{ fontSize: '13px', fontWeight: '750', color: 'var(--accent-violet)' }}>
+            Stage {activeStage.num} of 5: {activeStage.id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+          </span>
+        </div>
+
+        {/* Milestone Indicator circles */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {STAGES.map((s, idx) => {
+            const isCompleted = s.num < activeStage.num;
+            const isCurrent = s.id === activeStage.id;
+            return (
+              <React.Fragment key={s.id}>
+                <button
+                  onClick={() => setStage(s.id)}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    border: '1px solid',
+                    borderColor: isCurrent 
+                      ? 'var(--accent-violet)' 
+                      : isCompleted 
+                        ? 'var(--accent-emerald)' 
+                        : 'rgba(255, 255, 255, 0.08)',
+                    background: isCurrent 
+                      ? 'rgba(139, 92, 246, 0.15)' 
+                      : isCompleted 
+                        ? 'rgba(16, 185, 129, 0.1)' 
+                        : 'rgba(255, 255, 255, 0.01)',
+                    color: isCurrent 
+                      ? 'var(--accent-violet)' 
+                      : isCompleted 
+                        ? 'var(--accent-emerald)' 
+                        : 'var(--text-muted)',
+                    fontSize: '11px',
+                    fontWeight: '800',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 200ms ease'
+                  }}
+                  title={s.label}
+                >
+                  {isCompleted ? '✓' : s.num}
+                </button>
+                {idx < STAGES.length - 1 && (
+                  <div 
+                    style={{ 
+                      width: '20px', 
+                      height: '2px', 
+                      background: isCompleted ? 'var(--accent-emerald)' : 'rgba(255, 255, 255, 0.08)',
+                      opacity: 0.6
+                    }} 
+                  />
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Stage Content Area */}
+      <div className="stage-content-wrapper" style={{ minHeight: '380px' }}>
+        {renderStageContent()}
+      </div>
+
+      {/* 4. Bottom Stage Navigation Controls */}
+      <div 
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginTop: '40px',
+          paddingTop: '24px',
+          borderTop: '1px solid rgba(255,255,255,0.05)'
+        }}
+      >
+        <button
+          className="product-btn"
+          disabled={activeStage.num === 1}
+          onClick={() => {
+            const prev = STAGES.find(s => s.num === activeStage.num - 1);
+            if (prev) {
+              setStage(prev.id);
+              window.scrollTo(0, 0);
+            }
+          }}
+          style={{ 
+            opacity: activeStage.num === 1 ? 0.3 : 1, 
+            cursor: activeStage.num === 1 ? 'not-allowed' : 'pointer'
+          }}
+        >
+          ← Previous Stage
+        </button>
+
+        <button
+          className="cta-button"
+          disabled={activeStage.num === 5}
+          onClick={() => {
+            const next = STAGES.find(s => s.num === activeStage.num + 1);
+            if (next) {
+              setStage(next.id);
+              window.scrollTo(0, 0);
+            }
+          }}
+          style={{ 
+            opacity: activeStage.num === 5 ? 0.3 : 1, 
+            cursor: activeStage.num === 5 ? 'not-allowed' : 'pointer',
+            padding: '8px 16px',
+            fontSize: '12px'
+          }}
+        >
+          {activeStage.num < 5 
+            ? `Next Stage: ${STAGES.find(s => s.num === activeStage.num + 1).id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} →` 
+            : 'Lesson Completed'
+          }
+        </button>
+      </div>
+
     </div>
   );
 };

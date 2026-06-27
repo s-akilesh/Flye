@@ -26,6 +26,7 @@ const EngineeringWorkspace = React.lazy(() => import('../pages/learning/Engineer
 const Fundamentals = React.lazy(() => import('../pages/learning/Fundamentals').then(module => ({ default: module.Fundamentals })));
 const ComponentLibrary = React.lazy(() => import('../pages/learning/ComponentLibrary').then(module => ({ default: module.ComponentLibrary })));
 const ComponentDetails = React.lazy(() => import('../pages/learning/ComponentDetails').then(module => ({ default: module.ComponentDetails })));
+const FundamentalDetails = React.lazy(() => import('../pages/learning/FundamentalDetails').then(module => ({ default: module.FundamentalDetails })));
 
 import { ProtectedRoute } from '../components/auth/ProtectedRoute.jsx';
 import { AuthProvider } from '../context/AuthContext.jsx';
@@ -65,6 +66,7 @@ export const AppRouter = () => {
                   <Route element={<LearningLayout />}>
                     <Route path={ROUTES.LEARNING_WORKSPACE} element={<EngineeringWorkspace />} />
                     <Route path={ROUTES.LEARNING_FUNDAMENTALS} element={<Fundamentals />} />
+                    <Route path={ROUTES.LEARNING_FUNDAMENTAL_DETAILS} element={<FundamentalDetails />} />
                     <Route path={ROUTES.LEARNING_COMPONENTS} element={<ComponentLibrary />} />
                     <Route path={ROUTES.LEARNING_COMPONENT_DETAILS} element={<ComponentDetails />} />
                   </Route>

@@ -16,6 +16,7 @@ export const ROUTES = {
   LEARNING: '/learning',
   LEARNING_WORKSPACE: '/learning/workspace',
   LEARNING_FUNDAMENTALS: '/learning/fundamentals',
+  LEARNING_FUNDAMENTAL_DETAILS: '/learning/fundamentals/:slug',
   LEARNING_COMPONENTS: '/learning/components',
   LEARNING_COMPONENT_DETAILS: '/learning/components/:slug'
 };

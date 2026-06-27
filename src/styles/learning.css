@@ -334,13 +334,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4, 16px);
-  height: calc(100vh - 144px); /* 100vh - 80px (header) - 64px (padding) */
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
 }
 
-/* Hide scrollbar on the parent main container specifically when this view is open */
+/* Allow scrollbar on parent when this view is open */
 .learning-workspace-content:has(.component-details-container) {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .component-details-grid {
@@ -959,6 +959,41 @@
   .product-visual-card {
     grid-column: span 12;
   }
+}/* Choose Your Kit Pricing Cards & Carousel styles */
+.kits-cards-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
+.kit-pricing-card {
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 12px;
+  position: relative;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
 
+.kit-pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(139, 92, 246, 0.05);
+}
+
+@media (max-width: 768px) {
+  .kits-cards-grid {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 16px;
+    margin-right: -24px; /* bleed scroll to screen edge */
+  }
+  .kit-pricing-card {
+    flex: 0 0 290px !important;
+    scroll-snap-align: start;
+  }
+}

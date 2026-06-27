@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
@@ -12,6 +12,126 @@ import { useEnquiries } from '../hooks/useEnquiries';
 import { useSettings } from '../hooks/useSettings';
 import { useToast } from '../context/ToastContext';
 
+// Custom SVG Icons
+const DIYIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-blue)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+  </svg>
+);
+
+const CompleteIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-violet)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+    <circle cx="12" cy="12" r="10" />
+    <polygon points="12 8 13.09 10.22 15.5 10.57 13.75 12.28 14.16 14.7 12 13.56 9.84 14.7 10.25 12.28 8.5 10.57 10.91 10.22 12 8" />
+  </svg>
+);
+
+const PrintedIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-emerald)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+    <line x1="12" y1="22.08" x2="12" y2="12" />
+  </svg>
+);
+
+const CustomIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+    <polyline points="21 8 21 21 3 21 3 8" />
+    <rect x="1" y="3" width="22" height="5" />
+    <line x1="10" y1="12" x2="14" y2="12" />
+  </svg>
+);
+
+const PCBIcon = () => (
+  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="2" />
+    <path d="M6 6h4v4H6z" />
+    <path d="M6 14h4v4H6z" />
+    <path d="M14 6h4v4h-4z" />
+    <path d="M14 14h4v4h-4z" />
+  </svg>
+);
+
+const ChipIcon = () => (
+  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+    <line x1="9" y1="9" x2="15" y2="9" />
+    <line x1="9" y1="13" x2="15" y2="13" />
+    <line x1="9" y1="17" x2="15" y2="17" />
+    <line x1="12" y1="4" x2="12" y2="2" />
+    <line x1="12" y1="20" x2="12" y2="22" />
+  </svg>
+);
+
+const CubeIcon = () => (
+  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+    <path d="M2 17l10 5 10-5" />
+    <path d="M2 12l10 5 10-5" />
+  </svg>
+);
+
+const BookIcon = () => (
+  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+  </svg>
+);
+
+const getKitIcon = (id) => {
+  if (id === 'diy') return <DIYIcon />;
+  if (id === 'ready') return <CompleteIcon />;
+  if (id === 'printed') return <PrintedIcon />;
+  return <CustomIcon />;
+};
+
+const renderVisualDeliverables = (features) => {
+  if (!features || !Array.isArray(features)) return null;
+  const deliverables = [];
+  const lowerFeats = features.filter(f => typeof f === 'string').map(f => f.toLowerCase());
+
+  const hasComponents = lowerFeats.some(f => f.includes('component') || f.includes('electronic'));
+  const hasPCB = lowerFeats.some(f => f.includes('pcb') || f.includes('wiring') || f.includes('board'));
+  const hasPrinted = lowerFeats.some(f => f.includes('print') || f.includes('parts') || f.includes('mechanical'));
+  const hasDocs = lowerFeats.some(f => f.includes('doc') || f.includes('guide') || f.includes('book') || f.includes('code') || f.includes('support'));
+
+  if (hasPCB) deliverables.push({ label: 'PCB Board', icon: <PCBIcon /> });
+  if (hasComponents) deliverables.push({ label: 'Electronics', icon: <ChipIcon /> });
+  if (hasPrinted) deliverables.push({ label: '3D Printed Parts', icon: <CubeIcon /> });
+  if (hasDocs) deliverables.push({ label: 'Documentation', icon: <BookIcon /> });
+
+  if (deliverables.length === 0) return null;
+
+  return (
+    <div style={{ marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '10px' }}>
+      <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+        What's Included:
+      </span>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+        {deliverables.map((d, i) => (
+          <span 
+            key={i} 
+            style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '4px', 
+              fontSize: '10px', 
+              background: 'rgba(255,255,255,0.02)', 
+              border: '1px solid rgba(255,255,255,0.05)', 
+              padding: '2px 6px', 
+              borderRadius: '4px',
+              color: 'var(--text-primary)'
+            }}
+          >
+            {d.icon}
+            {d.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const ProjectDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -22,6 +142,99 @@ export const ProjectDetails = () => {
 
   const project = getProjectBySlug(slug);
 
+  const projectKits = useMemo(() => {
+    if (!project) return [];
+    if (project.variants && Array.isArray(project.variants) && project.variants.length > 0) {
+      return project.variants.filter(v => v && typeof v === 'object' && v.enabled);
+    }
+    const base = project.price || 2499;
+    return [
+      {
+        id: "diy",
+        enabled: true,
+        name: "DIY Learning Kit",
+        price: base,
+        description: "Assemble the project yourself.",
+        bestFor: "Students who want to build and learn.",
+        recommended: "best-value",
+        difficulty: "Beginner",
+        buildTime: "1-2 Hours",
+        ageGroup: "14+",
+        features: ["Electronic Components", "PCB & Wiring", "3D Printed Parts", "Step-by-step Guide"]
+      },
+      {
+        id: "ready",
+        enabled: true,
+        name: "Complete Project Kit",
+        price: base + 600,
+        description: "Fully assembled and tested project.",
+        bestFor: "Students who need a ready-made project.",
+        recommended: "most-popular",
+        difficulty: "Beginner",
+        buildTime: "Instant",
+        ageGroup: "12+",
+        features: ["Fully Assembled", "Tested & Verified", "Ready to Use", "Support included"]
+      },
+      {
+        id: "printed",
+        enabled: true,
+        name: "3D Printed Parts Pack",
+        price: Math.round(base * 0.35) || 999,
+        description: "Only 3D printed mechanical parts.",
+        bestFor: "Students who already have electronic components.",
+        recommended: "none",
+        difficulty: "Beginner",
+        buildTime: "Assembly Required",
+        ageGroup: "12+",
+        features: ["Printed Parts Only", "!Electronics Not Included", "!Assembly Required"]
+      }
+    ].filter(v => v.enabled);
+  }, [project]);
+
+  const maxKitPrice = useMemo(() => {
+    if (!projectKits || projectKits.length === 0) return 0;
+    return Math.max(...projectKits.map(k => Number(k?.price) || 0));
+  }, [projectKits]);
+
+  const completeKitPrice = useMemo(() => {
+    if (!projectKits || projectKits.length === 0) return 0;
+    const comp = projectKits.find(k => k && k.id === 'ready');
+    return comp ? Number(comp.price) || 0 : maxKitPrice;
+  }, [projectKits, maxKitPrice]);
+
+  const renderSavingsTag = (kit) => {
+    if (!kit || typeof kit !== 'object') return null;
+    const kitPrice = Number(kit.price);
+    if (isNaN(kitPrice) || kitPrice <= 0) return null;
+
+    const highestPrice = completeKitPrice || maxKitPrice;
+    if (kitPrice < highestPrice) {
+      const diff = highestPrice - kitPrice;
+      const pct = Math.round((diff / highestPrice) * 100);
+      if (diff > 0 && pct > 0) {
+        return (
+          <span 
+            style={{ 
+              display: 'inline-flex',
+              alignItems: 'center',
+              marginLeft: '8px', 
+              fontSize: '11px', 
+              background: 'rgba(16, 185, 129, 0.1)', 
+              border: '1px solid rgba(16, 185, 129, 0.2)',
+              color: 'var(--accent-emerald)', 
+              padding: '2px 6px', 
+              borderRadius: '4px',
+              fontWeight: '600'
+            }}
+          >
+            Save ₹{diff.toLocaleString('en-IN')} ({pct}%)
+          </span>
+        );
+      }
+    }
+    return null;
+  };
+
   // Gallery state - removed (using actual thumbnail image now)
 
   // Modals state
@@ -31,8 +244,20 @@ export const ProjectDetails = () => {
   const [requestorName, setRequestorName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [orderStep, setOrderStep] = useState('input'); // 'input' | 'confirmed'
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [showCompare, setShowCompare] = useState(false);
 
   const openOrderModal = () => {
+    const defaultKit = projectKits.find(k => k.recommended && k.recommended !== 'none') || projectKits[0];
+    setSelectedVariant(defaultKit || null);
+    setTargetOrderProject(project);
+    setRequestorName('');
+    setContactNumber('');
+    setOrderStep('input');
+  };
+
+  const openOrderModalForVariant = (kit) => {
+    setSelectedVariant(kit);
     setTargetOrderProject(project);
     setRequestorName('');
     setContactNumber('');
@@ -75,6 +300,7 @@ export const ProjectDetails = () => {
   const description = project.description || 'No description available.';
   const fullDescription = project.fullDescription || '';
   const price = project.price || 0;
+  const currency = project.currency || 'INR';
   const difficulty = project.difficulty || 'intermediate';
   const buildTime = project.buildTime || 'N/A';
   const technology = project.technology || 'Arduino';
@@ -168,6 +394,239 @@ export const ProjectDetails = () => {
                   <polyline points="21 15 16 10 5 21" />
                 </svg>
                 <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No image uploaded</span>
+              </div>
+            </div>
+
+
+            {/* Choose Your Kit Section */}
+            <div id="choose-kit-section" className="detail-section card-glass" style={{ padding: '24px' }}>
+              <h3 style={{ color: 'var(--accent-blue)', marginBottom: '4px' }}>Choose Your Kit</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 20px 0' }}>
+                Select the hardware and assembly option that best matches your learning goal.
+              </p>
+
+              {/* Cards Container Grid */}
+              <div className="kits-cards-grid">
+                {projectKits.map((kit) => {
+                  const isRecommended = kit.recommended && kit.recommended !== 'none';
+                  const highlightLabel = kit.recommended === 'best-value' ? '⭐ Best Value' : kit.recommended === 'most-popular' ? '⭐ Most Popular' : '';
+
+                  return (
+                    <div
+                      key={kit.id}
+                      className="card-glass kit-pricing-card"
+                      style={{
+                        border: isRecommended ? '2px solid var(--accent-violet)' : '1px solid rgba(255, 255, 255, 0.06)',
+                        background: isRecommended ? 'rgba(139, 92, 246, 0.02)' : 'rgba(255, 255, 255, 0.005)',
+                        padding: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        minHeight: '440px'
+                      }}
+                    >
+                      <div>
+                        {/* Header badge */}
+                        {isRecommended && (
+                          <span 
+                            style={{ 
+                              position: 'absolute', 
+                              top: '-12px', 
+                              left: '20px', 
+                              fontSize: '10px', 
+                              fontWeight: '900', 
+                              background: 'var(--accent-violet)', 
+                              color: '#fff', 
+                              padding: '2px 8px', 
+                              borderRadius: '4px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px'
+                            }}
+                          >
+                            {highlightLabel}
+                          </span>
+                        )}
+
+                        {/* Title & Icon */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          {getKitIcon(kit.id)}
+                          <h4 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0 }}>
+                            {kit.name}
+                          </h4>
+                        </div>
+
+                        {/* Description */}
+                        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
+                          {kit.description}
+                        </p>
+
+                        {/* Price */}
+                        <div style={{ margin: '12px 0' }}>
+                          <span style={{ fontSize: '24px', fontWeight: '900', color: '#fff' }}>
+                            ₹{(Number(kit.price) || 0).toLocaleString('en-IN')}
+                          </span>
+                          <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '4px' }}>
+                            {currency}
+                          </span>
+                          {renderSavingsTag(kit)}
+                        </div>
+
+                        {/* Best For block */}
+                        {kit.bestFor && (
+                          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '8px 10px', borderRadius: '6px', marginBottom: '12px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                            <span style={{ fontSize: '9px', textTransform: 'uppercase', color: 'var(--accent-blue)', fontWeight: 'bold', display: 'block', marginBottom: '2px' }}>
+                              Best For
+                            </span>
+                            <span style={{ fontSize: '11.5px', color: 'var(--text-primary)', lineHeight: '1.3' }}>
+                              {kit.bestFor}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Parameters details */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+                          {kit.difficulty && (
+                            <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.03)', padding: '2px 6px', borderRadius: '4px', color: 'var(--text-muted)' }}>
+                              Difficulty: {kit.difficulty}
+                            </span>
+                          )}
+                          {kit.buildTime && (
+                            <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.03)', padding: '2px 6px', borderRadius: '4px', color: 'var(--text-muted)' }}>
+                              Build: {kit.buildTime}
+                            </span>
+                          )}
+                          {kit.ageGroup && (
+                            <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.03)', padding: '2px 6px', borderRadius: '4px', color: 'var(--text-muted)' }}>
+                              Age: {kit.ageGroup}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Visual Summary */}
+                        {renderVisualDeliverables(kit.features)}
+
+                        {/* Included Features list */}
+                        <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0 0 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {Array.isArray(kit.features) && kit.features.map((feat, featIdx) => {
+                            const isExcluded = feat.startsWith('!') || feat.startsWith('-');
+                            const cleanFeat = isExcluded ? feat.substring(1) : feat;
+                            return (
+                              <li 
+                                key={featIdx} 
+                                style={{ 
+                                  display: 'flex', 
+                                  alignItems: 'flex-start', 
+                                  gap: '8px', 
+                                  fontSize: '12px',
+                                  color: isExcluded ? 'var(--text-muted)' : 'var(--text-primary)'
+                                }}
+                              >
+                                <span style={{ color: isExcluded ? 'var(--accent-red)' : 'var(--accent-emerald)', fontWeight: 'bold' }}>
+                                  {isExcluded ? '✗' : '✓'}
+                                </span>
+                                <span style={{ textDecoration: isExcluded ? 'line-through' : 'none' }}>
+                                  {cleanFeat}
+                                </span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+
+                      {/* CTA Buttons */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '20px' }}>
+                        <Button
+                          type="button"
+                          variant={isRecommended ? 'primary' : 'secondary'}
+                          className="width-100 btn-submit-calc"
+                          onClick={() => openOrderModalForVariant(kit)}
+                          style={{ padding: '8px 16px', fontSize: '12px' }}
+                        >
+                          Request This Kit
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Compare Accordion */}
+              <div className="card-glass" style={{ padding: '0px', marginTop: '24px', overflow: 'hidden' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowCompare(!showCompare)}
+                  style={{
+                    width: '100%',
+                    background: 'none',
+                    border: 'none',
+                    padding: '16px 20px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    color: '#fff',
+                    textAlign: 'left'
+                  }}
+                >
+                  <div>
+                    <h4 style={{ fontSize: '13px', fontWeight: '800', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--accent-blue)' }}>
+                      Need Help Choosing?
+                    </h4>
+                    <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>
+                      Not sure which kit is right for you? Click here to compare features.
+                    </p>
+                  </div>
+                  <span style={{ fontSize: '18px', color: 'var(--text-muted)', transition: 'transform 200ms ease', transform: showCompare ? 'rotate(90deg)' : 'none' }}>
+                    ❯
+                  </span>
+                </button>
+
+                {showCompare && (
+                  <div style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.1)' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12.5px', color: 'var(--text-primary)' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                          <th style={{ textAlign: 'left', padding: '10px', color: 'var(--text-muted)' }}>Feature</th>
+                          <th style={{ textAlign: 'center', padding: '10px', color: '#fff' }}>DIY Learning Kit</th>
+                          <th style={{ textAlign: 'center', padding: '10px', color: '#fff' }}>Complete Project Kit</th>
+                          <th style={{ textAlign: 'center', padding: '10px', color: '#fff' }}>3D Printed Parts Pack</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Electronics Included</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-red)' }}>❌ No</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                          <td style={{ padding: '10px', fontWeight: 'bold' }}>3D Printed Parts</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Assembly</td>
+                          <td style={{ textAlign: 'center', padding: '10px' }}>🔧 Self Assembly</td>
+                          <td style={{ textAlign: 'center', padding: '10px' }}>📦 Pre-Assembled</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--text-muted)' }}>-</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Documentation</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
+                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--text-muted)' }}>Manual Only</td>
+                        </tr>
+                        <tr>
+                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Ideal For</td>
+                          <td style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Builders & Students</td>
+                          <td style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Quick Demos & Labs</td>
+                          <td style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Spare Builders</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -419,27 +878,17 @@ export const ProjectDetails = () => {
                 </div>
               </div>
 
-              <div className="detail-price-box">
-                <div className="price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="price-val">₹{price}</span>
-                  <span className="availability-badge">
-                    {project.stockStatus === 'out-of-stock' ? '⚠ Out of Stock' : '✓ In Stock'}
-                  </span>
-                </div>
-                <p className="delivery-time" style={{ margin: 0 }}>
-                  Estimated Delivery: {project.estimatedDelivery || '3-5 Business Days'}
-                </p>
-              </div>
-
               <Button
                 type="button"
                 variant="primary"
                 className="width-100 btn-submit-calc"
-                id="btn-detail-order"
-                onClick={openOrderModal}
-                style={{ marginTop: 'var(--space-2)' }}
+                id="btn-detail-order-sticky"
+                onClick={() => {
+                  document.getElementById('choose-kit-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                style={{ marginTop: 'var(--space-3)' }}
               >
-                Request Project Kit
+                Choose Your Kit
               </Button>
               <Button
                 type="button"
@@ -458,7 +907,7 @@ export const ProjectDetails = () => {
                 style={{ marginTop: 'var(--space-2)' }}
               >
                 <svg viewBox="0 0 24 24" style={{ fill: 'currentColor', width: '14px', height: '14px' }}>
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.45 5.467 0 9.911-4.441 9.913-9.913.002-2.651-1.02-5.143-2.878-7.001C16.444 1.83 13.955.808 11.312.808c-5.474 0-9.915 4.444-9.917 9.916-.002 1.554.43 3.076 1.25 4.43l-.973 3.548 3.642-.956-.268-.152zm11.31-7.142c-.3-.149-1.776-.876-2.052-.976-.275-.1-.476-.149-.675.15-.199.299-.773.976-.949 1.176-.175.199-.35.224-.65.075-.3-.15-1.265-.466-2.41-1.487-.89-.794-1.775-1.665-2.074-.175-.299-.019-.461.13-.61.135-.133.3-.349.45-.523.15-.174.2-.299.3-.499.1-.199.05-.374-.025-.523-.075-.149-.675-1.627-.925-2.226-.243-.584-.488-.507-.674-.517-.175-.01-.375-.01-.575-.01-.2 0-.526.075-.801.374-.275.299-1.05.1023-1.05 2.5 0 2.396 1.747 4.708 1.986 5.032.25.324 3.441 5.253 8.337 7.371 1.164.502 2.074.802 2.784 1.026 1.169.372 2.235.319 3.077.193.938-.14 1.776-.723 2.027-1.396.25-.674.25-1.246.175-1.396-.075-.149-.275-.249-.575-.398z" />
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                 </svg>
                 WhatsApp
               </a>
@@ -470,9 +919,9 @@ export const ProjectDetails = () => {
       {/* Sticky Bottom CTA bar for Mobile viewports */}
       <div className="mobile-sticky-cta-bar" id="mobile-sticky-cta-bar">
         <div className="mobile-cta-price-box">
-          <span className="mobile-price-lbl">Unit Cost:</span>
+          <span className="mobile-price-lbl">Starting From:</span>
           <span className="mobile-price-val" id="mobile-detail-price">
-            ₹{price}
+            ₹{(projectKits.length > 0 ? Math.min(...projectKits.map(k => Number(k?.price) || 0)) : price).toLocaleString('en-IN')}
           </span>
         </div>
         <Button
@@ -480,9 +929,11 @@ export const ProjectDetails = () => {
           variant="primary"
           className="btn-submit-calc"
           id="btn-mobile-detail-order"
-          onClick={openOrderModal}
+          onClick={() => {
+            document.getElementById('choose-kit-section')?.scrollIntoView({ behavior: 'smooth' });
+          }}
         >
-          Request Kit
+          Choose Your Kit
         </Button>
       </div>
 
@@ -567,7 +1018,7 @@ export const ProjectDetails = () => {
               </svg>
             </div>
             <h4>REQUEST PROJECT KIT</h4>
-            <p>Enter your details below to confirm your request for <strong>{targetOrderProject?.title}</strong>.</p>
+            <p>Enter your details below to confirm your request for <strong>{targetOrderProject?.title} ({selectedVariant?.name})</strong>.</p>
 
             <div style={{ margin: 'var(--space-3) 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', textAlign: 'left' }}>
               <div>
@@ -604,20 +1055,21 @@ export const ProjectDetails = () => {
                 disabled={isProcessing}
                 onClick={async () => {
                   if (!requestorName.trim()) {
-                    showToast('Please enter your name.', 'error');
-                    return;
+                     showToast('Please enter your name.', 'error');
+                     return;
                   }
                   if (!contactNumber.trim() || contactNumber.replace(/\D/g, '').length < 10) {
-                    showToast('Please enter a valid 10-digit contact number.', 'error');
-                    return;
+                     showToast('Please enter a valid 10-digit contact number.', 'error');
+                     return;
                   }
                   try {
                     await addEnquiry({
                       name: requestorName,
                       mobile: contactNumber,
                       projectId: targetOrderProject.id,
-                      projectTitle: targetOrderProject.title,
-                      price: targetOrderProject.price
+                      projectTitle: `${targetOrderProject.title} (${selectedVariant?.name || 'Standard'})`,
+                      price: selectedVariant ? selectedVariant.price : targetOrderProject.price,
+                      notes: `Selected Kit: ${selectedVariant?.name || 'Standard'}`
                     });
                     setOrderStep('confirmed');
                   } catch (err) {
@@ -643,7 +1095,7 @@ export const ProjectDetails = () => {
               <div className="modal-receipt" id="receipt-meta">
                 <div className="receipt-row">
                   <span>PROJECT KIT:</span>
-                  <span className="receipt-val">{targetOrderProject.title}</span>
+                  <span className="receipt-val">{targetOrderProject.title} ({selectedVariant?.name})</span>
                 </div>
                 <div className="receipt-row">
                   <span>CONTACT:</span>
@@ -651,7 +1103,7 @@ export const ProjectDetails = () => {
                 </div>
                 <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
                   <span>UNIT COST:</span>
-                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>₹{targetOrderProject.price}</span>
+                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>₹{selectedVariant ? selectedVariant.price : targetOrderProject.price}</span>
                 </div>
               </div>
             )}

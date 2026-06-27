@@ -1,83 +1,69 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LearningRepository } from '../../data/learning';
 
 export const Fundamentals = () => {
+  const navigate = useNavigate();
   const fundamentals = useMemo(() => LearningRepository.getFundamentals(), []);
-  const [selectedConcept, setSelectedConcept] = useState(fundamentals[0]);
 
   return (
-    <div>
-      <div className="workspace-page-header">
+    <div style={{ paddingBottom: 'var(--space-8)' }}>
+      {/* Page Header */}
+      <div className="workspace-page-header" style={{ marginBottom: '32px' }}>
         <h1>Electrical Basics</h1>
-        <p>Master core electrical concepts visually and conceptually before diving into technical terms.</p>
+        <p>Master core electrical concepts visually using everyday analogies before exploring components.</p>
       </div>
 
-      {/* Concept Selector Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '16px', marginBottom: '32px' }}>
-        {fundamentals.map((concept) => {
-          const isActive = selectedConcept?.id === concept.id;
+      {/* Grid of 9 Lessons */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '20px' }}>
+        {fundamentals.map((concept, idx) => {
           return (
             <div 
               key={concept.id}
-              className="workspace-card"
+              className="workspace-card app-grid-btn"
               style={{
                 gridColumn: 'span 4',
                 cursor: 'pointer',
-                borderWidth: '1px',
-                borderColor: isActive ? 'var(--accent-violet)' : 'var(--border-subtle)',
-                background: isActive ? 'rgba(139, 92, 246, 0.04)' : 'var(--surface-card)',
-                boxShadow: isActive ? '0 0 15px rgba(139, 92, 246, 0.1)' : 'none',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8px'
+                justifyContent: 'space-between',
+                padding: '24px',
+                background: 'rgba(255,255,255,0.005)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '12px',
+                minHeight: '160px',
+                transition: 'all 200ms ease'
               }}
-              onClick={() => setSelectedConcept(concept)}
+              onClick={() => navigate(`/learning/fundamentals/${concept.slug}`)}
             >
-              <h3 style={{ fontSize: '15px', fontWeight: '700', margin: 0, color: isActive ? 'var(--accent-violet)' : 'var(--text-primary)' }}>
-                {concept.title}
-              </h3>
-              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: 0, lineClamp: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.4' }}>
-                {concept.description}
-              </p>
+              <div>
+                {/* Number indicator */}
+                <span style={{ fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--accent-violet)', letterSpacing: '0.5px' }}>
+                  Lesson {idx + 1}
+                </span>
+
+                <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '4px 0 8px 0', color: '#fff' }}>
+                  {concept.name}
+                </h3>
+                
+                <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                  {concept.description}
+                </p>
+              </div>
+
+              {/* Card Footer badges */}
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '2px 6px', borderRadius: '4px' }}>
+                  ⏱️ {concept.learningTime}
+                </span>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '2px 6px', borderRadius: '4px' }}>
+                  {concept.difficulty}
+                </span>
+              </div>
             </div>
           );
         })}
       </div>
-
-      {/* Active Concept Learning Cards Section */}
-      {selectedConcept && (
-        <section 
-          className="workspace-card" 
-          style={{ 
-            background: 'rgba(255, 255, 255, 0.01)', 
-            borderColor: 'rgba(255, 255, 255, 0.05)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px'
-          }}
-        >
-          <div>
-            <span style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-violet)' }}>
-              Deep Dive
-            </span>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', margin: '4px 0 8px 0', color: 'var(--text-primary)' }}>
-              {selectedConcept.title}
-            </h2>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
-              {selectedConcept.description}
-            </p>
-          </div>
-
-          <div className="learning-cards-grid">
-            {selectedConcept.cards.map((card, idx) => (
-              <div key={idx} className="learning-card">
-                <h4 className="learning-card-question">{card.question}</h4>
-                <p className="learning-card-answer">{card.answer}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 };

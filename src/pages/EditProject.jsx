@@ -32,11 +32,75 @@ export const EditProject = () => {
   const [technology, setTechnology] = useState('');
 
   // Pricing & Status State
-  const [price, setPrice] = useState(2499);
+  const [variants, setVariants] = useState([]);
   const [currency, setCurrency] = useState('INR');
   const [status, setStatus] = useState('active');
   const [featured, setFeatured] = useState(false);
   const [badge, setBadge] = useState('');
+
+  const updateKitField = (idx, field, value) => {
+    setVariants(prev => {
+      const copy = [...prev];
+      if (field === 'recommended' && value !== 'none') {
+        // Clear recommendation on all other kits
+        copy.forEach((k, i) => {
+          k.recommended = (i === idx) ? value : 'none';
+        });
+      } else {
+        copy[idx] = { ...copy[idx], [field]: value };
+      }
+      return copy;
+    });
+  };
+
+  const handleAddCustomKit = () => {
+    const newId = 'kit-' + Math.random().toString(36).substring(2, 7);
+    setVariants(prev => [
+      ...prev,
+      {
+        id: newId,
+        enabled: true,
+        name: "Custom Kit",
+        price: 0,
+        description: "",
+        bestFor: "",
+        recommended: "none",
+        difficulty: "Beginner",
+        buildTime: "1 Hour",
+        ageGroup: "12+",
+        features: []
+      }
+    ]);
+  };
+
+  const handleDeleteKit = (idx) => {
+    setVariants(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleAddFeature = (kitIdx, value) => {
+    if (!value.trim()) return;
+    setVariants(prev => {
+      const copy = [...prev];
+      const currentFeatures = copy[kitIdx].features || [];
+      copy[kitIdx] = {
+        ...copy[kitIdx],
+        features: [...currentFeatures, value.trim()]
+      };
+      return copy;
+    });
+  };
+
+  const handleRemoveFeature = (kitIdx, featIdx) => {
+    setVariants(prev => {
+      const copy = [...prev];
+      const currentFeatures = copy[kitIdx].features || [];
+      copy[kitIdx] = {
+        ...copy[kitIdx],
+        features: currentFeatures.filter((_, i) => i !== featIdx)
+      };
+      return copy;
+    });
+  };
 
   // Media State
   const [thumbnailPreview, setThumbnailPreview] = useState('');
@@ -85,8 +149,53 @@ export const EditProject = () => {
       setDifficulty(project.difficulty || 'intermediate');
       setBuildTime(project.buildTime || '6-8 Hours');
       setTechnology(project.technology || '');
-      setPrice(project.price || 2499);
       setCurrency(project.currency || 'INR');
+      if (project.variants && Array.isArray(project.variants) && project.variants.length > 0) {
+        setVariants(project.variants);
+      } else {
+        const base = project.price || 2499;
+        setVariants([
+          {
+            id: "diy",
+            enabled: true,
+            name: "DIY Learning Kit",
+            price: base,
+            description: "Assemble the project yourself.",
+            bestFor: "Students who want to build and learn.",
+            recommended: "best-value",
+            difficulty: "Beginner",
+            buildTime: "1-2 Hours",
+            ageGroup: "14+",
+            features: ["Electronic Components", "PCB & Wiring", "3D Printed Parts", "Step-by-step Guide"]
+          },
+          {
+            id: "ready",
+            enabled: true,
+            name: "Complete Project Kit",
+            price: base + 600,
+            description: "Fully assembled and tested project.",
+            bestFor: "Students who need a ready-made project.",
+            recommended: "most-popular",
+            difficulty: "Beginner",
+            buildTime: "Instant",
+            ageGroup: "12+",
+            features: ["Fully Assembled", "Tested & Verified", "Ready to Use", "Support included"]
+          },
+          {
+            id: "printed",
+            enabled: true,
+            name: "3D Printed Parts Pack",
+            price: Math.round(base * 0.35) || 999,
+            description: "Only 3D printed mechanical parts.",
+            bestFor: "Students who already have electronic components.",
+            recommended: "none",
+            difficulty: "Beginner",
+            buildTime: "Assembly Required",
+            ageGroup: "12+",
+            features: ["Printed Parts Only", "!Electronics Not Included", "!Assembly Required"]
+          }
+        ]);
+      }
       setStatus(project.status || 'active');
       setFeatured(project.featured || false);
       setBadge(project.badge || '');
@@ -350,12 +459,22 @@ export const EditProject = () => {
       .map((kw) => kw.trim().toLowerCase())
       .filter((kw) => kw !== '');
 
+    const finalKits = variants.map(v => ({
+      ...v,
+      price: Number(v.price) || 0
+    }));
+
+    const enabledKits = finalKits.filter(v => v.enabled);
+    const lowestPrice = enabledKits.length > 0
+      ? Math.min(...enabledKits.map(v => v.price))
+      : 0;
+
     // Map fields to the repository model schema
     const projectPayload = {
       title: title.trim(),
       description: description.trim(),
       fullDescription: fullDescription.trim(),
-      price: Number(price),
+      price: lowestPrice,
       currency,
       projectLevel,
       difficulty,
@@ -365,6 +484,7 @@ export const EditProject = () => {
       features: ['hardware', 'code', 'circuit', 'docs', 'support'],
       badge: badge.trim(),
       searchKeywords: finalKeywords,
+      variants: finalKits,
       images: {
         main: thumbnailPreview || 'src/assets/projects/smart-home/main.svg',
         schematic: schematicUrl.trim() || 'src/assets/projects/smart-home/schematic.svg',
@@ -688,20 +808,225 @@ export const EditProject = () => {
           <div id="sec-pricing" className="card-glass" style={{ padding: 'var(--space-4)' }}>
             <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>3. Pricing & Status</h3>
             
-            <div className="grid-12" style={{ gap: 'var(--space-3)' }}>
-              <div style={{ gridColumn: 'span 8' }} className="calc-row">
-                <label htmlFor="proj-price">Kit Cost *</label>
-                <Input
-                  type="number"
-                  id="proj-price"
-                  className="form-input"
-                  required
-                  min="0"
-                  value={price}
-                  onChange={(e) => setPrice(Number(e.target.value))}
-                />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '13px', fontWeight: '800', color: '#fff' }}>Available Kits Configuration</span>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  style={{ padding: '4px 10px', fontSize: '11px' }}
+                  onClick={handleAddCustomKit}
+                >
+                  + Add Custom Kit
+                </button>
               </div>
-              <div style={{ gridColumn: 'span 4' }} className="calc-row">
+
+              {variants.map((kit, kitIdx) => {
+                return (
+                  <div 
+                    key={kit.id} 
+                    className="card-glass" 
+                    style={{ 
+                      padding: '16px', 
+                      border: '1px solid rgba(255, 255, 255, 0.05)', 
+                      background: kit.enabled ? 'rgba(255,255,255,0.01)' : 'rgba(255,255,255,0.002)',
+                      opacity: kit.enabled ? 1 : 0.6,
+                      borderRadius: '8px'
+                    }}
+                  >
+                    {/* Header Row */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={kit.enabled} 
+                          onChange={(e) => updateKitField(kitIdx, 'enabled', e.target.checked)} 
+                        />
+                        <input 
+                          type="text" 
+                          value={kit.name} 
+                          placeholder="Kit Name"
+                          className="form-input" 
+                          style={{ fontWeight: '800', fontSize: '13px', padding: '4px 8px', width: '200px' }}
+                          onChange={(e) => updateKitField(kitIdx, 'name', e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <button
+                          type="button"
+                          className="btn"
+                          style={{ padding: '4px 8px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-red)', fontSize: '11px', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                          onClick={() => handleDeleteKit(kitIdx)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Editor Fields Grid */}
+                    {kit.enabled && (
+                      <div className="grid-12" style={{ gap: '12px' }}>
+                        {/* Price */}
+                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Price (₹) *</label>
+                          <input 
+                            type="number" 
+                            value={kit.price} 
+                            className="form-input" 
+                            onChange={(e) => updateKitField(kitIdx, 'price', Number(e.target.value))}
+                          />
+                        </div>
+
+                        {/* Highlight/Recommended */}
+                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Recommended Highlight</label>
+                          <select
+                            value={kit.recommended || 'none'}
+                            className="form-select"
+                            onChange={(e) => updateKitField(kitIdx, 'recommended', e.target.value)}
+                          >
+                            <option value="none">None</option>
+                            <option value="best-value">Best Value</option>
+                            <option value="most-popular">Most Popular</option>
+                          </select>
+                        </div>
+
+                        {/* Age Group */}
+                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Age Group</label>
+                          <input 
+                            type="text" 
+                            value={kit.ageGroup || ''} 
+                            placeholder="e.g. 14+"
+                            className="form-input" 
+                            onChange={(e) => updateKitField(kitIdx, 'ageGroup', e.target.value)}
+                          />
+                        </div>
+
+                        {/* Difficulty */}
+                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Difficulty</label>
+                          <input 
+                            type="text" 
+                            value={kit.difficulty || ''} 
+                            placeholder="e.g. Beginner"
+                            className="form-input" 
+                            onChange={(e) => updateKitField(kitIdx, 'difficulty', e.target.value)}
+                          />
+                        </div>
+
+                        {/* Build Time */}
+                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Estimated Build Time</label>
+                          <input 
+                            type="text" 
+                            value={kit.buildTime || ''} 
+                            placeholder="e.g. 30 Minutes"
+                            className="form-input" 
+                            onChange={(e) => updateKitField(kitIdx, 'buildTime', e.target.value)}
+                          />
+                        </div>
+
+                        {/* Short Description */}
+                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Short Description</label>
+                          <input 
+                            type="text" 
+                            value={kit.description || ''} 
+                            className="form-input" 
+                            onChange={(e) => updateKitField(kitIdx, 'description', e.target.value)}
+                          />
+                        </div>
+
+                        {/* Best For */}
+                        <div style={{ gridColumn: 'span 12' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Best For Description</label>
+                          <input 
+                            type="text" 
+                            value={kit.bestFor || ''} 
+                            placeholder="e.g. Students who want to build and learn."
+                            className="form-input" 
+                            onChange={(e) => updateKitField(kitIdx, 'bestFor', e.target.value)}
+                          />
+                        </div>
+
+                        {/* Interactive Features List Manager */}
+                        <div style={{ gridColumn: 'span 12' }} className="calc-row">
+                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Kit Included Deliverables (Features)</label>
+                          
+                          {/* List of current features */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
+                            {Array.isArray(kit.features) && kit.features.map((feat, featIdx) => {
+                              const isExcluded = feat.startsWith('!') || feat.startsWith('-');
+                              const cleanFeat = isExcluded ? feat.substring(1) : feat;
+                              return (
+                                <span 
+                                  key={featIdx} 
+                                  style={{ 
+                                    display: 'inline-flex', 
+                                    alignItems: 'center', 
+                                    gap: '6px', 
+                                    fontSize: '11px', 
+                                    padding: '4px 8px', 
+                                    borderRadius: '4px',
+                                    background: isExcluded ? 'rgba(239, 68, 68, 0.08)' : 'rgba(52, 211, 153, 0.08)',
+                                    border: `1px solid ${isExcluded ? 'rgba(239, 68, 68, 0.15)' : 'rgba(52, 211, 153, 0.15)'}`,
+                                    color: isExcluded ? 'var(--accent-red)' : 'var(--accent-emerald)'
+                                  }}
+                                >
+                                  {isExcluded ? '✗' : '✓'} {cleanFeat}
+                                  <button
+                                    type="button"
+                                    style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: '0 2px', fontWeight: 'bold' }}
+                                    onClick={() => handleRemoveFeature(kitIdx, featIdx)}
+                                  >
+                                    &times;
+                                  </button>
+                                </span>
+                              );
+                            })}
+                          </div>
+
+                          {/* Input to add a new feature tag */}
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <input 
+                              type="text" 
+                              placeholder="Type a deliverable. Start with '!' or '-' to show as Excluded (e.g. !Assembly)"
+                              className="form-input" 
+                              id={`new-feat-input-${kitIdx}`}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleAddFeature(kitIdx, e.target.value);
+                                  e.target.value = '';
+                                }
+                              }}
+                            />
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
+                              onClick={() => {
+                                const input = document.getElementById(`new-feat-input-${kitIdx}`);
+                                if (input && input.value.trim()) {
+                                  handleAddFeature(kitIdx, input.value);
+                                  input.value = '';
+                                }
+                              }}
+                            >
+                              Add Feature
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="grid-12" style={{ gap: 'var(--space-3)' }}>
+              <div style={{ gridColumn: 'span 12' }} className="calc-row">
                 <label htmlFor="proj-curr">Currency</label>
                 <select
                   id="proj-curr"

@@ -9,6 +9,13 @@ export const ledFamily = {
       category: 'Semiconductors',
       description: 'A semiconductor diode that lights up when current flows through it in one direction.',
       status: 'new',
+      mission: 'Learn how LEDs emit light and why they require current limiting.',
+      prerequisites: ['electricity-basics', 'voltage-basics'],
+      learningOutcomes: ['How LEDs emit light', 'Polarity identification', 'Sizing current-limiting resistors'],
+      typicalValue: '2.0V, 20mA',
+      polarity: 'Polarized',
+      difficulty: 'Beginner',
+      learningTime: '8 min',
       symbolSvg: `
         <svg viewBox="0 0 60 60" width="50" height="50" stroke="currentColor" stroke-width="2.5" fill="none">
           <line x1="10" y1="30" x2="25" y2="30" />
@@ -153,6 +160,13 @@ export const ledFamily = {
       category: 'Semiconductors',
       description: 'A component that acts as a one-way valve for electricity, letting current pass in one direction and blocking it in the other.',
       status: 'new',
+      mission: 'Learn how diodes act as one-way electrical valves.',
+      prerequisites: ['electricity-basics'],
+      learningOutcomes: ['Forward and reverse bias', 'Voltage drop across a diode', 'Rectification basics'],
+      typicalValue: '0.7V drop',
+      polarity: 'Polarized',
+      difficulty: 'Intermediate',
+      learningTime: '12 min',
       symbolSvg: `
         <svg viewBox="0 0 60 60" width="50" height="50" stroke="currentColor" stroke-width="2.5" fill="none">
           <line x1="10" y1="30" x2="25" y2="30" />
