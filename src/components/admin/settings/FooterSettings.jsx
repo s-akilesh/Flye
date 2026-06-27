@@ -55,6 +55,7 @@ export const FooterSettings = ({ onBack }) => {
           <label className="form-label">Footer Tagline/Text</label>
           <Input
             type="text"
+            className="form-input"
             placeholder="e.g. Building next-generation engineers."
             value={form.footerText}
             onChange={(e) => handleChange('footerText', e.target.value)}
@@ -64,6 +65,7 @@ export const FooterSettings = ({ onBack }) => {
           <label className="form-label">Copyright Notice</label>
           <Input
             type="text"
+            className="form-input"
             placeholder="e.g. © 2026 Flyen. All rights reserved."
             value={form.copyrightText}
             onChange={(e) => handleChange('copyrightText', e.target.value)}

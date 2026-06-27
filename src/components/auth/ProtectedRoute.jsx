@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../constants/routes.js';
 
 export const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, viewMode } = useAuth();
 
   if (loading) {
     return (
@@ -49,6 +49,10 @@ export const ProtectedRoute = ({ children }) => {
 
   if (!user) {
     return <Navigate to={ROUTES.ADMIN_LOGIN || '/admin-login'} replace />;
+  }
+
+  if (viewMode !== 'admin') {
+    return <Navigate to="/" replace />;
   }
 
   return children;

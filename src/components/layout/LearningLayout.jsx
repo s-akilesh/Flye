@@ -1,12 +1,40 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
+import { LearningRepository } from '../../data/learning';
 import '../../styles/learning.css';
 
 export const LearningLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const getActiveTitle = () => {
+    const path = location.pathname;
+    if (path === ROUTES.LEARNING_WORKSPACE) return 'Workspace';
+    if (path === ROUTES.LEARNING_COMPONENTS) return 'Components Library';
+    if (path === ROUTES.LEARNING_FUNDAMENTALS) return 'Learning Roadmap';
+    
+    // Check for detail slugs
+    const parts = path.split('/');
+    const slug = parts[parts.length - 1];
+    
+    if (path.includes('/components/')) {
+      const comp = LearningRepository.getComponents().find(c => c.slug === slug);
+      return comp ? comp.name : 'Component Details';
+    }
+    if (path.includes('/fundamentals/')) {
+      const roadmap = LearningRepository.getRoadmap();
+      for (const lvl of roadmap) {
+        for (const cat of lvl.categories) {
+          const comp = cat.components.find(c => c.slug === slug);
+          if (comp) return comp.name;
+        }
+      }
+      return 'Fundamental Details';
+    }
+    return 'Learning';
+  };
 
   const navItems = [
     {
@@ -86,6 +114,32 @@ export const LearningLayout = () => {
 
   return (
     <div className="learning-workspace-container">
+      {/* Mobile Sticky Learning Header */}
+      <header className="mobile-learning-header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button 
+            type="button" 
+            onClick={() => {
+              if (location.pathname === ROUTES.LEARNING_WORKSPACE) {
+                navigate('/');
+              } else {
+                navigate(-1);
+              }
+            }} 
+            style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
+            title="Go Back"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span className="mobile-learning-title" style={{ fontSize: '15px', fontWeight: '800', color: '#fff' }}>
+            {getActiveTitle()}
+          </span>
+        </div>
+      </header>
+
       {/* Sticky Sidebar Navigation */}
       <aside className="learning-sidebar">
         <div>

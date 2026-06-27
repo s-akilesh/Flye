@@ -258,26 +258,6 @@ export const AdminDashboard = () => {
             </div>
           </Card>
 
-          {/* Quick Actions Card */}
-          <Card className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', justifyContent: 'space-between' }}>
-            <div>
-              <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Quick Actions</span>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-2)', marginTop: 'var(--space-3)' }}>
-                <Button variant="secondary" onClick={() => navigate(ROUTES.ADMIN_ADD_PROJECT)} style={{ fontSize: '12px', padding: '10px 8px', justifyContent: 'center' }}>
-                  ➕ Add Kit
-                </Button>
-                <Button variant="secondary" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} style={{ fontSize: '12px', padding: '10px 8px', justifyContent: 'center' }}>
-                  🛠️ Projects
-                </Button>
-                <Button variant="secondary" onClick={() => navigate(ROUTES.ADMIN_ENQUIRIES)} style={{ fontSize: '12px', padding: '10px 8px', justifyContent: 'center' }}>
-                  📋 Enquiries
-                </Button>
-                <Button variant="secondary" onClick={() => navigate(ROUTES.ADMIN_SETTINGS)} style={{ fontSize: '12px', padding: '10px 8px', justifyContent: 'center' }}>
-                  ⚙️ Settings
-                </Button>
-              </div>
-            </div>
-          </Card>
         </div>
 
         {/* Recent Enquiries table */}

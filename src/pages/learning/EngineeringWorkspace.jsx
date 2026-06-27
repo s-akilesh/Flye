@@ -118,17 +118,7 @@ export const EngineeringWorkspace = () => {
       <div className="roadmap-timeline" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
         
         {/* Decorative connecting glow line for timeline */}
-        <div 
-          style={{ 
-            position: 'absolute', 
-            left: '31px', 
-            top: '40px', 
-            bottom: '40px', 
-            width: '2px', 
-            background: 'linear-gradient(180deg, var(--accent-violet) 0%, rgba(139, 92, 246, 0.1) 80%, transparent 100%)',
-            zIndex: 1
-          }} 
-        />
+        <div className="timeline-connector-line" />
 
         {roadmap.map((lvl) => {
           const isLvl9 = lvl.level === 9;
@@ -137,33 +127,23 @@ export const EngineeringWorkspace = () => {
           return (
             <div 
               key={lvl.level} 
+              className="timeline-level-row"
               style={{ 
-                display: 'flex', 
-                gap: 'var(--space-4)', 
-                opacity: isLocked ? 0.55 : (isLvl9 ? 0.5 : 1),
-                zIndex: 2
+                opacity: isLocked ? 0.55 : (isLvl9 ? 0.5 : 1)
               }}
             >
               {/* Level Indicator Node */}
               <div 
+                className="timeline-level-node"
                 style={{ 
-                  width: '64px', 
-                  height: '64px', 
-                  borderRadius: '50%', 
                   background: isLocked ? 'rgba(0,0,0,0.2)' : (isLvl9 ? 'rgba(255,255,255,0.03)' : 'rgba(139, 92, 246, 0.08)'), 
                   border: `2px solid ${isLocked ? 'rgba(255, 255, 255, 0.1)' : (isLvl9 ? 'var(--border-subtle)' : 'var(--accent-violet)')}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '18px',
-                  fontWeight: '800',
                   color: isLocked ? 'var(--text-muted)' : (isLvl9 ? 'var(--text-dim)' : 'var(--text-main)'),
-                  flexShrink: 0,
                   boxShadow: (isLocked || isLvl9) ? 'none' : '0 0 15px rgba(139, 92, 246, 0.15)'
                 }}
               >
                 {isLocked ? (
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
+                  <svg viewBox="0 0 24 24" className="timeline-lock-icon" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>

@@ -90,6 +90,7 @@ export const AdminProfile = ({ onBack }) => {
           <label className="form-label">Full Name</label>
           <Input
             type="text"
+            className="form-input"
             placeholder="e.g. Akilesh"
             value={form.profileName}
             onChange={(e) => handleChange('profileName', e.target.value)}
@@ -100,6 +101,7 @@ export const AdminProfile = ({ onBack }) => {
           <label className="form-label">Email Address</label>
           <Input
             type="email"
+            className="form-input"
             placeholder="e.g. admin@flyenlabs.com"
             value={form.profileEmail}
             onChange={(e) => handleChange('profileEmail', e.target.value)}
@@ -110,6 +112,7 @@ export const AdminProfile = ({ onBack }) => {
           <label className="form-label">Phone Number</label>
           <Input
             type="tel"
+            className="form-input"
             placeholder="e.g. +91 9876543210"
             value={form.profilePhone}
             onChange={(e) => handleChange('profilePhone', e.target.value)}
@@ -120,6 +123,7 @@ export const AdminProfile = ({ onBack }) => {
           <label className="form-label">Designation / Role</label>
           <Input
             type="text"
+            className="form-input"
             placeholder="e.g. Chief Administrator"
             value={form.profileDesignation}
             onChange={(e) => handleChange('profileDesignation', e.target.value)}

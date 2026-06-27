@@ -122,23 +122,11 @@ export const AdminSettings = () => {
         /* Settings List Landing Page */
         <>
           <div className="portal-header" style={{ marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-              <Button
-                variant="secondary"
-                className="btn-back"
-                onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
-                style={{ padding: '8px', minWidth: 'auto' }}
-              >
-                <svg viewBox="0 0 24 24" style={{ width: '16px', height: '16px', fill: 'currentColor' }}>
-                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                </svg>
-              </Button>
-              <div className="portal-title-area">
-                <h2 style={{ fontSize: '24px', fontWeight: '800', margin: 0 }}>Platform Settings</h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  Manage credentials, routing rules, configurations and website details.
-                </p>
-              </div>
+            <div className="portal-title-area">
+              <h2 style={{ fontSize: '24px', fontWeight: '800', margin: 0 }}>Platform Settings</h2>
+              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                Manage credentials, routing rules, configurations and website details.
+              </p>
             </div>
           </div>
 

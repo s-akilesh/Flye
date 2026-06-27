@@ -86,6 +86,7 @@ export const SocialNetworks = ({ onBack }) => {
           {renderFieldLabel('LinkedIn Company Page', form.linkedinUrl)}
           <Input
             type="url"
+            className="form-input"
             placeholder="https://linkedin.com/company/yourpage"
             value={form.linkedinUrl}
             onChange={(e) => handleChange('linkedinUrl', e.target.value)}
@@ -96,6 +97,7 @@ export const SocialNetworks = ({ onBack }) => {
           {renderFieldLabel('Instagram Profile', form.instagramUrl)}
           <Input
             type="url"
+            className="form-input"
             placeholder="https://instagram.com/yourhandle"
             value={form.instagramUrl}
             onChange={(e) => handleChange('instagramUrl', e.target.value)}
@@ -106,6 +108,7 @@ export const SocialNetworks = ({ onBack }) => {
           {renderFieldLabel('YouTube Channel', form.youtubeUrl)}
           <Input
             type="url"
+            className="form-input"
             placeholder="https://youtube.com/@yourchannel"
             value={form.youtubeUrl}
             onChange={(e) => handleChange('youtubeUrl', e.target.value)}
@@ -116,6 +119,7 @@ export const SocialNetworks = ({ onBack }) => {
           {renderFieldLabel('X (formerly Twitter) Account', form.twitterUrl)}
           <Input
             type="url"
+            className="form-input"
             placeholder="https://x.com/yourhandle"
             value={form.twitterUrl}
             onChange={(e) => handleChange('twitterUrl', e.target.value)}
@@ -126,6 +130,7 @@ export const SocialNetworks = ({ onBack }) => {
           {renderFieldLabel('Facebook Page', form.facebookUrl)}
           <Input
             type="url"
+            className="form-input"
             placeholder="https://facebook.com/yourpage"
             value={form.facebookUrl}
             onChange={(e) => handleChange('facebookUrl', e.target.value)}
@@ -136,6 +141,7 @@ export const SocialNetworks = ({ onBack }) => {
           {renderFieldLabel('GitHub Profile/Repo', form.githubUrl)}
           <Input
             type="url"
+            className="form-input"
             placeholder="https://github.com/yourprofile"
             value={form.githubUrl}
             onChange={(e) => handleChange('githubUrl', e.target.value)}
@@ -146,6 +152,7 @@ export const SocialNetworks = ({ onBack }) => {
           {renderFieldLabel('Official Website Link', form.websiteUrl)}
           <Input
             type="url"
+            className="form-input"
             placeholder="https://yourwebsite.com"
             value={form.websiteUrl}
             onChange={(e) => handleChange('websiteUrl', e.target.value)}

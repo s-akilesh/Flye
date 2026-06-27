@@ -362,16 +362,9 @@ export const ManageProjects = () => {
       transition={{ duration: 0.4 }}
     >
       <div className="portal-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-          <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)} style={{ padding: '8px', minWidth: 'auto' }}>
-            <svg viewBox="0 0 24 24">
-              <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
-            </svg>
-          </Button>
-          <div className="portal-title-area">
-            <h2>Project Catalog Management</h2>
-            <p>Visual database management panel for Flyen engineering catalog</p>
-          </div>
+        <div className="portal-title-area">
+          <h2>Project Catalog Management</h2>
+          <p>Visual database management panel for Flyen engineering catalog</p>
         </div>
         <div className="portal-header-meta" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
           <Button

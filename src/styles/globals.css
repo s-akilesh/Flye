@@ -3913,3 +3913,300 @@ input[type="radio"]:checked::after {
   border-color: var(--border-active) !important;
   color: var(--text-primary) !important;
 }
+
+/* --- HYBRID MOBILE NAVIGATION ARCHITECTURE --- */
+
+/* Mobile Bottom Navigation Bar Styles */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 62px;
+  background: rgba(10, 10, 15, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: none;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.5);
+}
+
+.bottom-nav-item svg {
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.bottom-nav-item:active svg {
+  transform: scale(0.9);
+}
+
+.bottom-nav-item.active {
+  color: var(--accent-violet) !important;
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.bottom-nav-item.active svg {
+  stroke: var(--accent-violet) !important;
+  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.5));
+}
+
+/* Mobile Learning Header Styles */
+.mobile-learning-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 999;
+}
+
+.mobile-learning-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Mobile Drawer Overlay & Container Animations */
+.drawer-overlay {
+  z-index: 9998;
+}
+
+.drawer-container {
+  z-index: 9999;
+}
+
+/* Scroll Offset padding for viewport wrapper */
+.main-viewport-content {
+  padding-bottom: 0;
+}
+
+/* Timeline Roadmap Layout Styles */
+.timeline-connector-line {
+  position: absolute;
+  left: 31px;
+  top: 40px;
+  bottom: 40px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent-violet) 0%, rgba(139, 92, 246, 0.1) 80%, transparent 100%);
+  z-index: 1;
+}
+
+.timeline-level-row {
+  display: flex;
+  gap: var(--space-4);
+  z-index: 2;
+}
+
+.timeline-level-node {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.timeline-lock-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive Rules for Mobile Navigation Layout elements */
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex;
+  }
+  
+  .mobile-learning-header {
+    display: flex;
+  }
+  
+  .main-viewport-content {
+    padding-bottom: 72px; /* Prevent bottom nav from clipping pages */
+  }
+
+  .mobile-drawer-hamburger {
+    display: flex !important;
+  }
+
+  /* Timeline Roadmap Mobile Scaling */
+  .timeline-connector-line {
+    left: 21px;
+    top: 30px;
+    bottom: 30px;
+  }
+  
+  .timeline-level-row {
+    gap: var(--space-2) !important;
+  }
+  
+  .timeline-level-node {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+  
+  .timeline-lock-icon {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Hide Desktop specific structures on mobile */
+  header .logo-container + .nav-controls a:not(.header-notify-bell):not(.header-admin-avatar),
+  header .logo-container + .nav-controls button:not(.mobile-drawer-hamburger):not(.header-notify-bell):not(.header-role-switcher) {
+    display: none !important;
+  }
+  
+  .learning-sidebar {
+    display: none !important;
+  }
+
+  .learning-workspace-container {
+    display: block !important;
+  }
+
+  .learning-workspace-content {
+    padding: var(--space-4) !important;
+  }
+  
+  /* Breadcrumbs compression on mobile */
+  .desktop-breadcrumb-item, 
+  .desktop-breadcrumb-text {
+    display: none !important;
+  }
+}
+
+/* Admin Panel Sidebar Layout Styles */
+.admin-layout-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  background: var(--bg-main, #050508);
+}
+
+.admin-sidebar {
+  width: 240px;
+  background: rgba(10, 10, 15, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-4);
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+}
+
+.admin-sidebar.collapsed {
+  width: 72px;
+  padding: var(--space-5) var(--space-3);
+}
+
+.admin-nav-item:hover {
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: #fff !important;
+}
+
+.admin-nav-item.active:hover {
+  background: rgba(139, 92, 246, 0.12) !important;
+  color: var(--accent-violet) !important;
+}
+
+.admin-main-content {
+  flex: 1;
+  margin-left: var(--admin-sidebar-width, 240px);
+  padding: var(--space-6) var(--space-8);
+  padding-top: 88px; /* Offset for global header on desktop */
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+}
+
+/* Stretch and shrink global header when in admin panel */
+body.in-admin-panel header {
+  left: var(--admin-sidebar-width, 240px);
+  width: calc(100% - var(--admin-sidebar-width, 240px));
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure header transitions are smooth globally */
+header {
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+}
+
+@media (max-width: 768px) {
+  .admin-mobile-header {
+    display: flex !important;
+  }
+  
+  .admin-layout-container {
+    flex-direction: column;
+  }
+  
+  .admin-sidebar {
+    position: fixed;
+    left: -240px;
+    top: 52px;
+    bottom: 0;
+    width: 240px;
+    height: calc(100vh - 52px);
+    z-index: 9999;
+  }
+  
+  .admin-sidebar.mobile-open {
+    left: 0;
+  }
+  
+  .admin-sidebar.collapsed {
+    width: 240px;
+  }
+  
+  .sidebar-collapse-btn {
+    display: none !important;
+  }
+  
+  .admin-main-content {
+    margin-left: 0 !important;
+    padding: var(--space-4) !important;
+    padding-top: 88px !important; /* Offset for global header on mobile */
+  }
+}
+
+/* Padding override for admin portal page containers */
+.admin-main-content .portal-section {
+  padding: 20px 0px 10px 0px !important;
+  min-height: auto;
+  max-width: none;
+  margin: 0;
+}
+
+/* Hide header role switcher icon on mobile and tablet viewports */
+@media (max-width: 768px) {
+  .header-role-switcher,
+  .header-admin-avatar {
+    display: none !important;
+  }
+}
+

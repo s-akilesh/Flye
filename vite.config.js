@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     visualizer({
       filename: 'stats.json',
-      json: true
+      template: 'raw-data'
     })
   ],
   build: {
@@ -48,20 +48,6 @@ export default defineConfig({
               return 'vendor-xlsx';
             }
             return 'vendor-others';
-          }
-          if (id.includes('src/pages/')) {
-            if (
-              id.includes('AdminDashboard') || 
-              id.includes('ManageProjects') || 
-              id.includes('AddProject') || 
-              id.includes('EditProject') || 
-              id.includes('ManageEnquiries') || 
-              id.includes('AdminSettings') || 
-              id.includes('AdminLogin')
-            ) {
-              return 'admin-pages';
-            }
-            return 'public-pages';
           }
         }
       }

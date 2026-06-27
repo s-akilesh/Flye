@@ -56,6 +56,7 @@ export const EmailRouting = ({ onBack }) => {
           <label className="form-label">Contact Inquiry Destination</label>
           <Input
             type="email"
+            className="form-input"
             placeholder="e.g. hello@flyenlabs.com"
             value={form.contactEmail}
             onChange={(e) => handleChange('contactEmail', e.target.value)}
@@ -66,6 +67,7 @@ export const EmailRouting = ({ onBack }) => {
           <label className="form-label">System Notification Email</label>
           <Input
             type="email"
+            className="form-input"
             placeholder="e.g. system@flyenlabs.com"
             value={form.notificationEmail}
             onChange={(e) => handleChange('notificationEmail', e.target.value)}
@@ -76,6 +78,7 @@ export const EmailRouting = ({ onBack }) => {
           <label className="form-label">Default Reply-To Address</label>
           <Input
             type="email"
+            className="form-input"
             placeholder="e.g. support@flyenlabs.com"
             value={form.replyToEmail}
             onChange={(e) => handleChange('replyToEmail', e.target.value)}

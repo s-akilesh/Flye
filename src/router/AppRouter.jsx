@@ -19,6 +19,7 @@ const EditProject = React.lazy(() => import('../pages/EditProject').then(module 
 const ManageEnquiries = React.lazy(() => import('../pages/ManageEnquiries').then(module => ({ default: module.ManageEnquiries })));
 const AdminSettings = React.lazy(() => import('../pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 const AdminLogin = React.lazy(() => import('../pages/AdminLogin.jsx').then(module => ({ default: module.AdminLogin })));
+const AdminLayout = React.lazy(() => import('../components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
 
 // Lazy Load Learning Workspace Pages & Layout
 const LearningLayout = React.lazy(() => import('../components/layout/LearningLayout').then(module => ({ default: module.LearningLayout })));
@@ -77,13 +78,15 @@ export const AppRouter = () => {
                   {/* Admin Login Route */}
                   <Route path={ROUTES.ADMIN_LOGIN || '/admin-login'} element={<AdminLogin />} />
 
-                  {/* Protected Admin Console Routes */}
-                  <Route path={ROUTES.ADMIN_DASHBOARD} element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-                  <Route path={ROUTES.ADMIN_PROJECTS} element={<ProtectedRoute><ManageProjects /></ProtectedRoute>} />
-                  <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<ProtectedRoute><AddProject /></ProtectedRoute>} />
-                  <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<ProtectedRoute><EditProject /></ProtectedRoute>} />
-                  <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ProtectedRoute><ManageEnquiries /></ProtectedRoute>} />
-                  <Route path={ROUTES.ADMIN_SETTINGS} element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
+                  {/* Protected Admin Console Routes wrapped in AdminLayout */}
+                  <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+                    <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+                    <Route path={ROUTES.ADMIN_PROJECTS} element={<ManageProjects />} />
+                    <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<AddProject />} />
+                    <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<EditProject />} />
+                    <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ManageEnquiries />} />
+                    <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
+                  </Route>
                   
                   <Route path="*" element={<Home />} />
                 </Routes>

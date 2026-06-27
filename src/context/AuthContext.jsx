@@ -34,6 +34,15 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  const [viewMode, setViewModeState] = useState(() => {
+    return localStorage.getItem('flyen_view_mode') || 'admin';
+  });
+
+  const setViewMode = (mode) => {
+    localStorage.setItem('flyen_view_mode', mode);
+    setViewModeState(mode);
+  };
+
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -49,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, viewMode, setViewMode }}>
       {children}
     </AuthContext.Provider>
   );

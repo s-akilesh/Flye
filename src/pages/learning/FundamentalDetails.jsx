@@ -38,11 +38,36 @@ export const FundamentalDetails = () => {
     setSearchParams({ stage: id });
   };
 
-  // Reset stage to imagine when slug changes
+  // Reset stage to imagine when slug changes and save to navigation history
   useEffect(() => {
-    setStage('imagine');
-    setRevealChallenge(false);
-  }, [slug]);
+    if (lesson) {
+      setStage('imagine');
+      setRevealChallenge(false);
+
+      // Save continue learning metadata
+      localStorage.setItem('flyen_last_lesson', JSON.stringify({
+        name: lesson.name,
+        slug: lesson.slug,
+        progress: 50, // mock progress
+        isFallback: false
+      }));
+
+      // Add to recently visited
+      const savedRecents = localStorage.getItem('flyen_recent_history');
+      let recentsList = [];
+      if (savedRecents) {
+        try {
+          recentsList = JSON.parse(savedRecents);
+        } catch (e) {}
+      }
+      recentsList = recentsList.filter(item => item.path !== `/learning/fundamentals/${lesson.slug}`);
+      recentsList.unshift({
+        title: lesson.name,
+        path: `/learning/fundamentals/${lesson.slug}`
+      });
+      localStorage.setItem('flyen_recent_history', JSON.stringify(recentsList.slice(0, 5)));
+    }
+  }, [slug, lesson]);
 
   if (!lesson) {
     return (
@@ -361,23 +386,38 @@ export const FundamentalDetails = () => {
         </button>
         
         <div className="family-breadcrumbs" style={{ fontSize: '11px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-          <span style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
-            Engineering Workspace
+          {/* Home Link */}
+          <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }} onClick={() => navigate('/')} title="Home">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
           </span>
           <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+
+          {/* Workspace Link */}
+          <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)} title="Workspace">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            </svg>
+            <span className="desktop-breadcrumb-text">Workspace</span>
+          </span>
+          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+          
           {roadmapInfo && (
             <>
-              <span style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
+              <span className="desktop-breadcrumb-item" style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
                 {roadmapInfo.levelTitle}
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-              <span style={{ color: 'var(--text-muted)' }}>
+              <span className="desktop-breadcrumb-item" style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+              <span className="desktop-breadcrumb-item" style={{ color: 'var(--text-muted)' }}>
                 {roadmapInfo.categoryName}
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+              <span className="desktop-breadcrumb-item" style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
             </>
           )}
-          <span style={{ color: 'var(--accent-violet)' }}>{lesson.name}</span>
+          <span style={{ color: 'var(--accent-violet)', fontWeight: '800' }}>{lesson.name}</span>
         </div>
       </div>
 

@@ -67,6 +67,7 @@ export const WebsiteBranding = ({ onBack }) => {
           <label className="form-label">Website Name</label>
           <Input
             type="text"
+            className="form-input"
             placeholder="e.g. Flyen Labs"
             value={form.companyName}
             onChange={(e) => handleChange('companyName', e.target.value)}
@@ -76,6 +77,7 @@ export const WebsiteBranding = ({ onBack }) => {
           <label className="form-label">Website Tagline</label>
           <Input
             type="text"
+            className="form-input"
             placeholder="e.g. Build. Learn. Innovate."
             value={form.companyTagline}
             onChange={(e) => handleChange('companyTagline', e.target.value)}

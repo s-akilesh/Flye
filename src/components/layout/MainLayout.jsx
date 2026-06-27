@@ -1,19 +1,51 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { GlowBackground } from './GlowBackground';
-import { ROUTES } from '../../constants/routes';
+import { BottomNavigation } from './BottomNavigation';
+import { MobileDrawer } from './MobileDrawer';
 
 export const MainLayout = ({ children }) => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const isHomePage = location.pathname === ROUTES.HOME;
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
+  const closeDrawer = () => setIsDrawerOpen(false);
+
+  // Scroll restoration hook & drawer event listeners
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleToggle = () => toggleDrawer();
+    const handleClose = () => closeDrawer();
+    
+    window.addEventListener('toggle-flyen-drawer', handleToggle);
+    window.addEventListener('close-flyen-drawer', handleClose);
+    
+    return () => {
+      window.removeEventListener('toggle-flyen-drawer', handleToggle);
+      window.removeEventListener('close-flyen-drawer', handleClose);
+    };
+  }, []);
+
+  const isLearningPage = location.pathname.startsWith('/learning');
 
   return (
     <>
       <GlowBackground />
-      <Header />
+      <Header onToggleDrawer={toggleDrawer} />
       
-      {children}
+      <div className="main-viewport-content" style={{ paddingBottom: isLearningPage ? '0' : undefined }}>
+        {children}
+      </div>
+
+      {!isLearningPage && (
+        <BottomNavigation onToggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} />
+      )}
+      <MobileDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
     </>
   );
 };

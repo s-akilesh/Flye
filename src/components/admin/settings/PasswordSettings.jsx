@@ -88,6 +88,7 @@ export const PasswordSettings = ({ onBack }) => {
           <label className="form-label">Current Password</label>
           <Input
             type="password"
+            className="form-input"
             placeholder="••••••••"
             value={pwForm.current}
             onChange={(e) => setPwForm(f => ({ ...f, current: e.target.value }))}
@@ -99,6 +100,7 @@ export const PasswordSettings = ({ onBack }) => {
           <label className="form-label">New Password</label>
           <Input
             type="password"
+            className="form-input"
             placeholder="••••••••"
             value={pwForm.newPw}
             onChange={(e) => setPwForm(f => ({ ...f, newPw: e.target.value }))}
@@ -110,6 +112,7 @@ export const PasswordSettings = ({ onBack }) => {
           <label className="form-label">Confirm New Password</label>
           <Input
             type="password"
+            className="form-input"
             placeholder="••••••••"
             value={pwForm.confirm}
             onChange={(e) => setPwForm(f => ({ ...f, confirm: e.target.value }))}

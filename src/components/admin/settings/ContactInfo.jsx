@@ -57,6 +57,7 @@ export const ContactInfo = ({ onBack }) => {
           <label className="form-label">Contact Email</label>
           <Input
             type="email"
+            className="form-input"
             placeholder="e.g. contact@flyenlabs.com"
             value={form.contactEmail}
             onChange={(e) => handleChange('contactEmail', e.target.value)}
@@ -66,6 +67,7 @@ export const ContactInfo = ({ onBack }) => {
           <label className="form-label">Phone Number</label>
           <Input
             type="tel"
+            className="form-input"
             placeholder="e.g. +91 9876543210"
             value={form.contactPhone}
             onChange={(e) => handleChange('contactPhone', e.target.value)}
@@ -75,6 +77,7 @@ export const ContactInfo = ({ onBack }) => {
           <label className="form-label">WhatsApp Number</label>
           <Input
             type="tel"
+            className="form-input"
             placeholder="e.g. 919876543210 (include country code, no + or spaces)"
             value={form.whatsappNumber}
             onChange={(e) => handleChange('whatsappNumber', e.target.value)}
@@ -84,6 +87,7 @@ export const ContactInfo = ({ onBack }) => {
           <label className="form-label">Business Address</label>
           <Input
             type="text"
+            className="form-input"
             placeholder="e.g. Sector 7 Tech Hub, Bangalore"
             value={form.companyAddress}
             onChange={(e) => handleChange('companyAddress', e.target.value)}
