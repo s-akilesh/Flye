@@ -7,6 +7,7 @@ import {
   QUICK_ACTIONS 
 } from '../../config/navigation';
 import { useAuth } from '../../context/AuthContext';
+import { useSettings } from '../../hooks/useSettings';
 import { Button } from '../ui/Button';
 import { ROUTES } from '../../constants/routes.js';
 
@@ -122,6 +123,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout, viewMode, setViewMode } = useAuth();
+  const { settings } = useSettings();
   const [searchQuery, setSearchQuery] = useState('');
 
   // 1. Manage dynamic "Continue Learning" & "Recently Visited" from LocalStorage
@@ -240,15 +242,26 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               {/* Drawer Header Status block */}
               <div className="drawer-user-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-violet))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', color: '#fff', fontSize: '14px' }}>
-                    {user ? 'A' : 'JD'}
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-violet))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', color: '#fff', fontSize: '14px', overflow: 'hidden' }}>
+                    {user ? (
+                      settings.profilePhoto ? (
+                        <img src={settings.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        (settings.profileName ? settings.profileName[0].toUpperCase() : 'A')
+                      )
+                    ) : 'JD'}
                   </div>
                   <div>
                     <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: '#fff' }}>
-                      {user ? 'Administrator' : 'John Doe'}
+                      {user ? (settings.profileName || 'Administrator') : 'John Doe'}
                     </h4>
-                    <span style={{ fontSize: '11px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>
-                      {user ? 'Flyen Staff' : 'Level 1 Student'}
+                    {user && settings.profileEmail && (
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                        {settings.profileEmail}
+                      </div>
+                    )}
+                    <span style={{ fontSize: '11px', color: 'var(--accent-violet)', fontWeight: 'bold', display: 'block', marginTop: '2px' }}>
+                      {user ? (settings.profileDesignation || 'Flyen Staff') : 'Level 1 Student'}
                     </span>
                   </div>
                 </div>

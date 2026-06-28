@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.settings (
     address TEXT DEFAULT '',
     contact_email TEXT DEFAULT '',
     contact_phone TEXT DEFAULT '',
+    whatsapp_number TEXT DEFAULT '',
     instagram_url TEXT DEFAULT '',
     youtube_url TEXT DEFAULT '',
     linkedin_url TEXT DEFAULT '',
@@ -21,6 +22,11 @@ CREATE TABLE IF NOT EXISTS public.settings (
     copyright_text TEXT DEFAULT '',
     notification_email TEXT DEFAULT '',
     reply_to_email TEXT DEFAULT '',
+    profile_photo TEXT DEFAULT '',
+    profile_name TEXT DEFAULT '',
+    profile_email TEXT DEFAULT '',
+    profile_phone TEXT DEFAULT '',
+    profile_designation TEXT DEFAULT '',
     updated_at TIMESTAMPTZ DEFAULT now(),
     updated_by TEXT
 );

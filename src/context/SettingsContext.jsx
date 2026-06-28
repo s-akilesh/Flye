@@ -48,6 +48,7 @@ const mapDbToContext = (dbRow) => {
     companyAddress: dbRow.address ?? '',
     contactEmail: dbRow.contact_email ?? '',
     contactPhone: dbRow.contact_phone ?? '',
+    whatsappNumber: dbRow.whatsapp_number ?? '',
     instagramUrl: dbRow.instagram_url ?? '',
     youtubeUrl: dbRow.youtube_url ?? '',
     linkedinUrl: dbRow.linkedin_url ?? '',
@@ -58,6 +59,11 @@ const mapDbToContext = (dbRow) => {
     copyrightText: dbRow.copyright_text ?? '',
     notificationEmail: dbRow.notification_email ?? '',
     replyToEmail: dbRow.reply_to_email ?? '',
+    profilePhoto: dbRow.profile_photo ?? '',
+    profileName: dbRow.profile_name ?? '',
+    profileEmail: dbRow.profile_email ?? '',
+    profilePhone: dbRow.profile_phone ?? '',
+    profileDesignation: dbRow.profile_designation ?? '',
   };
 };
 
@@ -71,6 +77,7 @@ const mapContextToDb = (contextData) => {
   if (contextData.companyAddress !== undefined) dbRow.address = contextData.companyAddress;
   if (contextData.contactEmail !== undefined) dbRow.contact_email = contextData.contactEmail;
   if (contextData.contactPhone !== undefined) dbRow.contact_phone = contextData.contactPhone;
+  if (contextData.whatsappNumber !== undefined) dbRow.whatsapp_number = contextData.whatsappNumber;
   if (contextData.instagramUrl !== undefined) dbRow.instagram_url = contextData.instagramUrl;
   if (contextData.youtubeUrl !== undefined) dbRow.youtube_url = contextData.youtubeUrl;
   if (contextData.linkedinUrl !== undefined) dbRow.linkedin_url = contextData.linkedinUrl;
@@ -81,6 +88,11 @@ const mapContextToDb = (contextData) => {
   if (contextData.copyrightText !== undefined) dbRow.copyright_text = contextData.copyrightText;
   if (contextData.notificationEmail !== undefined) dbRow.notification_email = contextData.notificationEmail;
   if (contextData.replyToEmail !== undefined) dbRow.reply_to_email = contextData.replyToEmail;
+  if (contextData.profilePhoto !== undefined) dbRow.profile_photo = contextData.profilePhoto;
+  if (contextData.profileName !== undefined) dbRow.profile_name = contextData.profileName;
+  if (contextData.profileEmail !== undefined) dbRow.profile_email = contextData.profileEmail;
+  if (contextData.profilePhone !== undefined) dbRow.profile_phone = contextData.profilePhone;
+  if (contextData.profileDesignation !== undefined) dbRow.profile_designation = contextData.profileDesignation;
   return dbRow;
 };
 

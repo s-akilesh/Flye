@@ -7,6 +7,12 @@ export const Footer = () => {
 
   return (
     <footer className="home-footer">
+      {settings.footerText && (
+        <div className="home-footer-tagline" style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', marginBottom: 'var(--space-3)', padding: '0 var(--space-4)', lineHeight: '1.5' }}>
+          {settings.footerText}
+        </div>
+      )}
+
       <div className="home-footer-links">
         <ContactChips />
       </div>
@@ -37,7 +43,7 @@ export const Footer = () => {
       )}
 
       <div className="home-footer-copyright">
-        &copy; {new Date().getFullYear()} {settings.companyName}. All rights reserved.
+        {settings.copyrightText ? settings.copyrightText : `\u00A9 ${new Date().getFullYear()} ${settings.companyName || 'Flyen'}. All rights reserved.`}
       </div>
     </footer>
   );
