@@ -101,9 +101,11 @@ export const SettingsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const loadPlatformSettings = async () => {
+  const loadPlatformSettings = async (showSpinner = false) => {
     try {
-      setLoading(true);
+      if (showSpinner) {
+        setLoading(true);
+      }
       setError(null);
       logger.log('[SettingsContext] Initiating settings fetch from Supabase...');
       const dbRow = await settingsService.getSettings();
@@ -118,23 +120,25 @@ export const SettingsProvider = ({ children }) => {
       logger.error('[SettingsContext] Failed to load settings from Supabase:', err);
       setError(err.message || 'Failed to load platform settings.');
     } finally {
-      setLoading(false);
+      if (showSpinner) {
+        setLoading(false);
+      }
     }
   };
 
-  // Load settings from Supabase on startup
+  // Load settings from Supabase on startup with full-screen loading spinner
   useEffect(() => {
-    loadPlatformSettings();
+    loadPlatformSettings(true);
   }, []);
 
-  // Re-fetch settings dynamically on authentication state changes (login/logout)
+  // Re-fetch settings in the background on authentication state changes (login/logout/token refresh)
   useEffect(() => {
     logger.log('[SettingsContext] Registering auth state listener...');
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       logger.log(`[SettingsContext] Auth state changed event: ${event}. User is authenticated: ${!!session?.user}`);
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-        logger.log(`[SettingsContext] Triggering settings re-fetch due to auth event: ${event}`);
-        loadPlatformSettings();
+        logger.log(`[SettingsContext] Triggering settings background re-fetch due to auth event: ${event}`);
+        loadPlatformSettings(false); // Background fetch, no spinner!
       }
     });
 
