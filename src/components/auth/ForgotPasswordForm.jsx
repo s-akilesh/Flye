@@ -1,0 +1,160 @@
+import React, { useState } from 'react';
+import { authService } from '../../services/authService';
+import { Button } from '../ui/Button';
+import { logger } from '../../utils/logger';
+
+export const ForgotPasswordForm = ({ onBackToLogin }) => {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(false);
+
+    if (!email.trim()) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      logger.log('[ForgotPasswordForm] Sending password reset request for:', email);
+      // Redirect back to the auth page with a recovery indicator
+      const redirectTo = `${window.location.origin}/auth?type=recovery`;
+      await authService.resetPassword(email, redirectTo);
+      setSuccess(true);
+      logger.log('[ForgotPasswordForm] Password reset email sent.');
+    } catch (err) {
+      logger.error('[ForgotPasswordForm] Failed to send reset email:', err);
+      setError(err.message || 'Failed to send password reset email. Please verify the email address.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'center' }}>
+        <div style={{
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          background: 'rgba(34, 197, 94, 0.1)',
+          border: '1px solid rgba(34, 197, 94, 0.2)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto',
+          color: 'var(--accent-success, #22c55e)',
+          boxShadow: '0 0 24px rgba(34, 197, 94, 0.15)'
+        }}>
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+
+        <div>
+          <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 8px 0', color: '#fff' }}>Check your email</h3>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary, #94a3b8)', lineHeight: '1.6', margin: 0 }}>
+            We've sent a password reset link to <strong style={{ color: '#fff' }}>{email}</strong>.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={onBackToLogin}
+          style={{
+            marginTop: '12px',
+            background: 'none',
+            border: 'none',
+            color: 'var(--accent-violet, #8b5cf6)',
+            fontSize: '12px',
+            fontWeight: '700',
+            cursor: 'pointer',
+            textDecoration: 'none'
+          }}
+        >
+          ← Back to Sign In
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div>
+        <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>Reset Password</h3>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary, #94a3b8)', margin: 0 }}>
+          Enter your email address and we'll send you a link to reset your password.
+        </p>
+      </div>
+
+      {error && (
+        <div style={{
+          padding: '12px',
+          background: 'rgba(239, 68, 68, 0.08)',
+          border: '1px solid rgba(239, 68, 68, 0.2)',
+          borderRadius: '8px',
+          color: 'var(--accent-danger, #ef4444)',
+          fontSize: '12px',
+          lineHeight: '1.5'
+        }}>
+          ⚠️ {error}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-secondary, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email Address</label>
+        <input
+          type="email"
+          className="form-input"
+          placeholder="name@university.edu"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isSubmitting}
+          required
+        />
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={isSubmitting}
+          style={{
+            width: '100%',
+            padding: '12px',
+            fontWeight: '700',
+            fontSize: '13px',
+            background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+            border: 'none',
+            boxShadow: '0 4px 16px rgba(139, 92, 246, 0.25)'
+          }}
+        >
+          {isSubmitting ? 'Sending Link...' : 'Send Reset Link'}
+        </Button>
+
+        <button
+          type="button"
+          onClick={onBackToLogin}
+          disabled={isSubmitting}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'var(--text-dim, #64748b)',
+            fontSize: '11px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            padding: '8px 0'
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
+};

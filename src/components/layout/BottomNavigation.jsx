@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { BOTTOM_NAVIGATION, LEARNING_NAVIGATION } from '../../config/navigation';
 import { useAuth } from '../../context/AuthContext';
+import { ROUTES } from '../../constants/routes';
 
 // Icons mapping helper
 const BottomNavIcon = ({ id, isActive }) => {
@@ -98,10 +99,10 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
 
   // 1. Render Workspace Quick Selector Drawer (overlay above footer menu)
   const learningWorkspaceItems = [
-    { label: 'Dashboard', path: '/learning/workspace' },
-    { label: 'Component Library', path: '/learning/components' },
-    { label: 'Electronic Basics', path: '/learning/fundamentals' },
-    { label: 'Learning Roadmap', path: '/learning/roadmap' }
+    { label: 'Dashboard', path: ROUTES.STUDENT_DASHBOARD },
+    { label: 'Engineering Workspace', path: ROUTES.LEARNING_WORKSPACE },
+    { label: 'Explore Components', path: ROUTES.LEARNING_COMPONENTS },
+    { label: 'Fundamentals', path: ROUTES.LEARNING_FUNDAMENTALS }
   ];
 
   return (
@@ -185,8 +186,10 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
         {menuItems.map((item) => {
           // Evaluate active status
           let isActive = false;
-          if (item.id === 'workspace') {
-            isActive = showWorkspaceDrawer;
+          if (showWorkspaceDrawer) {
+            isActive = item.id === 'workspace';
+          } else if (item.id === 'workspace') {
+            isActive = location.pathname.startsWith('/learning') || location.pathname === '/dashboard';
           } else if (item.action === 'toggleDrawer') {
             isActive = isDrawerOpen;
           } else {

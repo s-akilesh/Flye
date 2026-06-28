@@ -32,17 +32,18 @@ export const MainLayout = ({ children }) => {
   }, []);
 
   const isLearningPage = location.pathname.startsWith('/learning');
+  const isAuthPage = location.pathname === '/auth' || location.pathname === '/admin-login';
 
   return (
     <>
       <GlowBackground />
-      <Header onToggleDrawer={toggleDrawer} />
+      {!isAuthPage && <Header onToggleDrawer={toggleDrawer} />}
       
       <div className="main-viewport-content" style={{ paddingBottom: isLearningPage ? '0' : undefined }}>
         {children}
       </div>
 
-      {!isLearningPage && (
+      {!isLearningPage && !isAuthPage && (
         <BottomNavigation onToggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} />
       )}
       <MobileDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />

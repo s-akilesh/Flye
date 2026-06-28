@@ -5,7 +5,7 @@
 -- Enable Row Level Security (RLS)
 ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
 
--- 1. SELECT: Allow everyone (anonymous guests / students) to read settings
+-- 1. SELECT: Allow everyone (anonymous guests / user) to read settings
 CREATE POLICY "Allow public read access on settings" ON public.settings
     FOR SELECT USING (true);
 

@@ -121,6 +121,24 @@ export const Header = ({ onToggleDrawer }) => {
             Logout
           </Button>
         )}
+
+        {!user && window.location.pathname !== '/auth' && (
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => navigate(ROUTES.STUDENT_AUTH)}
+            style={{
+              padding: '6px 12px',
+              fontSize: '12px',
+              background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+              border: 'none',
+              boxShadow: '0 2px 8px rgba(139, 92, 246, 0.2)',
+              marginLeft: 'var(--space-2)'
+            }}
+          >
+            Sign In
+          </Button>
+        )}
       </div>
 
       {/* Notifications Drawer Modal */}

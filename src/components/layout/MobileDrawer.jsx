@@ -121,7 +121,12 @@ const DrawerIcon = ({ id }) => {
 export const MobileDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout, viewMode, setViewMode } = useAuth();
+  const { user, profile, logout, viewMode, setViewMode } = useAuth();
+
+  const getInitials = (name) => {
+    if (!name) return 'S';
+    return name.trim().split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  };
   const [searchQuery, setSearchQuery] = useState('');
 
   // 1. Manage dynamic "Continue Learning" & "Recently Visited" from LocalStorage
@@ -239,19 +244,66 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
 
               {/* Drawer Header Status block */}
               <div className="drawer-user-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-violet))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', color: '#fff', fontSize: '14px' }}>
-                    {user ? 'A' : 'JD'}
+                {user ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                    {profile?.avatar_url ? (
+                      <img 
+                        src={profile.avatar_url} 
+                        alt="Profile" 
+                        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div style={{ 
+                      width: '40px', 
+                      height: '40px', 
+                      borderRadius: '50%', 
+                      background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-violet))', 
+                      display: profile?.avatar_url ? 'none' : 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontWeight: '800', 
+                      color: '#fff', 
+                      fontSize: '14px' 
+                    }}>
+                      {getInitials(profile?.full_name || user?.email)}
+                    </div>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: '#fff' }}>
+                        {profile?.full_name || user?.email || 'Student'}
+                      </h4>
+                      <span style={{ fontSize: '11px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>
+                        {profile?.role === 'admin' ? 'Flyen Staff' : 'Student'}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: '#fff' }}>
-                      {user ? 'Administrator' : 'John Doe'}
-                    </h4>
-                    <span style={{ fontSize: '11px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>
-                      {user ? 'Flyen Staff' : 'Level 1 Student'}
-                    </span>
-                  </div>
-                </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate(ROUTES.STUDENT_AUTH);
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      fontSize: '12.5px',
+                      fontWeight: '700',
+                      background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+                      border: 'none',
+                      borderRadius: '6px',
+                      color: 'white',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 10px rgba(139, 92, 246, 0.2)',
+                      marginBottom: '12px'
+                    }}
+                  >
+                    Sign In / Sign Up
+                  </button>
+                )}
 
                 {/* Switch view mode button inside drawer for admins */}
                 {user && (

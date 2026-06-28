@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
 import { LearningRepository } from '../../data/learning';
@@ -8,14 +8,39 @@ export const LearningLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Manage body class and CSS variable for header stretching/shrinking
+  useEffect(() => {
+    const updateSidebarWidth = () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        document.documentElement.style.setProperty('--learning-sidebar-width', '0px');
+      } else {
+        const width = isCollapsed ? '72px' : '240px';
+        document.documentElement.style.setProperty('--learning-sidebar-width', width);
+      }
+    };
+
+    updateSidebarWidth();
+    document.body.classList.add('in-learning-portal');
+
+    window.addEventListener('resize', updateSidebarWidth);
+
+    return () => {
+      document.documentElement.style.setProperty('--learning-sidebar-width', '0px');
+      document.body.classList.remove('in-learning-portal');
+      window.removeEventListener('resize', updateSidebarWidth);
+    };
+  }, [isCollapsed]);
 
   const getActiveTitle = () => {
     const path = location.pathname;
+    if (path === ROUTES.STUDENT_DASHBOARD) return 'Dashboard';
     if (path === ROUTES.LEARNING_WORKSPACE) return 'Workspace';
     if (path === ROUTES.LEARNING_COMPONENTS) return 'Components Library';
     if (path === ROUTES.LEARNING_FUNDAMENTALS) return 'Learning Roadmap';
     
-    // Check for detail slugs
     const parts = path.split('/');
     const slug = parts[parts.length - 1];
     
@@ -38,22 +63,35 @@ export const LearningLayout = () => {
 
   const navItems = [
     {
-      path: ROUTES.LEARNING_WORKSPACE,
-      label: 'Engineering Workspace',
+      id: 'dashboard',
+      path: ROUTES.STUDENT_DASHBOARD,
+      label: 'Dashboard',
       icon: (
-        <svg className="sidebar-nav-icon" viewBox="0 0 24 24">
-          <rect x="3" y="3" width="7" height="9" rx="1" />
-          <rect x="14" y="3" width="7" height="5" rx="1" />
-          <rect x="14" y="12" width="7" height="9" rx="1" />
-          <rect x="3" y="16" width="7" height="5" rx="1" />
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
       )
     },
     {
+      id: 'workspace',
+      path: ROUTES.LEARNING_WORKSPACE,
+      label: 'Engineering Workspace',
+      icon: (
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="9" />
+          <rect x="14" y="3" width="7" height="5" />
+          <rect x="14" y="12" width="7" height="9" />
+          <rect x="3" y="16" width="7" height="5" />
+        </svg>
+      )
+    },
+    {
+      id: 'components',
       path: ROUTES.LEARNING_COMPONENTS,
       label: 'Explore Components',
       icon: (
-        <svg className="sidebar-nav-icon" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="10" />
           <line x1="8" y1="12" x2="16" y2="12" />
           <line x1="12" y1="8" x2="12" y2="16" />
@@ -61,20 +99,22 @@ export const LearningLayout = () => {
       )
     },
     {
+      id: 'fundamentals',
       path: ROUTES.LEARNING_FUNDAMENTALS,
       label: 'Fundamentals',
       icon: (
-        <svg className="sidebar-nav-icon" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
         </svg>
       )
     },
     {
+      id: 'experiments',
       path: '#experiments',
       label: 'Experiments',
       icon: (
-        <svg className="sidebar-nav-icon" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5h20c0-2.31-1-4.24-2.5-5.5" />
           <path d="M12 2v10" />
           <path d="M9 12h6" />
@@ -84,20 +124,22 @@ export const LearningLayout = () => {
       disabled: true
     },
     {
+      id: 'projects',
       path: '#projects',
       label: 'Projects',
       icon: (
-        <svg className="sidebar-nav-icon" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
         </svg>
       ),
       disabled: true
     },
     {
+      id: 'bookmarks',
       path: '#bookmarks',
       label: 'Bookmarks',
       icon: (
-        <svg className="sidebar-nav-icon" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
         </svg>
       ),
@@ -108,7 +150,6 @@ export const LearningLayout = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    // Redirect to component library with query parameter
     navigate(`${ROUTES.LEARNING_COMPONENTS}?search=${encodeURIComponent(searchQuery.trim())}`);
   };
 
@@ -140,61 +181,199 @@ export const LearningLayout = () => {
         </div>
       </header>
 
-      {/* Sticky Sidebar Navigation */}
-      <aside className="learning-sidebar">
-        <div>
-          <span className="sidebar-title">Engineering portal</span>
-          <ul className="sidebar-nav-list">
-            {navItems.map((item, index) => {
-              const isActive = location.pathname === item.path;
-              if (item.disabled) {
+      {/* Sticky Sidebar Navigation - styled exactly like the Admin Panel sidebar */}
+      <aside className={`learning-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+        {/* Top Section: Header & Navigation Links */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          
+          {/* Header & Collapse Trigger */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: isCollapsed ? 'center' : 'space-between',
+            paddingBottom: '16px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            minHeight: '22px'
+          }}>
+            {!isCollapsed && (
+              <span style={{ 
+                fontSize: '11px', 
+                fontWeight: '800', 
+                textTransform: 'uppercase', 
+                color: 'var(--accent-violet, #8b5cf6)', 
+                letterSpacing: '1px' 
+              }}>
+                Engineering portal
+              </span>
+            )}
+            <button 
+              type="button"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                color: 'var(--text-muted, #64748b)', 
+                cursor: 'pointer', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                padding: '4px',
+                borderRadius: '4px',
+                transition: 'background 0.2s'
+              }}
+              title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none" style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }}>
+                <polyline points="11 17 6 12 11 7" />
+                <polyline points="18 17 13 12 18 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <nav>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {navItems.map((item, index) => {
+                const isActive = location.pathname === item.path || (item.id === 'components' && location.pathname.startsWith('/learning/components/')) || (item.id === 'fundamentals' && location.pathname.startsWith('/learning/fundamentals/'));
+                
+                if (item.disabled) {
+                  return (
+                    <li 
+                      key={index} 
+                      style={{ 
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: isCollapsed ? 'center' : 'flex-start',
+                        gap: isCollapsed ? '0' : '12px',
+                        padding: '10px 12px',
+                        borderRadius: '6px',
+                        color: 'var(--text-secondary, #9ca3af)',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        opacity: 0.45, 
+                        cursor: 'not-allowed',
+                        whiteSpace: 'nowrap'
+                      }}
+                      title={`${item.label} (Coming Soon)`}
+                    >
+                      {item.icon}
+                      {!isCollapsed && <span>{item.label}</span>}
+                    </li>
+                  );
+                }
+                
                 return (
-                  <li 
-                    key={index} 
-                    className="sidebar-nav-item" 
-                    style={{ opacity: 0.45, cursor: 'not-allowed' }}
-                    title={`${item.label} (Coming Soon)`}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
+                  <li key={index}>
+                    <Link 
+                      to={item.path} 
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: isCollapsed ? 'center' : 'flex-start',
+                        gap: isCollapsed ? '0' : '12px',
+                        padding: '10px 12px',
+                        borderRadius: '6px',
+                        color: isActive ? 'var(--accent-violet, #8b5cf6)' : 'var(--text-secondary, #9ca3af)',
+                        background: isActive ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
+                        border: isActive ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
+                        textDecoration: 'none',
+                        fontSize: '13px',
+                        fontWeight: isActive ? '700' : '500',
+                        transition: 'all 0.2s ease',
+                        whiteSpace: 'nowrap'
+                      }}
+                      title={isCollapsed ? item.label : undefined}
+                      className="learning-nav-item"
+                    >
+                      {item.icon}
+                      {!isCollapsed && <span>{item.label}</span>}
+                    </Link>
                   </li>
                 );
-              }
-              return (
-                <li key={index}>
-                  <Link 
-                    to={item.path} 
-                    className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+              })}
+            </ul>
+          </nav>
         </div>
 
-        {/* Component Search Widget */}
-        <form className="sidebar-search-box" onSubmit={handleSearchSubmit}>
-          <svg className="sidebar-search-icon" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="text"
-            className="sidebar-search-input"
-            placeholder="Search components..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </form>
+        {/* Bottom Section: Back Link */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {/* Back to Home Link */}
+          <Link
+            to="/"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: isCollapsed ? 'center' : 'flex-start',
+              gap: isCollapsed ? '0' : '12px',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              color: 'var(--text-muted, #64748b)',
+              textDecoration: 'none',
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              border: '1px solid transparent',
+              transition: 'all 0.2s'
+            }}
+            title={isCollapsed ? 'Back to Home' : undefined}
+            className="learning-nav-item-back"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            {!isCollapsed && <span>Back to Home</span>}
+          </Link>
+        </div>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="learning-workspace-content">
+      {/* Main Panel Viewport */}
+      <main className="learning-main-content">
         <Outlet />
       </main>
+
+      <style>{`
+        @media (min-width: 769px) {
+          .learning-sidebar {
+            width: var(--learning-sidebar-width, 240px) !important;
+            background: rgba(10, 10, 15, 0.96) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            height: 100vh !important;
+            z-index: 100 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            padding: 24px 16px !important;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease !important;
+          }
+          
+          .learning-sidebar.collapsed {
+            padding: 24px 12px !important;
+          }
+
+          .learning-main-content {
+            flex: 1;
+            margin-left: var(--learning-sidebar-width, 240px) !important;
+            padding: 40px var(--page-padding) !important;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          }
+        }
+
+        .learning-nav-item:hover {
+          background: rgba(255, 255, 255, 0.02) !important;
+          color: #fff !important;
+        }
+        .learning-nav-item-back:hover {
+          background: rgba(255, 255, 255, 0.02) !important;
+          color: #fff !important;
+        }
+      `}</style>
     </div>
   );
 };

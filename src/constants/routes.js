@@ -18,5 +18,8 @@ export const ROUTES = {
   LEARNING_FUNDAMENTALS: '/learning/fundamentals',
   LEARNING_FUNDAMENTAL_DETAILS: '/learning/fundamentals/:slug',
   LEARNING_COMPONENTS: '/learning/components',
-  LEARNING_COMPONENT_DETAILS: '/learning/components/:slug'
+  LEARNING_COMPONENT_DETAILS: '/learning/components/:slug',
+  STUDENT_AUTH: '/auth',
+  STUDENT_DASHBOARD: '/dashboard',
+  STUDENT_SETTINGS: '/settings'
 };

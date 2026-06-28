@@ -136,7 +136,7 @@ export const EngineeringWorkspace = () => {
               <div 
                 className="timeline-level-node"
                 style={{ 
-                  background: isLocked ? 'rgba(0,0,0,0.2)' : (isLvl9 ? 'rgba(255,255,255,0.03)' : 'rgba(139, 92, 246, 0.08)'), 
+                  background: isLocked ? '#0e0f16' : (isLvl9 ? '#06060a' : '#0e0b1c'), 
                   border: `2px solid ${isLocked ? 'rgba(255, 255, 255, 0.1)' : (isLvl9 ? 'var(--border-subtle)' : 'var(--accent-violet)')}`,
                   color: isLocked ? 'var(--text-muted)' : (isLvl9 ? 'var(--text-dim)' : 'var(--text-main)'),
                   boxShadow: (isLocked || isLvl9) ? 'none' : '0 0 15px rgba(139, 92, 246, 0.15)'

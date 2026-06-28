@@ -11,6 +11,8 @@ import { ROUTES } from '../constants/routes';
 import { useEnquiries } from '../hooks/useEnquiries';
 import { useSettings } from '../hooks/useSettings';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
+import { ProgressiveAuthModal } from '../components/auth/ProgressiveAuthModal';
 
 // Custom SVG Icons
 const DIYIcon = () => (
@@ -141,6 +143,38 @@ export const ProjectDetails = () => {
   const { showToast } = useToast();
 
   const project = getProjectBySlug(slug);
+  const { user } = useAuth();
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showProgressiveAuth, setShowProgressiveAuth] = useState(false);
+  const [authAction, setAuthAction] = useState('save your progress');
+
+  const handleBookmarkClick = () => {
+    if (!user) {
+      setAuthAction('save this project to your bookmarks');
+      setShowProgressiveAuth(true);
+    } else {
+      setIsBookmarked(!isBookmarked);
+      showToast(isBookmarked ? 'Project removed from bookmarks.' : 'Project bookmarked successfully!', 'success');
+    }
+  };
+
+  const handleDownloadClick = () => {
+    if (!user) {
+      setAuthAction('download project guides and schematics');
+      setShowProgressiveAuth(true);
+    } else {
+      showToast('Downloading project source files...', 'success');
+    }
+  };
+
+  const handleContinueAsGuest = () => {
+    if (authAction.includes('bookmark')) {
+      setIsBookmarked(true);
+      showToast('Project bookmarked in guest mode (won\'t persist).', 'success');
+    } else {
+      showToast('Downloading project source files in guest mode...', 'success');
+    }
+  };
 
   const projectKits = useMemo(() => {
     if (!project) return [];
@@ -899,6 +933,26 @@ export const ProjectDetails = () => {
               >
                 Contact Expert
               </Button>
+              
+              <Button
+                type="button"
+                variant="secondary"
+                className="width-100"
+                onClick={handleBookmarkClick}
+                style={{ marginTop: 'var(--space-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', border: isBookmarked ? '1px solid var(--accent-violet, #8b5cf6)' : undefined }}
+              >
+                <span>{isBookmarked ? '★ Bookmarked' : '☆ Bookmark Project'}</span>
+              </Button>
+
+              <Button
+                type="button"
+                variant="secondary"
+                className="width-100"
+                onClick={handleDownloadClick}
+                style={{ marginTop: 'var(--space-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              >
+                <span>📥 Download Resources</span>
+              </Button>
               <a
                 href={`https://wa.me/${settings.whatsappNumber}`}
                 target="_blank"
@@ -1114,6 +1168,13 @@ export const ProjectDetails = () => {
           </>
         )}
       </Modal>
+
+      <ProgressiveAuthModal 
+        isOpen={showProgressiveAuth} 
+        onClose={() => setShowProgressiveAuth(false)} 
+        onContinueAsGuest={handleContinueAsGuest} 
+        actionName={authAction} 
+      />
     </motion.section>
   );
 };

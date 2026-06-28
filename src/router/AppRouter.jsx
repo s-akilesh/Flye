@@ -20,6 +20,7 @@ const ManageEnquiries = React.lazy(() => import('../pages/ManageEnquiries').then
 const AdminSettings = React.lazy(() => import('../pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 const AdminLogin = React.lazy(() => import('../pages/AdminLogin.jsx').then(module => ({ default: module.AdminLogin })));
 const AdminLayout = React.lazy(() => import('../components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
+const AuthGateway = React.lazy(() => import('../pages/AuthGateway').then(module => ({ default: module.AuthGateway })));
 
 // Lazy Load Learning Workspace Pages & Layout
 const LearningLayout = React.lazy(() => import('../components/layout/LearningLayout').then(module => ({ default: module.LearningLayout })));
@@ -28,6 +29,9 @@ const Fundamentals = React.lazy(() => import('../pages/learning/Fundamentals').t
 const ComponentLibrary = React.lazy(() => import('../pages/learning/ComponentLibrary').then(module => ({ default: module.ComponentLibrary })));
 const ComponentDetails = React.lazy(() => import('../pages/learning/ComponentDetails').then(module => ({ default: module.ComponentDetails })));
 const FundamentalDetails = React.lazy(() => import('../pages/learning/FundamentalDetails').then(module => ({ default: module.FundamentalDetails })));
+const StudentDashboard = React.lazy(() => import('../pages/StudentDashboard').then(module => ({ default: module.StudentDashboard })));
+const StudentSettings = React.lazy(() => import('../pages/StudentSettings').then(module => ({ default: module.StudentSettings })));
+const StudentProtectedRoute = React.lazy(() => import('../components/auth/StudentProtectedRoute.jsx').then(module => ({ default: module.StudentProtectedRoute })));
 
 import { ProtectedRoute } from '../components/auth/ProtectedRoute.jsx';
 import { AuthProvider } from '../context/AuthContext.jsx';
@@ -65,6 +69,7 @@ export const AppRouter = () => {
                   {/* Learning Workspace Platform */}
                   <Route path={ROUTES.LEARNING} element={<Navigate to={ROUTES.LEARNING_WORKSPACE} replace />} />
                   <Route element={<LearningLayout />}>
+                    <Route path={ROUTES.STUDENT_DASHBOARD} element={<React.Suspense fallback={<PageLoading />}><StudentProtectedRoute><StudentDashboard /></StudentProtectedRoute></React.Suspense>} />
                     <Route path={ROUTES.LEARNING_WORKSPACE} element={<EngineeringWorkspace />} />
                     <Route path={ROUTES.LEARNING_FUNDAMENTALS} element={<Fundamentals />} />
                     <Route path={ROUTES.LEARNING_FUNDAMENTAL_DETAILS} element={<FundamentalDetails />} />
@@ -77,6 +82,12 @@ export const AppRouter = () => {
                   
                   {/* Admin Login Route */}
                   <Route path={ROUTES.ADMIN_LOGIN || '/admin-login'} element={<AdminLogin />} />
+
+                  {/* Student Auth Gateway */}
+                  <Route path={ROUTES.STUDENT_AUTH} element={<AuthGateway />} />
+
+                  {/* Student Settings */}
+                  <Route path={ROUTES.STUDENT_SETTINGS} element={<React.Suspense fallback={<PageLoading />}><StudentProtectedRoute><StudentSettings /></StudentProtectedRoute></React.Suspense>} />
 
                   {/* Protected Admin Console Routes wrapped in AdminLayout */}
                   <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
