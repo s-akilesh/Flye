@@ -12,18 +12,6 @@ import { EnquiryProvider } from './context/EnquiryContext';
 import { ToastProvider } from './context/ToastContext';
 
 export default function App() {
-  useEffect(() => {
-    async function testConnection() {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-
-      console.log('DATA:', data)
-      console.log('ERROR:', error)
-    }
-
-    testConnection()
-  }, [])
   return (
     <ToastProvider>
       <SettingsProvider>

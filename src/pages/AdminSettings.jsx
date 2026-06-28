@@ -96,9 +96,35 @@ export const AdminSettings = () => {
       return <span className="settings-status-tag tag-soon">Coming Soon</span>;
     }
     if (status === 'attention') {
-      return <span className="settings-status-tag tag-attention">⚠️ Needs Attention</span>;
+      return (
+        <span 
+          style={{ 
+            width: '8px', 
+            height: '8px', 
+            borderRadius: '50%', 
+            background: 'var(--accent-orange, #f97316)', 
+            display: 'inline-block',
+            boxShadow: '0 0 8px var(--accent-orange, #f97316)',
+            marginLeft: '8px'
+          }} 
+          title="Needs Attention"
+        />
+      );
     }
-    return <span className="settings-status-tag tag-configured">✓ Configured</span>;
+    return (
+      <span 
+        style={{ 
+          width: '8px', 
+          height: '8px', 
+          borderRadius: '50%', 
+          background: 'var(--accent-emerald, #10b981)', 
+          display: 'inline-block',
+          boxShadow: '0 0 8px var(--accent-emerald, #10b981)',
+          marginLeft: '8px'
+        }} 
+        title="Configured"
+      />
+    );
   };
 
   const ActiveFormComponent = activeRow ? COMPONENT_MAPPING[activeRow.component] : null;

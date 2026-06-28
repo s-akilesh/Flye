@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { logger } from '../utils/logger';
 
 const AIContext = createContext();
 
@@ -9,7 +10,7 @@ export const AIProvider = ({ children }) => {
   const triggerAISearch = (query) => {
     setIsAIActive(true);
     // Future expansion point for backend AI API calls
-    console.log("AI Search Triggered: ", query);
+    logger.log("AI Search Triggered: ", query);
   };
 
   return (
