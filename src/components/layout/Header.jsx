@@ -9,7 +9,7 @@ import { Modal } from '../ui/Modal';
 export const Header = ({ onToggleDrawer }) => {
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const { user, logout, viewMode, setViewMode } = useAuth();
+  const { user, isAdmin, logout, viewMode, setViewMode } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -42,11 +42,11 @@ export const Header = ({ onToggleDrawer }) => {
       </div>
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-        {user && (
+        {user && isAdmin && (
           <button
             type="button"
             onClick={() => {
-              const nextMode = viewMode === 'admin' ? 'student' : 'admin';
+              const nextMode = viewMode === 'admin' ? 'user' : 'admin';
               setViewMode(nextMode);
               if (nextMode === 'admin') {
                 navigate(ROUTES.ADMIN_DASHBOARD);
@@ -66,7 +66,7 @@ export const Header = ({ onToggleDrawer }) => {
               color: viewMode === 'admin' ? 'var(--accent-violet)' : 'var(--text-muted)', 
               cursor: 'pointer' 
             }}
-            title={viewMode === 'admin' ? "Switch to Student View" : "Switch to Admin View"}
+            title={viewMode === 'admin' ? "Switch to User View" : "Switch to Admin View"}
           >
             <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />

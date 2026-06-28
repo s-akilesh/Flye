@@ -121,7 +121,7 @@ const DrawerIcon = ({ id }) => {
 export const MobileDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, profile, logout, viewMode, setViewMode } = useAuth();
+  const { user, profile, isAdmin, logout, viewMode, setViewMode } = useAuth();
 
   const getInitials = (name) => {
     if (!name) return 'S';
@@ -306,11 +306,11 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                 )}
 
                 {/* Switch view mode button inside drawer for admins */}
-                {user && (
+                {user && isAdmin && (
                   <button
                     type="button"
                     onClick={() => {
-                      const nextMode = viewMode === 'admin' ? 'student' : 'admin';
+                      const nextMode = viewMode === 'admin' ? 'user' : 'admin';
                       setViewMode(nextMode);
                       onClose(); // Close drawer
                       if (nextMode === 'admin') {
@@ -342,7 +342,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                       <path d="M8 21L3 16L8 11" />
                       <path d="M3 16H15" />
                     </svg>
-                    {viewMode === 'admin' ? 'Switch to Student View' : 'Switch to Admin View'}
+                    {viewMode === 'admin' ? 'Switch to User View' : 'Switch to Admin View'}
                   </button>
                 )}
                 

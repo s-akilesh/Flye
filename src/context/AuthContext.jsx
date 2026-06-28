@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const [viewMode, setViewModeState] = useState(() => {
-    return localStorage.getItem('flyen_view_mode') || 'admin';
+    return localStorage.getItem('flyen_view_mode') || 'user';
   });
 
   const setViewMode = (mode) => {
@@ -32,6 +32,13 @@ export const AuthProvider = ({ children }) => {
       logger.log(`[AuthContext] Fetching profile for user ID: ${currentUser.id}`);
       const userProfile = await userService.getProfileById(currentUser.id);
       setProfile(userProfile);
+      
+      // Security Guard: If the user is not an admin, force viewMode to 'user'
+      const userIsAdmin = userProfile?.role === 'admin' || userProfile?.role === 'super_admin';
+      if (!userIsAdmin) {
+        localStorage.setItem('flyen_view_mode', 'user');
+        setViewModeState('user');
+      }
     } catch (err) {
       logger.error('[AuthContext] Failed to load user profile:', err);
       setProfile(null);

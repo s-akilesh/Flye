@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes.js';
 
 export const RoleSwitcher = () => {
-  const { user, viewMode, setViewMode } = useAuth();
+  const { user, isAdmin, viewMode, setViewMode } = useAuth();
   const navigate = useNavigate();
 
-  if (!user) return null;
+  if (!user || !isAdmin) return null;
 
   const handleToggle = () => {
-    const nextMode = viewMode === 'admin' ? 'student' : 'admin';
+    const nextMode = viewMode === 'admin' ? 'user' : 'admin';
     setViewMode(nextMode);
     
     if (nextMode === 'admin') {
@@ -46,7 +46,7 @@ export const RoleSwitcher = () => {
           Viewing As
         </span>
         <span style={{ fontSize: '12px', fontWeight: '800', color: viewMode === 'admin' ? 'var(--accent-violet)' : 'var(--accent-blue)', margin: 0, padding: 0 }}>
-          {viewMode === 'admin' ? '🛠️ Admin Mode' : '🎓 Student Mode'}
+          {viewMode === 'admin' ? '🛠️ Admin Mode' : '🎓 User Mode'}
         </span>
       </div>
       <button
@@ -65,7 +65,7 @@ export const RoleSwitcher = () => {
           outline: 'none'
         }}
       >
-        {viewMode === 'admin' ? 'View Student' : 'View Admin'}
+        {viewMode === 'admin' ? 'View User' : 'View Admin'}
       </button>
     </div>
   );
