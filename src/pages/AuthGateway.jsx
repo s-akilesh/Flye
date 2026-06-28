@@ -7,16 +7,26 @@ import { SignupForm } from '../components/auth/SignupForm';
 import { ForgotPasswordForm } from '../components/auth/ForgotPasswordForm';
 import { ResetPasswordForm } from '../components/auth/ResetPasswordForm';
 import { authService } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 import { ROUTES } from '../constants/routes';
 import { logger } from '../utils/logger';
 import { useSettings } from '../hooks/useSettings';
 
 export const AuthGateway = () => {
   const { settings } = useSettings();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('login'); // 'login' | 'signup' | 'verification' | 'forgot-password' | 'reset-password'
   const [registeredEmail, setRegisteredEmail] = useState('');
   const [resendStatus, setResendStatus] = useState(null);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!loading && user) {
+      logger.log('[AuthGateway] User is already authenticated. Redirecting to home...');
+      navigate('/');
+    }
+  }, [user, loading, navigate]);
 
   // Check URL parameters for recovery state on mount
   useEffect(() => {

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/Button';
 import { logger } from '../../utils/logger';
 
 export const LoginForm = ({ onForgotPassword }) => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -23,7 +25,8 @@ export const LoginForm = ({ onForgotPassword }) => {
     try {
       logger.log('[LoginForm] Attempting sign-in for:', email);
       await login(email, password);
-      logger.log('[LoginForm] Login success.');
+      logger.log('[LoginForm] Login success. Redirecting to home...');
+      navigate('/');
     } catch (err) {
       logger.error('[LoginForm] Login failed:', err);
       let message = 'Invalid email or password. Please try again.';
