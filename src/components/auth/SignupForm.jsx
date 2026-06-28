@@ -51,7 +51,26 @@ export const SignupForm = ({ onSignupSuccess }) => {
       }
     } catch (err) {
       logger.error('[SignupForm] Registration failed:', err);
-      setError(err.message || 'Failed to create account. Please try again.');
+      let message = 'Failed to create account. Please try again.';
+      if (err) {
+        if (typeof err === 'string') {
+          message = err;
+        } else if (err.message && typeof err.message === 'string' && err.message !== '{}') {
+          message = err.message;
+        } else if (err.error_description && typeof err.error_description === 'string') {
+          message = err.error_description;
+        } else if (typeof err === 'object') {
+          try {
+            const str = JSON.stringify(err);
+            if (str !== '{}') {
+              message = str;
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+      }
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
