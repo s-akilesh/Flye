@@ -19,16 +19,23 @@ export const SystemPrefs = ({ onBack }) => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 600));
-    saveSettings({ ...settings, ...form });
-    setIsLoading(false);
-    setIsDirty(false);
-    
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    setSaveStatus({
-      message: 'System preferences updated successfully',
-      lastUpdated: now
-    });
+    setSaveStatus(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 600));
+      await saveSettings({ ...settings, ...form });
+      setIsDirty(false);
+      
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      setSaveStatus({
+        message: 'System preferences updated successfully',
+        lastUpdated: now
+      });
+    } catch (err) {
+      console.error('Failed to save system preferences:', err);
+      alert('Failed to save settings: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

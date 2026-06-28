@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { settingsService } from '../services/settingsService';
+import { logger } from '../utils/logger';
 
 export const SettingsContext = createContext();
-
-const LOCAL_STORAGE_KEY = 'flyen_settings';
 
 export const DEFAULT_SETTINGS = {
   companyName: '',
@@ -36,56 +36,160 @@ export const DEFAULT_SETTINGS = {
   lastLogin: 'Just now',
 };
 
-const loadSettings = () => {
-  try {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      // Merge stored with defaults to ensure new fields are present
-      return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
-    }
-  } catch (e) {
-    console.error('Failed to load settings from localStorage', e);
-  }
-  return { ...DEFAULT_SETTINGS };
+// Map DB snake_case columns to Context camelCase properties
+const mapDbToContext = (dbRow) => {
+  if (!dbRow) return {};
+  return {
+    companyName: dbRow.website_name ?? '',
+    companyTagline: dbRow.website_tagline ?? '',
+    websiteLogo: dbRow.logo_url ?? '',
+    websiteFavicon: dbRow.favicon_url ?? '',
+    companyAddress: dbRow.address ?? '',
+    contactEmail: dbRow.contact_email ?? '',
+    contactPhone: dbRow.contact_phone ?? '',
+    instagramUrl: dbRow.instagram_url ?? '',
+    youtubeUrl: dbRow.youtube_url ?? '',
+    linkedinUrl: dbRow.linkedin_url ?? '',
+    facebookUrl: dbRow.facebook_url ?? '',
+    githubUrl: dbRow.github_url ?? '',
+    websiteUrl: dbRow.website_url ?? '',
+    footerText: dbRow.footer_text ?? '',
+    copyrightText: dbRow.copyright_text ?? '',
+    notificationEmail: dbRow.notification_email ?? '',
+    replyToEmail: dbRow.reply_to_email ?? '',
+  };
+};
+
+// Map Context camelCase properties to DB snake_case columns (Only include verified columns to avoid Postgrest cache errors)
+const mapContextToDb = (contextData) => {
+  const dbRow = {};
+  if (contextData.companyName !== undefined) dbRow.website_name = contextData.companyName;
+  if (contextData.companyTagline !== undefined) dbRow.website_tagline = contextData.companyTagline;
+  if (contextData.websiteLogo !== undefined) dbRow.logo_url = contextData.websiteLogo;
+  if (contextData.websiteFavicon !== undefined) dbRow.favicon_url = contextData.websiteFavicon;
+  if (contextData.companyAddress !== undefined) dbRow.address = contextData.companyAddress;
+  if (contextData.contactEmail !== undefined) dbRow.contact_email = contextData.contactEmail;
+  if (contextData.contactPhone !== undefined) dbRow.contact_phone = contextData.contactPhone;
+  if (contextData.instagramUrl !== undefined) dbRow.instagram_url = contextData.instagramUrl;
+  if (contextData.youtubeUrl !== undefined) dbRow.youtube_url = contextData.youtubeUrl;
+  if (contextData.linkedinUrl !== undefined) dbRow.linkedin_url = contextData.linkedinUrl;
+  if (contextData.facebookUrl !== undefined) dbRow.facebook_url = contextData.facebookUrl;
+  if (contextData.githubUrl !== undefined) dbRow.github_url = contextData.githubUrl;
+  if (contextData.websiteUrl !== undefined) dbRow.website_url = contextData.websiteUrl;
+  if (contextData.footerText !== undefined) dbRow.footer_text = contextData.footerText;
+  if (contextData.copyrightText !== undefined) dbRow.copyright_text = contextData.copyrightText;
+  if (contextData.notificationEmail !== undefined) dbRow.notification_email = contextData.notificationEmail;
+  if (contextData.replyToEmail !== undefined) dbRow.reply_to_email = contextData.replyToEmail;
+  return dbRow;
 };
 
 export const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useState(loadSettings);
+  const [settings, setSettings] = useState({ ...DEFAULT_SETTINGS });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Persist to localStorage whenever settings change
+  // Load settings from Supabase on startup
   useEffect(() => {
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settings));
-    } catch (e) {
-      console.error('Failed to save settings to localStorage', e);
-    }
-  }, [settings]);
+    const loadPlatformSettings = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const dbRow = await settingsService.getSettings();
+        if (dbRow) {
+          const mapped = mapDbToContext(dbRow);
+          setSettings((prev) => ({ ...prev, ...mapped }));
+        }
+      } catch (err) {
+        logger.error('Failed to load settings from Supabase:', err);
+        // Fallback to DEFAULT_SETTINGS, do not crash (handled gracefully)
+        setError(err.message || 'Failed to load platform settings.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    loadPlatformSettings();
+  }, []);
+
+  // Update Favicon and Document Title reactively when settings change
+  useEffect(() => {
+    if (settings.websiteFavicon) {
+      let link = document.querySelector("link[rel~='icon']");
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+      }
+      link.href = settings.websiteFavicon;
+    }
+    if (settings.companyName) {
+      document.title = settings.companyName;
+    }
+  }, [settings.websiteFavicon, settings.companyName]);
+
+  // In-memory state updater for form edits (no immediate database write)
   const updateSettings = (patch) => {
     setSettings((prev) => ({ ...prev, ...patch }));
   };
 
-  const saveSettings = (data) => {
-    const merged = { ...DEFAULT_SETTINGS, ...data };
-    setSettings(merged);
+  // Persists changes to the Supabase settings table
+  const saveSettings = async (data) => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
-    } catch (e) {
-      console.error('Failed to save settings to localStorage', e);
+      setError(null);
+      const merged = { ...settings, ...data };
+      const dbPayload = mapContextToDb(merged);
+      const updatedRow = await settingsService.updateSettings(dbPayload);
+      const mapped = mapDbToContext(updatedRow);
+      setSettings((prev) => ({ ...prev, ...mapped }));
+      return { success: true };
+    } catch (err) {
+      logger.error('Failed to save settings to Supabase:', err);
+      throw err;
     }
   };
 
-  const resetDefaults = () => {
-    setSettings({ ...DEFAULT_SETTINGS });
+  // Resets settings to default values in both context and database
+  const resetDefaults = async () => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(DEFAULT_SETTINGS));
-    } catch (e) {
-      console.error('Failed to reset settings', e);
+      setError(null);
+      const dbPayload = mapContextToDb(DEFAULT_SETTINGS);
+      const updatedRow = await settingsService.updateSettings(dbPayload);
+      const mapped = mapDbToContext(updatedRow);
+      setSettings({ ...DEFAULT_SETTINGS, ...mapped });
+      return { success: true };
+    } catch (err) {
+      logger.error('Failed to reset settings in Supabase:', err);
+      throw err;
     }
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--bg-primary, #0a0a0c)', color: 'var(--text-muted, #94a3b8)', fontFamily: 'Inter, sans-serif' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '40px', height: '40px', border: '3px solid rgba(255,255,255,0.05)', borderTopColor: 'var(--accent-violet, #8b5cf6)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+          <span style={{ fontSize: '11px', letterSpacing: '2px', fontWeight: '600', color: 'var(--text-dim, #64748b)' }}>LOADING FLYEN PLATFORM...</span>
+        </div>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, saveSettings, resetDefaults }}>
+    <SettingsContext.Provider 
+      value={{ 
+        settings, 
+        loading, 
+        error, 
+        updateSettings, 
+        saveSettings, 
+        resetDefaults 
+      }}
+    >
       {children}
     </SettingsContext.Provider>
   );

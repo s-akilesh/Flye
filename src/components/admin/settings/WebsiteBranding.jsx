@@ -29,16 +29,23 @@ export const WebsiteBranding = ({ onBack }) => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    saveSettings(form);
-    setIsLoading(false);
-    setIsDirty(false);
-    
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    setSaveStatus({
-      message: 'Website Branding Saved Successfully',
-      lastUpdated: `${now}`
-    });
+    setSaveStatus(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      await saveSettings(form);
+      setIsDirty(false);
+      
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      setSaveStatus({
+        message: 'Website Branding Saved Successfully',
+        lastUpdated: `${now}`
+      });
+    } catch (err) {
+      console.error('Failed to save website branding:', err);
+      alert('Failed to save settings: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleUploadLogo = () => {

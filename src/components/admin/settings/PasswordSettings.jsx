@@ -39,26 +39,32 @@ export const PasswordSettings = ({ onBack }) => {
     }
 
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      await new Promise(resolve => setTimeout(resolve, 800));
 
-    const today = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    
-    saveSettings({
-      ...settings,
-      adminPassword: pwForm.newPw,
-      lastPasswordChanged: today
-    });
+      const today = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      
+      await saveSettings({
+        ...settings,
+        adminPassword: pwForm.newPw,
+        lastPasswordChanged: today
+      });
 
-    setIsLoading(false);
-    setIsDirty(false);
-    setPwForm({ current: '', newPw: '', confirm: '' });
-    
-    setPwSuccess('✅ Password updated successfully!');
-    setSaveStatus({
-      message: 'Security password changed successfully',
-      lastUpdated: `${now}`
-    });
+      setIsDirty(false);
+      setPwForm({ current: '', newPw: '', confirm: '' });
+      
+      setPwSuccess('✅ Password updated successfully!');
+      setSaveStatus({
+        message: 'Security password changed successfully',
+        lastUpdated: `${now}`
+      });
+    } catch (err) {
+      console.error('Failed to change password:', err);
+      setPwError('Failed to change password: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

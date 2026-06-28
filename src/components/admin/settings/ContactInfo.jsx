@@ -29,16 +29,23 @@ export const ContactInfo = ({ onBack }) => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    saveSettings(form);
-    setIsLoading(false);
-    setIsDirty(false);
+    setSaveStatus(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      await saveSettings(form);
+      setIsDirty(false);
 
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    setSaveStatus({
-      message: 'Contact Info Saved Successfully',
-      lastUpdated: `${now}`
-    });
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      setSaveStatus({
+        message: 'Contact Info Saved Successfully',
+        lastUpdated: `${now}`
+      });
+    } catch (err) {
+      console.error('Failed to save contact info:', err);
+      alert('Failed to save settings: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

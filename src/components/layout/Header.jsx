@@ -25,11 +25,20 @@ export const Header = ({ onToggleDrawer }) => {
 
   return (
     <header>
-      <div className="logo-container" onClick={() => navigate(ROUTES.HOME)}>
-        <svg className="logo-icon" viewBox="0 0 24 24">
-          <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
-        </svg>
-        <span className="logo-text">{settings.companyName.toUpperCase()}</span>
+      <div className="logo-container" onClick={() => navigate(ROUTES.HOME)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+        {settings.websiteLogo ? (
+          <img 
+            src={settings.websiteLogo} 
+            alt={settings.companyName || 'Flyen'} 
+            className="logo-img" 
+            style={{ height: '28px', width: 'auto', objectFit: 'contain', marginRight: '10px' }} 
+          />
+        ) : (
+          <svg className="logo-icon" viewBox="0 0 24 24" style={{ marginRight: '10px' }}>
+            <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
+          </svg>
+        )}
+        <span className="logo-text">{(settings.companyName || 'Flyen').toUpperCase()}</span>
       </div>
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
