@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { settingsService } from '../services/settingsService';
 import { logger } from '../utils/logger';
+import { supabase } from '../lib/supabase';
 
 export const SettingsContext = createContext();
 
@@ -88,27 +89,47 @@ export const SettingsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const loadPlatformSettings = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      logger.log('[SettingsContext] Initiating settings fetch from Supabase...');
+      const dbRow = await settingsService.getSettings();
+      if (dbRow) {
+        const mapped = mapDbToContext(dbRow);
+        logger.log('[SettingsContext] Settings fetched successfully. Mapped payload:', mapped);
+        setSettings((prev) => ({ ...prev, ...mapped }));
+      } else {
+        logger.log('[SettingsContext] No settings record returned from Supabase.');
+      }
+    } catch (err) {
+      logger.error('[SettingsContext] Failed to load settings from Supabase:', err);
+      setError(err.message || 'Failed to load platform settings.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Load settings from Supabase on startup
   useEffect(() => {
-    const loadPlatformSettings = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const dbRow = await settingsService.getSettings();
-        if (dbRow) {
-          const mapped = mapDbToContext(dbRow);
-          setSettings((prev) => ({ ...prev, ...mapped }));
-        }
-      } catch (err) {
-        logger.error('Failed to load settings from Supabase:', err);
-        // Fallback to DEFAULT_SETTINGS, do not crash (handled gracefully)
-        setError(err.message || 'Failed to load platform settings.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadPlatformSettings();
+  }, []);
+
+  // Re-fetch settings dynamically on authentication state changes (login/logout)
+  useEffect(() => {
+    logger.log('[SettingsContext] Registering auth state listener...');
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      logger.log(`[SettingsContext] Auth state changed event: ${event}. User is authenticated: ${!!session?.user}`);
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        logger.log(`[SettingsContext] Triggering settings re-fetch due to auth event: ${event}`);
+        loadPlatformSettings();
+      }
+    });
+
+    return () => {
+      logger.log('[SettingsContext] Unsubscribing from auth state listener.');
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Update Favicon and Document Title reactively when settings change
