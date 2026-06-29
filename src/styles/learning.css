@@ -132,7 +132,7 @@
 }
 
 .workspace-page-header h1 {
-  font-size: 28px;
+  font-size: 18px !important;
   font-weight: 800;
   margin: 0 0 4px 0;
   letter-spacing: -0.5px;
@@ -336,6 +336,7 @@
   gap: var(--space-4, 16px);
   height: auto;
   overflow: visible;
+  padding-bottom: 120px !important; /* Offset for fixed footer */
 }
 
 /* Allow scrollbar on parent when this view is open */
@@ -959,7 +960,13 @@
   .product-visual-card {
     grid-column: span 12;
   }
-}/* Choose Your Kit Pricing Cards & Carousel styles */
+}
+
+#choose-kit-section {
+  overflow: hidden !important;
+}
+
+/* Choose Your Kit Pricing Cards & Carousel styles */
 .kits-cards-grid {
   display: flex;
   flex-direction: row;
@@ -989,11 +996,125 @@
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch;
+    padding-top: 16px !important;
     padding-bottom: 16px;
     margin-right: -24px; /* bleed scroll to screen edge */
+    padding-right: 32px !important;
   }
   .kit-pricing-card {
     flex: 0 0 290px !important;
     scroll-snap-align: start;
+  }
+}
+
+/* Stage Navigation Footer (Fixed at bottom of viewport) */
+.stage-navigation-footer {
+  position: fixed;
+  bottom: 0;
+  left: var(--learning-sidebar-width, 240px);
+  right: 0;
+  height: 72px;
+  background: rgba(10, 10, 15, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px; /* 24px padding left and right */
+  margin: 0;
+  z-index: 99;
+}
+
+/* Back button in rectangle shape */
+.stage-navigation-footer .product-btn {
+  border-radius: 8px !important; /* Rectangle shape */
+  padding: 8px 16px !important;
+  font-size: 12px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--text-secondary, #9ca3af) !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.stage-navigation-footer .product-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #fff !important;
+}
+
+.stage-navigation-footer .cta-button {
+  border-radius: 8px !important; /* Rectangle shape */
+  padding: 8px 16px !important;
+  font-size: 12px !important;
+}
+
+@media (max-width: 768px) {
+  .stage-navigation-footer {
+    left: 0 !important; /* Full width on mobile */
+    height: 72px;
+    padding: 0 24px;
+    flex-direction: row !important;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .stage-navigation-footer button {
+    flex: 1 !important;
+    width: auto !important;
+    text-align: center;
+    padding: 10px 8px !important; /* Slightly snugger padding to fit text on small devices */
+    font-size: 12px !important;
+    margin: 0 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Responsive Grid for Workspace Info Cards */
+.workspace-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4, 16px);
+  margin-bottom: var(--space-6, 32px);
+}
+
+.workspace-info-card {
+  padding: var(--space-4, 16px);
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--surface-card, rgba(20, 20, 30, 0.75));
+}
+
+.workspace-info-card:hover {
+  transform: translateY(-2px);
+}
+
+.workspace-info-card.violet {
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  background: rgba(139, 92, 246, 0.03);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.02);
+}
+
+.workspace-info-card.blue {
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  background: rgba(59, 130, 246, 0.03);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.02);
+}
+
+.workspace-info-card.emerald {
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  background: rgba(16, 185, 129, 0.03);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.02);
+}
+
+@media (max-width: 768px) {
+  .workspace-info-grid {
+    grid-template-columns: 1fr;
+    margin-bottom: var(--space-4, 16px);
   }
 }

@@ -37,48 +37,35 @@ export const EngineeringWorkspace = () => {
 
   return (
     <div style={{ paddingBottom: 'var(--space-8)' }}>
-      {/* 1. Page Header & Key Three Questions */}
-      <div className="workspace-page-header" style={{ marginBottom: 'var(--space-6)' }}>
-        <h1>Engineering Workspace</h1>
-        <p>Interactive playground to explore and master practical electronics step-by-step.</p>
-      </div>
 
-      {/* Answer Three Questions Callout Banner */}
-      <div 
-        className="card-glass" 
-        style={{ 
-          padding: 'var(--space-4)', 
-          borderRadius: '12px', 
-          marginBottom: 'var(--space-6)',
-          border: '1px solid rgba(139, 92, 246, 0.15)',
-          background: 'rgba(139, 92, 246, 0.02)'
-        }}
-      >
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 'var(--space-4)' }}>
-          <div style={{ gridColumn: 'span 4' }}>
-            <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-violet)' }}>
-              What am I learning?
-            </span>
-            <p style={{ fontSize: '12px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-              Practical Electronics Engineering, structured as a level-by-level journey from fundamental physics to microcontrollers and advanced AI hardware.
-            </p>
-          </div>
-          <div style={{ gridColumn: 'span 4' }}>
-            <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-blue)' }}>
-              Why is it important?
-            </span>
-            <p style={{ fontSize: '12px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-              Understanding individual building blocks conceptually allows you to debug, prototype, and build your own custom hardware systems from scratch.
-            </p>
-          </div>
-          <div style={{ gridColumn: 'span 4' }}>
-            <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-emerald)' }}>
-              What should I learn next?
-            </span>
-            <p style={{ fontSize: '12px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-              Start with <strong>Level 1 — Electrical Basics</strong>. Learn what Voltage and Current are before exploring individual components.
-            </p>
-          </div>
+
+      {/* Answer Three Questions Callout Banner - 3 Separate Cards */}
+      <div className="workspace-info-grid">
+        <div className="workspace-info-card violet">
+          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-violet)' }}>
+            What am I learning?
+          </span>
+          <p style={{ fontSize: '12px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+            Practical Electronics Engineering, structured as a level-by-level journey from fundamental physics to microcontrollers and advanced AI hardware.
+          </p>
+        </div>
+        
+        <div className="workspace-info-card blue">
+          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-blue)' }}>
+            Why is it important?
+          </span>
+          <p style={{ fontSize: '12px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+            Understanding individual building blocks conceptually allows you to debug, prototype, and build your own custom hardware systems from scratch.
+          </p>
+        </div>
+        
+        <div className="workspace-info-card emerald">
+          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-emerald)' }}>
+            What should I learn next?
+          </span>
+          <p style={{ fontSize: '12px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+            Start with <strong>Level 1 — Electrical Basics</strong>. Learn what Voltage and Current are before exploring individual components.
+          </p>
         </div>
       </div>
 

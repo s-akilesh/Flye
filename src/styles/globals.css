@@ -199,11 +199,11 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 100;
+  z-index: 1000 !important;
   background: rgba(5, 5, 5, 0.4);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .logo-container {
@@ -1780,16 +1780,26 @@ header {
 
 /* --- DETAIL PAGE PORTAL STYLES --- */
 .detail-section {
-  padding: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.detail-section.card-glass:not(.ai-detail-card) {
+  background: none !important;
+  border: none !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
 }
 
 .detail-section h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: var(--space-5);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: var(--space-3);
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--accent-blue, #3b82f6) !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  margin-bottom: 20px !important;
 }
 
 .gallery-main-view {
@@ -2301,10 +2311,25 @@ header {
 
   /* Mobile Toolbar Adjustments */
   .marketplace-toolbar {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    z-index: 999 !important;
+    border-radius: 0px !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(10, 10, 15, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    padding: 12px 16px !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: var(--space-2) !important;
-    padding: var(--space-3) var(--space-3) !important;
+    gap: 12px !important;
   }
 
   .search-wrapper {
@@ -2319,6 +2344,10 @@ header {
     gap: var(--space-2) !important;
     width: auto !important;
     flex-shrink: 0 !important;
+  }
+
+  .btn-ai-toggle {
+    display: none !important;
   }
 
   .btn-mobile-filters {
@@ -2395,7 +2424,7 @@ header {
 
   /* Card Padding Rules for Project Details Screen */
   .detail-section {
-    padding: var(--space-3) var(--space-4) !important;
+    margin-bottom: var(--space-6) !important;
   }
 
   .sticky-detail-panel {
@@ -3971,12 +4000,13 @@ input[type="radio"]:checked::after {
   background: rgba(10, 10, 15, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   display: none;
   justify-content: space-between;
   align-items: center;
   padding: 0 16px;
-  z-index: 999;
+  z-index: 999 !important;
 }
 
 .mobile-learning-title {
@@ -4220,21 +4250,38 @@ header {
 
   /* 1. Enforce 12px left and right margin spacing */
   .main-viewport-content,
-  .learning-main-content,
   .admin-main-content {
     padding-left: 12px !important;
     padding-right: 12px !important;
   }
+  .learning-main-content {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    padding-top: 60px !important; /* Offset for fixed sub-header (52px) + 8px gap */
+  }
+
+  header {
+    padding: 12px var(--page-padding) !important;
+  }
 
   /* 2. Set the gap between page header and main header to 0px */
   .main-viewport-content {
-    padding-top: 64px !important; /* Clears the 16px padding + 32px height header */
+    padding-top: 60px !important; /* Clears the 12px padding + 36px height header */
   }
   .learning-workspace-container {
-    padding-top: 64px !important; /* Clears the header */
+    padding-top: 0px !important; /* Clears the header */
+  }
+  .mobile-learning-header {
+    position: fixed !important;
+    top: 60px !important; /* Align sticky sub-header exactly below main header */
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    z-index: 999 !important;
   }
   .admin-main-content {
-    padding-top: 64px !important; /* Clears the header */
+    padding-top: 60px !important; /* Clears the header */
   }
   .workspace-page-header, 
   .portal-header {
@@ -4244,11 +4291,132 @@ header {
 
   /* 3. Enforce page header size / height of 32px */
   h1, 
-  .workspace-page-header h1, 
   .portal-title-area h1,
   .admin-main-content h1 {
     font-size: 32px !important;
     line-height: 32px !important;
+  }
+
+  /* Project Kits Mobile Header Fixes */
+  #kits-portal {
+    height: auto !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  #kits-portal .portal-header {
+    display: none !important;
+  }
+  #kits-portal .portal-content-flex {
+    padding-top: 4px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-top: 0 !important;
+  }
+  #kits-portal .marketplace-main {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Mobile Horizontal Project Card Style */
+  .project-card-premium {
+    display: grid !important;
+    grid-template-columns: 100px 1fr !important;
+    grid-template-rows: auto auto auto auto !important;
+    gap: 6px 12px !important;
+    padding: 12px !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .project-card-premium .card-top-row {
+    position: absolute !important;
+    top: 16px !important;
+    left: 16px !important;
+    margin-bottom: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .project-card-premium .project-card-img {
+    grid-column: 1 !important;
+    grid-row: 1 / span 4 !important;
+    height: 100px !important;
+    width: 100px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .project-card-premium h3 {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .project-card-premium .card-desc {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    font-size: 11px !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-height: 16px !important;
+  }
+
+  .project-card-premium .card-spec-row {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+    margin: 0 !important;
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .project-card-premium .card-spec-row .status-pill {
+    font-size: 9px !important;
+    padding: 2px 6px !important;
+  }
+
+  .project-card-premium .project-card-footer {
+    grid-column: 2 !important;
+    grid-row: 4 !important;
+    margin-top: 4px !important;
+    padding-top: 6px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.04) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .project-card-premium .project-card-price {
+    font-size: 14px !important;
+  }
+
+  .project-card-premium .btn-card-order {
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    height: 26px !important;
+  }
+
+  /* Project Details Mobile Header Fixes */
+  #detail-portal {
+    padding-top: 60px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  #detail-portal .portal-header {
+    display: none !important;
+  }
+  #detail-portal .portal-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .compare-accordion {
+    display: none !important;
   }
 }
 

@@ -92,66 +92,7 @@ export const ComponentDetails = () => {
     
     return (
       <div style={{ paddingBottom: 'var(--space-8)', maxWidth: '1000px', margin: '0 auto' }}>
-        {/* Breadcrumbs */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'var(--space-4)' }}>
-          <button 
-            className="product-btn" 
-            onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}
-            style={{ padding: '6px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title="Back to Workspace"
-          >
-            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12,19 5,12 12,5" />
-            </svg>
-          </button>
-          
-          <div className="family-breadcrumbs" style={{ fontSize: '11px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-            {/* Home Link */}
-            <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }} onClick={() => navigate('/')} title="Home">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-            </span>
-            <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
 
-            {/* Workspace Link */}
-            <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)} title="Workspace">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-              </svg>
-              <span className="desktop-breadcrumb-text">Workspace</span>
-            </span>
-            <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-
-            {/* Components Link */}
-            <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }} onClick={() => navigate(ROUTES.LEARNING_COMPONENTS)} title="Components">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="8" y1="12" x2="16" y2="12" />
-                <line x1="12" y1="8" x2="12" y2="16" />
-              </svg>
-              <span className="desktop-breadcrumb-text">Components</span>
-            </span>
-            <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-
-            {roadmapComp && (
-              <>
-                <span className="desktop-breadcrumb-item" style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
-                  {roadmapComp.levelTitle}
-                </span>
-                <span className="desktop-breadcrumb-item" style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-                <span className="desktop-breadcrumb-item" style={{ color: 'var(--text-muted)' }}>
-                  {roadmapComp.categoryName}
-                </span>
-                <span className="desktop-breadcrumb-item" style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-              </>
-            )}
-            <span style={{ color: 'var(--accent-violet)', fontWeight: '800' }}>{roadmapComp ? roadmapComp.name : slug}</span>
-          </div>
-        </div>
 
         {/* Informative placeholder workspace card */}
         <div className="workspace-card" style={{ padding: '48px var(--space-6)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', border: '1px dashed var(--border-subtle)', background: 'rgba(255,255,255,0.005)' }}>
@@ -208,74 +149,7 @@ export const ComponentDetails = () => {
   return (
     <div className="component-details-container" style={{ paddingBottom: 'var(--space-8)', maxWidth: '1000px', margin: '0 auto' }}>
       
-      {/* 1. Breadcrumbs Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-        <button 
-          className="product-btn" 
-          onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}
-          style={{ padding: '6px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          title="Back to Workspace"
-        >
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12,19 5,12 12,5" />
-          </svg>
-        </button>
-        
-        <div className="family-breadcrumbs" style={{ fontSize: '11px', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-          {/* Home Link */}
-          <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }} onClick={() => navigate('/')} title="Home">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </span>
-          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
 
-          {/* Workspace Link */}
-          <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)} title="Workspace">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-            </svg>
-            <span className="desktop-breadcrumb-text">Workspace</span>
-          </span>
-          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-
-          {/* Components Link */}
-          <span style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }} onClick={() => navigate(ROUTES.LEARNING_COMPONENTS)} title="Components">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="8" y1="12" x2="16" y2="12" />
-              <line x1="12" y1="8" x2="12" y2="16" />
-            </svg>
-            <span className="desktop-breadcrumb-text">Components</span>
-          </span>
-          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-
-          {roadmapInfo && (
-            <>
-              <span className="desktop-breadcrumb-item" style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => navigate(ROUTES.LEARNING_WORKSPACE)}>
-                {roadmapInfo.levelTitle}
-              </span>
-              <span className="desktop-breadcrumb-item" style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-              <span className="desktop-breadcrumb-item" style={{ color: 'var(--text-muted)' }}>
-                {roadmapInfo.categoryName}
-              </span>
-              <span className="desktop-breadcrumb-item" style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-            </>
-          )}
-          <span 
-            className="desktop-breadcrumb-item"
-            style={{ color: 'var(--text-muted)', cursor: family ? 'pointer' : 'default' }}
-            onClick={() => family && navigate(`${ROUTES.LEARNING_COMPONENTS}/${family.id}`)}
-          >
-            {family ? family.name : componentData.name}
-          </span>
-          <span className="desktop-breadcrumb-item" style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-          <span style={{ color: 'var(--accent-violet)', fontWeight: '800' }}>{componentData.name}</span>
-        </div>
-      </div>
 
       {/* 2. Journey Milestone Tracker (Duolingo Style Progress Header) */}
       <div 
@@ -365,16 +239,7 @@ export const ComponentDetails = () => {
       </div>
 
       {/* 4. Bottom Stage Navigation Controls */}
-      <div 
-        style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          marginTop: '40px',
-          paddingTop: '24px',
-          borderTop: '1px solid rgba(255,255,255,0.05)'
-        }}
-      >
+      <div className="stage-navigation-footer">
         <button
           className="product-btn"
           disabled={activeStage.num === 1}

@@ -38,10 +38,8 @@ export const SearchPanel = ({
       <div className="toolbar-actions">
         {/* Mobile Filter Toggle Button */}
         <Button className="btn-mobile-filters" id="btn-mobile-filters" onClick={onOpenMobileFilters}>
-          <svg viewBox="0 0 24 24" width="16" height="16">
-            <line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" />
-            <line x1="4" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="2" />
-            <line x1="4" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" />
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
           </svg>
           <span className="btn-filter-text">Filters</span>
         </Button>

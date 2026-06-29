@@ -88,50 +88,7 @@ const getKitIcon = (id) => {
 };
 
 const renderVisualDeliverables = (features) => {
-  if (!features || !Array.isArray(features)) return null;
-  const deliverables = [];
-  const lowerFeats = features.filter(f => typeof f === 'string').map(f => f.toLowerCase());
-
-  const hasComponents = lowerFeats.some(f => f.includes('component') || f.includes('electronic'));
-  const hasPCB = lowerFeats.some(f => f.includes('pcb') || f.includes('wiring') || f.includes('board'));
-  const hasPrinted = lowerFeats.some(f => f.includes('print') || f.includes('parts') || f.includes('mechanical'));
-  const hasDocs = lowerFeats.some(f => f.includes('doc') || f.includes('guide') || f.includes('book') || f.includes('code') || f.includes('support'));
-
-  if (hasPCB) deliverables.push({ label: 'PCB Board', icon: <PCBIcon /> });
-  if (hasComponents) deliverables.push({ label: 'Electronics', icon: <ChipIcon /> });
-  if (hasPrinted) deliverables.push({ label: '3D Printed Parts', icon: <CubeIcon /> });
-  if (hasDocs) deliverables.push({ label: 'Documentation', icon: <BookIcon /> });
-
-  if (deliverables.length === 0) return null;
-
-  return (
-    <div style={{ marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '10px' }}>
-      <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-        What's Included:
-      </span>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-        {deliverables.map((d, i) => (
-          <span 
-            key={i} 
-            style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '4px', 
-              fontSize: '10px', 
-              background: 'rgba(255,255,255,0.02)', 
-              border: '1px solid rgba(255,255,255,0.05)', 
-              padding: '2px 6px', 
-              borderRadius: '4px',
-              color: 'var(--text-primary)'
-            }}
-          >
-            {d.icon}
-            {d.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
+  return null;
 };
 
 export const ProjectDetails = () => {
@@ -355,6 +312,42 @@ export const ProjectDetails = () => {
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
     >
+      {/* Mobile Sticky Header */}
+      <header className="mobile-learning-header">
+        <button 
+          type="button" 
+          onClick={() => navigate(ROUTES.PROJECTS)}
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            color: 'var(--text-primary)', 
+            cursor: 'pointer',
+            padding: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <svg 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <span className="mobile-learning-title" style={{ textTransform: 'uppercase' }}>
+          {title}
+        </span>
+        <div style={{ width: '36px' }}></div>
+      </header>
+
       <div
         className="portal-header"
         style={{
@@ -585,7 +578,7 @@ export const ProjectDetails = () => {
               </div>
 
               {/* Compare Accordion */}
-              <div className="card-glass" style={{ padding: '0px', marginTop: '24px', overflow: 'hidden' }}>
+              <div className="card-glass compare-accordion" style={{ padding: '0px', marginTop: '24px', overflow: 'hidden' }}>
                 <button
                   type="button"
                   onClick={() => setShowCompare(!showCompare)}

@@ -78,42 +78,33 @@ export const ComponentLibrary = () => {
         </div>
       </div>
 
-      {/* Answer Three Questions Callout Banner */}
-      <div 
-        className="card-glass" 
-        style={{ 
-          padding: 'var(--space-4)', 
-          borderRadius: '12px', 
-          marginBottom: 'var(--space-5)',
-          border: '1px solid rgba(139, 92, 246, 0.12)',
-          background: 'rgba(139, 92, 246, 0.015)'
-        }}
-      >
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 'var(--space-4)' }}>
-          <div style={{ gridColumn: 'span 4' }}>
-            <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-violet)' }}>
-              What am I learning?
-            </span>
-            <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-              Parent components and electronic families. Instead of scanning single parts, you learn their general category and main physics goals.
-            </p>
-          </div>
-          <div style={{ gridColumn: 'span 4' }}>
-            <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-blue)' }}>
-              Why is it important?
-            </span>
-            <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-              Grouping components into families simplifies your learning curve. Once you master a Resistor or Capacitor, you understand all its subclasses.
-            </p>
-          </div>
-          <div style={{ gridColumn: 'span 4' }}>
-            <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-emerald)' }}>
-              What should I learn next?
-            </span>
-            <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-              Select a component card (like <strong>Capacitor</strong>) to open its workspace, then toggle variants to compare electrolytic and ceramic structures.
-            </p>
-          </div>
+      {/* Answer Three Questions Callout Banner - 3 Separate Cards */}
+      <div className="workspace-info-grid">
+        <div className="workspace-info-card violet">
+          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-violet)' }}>
+            What am I learning?
+          </span>
+          <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+            Parent components and electronic families. Instead of scanning single parts, you learn their general category and main physics goals.
+          </p>
+        </div>
+        
+        <div className="workspace-info-card blue">
+          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-blue)' }}>
+            Why is it important?
+          </span>
+          <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+            Grouping components into families simplifies your learning curve. Once you master a Resistor or Capacitor, you understand all its subclasses.
+          </p>
+        </div>
+        
+        <div className="workspace-info-card emerald">
+          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-emerald)' }}>
+            What should I learn next?
+          </span>
+          <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+            Select a component card (like <strong>Capacitor</strong>) to open its workspace, then toggle variants to compare electrolytic and ceramic structures.
+          </p>
         </div>
       </div>
 

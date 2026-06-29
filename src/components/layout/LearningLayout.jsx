@@ -161,10 +161,15 @@ export const LearningLayout = () => {
           <button 
             type="button" 
             onClick={() => {
-              if (location.pathname === ROUTES.LEARNING_WORKSPACE) {
+              const mainHubPaths = [
+                ROUTES.LEARNING_WORKSPACE,
+                ROUTES.LEARNING_FUNDAMENTALS,
+                ROUTES.LEARNING_COMPONENTS
+              ];
+              if (mainHubPaths.includes(location.pathname)) {
                 navigate('/');
               } else {
-                navigate(-1);
+                navigate(ROUTES.LEARNING_WORKSPACE);
               }
             }} 
             style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}

@@ -15,14 +15,13 @@ export const Fundamentals = () => {
       </div>
 
       {/* Grid of 9 Lessons */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>
         {fundamentals.map((concept, idx) => {
           return (
             <div 
               key={concept.id}
               className="workspace-card app-grid-btn"
               style={{
-                gridColumn: 'span 4',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -32,6 +31,7 @@ export const Fundamentals = () => {
                 border: '1px solid var(--border-subtle)',
                 borderRadius: '12px',
                 minHeight: '160px',
+                minWidth: '240px',
                 transition: 'all 200ms ease'
               }}
               onClick={() => navigate(`/learning/fundamentals/${concept.slug}`)}
