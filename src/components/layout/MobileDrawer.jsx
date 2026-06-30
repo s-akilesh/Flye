@@ -23,6 +23,22 @@ const DrawerIcon = ({ id }) => {
       </svg>
     );
   }
+  if (id === 'workspace') {
+    return (
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+        <rect x="9" y="9" width="6" height="6" />
+        <line x1="9" y1="1" x2="9" y2="4" />
+        <line x1="15" y1="1" x2="15" y2="4" />
+        <line x1="9" y1="20" x2="9" y2="23" />
+        <line x1="15" y1="20" x2="15" y2="23" />
+        <line x1="20" y1="9" x2="23" y2="9" />
+        <line x1="20" y1="15" x2="23" y2="15" />
+        <line x1="1" y1="9" x2="4" y2="9" />
+        <line x1="1" y1="15" x2="4" y2="15" />
+      </svg>
+    );
+  }
   if (id === 'roadmap') {
     return (
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -700,7 +716,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               </div>
 
               {/* Login / Logout button */}
-              {user ? (
+              {user && (
                 <Button 
                   type="button" 
                   variant="ghost" 
@@ -708,15 +724,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                   style={{ width: '100%', padding: '6px 0', fontSize: '11px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
                 >
                   Logout (Admin)
-                </Button>
-              ) : (
-                <Button 
-                  type="button" 
-                  variant="secondary" 
-                  onClick={() => handleLinkClick('/admin-login')} 
-                  style={{ width: '100%', padding: '6px 0', fontSize: '11px' }}
-                >
-                  Staff Login
                 </Button>
               )}
             </div>

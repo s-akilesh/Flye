@@ -21,8 +21,16 @@ const BottomNavIcon = ({ id, isActive }) => {
   if (id === 'workspace') {
     return (
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+        <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+        <rect x="9" y="9" width="6" height="6" />
+        <line x1="9" y1="1" x2="9" y2="4" />
+        <line x1="15" y1="1" x2="15" y2="4" />
+        <line x1="9" y1="20" x2="9" y2="23" />
+        <line x1="15" y1="20" x2="15" y2="23" />
+        <line x1="20" y1="9" x2="23" y2="9" />
+        <line x1="20" y1="15" x2="23" y2="15" />
+        <line x1="1" y1="9" x2="4" y2="9" />
+        <line x1="1" y1="15" x2="4" y2="15" />
       </svg>
     );
   }
@@ -101,8 +109,8 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
   const learningWorkspaceItems = [
     { label: 'Dashboard', path: ROUTES.STUDENT_DASHBOARD },
     { label: 'Engineering Workspace', path: ROUTES.LEARNING_WORKSPACE },
-    { label: 'Explore Components', path: ROUTES.LEARNING_COMPONENTS },
-    { label: 'Fundamentals', path: ROUTES.LEARNING_FUNDAMENTALS }
+    { label: 'Component Library', path: ROUTES.LEARNING_COMPONENTS },
+    { label: 'Electrical Basics', path: ROUTES.LEARNING_FUNDAMENTALS }
   ];
 
   return (

@@ -136,16 +136,25 @@ export const AdminDashboard = () => {
 
   return (
     <motion.section
+      id="admin-dashboard-portal"
       className="portal-section page-container"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.4 }}
+      style={{ paddingTop: '76px' }}
     >
-      <div className="portal-header" style={{ marginBottom: 'var(--space-6)' }}>
+      {/* Mobile Sticky Sub-Header */}
+      <header className="mobile-learning-header">
+        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
+          Admin Portal Dashboard
+        </span>
+      </header>
+
+      <div className="portal-header" style={{ marginBottom: '16px', paddingBottom: '16px' }}>
         <div className="portal-title-area">
-          <h2>Admin Portal Dashboard</h2>
-          <p>Real-time analytics, conversion metrics, and management console</p>
+          <h2 style={{ margin: 0 }}>Admin Portal Dashboard</h2>
+          <p style={{ margin: '4px 0 0 0' }}>Real-time analytics, conversion metrics, and management console</p>
         </div>
       </div>
 
@@ -162,7 +171,7 @@ export const AdminDashboard = () => {
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>Create your first project kit.</p>
             </div>
           ) : (
-            <div className="admin-kpi-grid">
+            <div className="admin-kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
               {projectKpis.map((kpi, idx) => (
                 <Card key={idx} style={{ padding: 'var(--space-4)' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>{kpi.title}</span>

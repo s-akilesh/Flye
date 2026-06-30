@@ -5,8 +5,10 @@ import { useProjects } from '../hooks/useProjects';
 import { useFilters } from '../hooks/useFilters';
 import { useSearch } from '../hooks/useSearch';
 import { useProjectFilters } from '../hooks/useProjectFilters';
-import { Sidebar } from '../components/layout/Sidebar';
-import { SearchPanel } from '../components/layout/SearchPanel';
+import { AdminToolbar } from '../components/ui/AdminToolbar';
+import { CATEGORIES, CATEGORY_LABELS } from '../constants/categories';
+import { DIFFICULTIES, DIFFICULTY_LABELS } from '../constants/difficulties';
+import { PROJECT_FEATURES, FEATURE_LABELS } from '../constants/projectFeatures';
 import { ProjectGrid } from '../components/sections/ProjectGrid';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
@@ -46,10 +48,6 @@ export const ProjectListing = () => {
   // Mobile sidebar overlay state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-  // AI Finder state
-  const [isAIFinderOpen, setIsAIFinderOpen] = useState(false);
-  const [aiPrompt, setAiPrompt] = useState('');
-
   // Cart Order Modal state
   const [orderedProject, setOrderedProject] = useState(null);
   const [requestorName, setRequestorName] = useState('');
@@ -71,18 +69,12 @@ export const ProjectListing = () => {
     sortBy
   );
 
-  // Event Handlers
-  const handleAIFind = () => {
-    if (aiPrompt.trim() === '') return;
-    executeAISearch(aiPrompt);
-    setIsAIFinderOpen(false);
-  };
+
 
   const handleClearAll = () => {
     resetFilters();
     setSearchQuery('');
     clearAISearch();
-    setAiPrompt('');
   };
 
   return (
@@ -121,28 +113,137 @@ export const ProjectListing = () => {
       </div>
 
       <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
-        <Sidebar
-          isOpen={isMobileFiltersOpen}
-          onClose={() => setIsMobileFiltersOpen(false)}
-          activeCategories={activeCategories}
-          toggleCategory={toggleCategory}
-          activeDifficulties={activeDifficulties}
-          toggleDifficulty={toggleDifficulty}
-          activeFeatures={activeFeatures}
-          toggleFeature={toggleFeature}
-          activeProjectLevels={activeProjectLevels}
-          toggleProjectLevel={toggleProjectLevel}
-        />
+        <AdminToolbar
+          className="marketplace-toolbar"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 100 }}
+          searchId="marketplace-search"
+          searchLabel="Search Projects"
+          searchPlaceholder="Search projects, technologies, or keywords..."
+          searchValue={searchQuery}
+          onSearchChange={(e) => setSearchQuery(e.target.value)}
+          activeFilterCount={
+            (activeCategories.includes('all') ? 0 : activeCategories.length) +
+            activeDifficulties.length +
+            activeProjectLevels.length +
+            activeFeatures.length
+          }
+          sortValue={sortBy}
+          onSortChange={(e) => setSortBy(e.target.value)}
+          sortOptions={[
+            { value: 'popular', label: 'Most Popular' },
+            { value: 'newest', label: 'Newest' },
+            { value: 'price-low', label: 'Price: Low to High' },
+            { value: 'price-high', label: 'Price: High to Low' },
+            { value: 'difficulty', label: 'Difficulty' }
+          ]}
+          onReset={handleClearAll}
+        >
+          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Categories */}
+            <div className="calc-row">
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => toggleCategory('all')}
+                  className={`admin-chip ${activeCategories.includes('all') ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {Object.values(CATEGORIES).map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => toggleCategory(cat)}
+                    className={`admin-chip ${activeCategories.includes(cat) && !activeCategories.includes('all') ? 'active' : ''}`}
+                  >
+                    {CATEGORY_LABELS[cat]}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        <div className="marketplace-main">
-          <SearchPanel
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onOpenMobileFilters={() => setIsMobileFiltersOpen(true)}
-            onOpenAIFinder={() => setIsAIFinderOpen(true)}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-          />
+            {/* Difficulty */}
+            <div className="calc-row">
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Difficulty</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    activeDifficulties.forEach(d => toggleDifficulty(d));
+                  }}
+                  className={`admin-chip ${activeDifficulties.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {Object.values(DIFFICULTIES).map((diff) => (
+                  <button
+                    key={diff}
+                    type="button"
+                    onClick={() => toggleDifficulty(diff)}
+                    className={`admin-chip ${activeDifficulties.includes(diff) ? 'active' : ''}`}
+                  >
+                    {DIFFICULTY_LABELS[diff]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Project Level */}
+            <div className="calc-row">
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Project Level</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    activeProjectLevels.forEach(l => toggleProjectLevel(l));
+                  }}
+                  className={`admin-chip ${activeProjectLevels.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {['School', 'Diploma', 'Engineering'].map((lvl) => (
+                  <button
+                    key={lvl}
+                    type="button"
+                    onClick={() => toggleProjectLevel(lvl)}
+                    className={`admin-chip ${activeProjectLevels.includes(lvl) ? 'active' : ''}`}
+                  >
+                    {lvl}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Included Features */}
+            <div className="calc-row">
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Included Features</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    activeFeatures.forEach(f => toggleFeature(f));
+                  }}
+                  className={`admin-chip ${activeFeatures.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {Object.values(PROJECT_FEATURES).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => toggleFeature(f)}
+                    className={`admin-chip ${activeFeatures.includes(f) ? 'active' : ''}`}
+                  >
+                    {FEATURE_LABELS[f]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </AdminToolbar>
+
+        <div className="marketplace-main" style={{ width: '100%' }}>
 
           {filteredList.length > 0 ? (
             <ProjectGrid projects={filteredList} onRequestOrder={handleOpenOrderModal} />
@@ -164,42 +265,7 @@ export const ProjectListing = () => {
         </div>
       </div>
 
-      {/* AI Search Popup Modal */}
-      <Modal isOpen={isAIFinderOpen} onClose={() => setIsAIFinderOpen(false)} className="ai-modal-content" id="ai-modal">
-        <div className="compare-modal-header">
-          <h4>✨ AI Project Finder</h4>
-          <Button
-            variant="ghost"
-            className="btn-close-ai"
-            id="btn-close-ai"
-            onClick={() => setIsAIFinderOpen(false)}
-          >
-            &times;
-          </Button>
-        </div>
-        <p style={{ textAlign: 'left', marginBottom: 'var(--space-5)' }}>
-          Describe what you need in plain words (e.g., <em>"I need an Arduino project under 3000"</em> or <em>"Robotics kit for Diploma level"</em>) to query the engineering labs database.
-        </p>
-        <div className="ai-input-row">
-          <Input
-            type="text"
-            id="ai-search-prompt"
-            placeholder="Describe your project requirement..."
-            value={aiPrompt}
-            onChange={(e) => setAiPrompt(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAIFind()}
-            className="form-input"
-          />
-          <Button
-            type="button"
-            variant="none"
-            className="btn-ai-submit"
-            onClick={handleAIFind}
-          >
-            Find
-          </Button>
-        </div>
-      </Modal>
+
 
       {/* Successful Order Modal */}
       <Modal isOpen={orderedProject !== null} onClose={() => setOrderedProject(null)} className="modal-content purple">

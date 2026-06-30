@@ -131,12 +131,20 @@ export const AdminSettings = () => {
 
   return (
     <motion.section
+      id="admin-settings-portal"
       className="portal-section"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.3 }}
     >
+      {/* Mobile Sticky Sub-Header */}
+      <header className="mobile-learning-header">
+        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
+          {ActiveFormComponent ? activeRow.title : 'Platform Settings'}
+        </span>
+      </header>
+
       {ActiveFormComponent ? (
         /* Render Selected Form Screen dynamically */
         <div className="portal-content">
@@ -178,8 +186,8 @@ export const AdminSettings = () => {
                     transition: 'all 0.2s ease',
                   }}
                 />
-                <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)', fontSize: '14px' }}>
-                  🔍
+                <span className="material-icons-outlined" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)', fontSize: '18px' }}>
+                  search
                 </span>
                 {searchQuery && (
                   <button
@@ -218,7 +226,7 @@ export const AdminSettings = () => {
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <span style={{ fontSize: '16px' }}>{cat.icon}</span>
+                          <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>{cat.icon}</span>
                           <span style={{ fontSize: '13px', fontWeight: '700', color: '#fff', letterSpacing: '0.5px' }}>
                             {cat.title}
                           </span>
@@ -248,7 +256,6 @@ export const AdminSettings = () => {
                                   onClick={() => handleNavigateToPage(row.id)}
                                 >
                                   <div className="settings-row-left">
-                                    <span className="settings-row-icon">{cat.icon}</span>
                                     <div className="settings-row-info">
                                       <h4>{row.title}</h4>
                                       <p>{row.description}</p>

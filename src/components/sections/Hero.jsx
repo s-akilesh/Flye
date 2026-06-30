@@ -6,7 +6,7 @@ export const Hero = () => {
     'Electronic Projects',
     'IoT Solutions',
     '3D Printed Products',
-    'Premade Projects & Kits',
+    'Premade Projects',
     'Learning Resources'
   ];
 

@@ -7,7 +7,6 @@ export const SearchPanel = ({
   searchQuery,
   setSearchQuery,
   onOpenMobileFilters,
-  onOpenAIFinder,
   sortBy,
   setSortBy
 }) => {
@@ -42,12 +41,6 @@ export const SearchPanel = ({
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
           </svg>
           <span className="btn-filter-text">Filters</span>
-        </Button>
-
-        {/* AI Finder Toggle Button */}
-        <Button className="btn-ai-toggle" id="btn-ai-toggle" onClick={onOpenAIFinder}>
-          <span className="btn-ai-text">✨ AI Finder</span>
-          <span className="btn-ai-icon">✨</span>
         </Button>
 
         {/* Sorting selector */}

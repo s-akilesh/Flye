@@ -194,35 +194,6 @@ export const ProjectDetails = () => {
   }, [projectKits, maxKitPrice]);
 
   const renderSavingsTag = (kit) => {
-    if (!kit || typeof kit !== 'object') return null;
-    const kitPrice = Number(kit.price);
-    if (isNaN(kitPrice) || kitPrice <= 0) return null;
-
-    const highestPrice = completeKitPrice || maxKitPrice;
-    if (kitPrice < highestPrice) {
-      const diff = highestPrice - kitPrice;
-      const pct = Math.round((diff / highestPrice) * 100);
-      if (diff > 0 && pct > 0) {
-        return (
-          <span 
-            style={{ 
-              display: 'inline-flex',
-              alignItems: 'center',
-              marginLeft: '8px', 
-              fontSize: '11px', 
-              background: 'rgba(16, 185, 129, 0.1)', 
-              border: '1px solid rgba(16, 185, 129, 0.2)',
-              color: 'var(--accent-emerald)', 
-              padding: '2px 6px', 
-              borderRadius: '4px',
-              fontWeight: '600'
-            }}
-          >
-            Save ₹{diff.toLocaleString('en-IN')} ({pct}%)
-          </span>
-        );
-      }
-    }
     return null;
   };
 

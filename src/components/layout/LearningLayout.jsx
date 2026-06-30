@@ -39,7 +39,7 @@ export const LearningLayout = () => {
     if (path === ROUTES.STUDENT_DASHBOARD) return 'Dashboard';
     if (path === ROUTES.LEARNING_WORKSPACE) return 'Workspace';
     if (path === ROUTES.LEARNING_COMPONENTS) return 'Components Library';
-    if (path === ROUTES.LEARNING_FUNDAMENTALS) return 'Learning Roadmap';
+    if (path === ROUTES.LEARNING_FUNDAMENTALS) return 'Electrical Basics';
     
     const parts = path.split('/');
     const slug = parts[parts.length - 1];
@@ -79,10 +79,16 @@ export const LearningLayout = () => {
       label: 'Engineering Workspace',
       icon: (
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="7" height="9" />
-          <rect x="14" y="3" width="7" height="5" />
-          <rect x="14" y="12" width="7" height="9" />
-          <rect x="3" y="16" width="7" height="5" />
+          <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+          <rect x="9" y="9" width="6" height="6" />
+          <line x1="9" y1="1" x2="9" y2="4" />
+          <line x1="15" y1="1" x2="15" y2="4" />
+          <line x1="9" y1="20" x2="9" y2="23" />
+          <line x1="15" y1="20" x2="15" y2="23" />
+          <line x1="20" y1="9" x2="23" y2="9" />
+          <line x1="20" y1="15" x2="23" y2="15" />
+          <line x1="1" y1="9" x2="4" y2="9" />
+          <line x1="1" y1="15" x2="4" y2="15" />
         </svg>
       )
     },
@@ -99,13 +105,12 @@ export const LearningLayout = () => {
       )
     },
     {
-      id: 'fundamentals',
+      id: 'electricity',
       path: ROUTES.LEARNING_FUNDAMENTALS,
-      label: 'Fundamentals',
+      label: 'Electrical Basics',
       icon: (
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
         </svg>
       )
     },
@@ -239,7 +244,7 @@ export const LearningLayout = () => {
           <nav>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {navItems.map((item, index) => {
-                const isActive = location.pathname === item.path || (item.id === 'components' && location.pathname.startsWith('/learning/components/')) || (item.id === 'fundamentals' && location.pathname.startsWith('/learning/fundamentals/'));
+                const isActive = location.pathname === item.path || (item.id === 'components' && location.pathname.startsWith('/learning/components/')) || (item.id === 'electricity' && location.pathname.startsWith('/learning/fundamentals/'));
                 
                 if (item.disabled) {
                   return (

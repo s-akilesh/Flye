@@ -2,7 +2,7 @@ export const SETTINGS_METADATA = [
   {
     id: 'website',
     title: 'Website',
-    icon: '🌐',
+    icon: 'language',
     rows: [
       {
         id: 'branding',
@@ -33,7 +33,7 @@ export const SETTINGS_METADATA = [
   {
     id: 'security',
     title: 'Security',
-    icon: '🔐',
+    icon: 'lock',
     rows: [
       {
         id: 'password',
@@ -56,7 +56,7 @@ export const SETTINGS_METADATA = [
   {
     id: 'communication',
     title: 'Communication',
-    icon: '📧',
+    icon: 'mail',
     rows: [
       {
         id: 'email-routing',
@@ -79,7 +79,7 @@ export const SETTINGS_METADATA = [
   {
     id: 'social-media',
     title: 'Social Media',
-    icon: '📱',
+    icon: 'phone_iphone',
     rows: [
       {
         id: 'social-networks',
@@ -94,7 +94,7 @@ export const SETTINGS_METADATA = [
   {
     id: 'administration',
     title: 'Administration',
-    icon: '👥',
+    icon: 'people',
     rows: [
       {
         id: 'profile',

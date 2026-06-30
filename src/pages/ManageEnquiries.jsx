@@ -19,9 +19,19 @@ export const ManageEnquiries = () => {
 
   // Search & Filter State
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilters, setStatusFilters] = useState([]);
   const [dateFilter, setDateFilter] = useState('all');
   const [sortField, setSortField] = useState('date-desc');
+
+  const toggleStatusFilter = (st) => {
+    if (st === 'all') {
+      setStatusFilters([]);
+    } else {
+      setStatusFilters((prev) =>
+        prev.includes(st) ? prev.filter((s) => s !== st) : [...prev, st]
+      );
+    }
+  };
 
   // Bulk selection state
   const [selectedIds, setSelectedIds] = useState([]);
@@ -159,7 +169,8 @@ export const ManageEnquiries = () => {
     }
 
     // 2. Status Filter
-    if (statusFilter !== 'all' && enq.status !== statusFilter) return false;
+    const enqStatus = enq.status || 'new';
+    if (statusFilters.length > 0 && !statusFilters.includes(enqStatus)) return false;
 
     // 3. Date Filter (Today, Last 7 Days, Last 30 Days)
     if (dateFilter !== 'all') {
@@ -233,12 +244,42 @@ export const ManageEnquiries = () => {
 
   return (
     <motion.section
+      id="manage-enquiries-portal"
       className="portal-section page-container"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.4 }}
     >
+      {/* Mobile Sticky Sub-Header */}
+      <header className="mobile-learning-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0 16px', boxSizing: 'border-box' }}>
+        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
+          Manage Enquiries
+        </span>
+        
+        {/* Export Button */}
+        <Button
+          variant="secondary"
+          onClick={handleExportEnquiries}
+          style={{
+            padding: '6px 12px',
+            fontSize: '12px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '4px',
+            borderRadius: '6px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            color: '#fff'
+          }}
+        >
+          <span className="material-icons" style={{ fontSize: '16px' }}>file_upload</span>
+          Export
+        </Button>
+      </header>
+
       <div className="portal-header">
         <div className="portal-title-area">
           <h2>Manage Enquiries</h2>
@@ -259,7 +300,7 @@ export const ManageEnquiries = () => {
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* KPI Cards — 2-column grid */}
-        <div className="admin-kpi-grid">
+        <div className="admin-kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
           <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Enquiries</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text-primary)', margin: 'var(--space-2) 0 0 0' }}>{totalEnquiries}</h3>
@@ -294,7 +335,7 @@ export const ManageEnquiries = () => {
           searchValue={search}
           onSearchChange={(e) => setSearch(e.target.value)}
           activeFilterCount={
-            (statusFilter !== 'all' ? 1 : 0) +
+            statusFilters.length +
             (dateFilter !== 'all' ? 1 : 0)
           }
           sortValue={sortField}
@@ -307,32 +348,54 @@ export const ManageEnquiries = () => {
           ]}
           onReset={() => {
             setSearch('');
-            setStatusFilter('all');
+            setStatusFilters([]);
             setDateFilter('all');
             setSortField('date-desc');
           }}
         >
           {/* Filter panel content */}
-          <div className="admin-filter-panel-grid">
+          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div className="calc-row">
-              <label htmlFor="enquiry-status">Status</label>
-              <select id="enquiry-status" className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                <option value="all">All Statuses</option>
-                <option value="new">New</option>
-                <option value="contacted">Contacted</option>
-                <option value="quoted">Quoted</option>
-                <option value="completed">Completed</option>
-                <option value="rejected">Rejected</option>
-              </select>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Status</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => toggleStatusFilter('all')}
+                  className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {[['new', 'New'], ['contacted', 'Contacted'], ['quoted', 'Quoted'], ['completed', 'Completed'], ['rejected', 'Rejected']].map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => toggleStatusFilter(key)}
+                    className={`admin-chip ${statusFilters.includes(key) ? 'active' : ''}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="calc-row">
-              <label htmlFor="enquiry-date">Date Range</label>
-              <select id="enquiry-date" className="form-select" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
-                <option value="all">All Dates</option>
-                <option value="today">Today</option>
-                <option value="7days">Last 7 Days</option>
-                <option value="30days">Last 30 Days</option>
-              </select>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Date Range</label>
+              <div className="admin-chip-group">
+                {[
+                  ['all', 'All Time'],
+                  ['today', 'Today'],
+                  ['7days', 'Last 7 Days'],
+                  ['30days', 'Last 30 Days']
+                ].map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setDateFilter(key)}
+                    className={`admin-chip ${dateFilter === key ? 'active' : ''}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </AdminToolbar>

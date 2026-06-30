@@ -475,8 +475,53 @@ export const AddProject = () => {
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.4 }}
     >
+      {/* Mobile Sticky Sub-Header */}
+      <header className="mobile-learning-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0 16px', boxSizing: 'border-box' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button 
+            type="button" 
+            onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} 
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              padding: '4px',
+              margin: 0
+            }}
+          >
+            <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
+          </button>
+          <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
+            Create Kit
+          </span>
+        </div>
+        
+        {/* Mobile Save Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Button 
+            variant="primary" 
+            onClick={() => handleSaveProject('active')} 
+            disabled={isSaving}
+            style={{
+              padding: '4px 10px',
+              fontSize: '12px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {isSaving ? '...' : 'Save'}
+          </Button>
+        </div>
+      </header>
+
       {/* Header with Relocated Actions */}
-      <div className="portal-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
+      <div className="portal-header desktop-only-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} style={{ padding: '8px', minWidth: 'auto' }}>
             <svg viewBox="0 0 24 24">
@@ -1166,18 +1211,8 @@ export const AddProject = () => {
                         <label style={{ fontSize: '10px' }}>Upload File (Max 5MB)</label>
                         <input
                           type="file"
+                          className="form-file-input"
                           onChange={(e) => handleFileChange(idx, e.target.files[0])}
-                          style={{
-                            display: 'block',
-                            fontSize: '11px',
-                            color: 'var(--text-muted)',
-                            background: 'rgba(255,255,255,0.02)',
-                            border: '1px dashed rgba(255,255,255,0.1)',
-                            borderRadius: '4px',
-                            padding: '6px',
-                            cursor: 'pointer',
-                            width: '100%'
-                          }}
                         />
                         {res.size && (
                           <div style={{ fontSize: '10px', color: 'var(--accent-emerald)', marginTop: '4px' }}>

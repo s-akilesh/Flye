@@ -13,24 +13,20 @@ envContent.split('\n').forEach(line => {
 const supabase = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY);
 
 async function run() {
-  console.log("Attempting insert with empty object...");
+  console.log("Fetching existing settings row...");
   const { data: insData, error: insError } = await supabase
     .from('settings')
-    .insert({})
-    .select();
+    .select('*')
+    .limit(1);
 
   if (insError) {
-    console.log("INSERT ERROR:", insError.message, insError.details || "");
-  } else {
-    console.log("INSERT SUCCESS. Columns found:");
+    console.log("SELECT ERROR:", insError.message, insError.details || "");
+  } else if (insData && insData.length > 0) {
+    console.log("SELECT SUCCESS. Columns found:");
     console.log(Object.keys(insData[0]));
     console.log("Record:", JSON.stringify(insData[0]));
-    
-    // Clean up
-    if (insData[0] && insData[0].id) {
-      await supabase.from('settings').delete().eq('id', insData[0].id);
-      console.log("Cleaned up test record.");
-    }
+  } else {
+    console.log("No settings row found in database.");
   }
 }
 

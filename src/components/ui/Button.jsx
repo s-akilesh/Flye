@@ -7,7 +7,8 @@ export const Button = ({
   onClick,
   type = 'button',
   disabled = false,
-  id
+  id,
+  style
 }) => {
   const baseClasses = variant !== 'none' ? `btn btn-${variant}` : '';
   const mergedClass = `${baseClasses} ${className}`.trim();
@@ -19,6 +20,7 @@ export const Button = ({
       className={mergedClass}
       onClick={onClick}
       disabled={disabled}
+      style={style}
     >
       {children}
     </button>

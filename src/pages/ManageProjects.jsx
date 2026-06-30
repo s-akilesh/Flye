@@ -21,11 +21,42 @@ export const ManageProjects = () => {
 
   // Search & Filter State
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [categoryFilters, setCategoryFilters] = useState([]);
   const [difficultyFilter, setDifficultyFilter] = useState('all');
-  const [levelFilter, setLevelFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [levelFilters, setLevelFilters] = useState([]);
+  const [statusFilters, setStatusFilters] = useState([]);
   const [sortField, setSortField] = useState('title');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleCategoryFilter = (cat) => {
+    if (cat === 'all') {
+      setCategoryFilters([]);
+    } else {
+      setCategoryFilters((prev) =>
+        prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+      );
+    }
+  };
+
+  const toggleLevelFilter = (lvl) => {
+    if (lvl === 'all') {
+      setLevelFilters([]);
+    } else {
+      setLevelFilters((prev) =>
+        prev.includes(lvl) ? prev.filter((l) => l !== lvl) : [...prev, lvl]
+      );
+    }
+  };
+
+  const toggleStatusFilter = (st) => {
+    if (st === 'all') {
+      setStatusFilters([]);
+    } else {
+      setStatusFilters((prev) =>
+        prev.includes(st) ? prev.filter((s) => s !== st) : [...prev, st]
+      );
+    }
+  };
 
   // Bulk selection state
   const [selectedIds, setSelectedIds] = useState([]);
@@ -70,6 +101,7 @@ export const ManageProjects = () => {
     if (!file) return;
 
     setIsProcessing(true);
+    const reader = new FileReader();
     reader.onload = async (evt) => {
       try {
         const XLSX = await import('xlsx');
@@ -328,13 +360,13 @@ export const ManageProjects = () => {
       if (!matchesTitle && !matchesTech && !matchesKeywords) return false;
     }
     // 2. Category
-    if (categoryFilter !== 'all' && proj.category !== categoryFilter) return false;
+    if (categoryFilters.length > 0 && !categoryFilters.includes(proj.category)) return false;
     // 3. Difficulty
     if (difficultyFilter !== 'all' && proj.difficulty !== difficultyFilter) return false;
     // 4. Project Level
-    if (levelFilter !== 'all' && proj.projectLevel !== levelFilter) return false;
+    if (levelFilters.length > 0 && !levelFilters.includes(proj.projectLevel)) return false;
     // 5. Status
-    if (statusFilter !== 'all' && proj.status !== statusFilter) return false;
+    if (statusFilters.length > 0 && !statusFilters.includes(proj.status)) return false;
 
     return true;
   });
@@ -355,12 +387,157 @@ export const ManageProjects = () => {
 
   return (
     <motion.section
+      id="manage-projects-portal"
       className="portal-section page-container"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.4 }}
     >
+      {/* Mobile Sticky Sub-Header */}
+      <header className="mobile-learning-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0 16px', boxSizing: 'border-box' }}>
+        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
+          Manage Projects
+        </span>
+        
+        {/* Mobile Header Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Add Button */}
+          <Button
+            variant="primary"
+            onClick={() => navigate(ROUTES.ADMIN_ADD_PROJECT)}
+            style={{
+              padding: '6px 12px',
+              fontSize: '12px',
+              height: '30px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px'
+            }}
+          >
+            <span className="material-icons" style={{ fontSize: '16px' }}>add</span>
+            Add
+          </Button>
+
+          {/* 3-Dot Menu Trigger */}
+          <div style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(p => !p)}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '6px',
+                width: '30px',
+                height: '30px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                cursor: 'pointer',
+                outline: 'none'
+              }}
+            >
+              <span className="material-icons" style={{ fontSize: '18px' }}>more_vert</span>
+            </button>
+
+            {mobileMenuOpen && (
+              <>
+                <div style={{ position: 'fixed', inset: 0, zIndex: 999 }} onClick={() => setMobileMenuOpen(false)} />
+                <div 
+                  className="card-glass"
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    right: 0,
+                    marginTop: '8px',
+                    width: '150px',
+                    zIndex: 1000,
+                    padding: '4px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '2px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { triggerFileInput(); setMobileMenuOpen(false); }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#fff',
+                      padding: '8px 12px',
+                      fontSize: '13px',
+                      textAlign: 'left',
+                      width: '100%',
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+                    onMouseLeave={(e) => e.target.style.background = 'none'}
+                  >
+                    <span className="material-icons" style={{ fontSize: '16px' }}>download</span>
+                    Import
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { handleExportProjects(); setMobileMenuOpen(false); }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#fff',
+                      padding: '8px 12px',
+                      fontSize: '13px',
+                      textAlign: 'left',
+                      width: '100%',
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+                    onMouseLeave={(e) => e.target.style.background = 'none'}
+                  >
+                    <span className="material-icons" style={{ fontSize: '16px' }}>upload</span>
+                    Export
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { handleDownloadTemplate(); setMobileMenuOpen(false); }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#fff',
+                      padding: '8px 12px',
+                      fontSize: '13px',
+                      textAlign: 'left',
+                      width: '100%',
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+                    onMouseLeave={(e) => e.target.style.background = 'none'}
+                  >
+                    <span className="material-icons" style={{ fontSize: '16px' }}>description</span>
+                    Template
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </header>
+
       <div className="portal-header">
         <div className="portal-title-area">
           <h2>Project Catalog Management</h2>
@@ -389,7 +566,7 @@ export const ManageProjects = () => {
             disabled={isProcessing}
             style={{ fontSize: '13px', padding: '8px 16px' }}
           >
-            📁 Import Excel
+            📥 Import Excel
           </Button>
           <input
             type="file"
@@ -412,7 +589,7 @@ export const ManageProjects = () => {
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* KPI Cards — 2-column grid */}
-        <div className="admin-kpi-grid">
+        <div className="admin-kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
           <Card style={{ padding: 'var(--space-4)' }}>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Projects</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-blue)', margin: 'var(--space-2) 0 0 0' }}>{allProjects.length}</h3>
@@ -439,9 +616,9 @@ export const ManageProjects = () => {
           searchValue={search}
           onSearchChange={(e) => setSearch(e.target.value)}
           activeFilterCount={
-            (categoryFilter !== 'all' ? 1 : 0) +
-            (levelFilter !== 'all' ? 1 : 0) +
-            (statusFilter !== 'all' ? 1 : 0)
+            categoryFilters.length +
+            levelFilters.length +
+            statusFilters.length
           }
           sortValue={sortField}
           onSortChange={(e) => setSortField(e.target.value)}
@@ -453,41 +630,79 @@ export const ManageProjects = () => {
           ]}
           onReset={() => {
             setSearch('');
-            setCategoryFilter('all');
-            setLevelFilter('all');
-            setStatusFilter('all');
+            setCategoryFilters([]);
+            setLevelFilters([]);
+            setStatusFilters([]);
             setSortField('title');
           }}
         >
           {/* Filter panel content */}
-          <div className="admin-filter-panel-grid">
+          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div className="calc-row">
-              <label htmlFor="admin-cat">Category</label>
-              <select id="admin-cat" className="form-select" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-                <option value="all">All Categories</option>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => toggleCategoryFilter('all')}
+                  className={`admin-chip ${categoryFilters.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
                 {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => toggleCategoryFilter(key)}
+                    className={`admin-chip ${categoryFilters.includes(key) ? 'active' : ''}`}
+                  >
+                    {label}
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
             <div className="calc-row">
-              <label htmlFor="admin-level">Level</label>
-              <select id="admin-level" className="form-select" value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}>
-                <option value="all">All Levels</option>
-                <option value="School">School</option>
-                <option value="Diploma">Diploma</option>
-                <option value="Engineering">Engineering</option>
-              </select>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Level</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => toggleLevelFilter('all')}
+                  className={`admin-chip ${levelFilters.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {['School', 'Diploma', 'Engineering'].map((lvl) => (
+                  <button
+                    key={lvl}
+                    type="button"
+                    onClick={() => toggleLevelFilter(lvl)}
+                    className={`admin-chip ${levelFilters.includes(lvl) ? 'active' : ''}`}
+                  >
+                    {lvl}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="calc-row">
-              <label htmlFor="admin-status">Status</label>
-              <select id="admin-status" className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                <option value="all">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="draft">Draft</option>
-                <option value="coming-soon">Coming Soon</option>
-                <option value="archived">Archived</option>
-              </select>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Status</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => toggleStatusFilter('all')}
+                  className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {[['active', 'Active'], ['draft', 'Draft'], ['coming-soon', 'Coming Soon'], ['archived', 'Archived']].map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => toggleStatusFilter(key)}
+                    className={`admin-chip ${statusFilters.includes(key) ? 'active' : ''}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </AdminToolbar>

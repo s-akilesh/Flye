@@ -28,17 +28,17 @@ export const LEARNING_NAVIGATION = [
   {
     id: 'dashboard',
     label: 'Dashboard',
-    path: '/learning/workspace'
+    path: '/dashboard'
   },
   {
-    id: 'roadmap',
-    label: 'Learning Roadmap',
-    path: '/learning/fundamentals'
+    id: 'workspace',
+    label: 'Engineering Workspace',
+    path: '/learning/workspace'
   },
   {
     id: 'electricity',
     label: 'Electrical Basics',
-    path: '/learning/fundamentals/electricity'
+    path: '/learning/fundamentals'
   },
   {
     id: 'components',
