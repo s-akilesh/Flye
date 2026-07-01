@@ -25,6 +25,7 @@ export const AdminToolbar = ({
   className = "admin-toolbar-wrapper card-glass",
   style = { display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', position: 'relative', zIndex: 100 },
   children,
+  desktopActions,
 }) => {
   const [activeDrawer, setActiveDrawer] = useState(null); // 'filter' | 'sort' | null
 
@@ -95,21 +96,18 @@ export const AdminToolbar = ({
         </svg>
       </Button>
 
+      {/* Desktop/Laptop Actions Container */}
+      {desktopActions && (
+        <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {desktopActions}
+        </div>
+      )}
+
       {/* Bottom Drawer (Rendered via React Portal directly into body) */}
       {activeDrawer !== null && createPortal(
         <>
           <div className="mobile-drawer-backdrop active" onClick={() => setActiveDrawer(null)} />
-          <div 
-            className="mobile-drawer active" 
-            style={{ 
-              maxWidth: '600px', 
-              left: '50%', 
-              transform: 'translateX(-50%) translateY(0)', 
-              borderRadius: '16px 16px 0 0',
-              boxSizing: 'border-box',
-              zIndex: 99999
-            }}
-          >
+          <div className="mobile-drawer active">
             <div className="mobile-drawer-header">
               <h3>{activeDrawer === 'filter' ? 'Filters' : 'Sort By'}</h3>
               <button type="button" className="mobile-drawer-close" onClick={() => setActiveDrawer(null)}>

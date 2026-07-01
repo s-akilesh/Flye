@@ -1,4 +1,5 @@
 import { fundamentalsData } from './fundamentals';
+import { level1Lessons } from './level1ElectricalBasics';
 import { capacitorFamily } from './components/capacitor';
 import { resistorFamily } from './components/resistor';
 import { ledFamily } from './components/led';
@@ -17,11 +18,11 @@ const componentsData = families.reduce((acc, family) => {
 export const LearningRepository = {
   // Fundamentals
   getFundamentals: () => {
-    return fundamentalsData;
+    return level1Lessons;
   },
 
   getFundamentalBySlug: (slug) => {
-    return fundamentalsData.find(f => f.slug === slug) || null;
+    return level1Lessons.find(f => f.slug === slug) || null;
   },
 
   // Components (all individual variants)

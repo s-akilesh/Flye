@@ -47,14 +47,14 @@ export const Fundamentals = () => {
                 </h3>
                 
                 <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                  {concept.description}
+                  {concept.description || concept.learningObjective}
                 </p>
               </div>
 
               {/* Card Footer badges */}
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
                 <span style={{ fontSize: '10px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '2px 6px', borderRadius: '4px' }}>
-                  ⏱️ {concept.learningTime}
+                  ⏱️ {concept.learningTime || concept.time}
                 </span>
                 <span style={{ fontSize: '10px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '2px 6px', borderRadius: '4px' }}>
                   {concept.difficulty}

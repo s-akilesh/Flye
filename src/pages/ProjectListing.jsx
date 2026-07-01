@@ -123,8 +123,6 @@ export const ProjectListing = () => {
           onSearchChange={(e) => setSearchQuery(e.target.value)}
           activeFilterCount={
             (activeCategories.includes('all') ? 0 : activeCategories.length) +
-            activeDifficulties.length +
-            activeProjectLevels.length +
             activeFeatures.length
           }
           sortValue={sortBy}
@@ -133,8 +131,7 @@ export const ProjectListing = () => {
             { value: 'popular', label: 'Most Popular' },
             { value: 'newest', label: 'Newest' },
             { value: 'price-low', label: 'Price: Low to High' },
-            { value: 'price-high', label: 'Price: High to Low' },
-            { value: 'difficulty', label: 'Difficulty' }
+            { value: 'price-high', label: 'Price: High to Low' }
           ]}
           onReset={handleClearAll}
         >
@@ -163,57 +160,7 @@ export const ProjectListing = () => {
               </div>
             </div>
 
-            {/* Difficulty */}
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Difficulty</label>
-              <div className="admin-chip-group">
-                <button
-                  type="button"
-                  onClick={() => {
-                    activeDifficulties.forEach(d => toggleDifficulty(d));
-                  }}
-                  className={`admin-chip ${activeDifficulties.length === 0 ? 'active' : ''}`}
-                >
-                  All
-                </button>
-                {Object.values(DIFFICULTIES).map((diff) => (
-                  <button
-                    key={diff}
-                    type="button"
-                    onClick={() => toggleDifficulty(diff)}
-                    className={`admin-chip ${activeDifficulties.includes(diff) ? 'active' : ''}`}
-                  >
-                    {DIFFICULTY_LABELS[diff]}
-                  </button>
-                ))}
-              </div>
-            </div>
 
-            {/* Project Level */}
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Project Level</label>
-              <div className="admin-chip-group">
-                <button
-                  type="button"
-                  onClick={() => {
-                    activeProjectLevels.forEach(l => toggleProjectLevel(l));
-                  }}
-                  className={`admin-chip ${activeProjectLevels.length === 0 ? 'active' : ''}`}
-                >
-                  All
-                </button>
-                {['School', 'Diploma', 'Engineering'].map((lvl) => (
-                  <button
-                    key={lvl}
-                    type="button"
-                    onClick={() => toggleProjectLevel(lvl)}
-                    className={`admin-chip ${activeProjectLevels.includes(lvl) ? 'active' : ''}`}
-                  >
-                    {lvl}
-                  </button>
-                ))}
-              </div>
-            </div>
 
             {/* Included Features */}
             <div className="calc-row">

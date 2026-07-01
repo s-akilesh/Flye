@@ -58,7 +58,9 @@ body {
   font-size: 13px;
   font-weight: 500;
   border-radius: 6px;
-  padding: 8px 16px;
+  padding: 0 16px;
+  height: 36px;
+  box-sizing: border-box;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -3404,26 +3406,52 @@ input[type="radio"]:checked::after {
 }
 .mobile-drawer {
   position: fixed;
-  left: 0;
+  left: 50%;
   bottom: 0;
   width: 100%;
+  max-width: 600px;
   max-height: 85vh;
   overflow-y: auto;
   background: rgba(14, 14, 22, 0.98);
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px 16px 0 0;
-  z-index: 1001;
+  z-index: 99999;
   padding: 24px;
-  transform: translateY(100%);
+  transform: translate(-50%, 100%);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
 }
 .mobile-drawer.active {
-  transform: translateY(0);
+  transform: translate(-50%, 0);
+}
+
+/* Center mobile drawer as a pop-up modal on desktop/laptop views */
+@media (min-width: 769px) {
+  .mobile-drawer {
+    top: 50% !important;
+    left: 50% !important;
+    bottom: auto !important;
+    width: 90% !important;
+    max-width: 500px !important;
+    max-height: 80vh !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    transform: translate(-50%, -40%) scale(0.95) !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8) !important;
+  }
+  .mobile-drawer.active {
+    transform: translate(-50%, -50%) scale(1) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
 }
 .mobile-drawer-header {
   display: flex;
@@ -4541,7 +4569,8 @@ body.in-learning-portal header {
   .dynamic-word {
     font-size: 32px !important;
   }
-  .desktop-only-header {
+  .desktop-only-header,
+  .desktop-only {
     display: none !important;
   }
 }
@@ -4579,4 +4608,8 @@ body.in-learning-portal header {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-
+@media (min-width: 768px) {
+  .portal-header {
+    margin-bottom: 20px !important;
+  }
+}

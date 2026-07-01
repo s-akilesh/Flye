@@ -252,7 +252,7 @@ export const ManageEnquiries = () => {
       transition={{ duration: 0.4 }}
     >
       {/* Mobile Sticky Sub-Header */}
-      <header className="mobile-learning-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0 16px', boxSizing: 'border-box' }}>
+      <header className="mobile-learning-header">
         <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
           Manage Enquiries
         </span>
@@ -285,17 +285,6 @@ export const ManageEnquiries = () => {
           <h2>Manage Enquiries</h2>
           <p>Visual log of customer requests for project kit fabrications</p>
         </div>
-        <div className="portal-header-meta">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleExportEnquiries}
-            style={{ fontSize: '13px', padding: '8px 16px' }}
-            disabled={isProcessing}
-          >
-            📤 Export Excel
-          </Button>
-        </div>
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
@@ -327,276 +316,306 @@ export const ManageEnquiries = () => {
           </Card>
         </div>
 
-        {/* Toolbar: Search + Filter Icon + Sort Icon */}
-        <AdminToolbar
-          searchId="enquiry-search"
-          searchLabel="Search Enquiries"
-          searchPlaceholder="Search by title, customer name, mobile..."
-          searchValue={search}
-          onSearchChange={(e) => setSearch(e.target.value)}
-          activeFilterCount={
-            statusFilters.length +
-            (dateFilter !== 'all' ? 1 : 0)
-          }
-          sortValue={sortField}
-          onSortChange={(e) => setSortField(e.target.value)}
-          sortOptions={[
-            { value: 'date-desc', label: 'Newest First' },
-            { value: 'date-asc', label: 'Oldest First' },
-            { value: 'name', label: 'Customer Name' },
-            { value: 'title', label: 'Project Title' },
-          ]}
-          onReset={() => {
-            setSearch('');
-            setStatusFilters([]);
-            setDateFilter('all');
-            setSortField('date-desc');
-          }}
-        >
-          {/* Filter panel content */}
-          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Status</label>
-              <div className="admin-chip-group">
-                <button
-                  type="button"
-                  onClick={() => toggleStatusFilter('all')}
-                  className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
-                >
-                  All
-                </button>
-                {[['new', 'New'], ['contacted', 'Contacted'], ['quoted', 'Quoted'], ['completed', 'Completed'], ['rejected', 'Rejected']].map(([key, label]) => (
+        {/* Tabular Visual Grid Container Card */}
+        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden' }}>
+          {/* Toolbar: Search + Filter Icon + Sort Icon */}
+          <AdminToolbar
+            searchId="enquiry-search"
+            searchLabel="Search Enquiries"
+            searchPlaceholder="Search by title, customer name, mobile..."
+            searchValue={search}
+            onSearchChange={(e) => setSearch(e.target.value)}
+            activeFilterCount={
+              statusFilters.length +
+              (dateFilter !== 'all' ? 1 : 0)
+            }
+            sortValue={sortField}
+            onSortChange={(e) => setSortField(e.target.value)}
+            sortOptions={[
+              { value: 'date-desc', label: 'Newest First' },
+              { value: 'date-asc', label: 'Oldest First' },
+              { value: 'name', label: 'Customer Name' },
+              { value: 'title', label: 'Project Title' },
+            ]}
+            onReset={() => {
+              setSearch('');
+              setStatusFilters([]);
+              setDateFilter('all');
+              setSortField('date-desc');
+            }}
+            className="admin-toolbar-wrapper"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', position: 'relative', zIndex: 100 }}
+            desktopActions={
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleExportEnquiries}
+                disabled={isProcessing}
+                style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
+              >
+                📤 Export Excel
+              </Button>
+            }
+          >
+            {/* Filter panel content */}
+            <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="calc-row">
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Status</label>
+                <div className="admin-chip-group">
                   <button
-                    key={key}
                     type="button"
-                    onClick={() => toggleStatusFilter(key)}
-                    className={`admin-chip ${statusFilters.includes(key) ? 'active' : ''}`}
+                    onClick={() => toggleStatusFilter('all')}
+                    className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
                   >
-                    {label}
+                    All
                   </button>
-                ))}
-              </div>
-            </div>
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Date Range</label>
-              <div className="admin-chip-group">
-                {[
-                  ['all', 'All Time'],
-                  ['today', 'Today'],
-                  ['7days', 'Last 7 Days'],
-                  ['30days', 'Last 30 Days']
-                ].map(([key, label]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setDateFilter(key)}
-                    className={`admin-chip ${dateFilter === key ? 'active' : ''}`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </AdminToolbar>
-
-        {/* Bulk Actions Banner */}
-        {selectedIds.length > 0 && (
-          <div className="card-glass" style={{ padding: 'var(--space-3) var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--accent-violet)', background: 'rgba(124, 58, 237, 0.05)' }}>
-            <span style={{ fontSize: '13px', color: '#fff', fontWeight: '500' }}>
-              Selected <strong style={{ color: 'var(--accent-violet)' }}>{selectedIds.length}</strong> enquiry/enquiries
-            </span>
-            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleBulkAction('new')}
-                style={{ padding: '6px 12px', fontSize: '12px' }}
-                disabled={isProcessing}
-              >
-                🟡 Mark New
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleBulkAction('contacted')}
-                style={{ padding: '6px 12px', fontSize: '12px' }}
-                disabled={isProcessing}
-              >
-                🔵 Mark Contacted
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleBulkAction('quoted')}
-                style={{ padding: '6px 12px', fontSize: '12px' }}
-                disabled={isProcessing}
-              >
-                🟣 Mark Quoted
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleBulkAction('completed')}
-                style={{ padding: '6px 12px', fontSize: '12px' }}
-                disabled={isProcessing}
-              >
-                🟢 Mark Completed
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleBulkAction('rejected')}
-                style={{ padding: '6px 12px', fontSize: '12px' }}
-                disabled={isProcessing}
-              >
-                🔴 Mark Rejected
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => handleBulkAction('delete')}
-                style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
-                disabled={isProcessing}
-              >
-                🗑 Delete
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Tabular Visual Grid */}
-        {isLoading ? (
-          <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-            <h3>Loading database records...</h3>
-          </div>
-        ) : sortedList.length > 0 ? (
-          <div className="card-glass" style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
-            <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
-                    <input
-                      type="checkbox"
-                      className="tbl-checkbox"
-                      checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
-                      onChange={handleSelectAll}
-                    />
-                  </th>
-                  <th className="tbl-th" style={{ minWidth: '150px', maxWidth: '210px' }}>Project</th>
-                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '150px' }}>Customer Name</th>
-                  <th className="tbl-th" style={{ minWidth: '100px', maxWidth: '130px' }}>Mobile</th>
-                  <th className="tbl-th" style={{ minWidth: '80px',  maxWidth: '100px' }}>Price</th>
-                  <th className="tbl-th" style={{ minWidth: '140px', maxWidth: '160px' }}>Status</th>
-                  <th className="tbl-th" style={{ minWidth: '130px', maxWidth: '160px' }}>Created Date</th>
-                  <th className="tbl-th" style={{ minWidth: '130px', maxWidth: '160px' }}>Updated Date</th>
-                  <th className="tbl-th" style={{ minWidth: '170px', maxWidth: '190px', textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedList.map((enq) => {
-                  return (
-                    <tr
-                      key={enq.id}
-                      style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.2s' }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.015)'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  {[['new', 'New'], ['contacted', 'Contacted'], ['quoted', 'Quoted'], ['completed', 'Completed'], ['rejected', 'Rejected']].map(([key, label]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => toggleStatusFilter(key)}
+                      className={`admin-chip ${statusFilters.includes(key) ? 'active' : ''}`}
                     >
-                      <td className="tbl-td" style={{ width: '36px', minWidth: '36px' }}>
-                        <input
-                          type="checkbox"
-                          className="tbl-checkbox"
-                          checked={selectedIds.includes(enq.id)}
-                          onChange={() => handleSelectOne(enq.id)}
-                        />
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '500', color: 'var(--accent-blue)' }}>
-                        {enq.projectTitle || 'General Consultation'}
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px', color: '#fff' }}>
-                        {enq.name}
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '130px', color: 'var(--text-muted)' }}>
-                        {enq.mobile}
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '80px',  maxWidth: '100px', color: 'var(--accent-emerald)', fontWeight: '600' }}>
-                        {enq.price ? `₹${enq.price}` : '-'}
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '140px', maxWidth: '160px' }}>
-                        <select
-                          className="form-select"
-                          style={{
-                            padding: '4px 10px',
-                            height: 'auto',
-                            fontSize: '12px',
-                            background: 'rgba(255, 255, 255, 0.02)',
-                            borderColor: statusColors[enq.status] || 'rgba(255, 255, 255, 0.08)',
-                            color: statusColors[enq.status] || 'white',
-                            fontWeight: '600',
-                            width: '135px'
-                          }}
-                          value={enq.status || 'new'}
-                          onChange={(e) => handleStatusChange(enq.id, e.target.value)}
-                          disabled={isProcessing}
-                        >
-                          <option value="new" style={{ color: '#000' }}>🟡 New</option>
-                          <option value="contacted" style={{ color: '#000' }}>🔵 Contacted</option>
-                          <option value="quoted" style={{ color: '#000' }}>🟣 Quoted</option>
-                          <option value="completed" style={{ color: '#000' }}>🟢 Completed</option>
-                          <option value="rejected" style={{ color: '#000' }}>🔴 Rejected</option>
-                        </select>
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
-                        {formatDate(enq.createdAt)}
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
-                        {formatDate(enq.updatedAt)}
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '170px', maxWidth: '190px', textAlign: 'right' }}>
-                        <div style={{ display: 'inline-flex', gap: 'var(--space-1)' }}>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => setActiveEnquiry(enq)}
-                            style={{ padding: '4px 8px', fontSize: '12px' }}
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="calc-row">
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Date Submitted</label>
+                <div className="admin-chip-group">
+                  {[
+                    { key: 'all', label: 'All Time' },
+                    { key: 'today', label: 'Today' },
+                    { key: 'week', label: 'This Week' },
+                    { key: 'month', label: 'This Month' }
+                  ].map((opt) => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      onClick={() => setDateFilter(opt.key)}
+                      className={`admin-chip ${dateFilter === opt.key ? 'active' : ''}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </AdminToolbar>
+
+          {/* Bulk Actions Banner */}
+          {selectedIds.length > 0 && (
+            <div style={{ padding: 'var(--space-3) var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--accent-violet)', background: 'rgba(124, 58, 237, 0.05)' }}>
+              <span style={{ fontSize: '13px', color: '#fff', fontWeight: '500' }}>
+                Selected <strong style={{ color: 'var(--accent-violet)' }}>{selectedIds.length}</strong> enquiry/enquiries
+              </span>
+              <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('new')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  🟡 Mark New
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('contacted')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  🔵 Mark Contacted
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('quoted')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  🟣 Mark Quoted
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('completed')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  🟢 Mark Completed
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('rejected')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  🔴 Mark Rejected
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => handleBulkAction('delete')}
+                  style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                  disabled={isProcessing}
+                >
+                  🗑 Delete
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Conditional Table or Empty State rendering */}
+          {isLoading ? (
+            <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
+              <h3>Loading database records...</h3>
+            </div>
+          ) : sortedList.length > 0 ? (
+            <div style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
+              <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                    <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
+                      <input
+                        type="checkbox"
+                        checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
+                        onChange={handleSelectAll}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '150px' }}>Project Title</th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>Customer Name</th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>Mobile</th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '80px' }}>Quoted Price</th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '140px' }}>Lead Status</th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Submitted Date</th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Last Action</th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '170px', textAlign: 'right' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedList.map((enq) => {
+                    const isSelected = selectedIds.includes(enq.id);
+
+                    return (
+                      <tr 
+                        key={enq.id} 
+                        style={{ 
+                          borderBottom: '1px solid rgba(255,255,255,0.04)',
+                          background: isSelected ? 'rgba(139, 92, 246, 0.04)' : 'transparent',
+                          transition: 'background 0.2s ease'
+                        }}
+                        className="table-row-hover"
+                      >
+                        <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleSelectOne(enq.id)}
+                            style={{ cursor: 'pointer' }}
+                          />
+                        </td>
+                        <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '500', color: 'var(--accent-blue)' }}>
+                          {enq.projectTitle || 'General Consultation'}
+                        </td>
+                        <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px', color: '#fff' }}>
+                          {enq.name}
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '130px', color: 'var(--text-muted)' }}>
+                          {enq.mobile}
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '80px',  maxWidth: '100px', color: 'var(--accent-emerald)', fontWeight: '600' }}>
+                          {enq.price ? `₹${enq.price}` : '-'}
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '140px', maxWidth: '160px' }}>
+                          <select
+                            className="form-select"
+                            style={{
+                              padding: '4px 24px 4px 10px',
+                              height: 'auto',
+                              fontSize: '12px',
+                              background: 'rgba(255, 255, 255, 0.02)',
+                              backgroundColor: '#12121e',
+                              borderColor: statusColors[enq.status] || 'rgba(255, 255, 255, 0.08)',
+                              color: statusColors[enq.status] || 'white',
+                              fontWeight: '600',
+                              width: '135px',
+                              appearance: 'none',
+                              WebkitAppearance: 'none',
+                              MozAppearance: 'none',
+                              backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(statusColors[enq.status] || '#ffffff')}' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                              backgroundRepeat: 'no-repeat',
+                              backgroundPosition: 'right 6px center',
+                              backgroundSize: '12px',
+                              cursor: 'pointer'
+                            }}
+                            value={enq.status || 'new'}
+                            onChange={(e) => handleStatusChange(enq.id, e.target.value)}
                             disabled={isProcessing}
                           >
-                            View
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={() => handleOpenEditModal(enq)}
-                            style={{ padding: '4px 8px', fontSize: '12px' }}
-                            disabled={isProcessing}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => setEnquiryToDelete(enq)}
-                            style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent-crimson, #ef4444)' }}
-                            disabled={isProcessing}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="card-glass" style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-            <h3>No enquiries match your criteria</h3>
-            <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)' }}>
-              Try adjusting your search query, status, or date range filters.
-            </p>
-          </div>
-        )}
+                            <option value="new" style={{ background: '#12121e', color: '#fff' }}>New</option>
+                            <option value="contacted" style={{ background: '#12121e', color: '#fff' }}>Contacted</option>
+                            <option value="quoted" style={{ background: '#12121e', color: '#fff' }}>Quoted</option>
+                            <option value="completed" style={{ background: '#12121e', color: '#fff' }}>Completed</option>
+                            <option value="rejected" style={{ background: '#12121e', color: '#fff' }}>Rejected</option>
+                          </select>
+                        </td>
+                        <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
+                          {formatDate(enq.createdAt)}
+                        </td>
+                        <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
+                          {formatDate(enq.updatedAt)}
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '170px', maxWidth: '190px', textAlign: 'right' }}>
+                          <div style={{ display: 'inline-flex', gap: 'var(--space-1)' }}>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => setActiveEnquiry(enq)}
+                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                              disabled={isProcessing}
+                            >
+                              View
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              onClick={() => handleOpenEditModal(enq)}
+                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                              disabled={isProcessing}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => setEnquiryToDelete(enq)}
+                              style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent-crimson, #ef4444)' }}
+                              disabled={isProcessing}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
+              <h3>No enquiries match your criteria</h3>
+              <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)' }}>
+                Try adjusting your search query, status, or date range filters.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Enquiry Details - READ ONLY VIEW Modal */}
@@ -682,12 +701,26 @@ export const ManageEnquiries = () => {
                 className="form-select"
                 value={editStatus}
                 onChange={(e) => setEditStatus(e.target.value)}
+                style={{
+                  padding: '10px 24px 10px 14px',
+                  appearance: 'none',
+                  WebkitAppearance: 'none',
+                  MozAppearance: 'none',
+                  backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(statusColors[editStatus] || '#ffffff')}' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 6px center',
+                  backgroundSize: '14px',
+                  backgroundColor: '#12121e',
+                  color: statusColors[editStatus] || 'white',
+                  borderColor: statusColors[editStatus] || 'var(--border-subtle)',
+                  cursor: 'pointer'
+                }}
               >
-                <option value="new">🟡 New</option>
-                <option value="contacted">🔵 Contacted</option>
-                <option value="quoted">🟣 Quoted</option>
-                <option value="completed">🟢 Completed</option>
-                <option value="rejected">🔴 Rejected</option>
+                <option value="new" style={{ background: '#12121e', color: '#fff' }}>New</option>
+                <option value="contacted" style={{ background: '#12121e', color: '#fff' }}>Contacted</option>
+                <option value="quoted" style={{ background: '#12121e', color: '#fff' }}>Quoted</option>
+                <option value="completed" style={{ background: '#12121e', color: '#fff' }}>Completed</option>
+                <option value="rejected" style={{ background: '#12121e', color: '#fff' }}>Rejected</option>
               </select>
             </div>
 

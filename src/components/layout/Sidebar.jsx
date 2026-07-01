@@ -45,38 +45,7 @@ export const Sidebar = ({
         </div>
       </div>
 
-      {/* Difficulty Filters */}
-      <div className="filter-group">
-        <h4>Difficulty</h4>
-        <div className="filter-chips-difficulty" id="difficulty-chips-container">
-          {Object.values(DIFFICULTIES).map((diff) => (
-            <Chip
-              key={diff}
-              className="chip-difficulty"
-              active={activeDifficulties.includes(diff)}
-              onClick={() => toggleDifficulty(diff)}
-              icon={<span className={`dot ${diff === 'beginner' ? 'green' : diff === 'intermediate' ? 'amber' : 'red'}`}></span>}
-              label={DIFFICULTY_LABELS[diff]}
-            />
-          ))}
-        </div>
-      </div>
 
-      {/* Project Levels (School, Diploma, Engineering) */}
-      <div className="filter-group">
-        <h4>Project Level</h4>
-        <div className="filter-chips-difficulty" style={{ gap: 'var(--space-2)' }}>
-          {['School', 'Diploma', 'Engineering'].map((lvl) => (
-            <Chip
-              key={lvl}
-              className="chip-difficulty"
-              active={activeProjectLevels.includes(lvl)}
-              onClick={() => toggleProjectLevel(lvl)}
-              label={lvl}
-            />
-          ))}
-        </div>
-      </div>
 
       {/* Included Features Checkboxes */}
       <div className="filter-group">

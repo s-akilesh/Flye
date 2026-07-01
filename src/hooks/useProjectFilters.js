@@ -20,17 +20,13 @@ export const useProjectFilters = (
 
     // 1. Category Filter: Bypassed if activeCategories is empty or contains 'all'
     if (activeCategories && activeCategories.length > 0 && !activeCategories.includes('all')) {
-      list = list.filter((p) => activeCategories.includes(p.category));
-    }
-
-    // 2. Difficulty Filter
-    if (activeDifficulties && activeDifficulties.length > 0) {
-      list = list.filter((p) => activeDifficulties.includes(p.difficulty));
-    }
-
-    // 3. Project Level Filter
-    if (activeProjectLevels && activeProjectLevels.length > 0) {
-      list = list.filter((p) => activeProjectLevels.includes(p.projectLevel));
+      list = list.filter((p) => {
+        if (!p.category) return false;
+        const pCats = Array.isArray(p.category) 
+          ? p.category 
+          : p.category.split(',').map(c => c.trim().toLowerCase());
+        return pCats.some(c => activeCategories.includes(c));
+      });
     }
 
     // 4. Feature Filter (multi-select: project must have AT LEAST ONE of the selected features)
@@ -45,8 +41,14 @@ export const useProjectFilters = (
         if (maxPrice !== null && p.price > maxPrice) {
           return false;
         }
-        if (matchedCategories && matchedCategories.length > 0 && !matchedCategories.includes(p.category)) {
-          return false;
+        if (matchedCategories && matchedCategories.length > 0) {
+          if (!p.category) return false;
+          const pCats = Array.isArray(p.category) 
+            ? p.category 
+            : p.category.split(',').map(c => c.trim().toLowerCase());
+          if (!pCats.some(c => matchedCategories.includes(c))) {
+            return false;
+          }
         }
         if (matchedLevel !== null && p.projectLevel.toLowerCase() !== matchedLevel.toLowerCase()) {
           return false;
@@ -71,13 +73,7 @@ export const useProjectFilters = (
       list = [...list].sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-high') {
       list = [...list].sort((a, b) => b.price - a.price);
-    } else if (sortBy === 'difficulty') {
-      const weights = { beginner: 1, intermediate: 2, advanced: 3 };
-      list = [...list].sort((a, b) => {
-        const wA = weights[a.difficulty] || 0;
-        const wB = weights[b.difficulty] || 0;
-        return wA - wB;
-      });
+
     }
 
     return list;

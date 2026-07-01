@@ -165,9 +165,8 @@ export const AdminSettings = () => {
           </div>
 
           <div className="portal-content">
-            {/* Global Search Bar (centered) */}
             <div style={{ marginBottom: 'var(--space-5)', display: 'flex', justifyContent: 'center' }}>
-              <div style={{ position: 'relative', width: '100%', maxWidth: '640px' }}>
+              <div style={{ position: 'relative', width: '100%' }}>
                 <input
                   type="text"
                   className="settings-search-bar"

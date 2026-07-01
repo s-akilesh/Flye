@@ -194,7 +194,7 @@ export const LearningLayout = () => {
       {/* Sticky Sidebar Navigation - styled exactly like the Admin Panel sidebar */}
       <aside className={`learning-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         {/* Top Section: Header & Navigation Links */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto', flex: 1, paddingRight: '4px' }}>
           
           {/* Header & Collapse Trigger */}
           <div style={{ 
@@ -241,67 +241,196 @@ export const LearningLayout = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {navItems.map((item, index) => {
-                const isActive = location.pathname === item.path || (item.id === 'components' && location.pathname.startsWith('/learning/components/')) || (item.id === 'electricity' && location.pathname.startsWith('/learning/fundamentals/'));
-                
-                if (item.disabled) {
-                  return (
-                    <li 
-                      key={index} 
-                      style={{ 
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: isCollapsed ? 'center' : 'flex-start',
-                        gap: isCollapsed ? '0' : '12px',
-                        padding: '10px 12px',
-                        borderRadius: '6px',
-                        color: 'var(--text-secondary, #9ca3af)',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        opacity: 0.45, 
-                        cursor: 'not-allowed',
-                        whiteSpace: 'nowrap'
-                      }}
-                      title={`${item.label} (Coming Soon)`}
-                    >
-                      {item.icon}
-                      {!isCollapsed && <span>{item.label}</span>}
-                    </li>
-                  );
-                }
-                
-                return (
-                  <li key={index}>
-                    <Link 
-                      to={item.path} 
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: isCollapsed ? 'center' : 'flex-start',
-                        gap: isCollapsed ? '0' : '12px',
-                        padding: '10px 12px',
-                        borderRadius: '6px',
-                        color: isActive ? 'var(--accent-violet, #8b5cf6)' : 'var(--text-secondary, #9ca3af)',
-                        background: isActive ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
-                        border: isActive ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
-                        textDecoration: 'none',
-                        fontSize: '13px',
-                        fontWeight: isActive ? '700' : '500',
-                        transition: 'all 0.2s ease',
-                        whiteSpace: 'nowrap'
-                      }}
-                      title={isCollapsed ? item.label : undefined}
-                      className="learning-nav-item"
-                    >
-                      {item.icon}
-                      {!isCollapsed && <span>{item.label}</span>}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Link 
+              to={ROUTES.LEARNING_WORKSPACE} 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isCollapsed ? 'center' : 'flex-start',
+                gap: isCollapsed ? '0' : '12px',
+                padding: '10px 12px',
+                borderRadius: '6px',
+                color: location.pathname === ROUTES.LEARNING_WORKSPACE ? 'var(--accent-violet, #8b5cf6)' : 'var(--text-secondary, #9ca3af)',
+                background: location.pathname === ROUTES.LEARNING_WORKSPACE ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
+                border: location.pathname === ROUTES.LEARNING_WORKSPACE ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
+                textDecoration: 'none',
+                fontSize: '13px',
+                fontWeight: location.pathname === ROUTES.LEARNING_WORKSPACE ? '700' : '500',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap'
+              }}
+              className="learning-nav-item"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+                <rect x="9" y="9" width="6" height="6" />
+              </svg>
+              {!isCollapsed && <span>Engineering Workspace</span>}
+            </Link>
+
+            {/* Level 1 Group */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {!isCollapsed && (
+                <span style={{ fontSize: '10px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', paddingLeft: '12px', letterSpacing: '0.5px' }}>
+                  Level 1 — Electrical Basics
+                </span>
+              )}
+              
+              {/* Lessons Menu Item */}
+              <Link 
+                to="/learning/fundamentals/what-is-engineering" 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  gap: isCollapsed ? '0' : '12px',
+                  padding: '10px 12px',
+                  borderRadius: '6px',
+                  color: location.pathname.startsWith('/learning/fundamentals/') ? 'var(--accent-violet, #8b5cf6)' : 'var(--text-secondary, #9ca3af)',
+                  background: location.pathname.startsWith('/learning/fundamentals/') ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
+                  border: location.pathname.startsWith('/learning/fundamentals/') ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
+                  textDecoration: 'none',
+                  fontSize: '13px',
+                  fontWeight: location.pathname.startsWith('/learning/fundamentals/') ? '700' : '500',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+                className="learning-nav-item"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                {!isCollapsed && <span>Lessons</span>}
+              </Link>
+
+              {/* Sub-lessons list under Lessons when expanded/active */}
+              {!isCollapsed && location.pathname.startsWith('/learning/fundamentals/') && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingLeft: '32px', borderLeft: '1px solid rgba(255,255,255,0.04)', marginLeft: '20px', marginTop: '4px' }}>
+                  {LearningRepository.getFundamentals().map((l) => {
+                    const isCur = location.pathname.endsWith(`/${l.slug}`);
+                    return (
+                      <Link
+                        key={l.id}
+                        to={`/learning/fundamentals/${l.slug}`}
+                        style={{
+                          fontSize: '12px',
+                          color: isCur ? '#fff' : 'var(--text-secondary)',
+                          fontWeight: isCur ? '700' : '500',
+                          textDecoration: 'none',
+                          padding: '4px 0',
+                          transition: 'color 0.2s',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          maxWidth: '160px'
+                        }}
+                      >
+                        {isCur ? '👉 ' : ''}{l.title}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Components */}
+              <Link 
+                to={ROUTES.LEARNING_COMPONENTS} 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  gap: isCollapsed ? '0' : '12px',
+                  padding: '10px 12px',
+                  borderRadius: '6px',
+                  color: location.pathname.startsWith('/learning/components') ? 'var(--accent-violet, #8b5cf6)' : 'var(--text-secondary, #9ca3af)',
+                  background: location.pathname.startsWith('/learning/components') ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
+                  border: location.pathname.startsWith('/learning/components') ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
+                  textDecoration: 'none',
+                  fontSize: '13px',
+                  fontWeight: location.pathname.startsWith('/learning/components') ? '700' : '500',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+                className="learning-nav-item"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="8" y1="12" x2="16" y2="12" />
+                  <line x1="12" y1="8" x2="12" y2="16" />
+                </svg>
+                {!isCollapsed && <span>Components</span>}
+              </Link>
+
+              {/* Inactive sidebar placeholders */}
+              <div 
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  gap: isCollapsed ? '0' : '12px',
+                  padding: '10px 12px',
+                  color: 'var(--text-secondary, #9ca3af)',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  opacity: 0.4, 
+                  cursor: 'not-allowed',
+                  whiteSpace: 'nowrap'
+                }}
+                title="Experiments (Coming Soon)"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5h20c0-2.31-1-4.24-2.5-5.5" />
+                  <path d="M12 2v10" />
+                </svg>
+                {!isCollapsed && <span>Experiments</span>}
+              </div>
+
+              <div 
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  gap: isCollapsed ? '0' : '12px',
+                  padding: '10px 12px',
+                  color: 'var(--text-secondary, #9ca3af)',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  opacity: 0.4, 
+                  cursor: 'not-allowed',
+                  whiteSpace: 'nowrap'
+                }}
+                title="Projects (Coming Soon)"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+                {!isCollapsed && <span>Projects</span>}
+              </div>
+
+              <div 
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  gap: isCollapsed ? '0' : '12px',
+                  padding: '10px 12px',
+                  color: 'var(--text-secondary, #9ca3af)',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  opacity: 0.4, 
+                  cursor: 'not-allowed',
+                  whiteSpace: 'nowrap'
+                }}
+                title="Bookmarks (Coming Soon)"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                </svg>
+                {!isCollapsed && <span>Bookmarks</span>}
+              </div>
+
+            </div>
           </nav>
         </div>
 

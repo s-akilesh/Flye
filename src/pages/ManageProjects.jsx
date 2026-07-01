@@ -395,7 +395,7 @@ export const ManageProjects = () => {
       transition={{ duration: 0.4 }}
     >
       {/* Mobile Sticky Sub-Header */}
-      <header className="mobile-learning-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0 16px', boxSizing: 'border-box' }}>
+      <header className="mobile-learning-header">
         <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
           Manage Projects
         </span>
@@ -544,30 +544,6 @@ export const ManageProjects = () => {
           <p>Visual database management panel for Flyen engineering catalog</p>
         </div>
         <div className="portal-header-meta" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-          <Button
-            variant="secondary"
-            onClick={handleDownloadTemplate}
-            disabled={isProcessing}
-            style={{ fontSize: '13px', padding: '8px 16px' }}
-          >
-            📥 Template
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={handleExportProjects}
-            disabled={isProcessing}
-            style={{ fontSize: '13px', padding: '8px 16px' }}
-          >
-            📤 Export Excel
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={triggerFileInput}
-            disabled={isProcessing}
-            style={{ fontSize: '13px', padding: '8px 16px' }}
-          >
-            📥 Import Excel
-          </Button>
           <input
             type="file"
             ref={fileInputRef}
@@ -608,308 +584,341 @@ export const ManageProjects = () => {
           </Card>
         </div>
 
-        {/* Toolbar: Search + Filter Icon + Sort Icon */}
-        <AdminToolbar
-          searchId="admin-search"
-          searchLabel="Search Projects"
-          searchPlaceholder="Title, technology, tags..."
-          searchValue={search}
-          onSearchChange={(e) => setSearch(e.target.value)}
-          activeFilterCount={
-            categoryFilters.length +
-            levelFilters.length +
-            statusFilters.length
-          }
-          sortValue={sortField}
-          onSortChange={(e) => setSortField(e.target.value)}
-          sortOptions={[
-            { value: 'title', label: 'Title (A–Z)' },
-            { value: 'price-low', label: 'Price: Low to High' },
-            { value: 'price-high', label: 'Price: High to Low' },
-            { value: 'level', label: 'Project Level' },
-          ]}
-          onReset={() => {
-            setSearch('');
-            setCategoryFilters([]);
-            setLevelFilters([]);
-            setStatusFilters([]);
-            setSortField('title');
-          }}
-        >
-          {/* Filter panel content */}
-          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
-              <div className="admin-chip-group">
-                <button
-                  type="button"
-                  onClick={() => toggleCategoryFilter('all')}
-                  className={`admin-chip ${categoryFilters.length === 0 ? 'active' : ''}`}
+        {/* Tabular Visual Grid Container Card */}
+        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden' }}>
+          {/* Toolbar: Search + Filter Icon + Sort Icon */}
+          <AdminToolbar
+            searchId="admin-search"
+            searchLabel="Search Projects"
+            searchPlaceholder="Title, technology, tags..."
+            searchValue={search}
+            onSearchChange={(e) => setSearch(e.target.value)}
+            activeFilterCount={
+              categoryFilters.length +
+              levelFilters.length +
+              statusFilters.length
+            }
+            sortValue={sortField}
+            onSortChange={(e) => setSortField(e.target.value)}
+            sortOptions={[
+              { value: 'title', label: 'Title (A–Z)' },
+              { value: 'price-low', label: 'Price: Low to High' },
+              { value: 'price-high', label: 'Price: High to Low' },
+              { value: 'level', label: 'Project Level' },
+            ]}
+            onReset={() => {
+              setSearch('');
+              setCategoryFilters([]);
+              setLevelFilters([]);
+              setStatusFilters([]);
+              setSortField('title');
+            }}
+            className="admin-toolbar-wrapper"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', position: 'relative', zIndex: 100 }}
+            desktopActions={
+              <>
+                <Button
+                  variant="secondary"
+                  onClick={handleDownloadTemplate}
+                  disabled={isProcessing}
+                  style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  All
-                </button>
-                {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => toggleCategoryFilter(key)}
-                    className={`admin-chip ${categoryFilters.includes(key) ? 'active' : ''}`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Level</label>
-              <div className="admin-chip-group">
-                <button
-                  type="button"
-                  onClick={() => toggleLevelFilter('all')}
-                  className={`admin-chip ${levelFilters.length === 0 ? 'active' : ''}`}
+                  📥 Template
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={handleExportProjects}
+                  disabled={isProcessing}
+                  style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  All
-                </button>
-                {['School', 'Diploma', 'Engineering'].map((lvl) => (
-                  <button
-                    key={lvl}
-                    type="button"
-                    onClick={() => toggleLevelFilter(lvl)}
-                    className={`admin-chip ${levelFilters.includes(lvl) ? 'active' : ''}`}
-                  >
-                    {lvl}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Status</label>
-              <div className="admin-chip-group">
-                <button
-                  type="button"
-                  onClick={() => toggleStatusFilter('all')}
-                  className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
+                  📤 Export Excel
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={triggerFileInput}
+                  disabled={isProcessing}
+                  style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  All
-                </button>
-                {[['active', 'Active'], ['draft', 'Draft'], ['coming-soon', 'Coming Soon'], ['archived', 'Archived']].map(([key, label]) => (
+                  📥 Import Excel
+                </Button>
+              </>
+            }
+          >
+            {/* Filter panel content */}
+            <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="calc-row">
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
+                <div className="admin-chip-group">
                   <button
-                    key={key}
                     type="button"
-                    onClick={() => toggleStatusFilter(key)}
-                    className={`admin-chip ${statusFilters.includes(key) ? 'active' : ''}`}
+                    onClick={() => toggleCategoryFilter('all')}
+                    className={`admin-chip ${categoryFilters.length === 0 ? 'active' : ''}`}
                   >
-                    {label}
+                    All
                   </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </AdminToolbar>
-
-        {/* Tabular Visual Grid */}
-        {/* Bulk Actions Banner */}
-        {selectedIds.length > 0 && (
-          <div className="card-glass" style={{ padding: 'var(--space-3) var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--accent-violet)', background: 'rgba(124, 58, 237, 0.05)' }}>
-            <span style={{ fontSize: '13px', color: '#fff', fontWeight: '500' }}>
-              Selected <strong style={{ color: 'var(--accent-violet)' }}>{selectedIds.length}</strong> project(s)
-            </span>
-            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleBulkAction('activate')}
-                style={{ padding: '6px 12px', fontSize: '12px' }}
-                disabled={isProcessing}
-              >
-                🟢 Activate
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleBulkAction('archive')}
-                style={{ padding: '6px 12px', fontSize: '12px' }}
-                disabled={isProcessing}
-              >
-                🔴 Archive
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => handleBulkAction('delete')}
-                style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
-                disabled={isProcessing}
-              >
-                🗑 Delete
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Tabular Visual Grid */}
-        {isLoading ? (
-          <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-            <h3>Loading database records...</h3>
-          </div>
-        ) : sortedList.length > 0 ? (
-          <div className="card-glass" style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
-            <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
-                    <input
-                      type="checkbox"
-                      className="tbl-checkbox"
-                      checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
-                      onChange={handleSelectAll}
-                    />
-                  </th>
-                  <th className="tbl-th" style={{ minWidth: '160px', maxWidth: '220px' }}>Project Name</th>
-                  <th className="tbl-th" style={{ minWidth: '100px', maxWidth: '140px' }}>Category</th>
-                  <th className="tbl-th" style={{ minWidth: '100px', maxWidth: '130px' }}>Level</th>
-                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '140px' }}>Difficulty</th>
-                  <th className="tbl-th" style={{ minWidth: '80px',  maxWidth: '100px' }}>Price</th>
-                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '140px' }}>Status</th>
-                  <th className="tbl-th" style={{ minWidth: '70px',  maxWidth: '90px'  }}>Featured</th>
-                  <th className="tbl-th" style={{ minWidth: '110px', maxWidth: '140px' }}>Last Updated</th>
-                  <th className="tbl-th" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedList.map((proj) => {
-                  const statusColors = {
-                    active: 'var(--accent-emerald)',
-                    draft: '#eab308',
-                    'coming-soon': 'var(--accent-blue)',
-                    archived: 'var(--accent-crimson, #ef4444)'
-                  };
-
-                  return (
-                    <tr
-                      key={proj.id}
-                      style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.2s' }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.015)'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => toggleCategoryFilter(key)}
+                      className={`admin-chip ${categoryFilters.includes(key) ? 'active' : ''}`}
                     >
-                      <td className="tbl-td tbl-cb-cell">
-                        <input
-                          type="checkbox"
-                          className="tbl-checkbox"
-                          checked={selectedIds.includes(proj.id)}
-                          onChange={() => handleSelectOne(proj.id)}
-                        />
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '160px', maxWidth: '220px' }}>
-                        <div className="tbl-line-clamp-1" style={{ fontWeight: '600', color: '#fff', fontSize: '13px' }}>{proj.title}</div>
-                        <div className="tbl-line-clamp-1" style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>slug: {proj.slug}</div>
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '100px', maxWidth: '140px', textTransform: 'capitalize' }}>
-                        {proj.category}
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '100px', maxWidth: '130px' }}>
-                        {proj.projectLevel}
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '140px' }}>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                          <span
-                            style={{
-                              width: '6px',
-                              height: '6px',
-                              borderRadius: '50%',
-                              background: proj.difficulty === 'beginner' ? 'var(--accent-emerald)' : proj.difficulty === 'intermediate' ? 'var(--accent-amber)' : 'var(--accent-crimson, #ef4444)',
-                              display: 'inline-block'
-                            }}
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="calc-row">
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Level</label>
+                <div className="admin-chip-group">
+                  <button
+                    type="button"
+                    onClick={() => toggleLevelFilter('all')}
+                    className={`admin-chip ${levelFilters.length === 0 ? 'active' : ''}`}
+                  >
+                    All
+                  </button>
+                  {['School', 'Diploma', 'Engineering'].map((lvl) => (
+                    <button
+                      key={lvl}
+                      type="button"
+                      onClick={() => toggleLevelFilter(lvl)}
+                      className={`admin-chip ${levelFilters.includes(lvl) ? 'active' : ''}`}
+                    >
+                      {lvl}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="calc-row">
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Status</label>
+                <div className="admin-chip-group">
+                  <button
+                    type="button"
+                    onClick={() => toggleStatusFilter('all')}
+                    className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
+                  >
+                    All
+                  </button>
+                  {[['active', 'Active'], ['draft', 'Draft'], ['coming-soon', 'Coming Soon'], ['archived', 'Archived']].map(([key, label]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => toggleStatusFilter(key)}
+                      className={`admin-chip ${statusFilters.includes(key) ? 'active' : ''}`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </AdminToolbar>
+
+          {/* Bulk Actions Banner */}
+          {selectedIds.length > 0 && (
+            <div style={{ padding: 'var(--space-3) var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--accent-violet)', background: 'rgba(124, 58, 237, 0.05)' }}>
+              <span style={{ fontSize: '13px', color: '#fff', fontWeight: '500' }}>
+                Selected <strong style={{ color: 'var(--accent-violet)' }}>{selectedIds.length}</strong> project(s)
+              </span>
+              <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('activate')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  🟢 Activate
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('archive')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  🔴 Archive
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => handleBulkAction('delete')}
+                  style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                  disabled={isProcessing}
+                >
+                  🗑 Delete
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Conditional Table or Empty State rendering */}
+          {isLoading ? (
+            <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
+              <h3>Loading database records...</h3>
+            </div>
+          ) : sortedList.length > 0 ? (
+            <div style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
+              <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                    <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
+                      <input
+                        type="checkbox"
+                        checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
+                        onChange={handleSelectAll}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px' }}>
+                      Project Name
+                    </th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '120px' }}>
+                      Category & Level
+                    </th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
+                      Pricing
+                    </th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>
+                      Status
+                    </th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
+                      Updated At
+                    </th>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px', textAlign: 'right' }}>
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedList.map((proj) => {
+                    const isSelected = selectedIds.includes(proj.id);
+                    const mainPrice = proj.variants && proj.variants.length > 0
+                      ? Math.min(...proj.variants.filter(v => v.enabled).map(v => v.price))
+                      : proj.price;
+
+                    return (
+                      <tr 
+                        key={proj.id} 
+                        style={{ 
+                          borderBottom: '1px solid rgba(255,255,255,0.04)',
+                          background: isSelected ? 'rgba(139, 92, 246, 0.04)' : 'transparent',
+                          transition: 'background 0.2s ease'
+                        }}
+                        className="table-row-hover"
+                      >
+                        <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleSelectOne(proj.id)}
+                            style={{ cursor: 'pointer' }}
                           />
-                          {proj.difficulty.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '80px', maxWidth: '100px', fontWeight: '600', color: 'var(--text-main)' }}>
-                        ₹{proj.price}
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '140px' }}>
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '4px 10px',
-                            borderRadius: '4px',
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            textTransform: 'uppercase',
-                            background: 'rgba(255,255,255,0.02)',
-                            border: `1px solid ${statusColors[proj.status] || 'gray'}`,
-                            color: statusColors[proj.status] || 'white'
-                          }}
-                        >
-                          <span style={{ fontSize: '10px' }}>
-                            {proj.status === 'active' ? '🟢' : proj.status === 'draft' ? '🟡' : proj.status === 'coming-soon' ? '🔵' : '🔴'}
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '220px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
+                            <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff', display: 'block' }} className="tbl-line-clamp-1">
+                              {proj.title}
+                            </span>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block' }} className="tbl-line-clamp-1">
+                              {proj.technology || 'Arduino'}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '120px' }}>
+                          <span style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-primary)' }}>
+                            {CATEGORY_LABELS[proj.category] || proj.category}
                           </span>
-                          {proj.status === 'coming-soon' ? 'COMING SOON' : proj.status}
-                        </span>
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '70px', maxWidth: '90px' }}>
-                        {proj.featured ? (
-                          <span style={{ color: 'var(--accent-amber)', fontWeight: '600' }}>★ Yes</span>
-                        ) : (
-                          <span style={{ color: 'var(--text-muted)' }}>No</span>
-                        )}
-                      </td>
-                      <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '140px', color: 'var(--text-muted)' }}>
-                        {proj.lastUpdated}
-                      </td>
-                      <td className="tbl-td" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>
-                        <div style={{ display: 'inline-flex', gap: 'var(--space-1)' }}>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => navigate(ROUTES.PROJECT_DETAILS.replace(':slug', proj.slug))}
-                            style={{ padding: '4px 8px', fontSize: '12px' }}
-                          >
-                            View
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="primary"
-                            onClick={() => navigate(ROUTES.ADMIN_EDIT_PROJECT.replace(':slug', proj.slug))}
-                            style={{ padding: '4px 8px', fontSize: '12px' }}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={() => handleDuplicate(proj.id)}
-                            style={{ padding: '4px 8px', fontSize: '12px' }}
-                            disabled={isProcessing}
-                          >
-                            Copy
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => setProjectToDelete(proj)}
-                            style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent-crimson, #ef4444)' }}
-                            disabled={isProcessing}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="card-glass" style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-            <h3>No management records match your filters</h3>
-            <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)' }}>
-              Try adjusting your search queries or category filters.
-            </p>
-          </div>
-        )}
+                          <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                            {proj.projectLevel || 'School'}
+                          </span>
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '110px' }}>
+                          <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--accent-emerald, #10b981)' }}>
+                            {proj.currency === 'INR' ? '₹' : '$'}{mainPrice}
+                          </span>
+                          {proj.variants && proj.variants.length > 1 && (
+                            <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)' }}>
+                              {proj.variants.length} options
+                            </span>
+                          )}
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '100px' }}>
+                          {proj.status === 'active' ? (
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(16,185,129,0.1)', color: 'var(--accent-emerald, #10b981)', textTransform: 'uppercase' }}>
+                              Active
+                            </span>
+                          ) : proj.status === 'draft' ? (
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                              Draft
+                            </span>
+                          ) : proj.status === 'coming-soon' ? (
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(234,179,8,0.1)', color: '#eab308', textTransform: 'uppercase' }}>
+                              Soon
+                            </span>
+                          ) : (
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(239,68,68,0.1)', color: 'var(--accent-crimson, #ef4444)', textTransform: 'uppercase' }}>
+                              Archived
+                            </span>
+                          )}
+                        </td>
+                        <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '140px', color: 'var(--text-muted)' }}>
+                          {proj.lastUpdated}
+                        </td>
+                        <td className="tbl-td" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>
+                          <div style={{ display: 'inline-flex', gap: 'var(--space-1)' }}>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => navigate(ROUTES.PROJECT_DETAILS.replace(':slug', proj.slug))}
+                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                            >
+                              View
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="primary"
+                              onClick={() => navigate(ROUTES.ADMIN_EDIT_PROJECT.replace(':slug', proj.slug))}
+                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              onClick={() => handleDuplicate(proj.id)}
+                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                              disabled={isProcessing}
+                            >
+                              Copy
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => setProjectToDelete(proj)}
+                              style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent-crimson, #ef4444)' }}
+                              disabled={isProcessing}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
+              <h3>No management records match your filters</h3>
+              <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)' }}>
+                Try adjusting your search queries or category filters.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Delete Confirmation Dialog */}

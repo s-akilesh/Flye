@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
@@ -8,6 +8,7 @@ import { Input } from '../components/ui/Input';
 import { RichTextEditor } from '../components/ui/RichTextEditor';
 import { ROUTES } from '../constants/routes';
 import { CATEGORY_LABELS } from '../constants/categories';
+import { storageService } from '../services/storageService';
 
 export const AddProject = () => {
   const navigate = useNavigate();
@@ -22,11 +23,20 @@ export const AddProject = () => {
   const [fullDescription, setFullDescription] = useState('');
 
   // Classification State
-  const [category, setCategory] = useState('automation');
-  const [projectLevel, setProjectLevel] = useState('Engineering');
-  const [difficulty, setDifficulty] = useState('intermediate');
-  const [buildTime, setBuildTime] = useState('6-8 Hours');
+  const [categories, setCategories] = useState(['automation']);
   const [technology, setTechnology] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Pricing & Status State
   const [variants, setVariants] = useState([
@@ -36,11 +46,7 @@ export const AddProject = () => {
       name: "DIY Learning Kit",
       price: 2499,
       description: "Assemble the project yourself.",
-      bestFor: "Students who want to build and learn.",
       recommended: "best-value",
-      difficulty: "Beginner",
-      buildTime: "1-2 Hours",
-      ageGroup: "14+",
       features: ["Electronic Components", "PCB & Wiring", "3D Printed Parts", "Step-by-step Guide"]
     },
     {
@@ -49,11 +55,7 @@ export const AddProject = () => {
       name: "Complete Project Kit",
       price: 3099,
       description: "Fully assembled and tested project.",
-      bestFor: "Students who need a ready-made project.",
       recommended: "most-popular",
-      difficulty: "Beginner",
-      buildTime: "Instant",
-      ageGroup: "12+",
       features: ["Fully Assembled", "Tested & Verified", "Ready to Use", "Support included"]
     },
     {
@@ -62,11 +64,7 @@ export const AddProject = () => {
       name: "3D Printed Parts Pack",
       price: 999,
       description: "Only 3D printed mechanical parts.",
-      bestFor: "Students who already have electronic components.",
       recommended: "none",
-      difficulty: "Beginner",
-      buildTime: "Assembly Required",
-      ageGroup: "12+",
       features: ["Printed Parts Only", "!Electronics Not Included", "!Assembly Required"]
     }
   ]);
@@ -74,7 +72,7 @@ export const AddProject = () => {
   const [status, setStatus] = useState('active');
   const [featured, setFeatured] = useState(false);
   const [badge, setBadge] = useState('');
-
+  
   const updateKitField = (idx, field, value) => {
     setVariants(prev => {
       const copy = [...prev];
@@ -100,11 +98,7 @@ export const AddProject = () => {
         name: "Custom Kit",
         price: 0,
         description: "",
-        bestFor: "",
         recommended: "none",
-        difficulty: "Beginner",
-        buildTime: "1 Hour",
-        ageGroup: "12+",
         features: []
       }
     ]);
@@ -142,8 +136,6 @@ export const AddProject = () => {
   // Media State
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState('');
-  const [schematicUrl, setSchematicUrl] = useState('');
-  const [circuitUrl, setCircuitUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
 
   const handleThumbnailUpload = (file) => {
@@ -191,7 +183,6 @@ export const AddProject = () => {
   useEffect(() => {
     const sections = [
       'sec-basic',
-      'sec-classification',
       'sec-pricing',
       'sec-media',
       'sec-components',
@@ -371,7 +362,18 @@ export const AddProject = () => {
       return;
     }
 
-    setIsSaving(true);
+    let finalThumbnailUrl = thumbnailPreview || 'src/assets/projects/smart-home/main.svg';
+    if (thumbnailFile) {
+      try {
+        const uploadResult = await storageService.uploadImage('project-images', 'catalog', thumbnailFile);
+        finalThumbnailUrl = uploadResult.publicUrl;
+      } catch (err) {
+        showToast('Failed to upload project image: ' + (err.message || err), 'error');
+        setIsSaving(false);
+        return;
+      }
+    }
+
     // Clean Dynamic Components
     const finalComponents = componentsList.map((c) => c.trim()).filter((c) => c !== '');
     
@@ -393,10 +395,13 @@ export const AddProject = () => {
       .map((kw) => kw.trim().toLowerCase())
       .filter((kw) => kw !== '');
 
-    const finalKits = variants.map(v => ({
-      ...v,
-      price: Number(v.price) || 0
-    }));
+    const finalKits = variants.map(v => {
+      const { difficulty, buildTime, ageGroup, bestFor, ...rest } = v;
+      return {
+        ...rest,
+        price: Number(v.price) || 0
+      };
+    });
 
     const enabledKits = finalKits.filter(v => v.enabled);
     const lowestPrice = enabledKits.length > 0
@@ -410,19 +415,19 @@ export const AddProject = () => {
       fullDescription: fullDescription.trim(),
       price: lowestPrice,
       currency,
-      projectLevel,
-      difficulty,
+      projectLevel: 'Engineering',
+      difficulty: 'intermediate',
       technology: technology.trim() || 'Arduino',
-      category,
-      buildTime: buildTime.trim() || '4-6 Hours',
+      category: categories.join(', '),
+      buildTime: '4-6 Hours',
       features: ['hardware', 'code', 'circuit', 'docs', 'support'],
       badge: badge.trim(),
       searchKeywords: finalKeywords,
       variants: finalKits,
       images: {
-        main: thumbnailPreview || 'src/assets/projects/smart-home/main.svg',
-        schematic: schematicUrl.trim() || 'src/assets/projects/smart-home/schematic.svg',
-        circuit: circuitUrl.trim() || 'src/assets/projects/smart-home/circuit.svg'
+        main: finalThumbnailUrl,
+        schematic: '',
+        circuit: ''
       },
       videoUrl: videoUrl.trim() || 'https://www.youtube.com/embed/placeholder',
       resources: finalResources,
@@ -430,7 +435,7 @@ export const AddProject = () => {
       specifications: {
         controller: technology.trim() || 'Arduino Uno',
         sensors: 'Standard sensor configuration',
-        communication: category === 'iot' ? 'Wi-Fi' : category === 'gps-gsm' ? 'GSM' : 'None',
+        communication: categories.includes('iot') ? 'Wi-Fi' : categories.includes('gps-gsm') ? 'GSM' : 'None',
         operatingVoltage: '5V DC',
         programmingLanguage: 'C++'
       },
@@ -476,7 +481,7 @@ export const AddProject = () => {
       transition={{ duration: 0.4 }}
     >
       {/* Mobile Sticky Sub-Header */}
-      <header className="mobile-learning-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0 16px', boxSizing: 'border-box' }}>
+      <header className="mobile-learning-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button 
             type="button" 
@@ -554,56 +559,57 @@ export const AddProject = () => {
             className={`nav-sec-btn ${activeSection === 'sec-basic' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-basic')}
           >
-            📝 Basic Information
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>assignment</span>
+            Basic Information
           </button>
-          <button
-            type="button"
-            className={`nav-sec-btn ${activeSection === 'sec-classification' ? 'active' : ''}`}
-            onClick={() => scrollToSection('sec-classification')}
-          >
-            🏷️ Classification
-          </button>
+
           <button
             type="button"
             className={`nav-sec-btn ${activeSection === 'sec-pricing' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-pricing')}
           >
-            💰 Pricing & Status
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>sell</span>
+            Pricing & Status
           </button>
           <button
             type="button"
             className={`nav-sec-btn ${activeSection === 'sec-media' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-media')}
           >
-            🖼️ Media
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>play_circle</span>
+            Media
           </button>
           <button
             type="button"
             className={`nav-sec-btn ${activeSection === 'sec-components' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-components')}
           >
-            ⚡ Components
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>memory</span>
+            Components
           </button>
           <button
             type="button"
             className={`nav-sec-btn ${activeSection === 'sec-resources' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-resources')}
           >
-            📄 Resources
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>file_download</span>
+            Resources
           </button>
           <button
             type="button"
             className={`nav-sec-btn ${activeSection === 'sec-keywords' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-keywords')}
           >
-            🔍 Search Keywords
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>search</span>
+            Search Keywords
           </button>
           <button
             type="button"
             className={`nav-sec-btn ${activeSection === 'sec-related' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-related')}
           >
-            🔗 Related Projects
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>link</span>
+            Related Projects
           </button>
         </div>
 
@@ -612,7 +618,7 @@ export const AddProject = () => {
           
           {/* Section 1: Basic Information */}
           <div id="sec-basic" className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>1. Basic Information</h3>
+            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>Basic Information</h3>
 
             {/* Thumbnail Image Upload */}
             <div className="calc-row" style={{ marginBottom: 'var(--space-4)' }}>
@@ -685,6 +691,127 @@ export const AddProject = () => {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
+            <div className="grid-12" style={{ gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
+              <div style={{ gridColumn: 'span 6' }} className="calc-row">
+                <label>Categories *</label>
+                <div ref={dropdownRef} style={{ position: 'relative', width: '100%' }}>
+                  <button
+                    type="button"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="form-input"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      width: '100%',
+                      height: '38px',
+                      paddingTop: 0,
+                      paddingBottom: 0
+                    }}
+                  >
+                    <span style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '90%',
+                      color: categories.length > 0 ? '#fff' : 'var(--text-muted)',
+                      fontSize: '13px'
+                    }}>
+                      {categories.length > 0 
+                        ? categories.map(c => CATEGORY_LABELS[c] || c).join(', ') 
+                        : 'Select Categories'}
+                    </span>
+                    <span style={{
+                      transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s',
+                      display: 'inline-block',
+                      fontSize: '10px',
+                      color: 'var(--text-muted)'
+                    }}>
+                      ▼
+                    </span>
+                  </button>
+
+                  {dropdownOpen && (
+                    <div
+                      className="card-glass"
+                      style={{
+                        position: 'absolute',
+                        top: 'calc(100% + 4px)',
+                        left: 0,
+                        right: 0,
+                        zIndex: 100,
+                        maxHeight: '240px',
+                        overflowY: 'auto',
+                        padding: '8px 0',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        background: '#141416',
+                        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                      }}
+                    >
+                      {Object.entries(CATEGORY_LABELS).map(([key, label]) => {
+                        const isSelected = categories.includes(key);
+                        return (
+                          <label
+                            key={key}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              padding: '8px 12px',
+                              cursor: 'pointer',
+                              transition: 'background 0.15s',
+                              userSelect: 'none',
+                              margin: 0
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              style={{
+                                width: '15px',
+                                height: '15px',
+                                accentColor: 'var(--accent-violet)',
+                                cursor: 'pointer',
+                                margin: 0
+                              }}
+                              onChange={() => {
+                                setCategories(prev => {
+                                  if (prev.includes(key)) {
+                                    if (prev.length === 1) return prev;
+                                    return prev.filter(c => c !== key);
+                                  } else {
+                                    return [...prev, key];
+                                  }
+                                });
+                              }}
+                            />
+                            <span style={{ fontSize: '13px', color: isSelected ? '#fff' : 'var(--text-secondary)' }}>
+                              {label}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ gridColumn: 'span 6' }} className="calc-row">
+                <label htmlFor="proj-tech">Primary Microcontroller / Chipset</label>
+                <Input
+                  type="text"
+                  id="proj-tech"
+                  className="form-input"
+                  placeholder="e.g. Arduino Uno R3, ESP32"
+                  value={technology}
+                  onChange={(e) => setTechnology(e.target.value)}
+                />
+              </div>
+            </div>
 
             <div className="calc-row" style={{ marginBottom: 'var(--space-3)' }}>
               <label>URL Slug (Auto Generated)</label>
@@ -720,80 +847,9 @@ export const AddProject = () => {
             </div>
           </div>
 
-          {/* Section 2: Classification */}
-          <div id="sec-classification" className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>2. Classification</h3>
-            <div className="grid-12" style={{ gap: 'var(--space-3)' }}>
-              <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                <label htmlFor="proj-cat">Category</label>
-                <select
-                  id="proj-cat"
-                  className="form-select"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                    <option key={key} value={key}>{label}</option>
-                  ))}
-                </select>
-              </div>
-              <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                <label htmlFor="proj-level">Project Level</label>
-                <select
-                  id="proj-level"
-                  className="form-select"
-                  value={projectLevel}
-                  onChange={(e) => setProjectLevel(e.target.value)}
-                >
-                  <option value="School">School Projects</option>
-                  <option value="Diploma">Diploma Projects</option>
-                  <option value="Engineering">Engineering Projects</option>
-                </select>
-              </div>
-              <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                <label htmlFor="proj-diff">Difficulty</label>
-                <select
-                  id="proj-diff"
-                  className="form-select"
-                  value={difficulty}
-                  onChange={(e) => setDifficulty(e.target.value)}
-                >
-                  <option value="beginner">Beginner</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid-12" style={{ gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
-              <div style={{ gridColumn: 'span 6' }} className="calc-row">
-                <label htmlFor="proj-tech">Primary Microcontroller / Chipset</label>
-                <Input
-                  type="text"
-                  id="proj-tech"
-                  className="form-input"
-                  placeholder="e.g. Arduino Uno R3, ESP32"
-                  value={technology}
-                  onChange={(e) => setTechnology(e.target.value)}
-                />
-              </div>
-              <div style={{ gridColumn: 'span 6' }} className="calc-row">
-                <label htmlFor="proj-time">Estimated Build Time</label>
-                <Input
-                  type="text"
-                  id="proj-time"
-                  className="form-input"
-                  placeholder="e.g. 5-7 Hours"
-                  value={buildTime}
-                  onChange={(e) => setBuildTime(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Section 3: Pricing & Status */}
           <div id="sec-pricing" className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>3. Pricing & Status</h3>
+            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>Pricing & Status</h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -878,42 +934,6 @@ export const AddProject = () => {
                           </select>
                         </div>
 
-                        {/* Age Group */}
-                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Age Group</label>
-                          <input 
-                            type="text" 
-                            value={kit.ageGroup || ''} 
-                            placeholder="e.g. 14+"
-                            className="form-input" 
-                            onChange={(e) => updateKitField(kitIdx, 'ageGroup', e.target.value)}
-                          />
-                        </div>
-
-                        {/* Difficulty */}
-                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Difficulty</label>
-                          <input 
-                            type="text" 
-                            value={kit.difficulty || ''} 
-                            placeholder="e.g. Beginner"
-                            className="form-input" 
-                            onChange={(e) => updateKitField(kitIdx, 'difficulty', e.target.value)}
-                          />
-                        </div>
-
-                        {/* Build Time */}
-                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Estimated Build Time</label>
-                          <input 
-                            type="text" 
-                            value={kit.buildTime || ''} 
-                            placeholder="e.g. 30 Minutes"
-                            className="form-input" 
-                            onChange={(e) => updateKitField(kitIdx, 'buildTime', e.target.value)}
-                          />
-                        </div>
-
                         {/* Short Description */}
                         <div style={{ gridColumn: 'span 4' }} className="calc-row">
                           <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Short Description</label>
@@ -922,18 +942,6 @@ export const AddProject = () => {
                             value={kit.description || ''} 
                             className="form-input" 
                             onChange={(e) => updateKitField(kitIdx, 'description', e.target.value)}
-                          />
-                        </div>
-
-                        {/* Best For */}
-                        <div style={{ gridColumn: 'span 12' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Best For Description</label>
-                          <input 
-                            type="text" 
-                            value={kit.bestFor || ''} 
-                            placeholder="e.g. Students who want to build and learn."
-                            className="form-input" 
-                            onChange={(e) => updateKitField(kitIdx, 'bestFor', e.target.value)}
                           />
                         </div>
 
@@ -1073,33 +1081,9 @@ export const AddProject = () => {
             </div>
           </div>
 
-          {/* Section 4: Media */}
+          {/* Section 4: Video Guide URL */}
           <div id="sec-media" className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>4. Media Assets</h3>
-
-            <div className="calc-row" style={{ marginBottom: 'var(--space-3)' }}>
-              <label htmlFor="proj-schematic">Schematic Graphic Link (URL)</label>
-              <Input
-                type="url"
-                id="proj-schematic"
-                className="form-input"
-                placeholder="e.g. https://example.com/assets/schematic.svg"
-                value={schematicUrl}
-                onChange={(e) => setSchematicUrl(e.target.value)}
-              />
-            </div>
-
-            <div className="calc-row" style={{ marginBottom: 'var(--space-3)' }}>
-              <label htmlFor="proj-circuit">Circuit Board Diagram Link (URL)</label>
-              <Input
-                type="url"
-                id="proj-circuit"
-                className="form-input"
-                placeholder="e.g. https://example.com/assets/circuit.svg"
-                value={circuitUrl}
-                onChange={(e) => setCircuitUrl(e.target.value)}
-              />
-            </div>
+            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>Video Guide URL</h3>
 
             <div className="calc-row">
               <label htmlFor="proj-video">Video Guide URL (YouTube embed link)</label>
@@ -1117,7 +1101,7 @@ export const AddProject = () => {
           {/* Section 5: Components */}
           <div id="sec-components" className="card-glass" style={{ padding: 'var(--space-4)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-              <h3 style={{ color: 'var(--accent-blue)' }}>5. Hardware Components</h3>
+              <h3 style={{ color: 'var(--accent-blue)' }}>Hardware Components</h3>
               <Button type="button" variant="secondary" onClick={handleAddComponent} style={{ padding: '4px 10px', fontSize: '12px' }}>
                 + Add row
               </Button>
@@ -1153,7 +1137,7 @@ export const AddProject = () => {
           {/* Section 6: Resources */}
           <div id="sec-resources" className="card-glass" style={{ padding: 'var(--space-4)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-              <h3 style={{ color: 'var(--accent-blue)' }}>6. Resource Files</h3>
+              <h3 style={{ color: 'var(--accent-blue)' }}>Resource Files</h3>
               <Button type="button" variant="secondary" onClick={handleAddResource} style={{ padding: '4px 10px', fontSize: '12px' }}>
                 + Add resource
               </Button>
@@ -1241,15 +1225,36 @@ export const AddProject = () => {
 
                     <div className="calc-row">
                       <label style={{ fontSize: '10px' }}>Availability</label>
-                      <select
-                        className="form-select"
-                        value={res.status}
-                        onChange={(e) => handleResourceChange(idx, 'status', e.target.value)}
-                        style={{ padding: '2px 4px', fontSize: '11px', height: '26px' }}
-                      >
-                        <option value="available">Available</option>
-                        <option value="coming-soon">Coming Soon</option>
-                      </select>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {[
+                          { value: 'available', label: 'Available' },
+                          { value: 'coming-soon', label: 'Coming Soon' }
+                        ].map((opt) => {
+                          const isSelected = res.status === opt.value;
+                          return (
+                            <button
+                              key={opt.value}
+                              type="button"
+                              onClick={() => handleResourceChange(idx, 'status', opt.value)}
+                              className={`admin-chip ${isSelected ? 'active' : ''}`}
+                              style={{
+                                flex: 1,
+                                padding: '6px 12px',
+                                fontSize: '11px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                background: isSelected ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
+                                border: `1px solid ${isSelected ? 'var(--accent-violet)' : 'rgba(255,255,255,0.06)'}`,
+                                color: isSelected ? '#fff' : 'var(--text-secondary)',
+                                textAlign: 'center'
+                              }}
+                            >
+                              {opt.label}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 );
@@ -1259,7 +1264,7 @@ export const AddProject = () => {
 
           {/* Section 7: Search Keywords */}
           <div id="sec-keywords" className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <h3 style={{ marginBottom: 'var(--space-2)', color: 'var(--accent-blue)' }}>7. Search Keywords</h3>
+            <h3 style={{ marginBottom: 'var(--space-2)', color: 'var(--accent-blue)' }}>Search Keywords</h3>
             <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: 'var(--space-3)' }}>
               Enter keywords separated by commas (helps precision searches & AI Finder).
             </p>
@@ -1276,7 +1281,7 @@ export const AddProject = () => {
 
           {/* Section 8: Related Projects */}
           <div id="sec-related" className="card-glass" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-5)' }}>
-            <h3 style={{ marginBottom: 'var(--space-2)', color: 'var(--accent-blue)' }}>8. Related kits recommendation</h3>
+            <h3 style={{ marginBottom: 'var(--space-2)', color: 'var(--accent-blue)' }}>Related kits recommendation</h3>
             <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: 'var(--space-3)' }}>
               Select other kits to suggest in the details footer.
             </p>

@@ -6,14 +6,25 @@ export const ROADMAP_METADATA = [
     learningGoal: 'Students understand basic charge, voltage, current, resistance, power, and circuit connections.',
     categories: [
       {
+        name: 'Introduction',
+        components: [
+          { id: 'intro-engineering', name: 'What is Engineering?', description: 'How engineers apply science and math to solve problems.', slug: 'what-is-engineering', isImplemented: true, isFundamental: true },
+          { id: 'intro-ee', name: 'What is Electrical Engineering?', description: 'Generation, transmission, and silicon chips.', slug: 'what-is-electrical-engineering', isImplemented: true, isFundamental: true },
+          { id: 'why-learn', name: 'Why Learn Electronics?', description: 'Building custom hardware and smart projects.', slug: 'why-learn-electronics', isImplemented: true, isFundamental: true }
+        ]
+      },
+      {
         name: 'Core Concepts',
         components: [
-          { id: 'electricity', name: 'What is Electricity?', description: 'The movement of charged particles.', slug: 'electricity', isImplemented: true, isFundamental: true },
+          { id: 'electricity', name: 'What is Electricity?', description: 'The movement of charged particles.', slug: 'what-is-electricity', isImplemented: true, isFundamental: true },
+          { id: 'electric-charge', name: 'Electric Charge', description: 'Positive (+) and negative (-) charges.', slug: 'electric-charge', isImplemented: true, isFundamental: true },
+          { id: 'conductors-insulators', name: 'Conductors vs Insulators', description: 'Classify materials by flow rate.', slug: 'conductors-vs-insulators', isImplemented: true, isFundamental: true },
           { id: 'voltage', name: 'Voltage', description: 'Electrical pressure that pushes electrons.', slug: 'voltage', isImplemented: true, isFundamental: true },
           { id: 'current', name: 'Current', description: 'The flow rate of electrical charge.', slug: 'current', isImplemented: true, isFundamental: true },
           { id: 'resistance', name: 'Resistance', description: 'Opposition to the flow of current.', slug: 'resistance', isImplemented: true, isFundamental: true },
           { id: 'power', name: 'Power', description: 'The rate at which electrical energy is consumed.', slug: 'power', isImplemented: true, isFundamental: true },
           { id: 'energy', name: 'Energy', description: 'Total electrical work done over time.', slug: 'energy', isImplemented: true, isFundamental: true },
+          { id: 'ohms-law', name: "Ohm's Law", description: 'Relation between voltage, current, and resistance.', slug: 'ohms-law', isImplemented: true, isFundamental: true },
           { id: 'ac-dc', name: 'AC vs DC', description: 'Alternating Current versus Direct Current.', slug: 'ac-dc', isImplemented: true, isFundamental: true }
         ]
       },
@@ -21,7 +32,16 @@ export const ROADMAP_METADATA = [
         name: 'Circuit Connections',
         components: [
           { id: 'series-circuit', name: 'Series Circuit', description: 'Single path for current flow.', slug: 'series-circuit', isImplemented: true, isFundamental: true },
-          { id: 'parallel-circuit', name: 'Parallel Circuit', description: 'Multiple paths for current flow.', slug: 'parallel-circuit', isImplemented: true, isFundamental: true }
+          { id: 'parallel-circuit', name: 'Parallel Circuit', description: 'Multiple paths for current flow.', slug: 'parallel-circuit', isImplemented: true, isFundamental: true },
+          { id: 'open-circuit', name: 'Open Circuit', description: 'A broken path that stops current flow.', slug: 'open-circuit', isImplemented: true, isFundamental: true },
+          { id: 'short-circuit', name: 'Short Circuit', description: 'Bypassing the load with near-zero resistance.', slug: 'short-circuit', isImplemented: true, isFundamental: true },
+          { id: 'electrical-safety', name: 'Electrical Safety', description: 'Safe practices when working with circuits.', slug: 'electrical-safety', isImplemented: true, isFundamental: true }
+        ]
+      },
+      {
+        name: 'Assessment',
+        components: [
+          { id: 'final-assessment', name: 'Final Assessment', description: 'Test your Electrical Basics understanding.', slug: 'final-assessment', isImplemented: true, isFundamental: true }
         ]
       }
     ]
