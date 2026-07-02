@@ -25,7 +25,7 @@ export const Header = ({ onToggleDrawer }) => {
 
   return (
     <header>
-      <div className="logo-container" onClick={() => navigate(ROUTES.HOME)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+      <div className="logo-container" onClick={() => navigate(viewMode === 'admin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.HOME)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
         {settings.websiteLogo ? (
           <img 
             src={settings.websiteLogo} 
@@ -57,21 +57,26 @@ export const Header = ({ onToggleDrawer }) => {
             className="btn-header header-admin-avatar header-role-switcher"
             id="header-settings-btn"
             style={{ 
-              padding: '8px', 
+              height: '36px',
+              padding: '0 12px', 
+              boxSizing: 'border-box',
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
-              background: 'none', 
-              border: 'none', 
+              gap: '6px',
+              background: 'rgba(255, 255, 255, 0.05)', 
+              border: '1px solid rgba(255, 255, 255, 0.15)', 
+              borderRadius: '6px',
               color: viewMode === 'admin' ? 'var(--accent-violet)' : 'var(--text-muted)', 
-              cursor: 'pointer' 
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: '500',
+              transition: 'all 0.2s ease'
             }}
             title={viewMode === 'admin' ? "Switch to User View" : "Switch to Admin View"}
           >
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
+            <span className="material-icons" style={{ fontSize: '18px' }}>swap_horiz</span>
+            <span>{viewMode === 'admin' ? 'Switch to User' : 'Switch to Admin'}</span>
           </button>
         )}
 
@@ -83,10 +88,7 @@ export const Header = ({ onToggleDrawer }) => {
           style={{ padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
           title="Notifications"
         >
-          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
+          <span className="material-icons" style={{ fontSize: '18px' }}>notifications</span>
         </button>
 
         {/* Hamburger Trigger for Mobile */}
@@ -97,11 +99,7 @@ export const Header = ({ onToggleDrawer }) => {
           style={{ padding: '8px', display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}
           title="Open Menu"
         >
-          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
+          <span className="material-icons" style={{ fontSize: '20px' }}>menu</span>
         </button>
 
         {user && (
@@ -143,11 +141,8 @@ export const Header = ({ onToggleDrawer }) => {
 
       {/* Notifications Drawer Modal */}
       <Modal isOpen={showNotifications} onClose={() => setShowNotifications(false)} className="modal-content purple" style={{ maxWidth: '400px' }}>
-        <div className="modal-icon" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--accent-violet)' }}>
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
+        <div className="modal-icon" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--accent-violet)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="material-icons-outlined" style={{ fontSize: '32px' }}>notifications</span>
         </div>
         <h4 style={{ textAlign: 'center', margin: '12px 0 6px 0', fontSize: '16px', fontWeight: '800' }}>NOTIFICATIONS</h4>
         <p style={{ fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 16px 0' }}>Stay updated on your platform activities</p>
@@ -178,12 +173,8 @@ export const Header = ({ onToggleDrawer }) => {
 
       {/* Logout Confirmation Modal */}
       <Modal isOpen={showLogoutConfirm} onClose={() => setShowLogoutConfirm(false)} className="modal-content purple" style={{ maxWidth: '360px' }}>
-        <div className="modal-icon" style={{ background: 'rgba(239, 68, 68, 0.15)', color: 'var(--accent-crimson, #ef4444)' }}>
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
+        <div className="modal-icon" style={{ background: 'rgba(239, 68, 68, 0.15)', color: 'var(--accent-crimson, #ef4444)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="material-icons-outlined" style={{ fontSize: '32px' }}>logout</span>
         </div>
         <h4 style={{ textAlign: 'center', margin: '12px 0 6px 0', fontSize: '16px', fontWeight: '800' }}>CONFIRM LOGOUT</h4>
         <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 20px 0' }}>

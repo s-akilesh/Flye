@@ -9,6 +9,51 @@ export const LearningLayout = () => {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [completedLessons, setCompletedLessons] = useState([]);
+  const [expandedSections, setExpandedSections] = useState({});
+  const [isLessonsExpanded, setIsLessonsExpanded] = useState(true);
+
+  // Auto expand parent when entering lessons path
+  useEffect(() => {
+    if (location.pathname.startsWith('/learning/fundamentals/')) {
+      setIsLessonsExpanded(true);
+    }
+  }, [location.pathname]);
+
+  // Automatically expand the section of the current active lesson on mount/navigation
+  useEffect(() => {
+    if (location.pathname.startsWith('/learning/fundamentals/')) {
+      const activeLesson = LearningRepository.getFundamentals().find(l => 
+        location.pathname.endsWith(`/${l.slug}`)
+      );
+      if (activeLesson) {
+        const sectionName = activeLesson.section || 'Introduction';
+        setExpandedSections(prev => ({
+          ...prev,
+          [sectionName]: true
+        }));
+      }
+    }
+  }, [location.pathname]);
+
+  const toggleSection = (sectionName) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionName]: !prev[sectionName]
+    }));
+  };
+
+  // Load completed lessons list from localStorage on mount and location changes
+  useEffect(() => {
+    const savedCompleted = localStorage.getItem('flyen_completed_lessons');
+    if (savedCompleted) {
+      try {
+        setCompletedLessons(JSON.parse(savedCompleted));
+      } catch (e) {}
+    } else {
+      setCompletedLessons([]);
+    }
+  }, [location.pathname]);
 
   // Manage body class and CSS variable for header stretching/shrinking
   useEffect(() => {
@@ -271,26 +316,29 @@ export const LearningLayout = () => {
 
             {/* Level 1 Group */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {!isCollapsed && (
-                <span style={{ fontSize: '10px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', paddingLeft: '12px', letterSpacing: '0.5px' }}>
-                  Level 1 — Electrical Basics
-                </span>
-              )}
               
               {/* Lessons Menu Item */}
-              <Link 
-                to="/learning/fundamentals/what-is-engineering" 
+              <div 
+                onClick={(e) => {
+                  if (location.pathname.startsWith('/learning/fundamentals/')) {
+                    e.preventDefault();
+                    setIsLessonsExpanded(!isLessonsExpanded);
+                  } else {
+                    navigate('/learning/fundamentals/what-is-engineering');
+                    setIsLessonsExpanded(true);
+                  }
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  justifyContent: isCollapsed ? 'center' : 'space-between',
                   gap: isCollapsed ? '0' : '12px',
                   padding: '10px 12px',
                   borderRadius: '6px',
                   color: location.pathname.startsWith('/learning/fundamentals/') ? 'var(--accent-violet, #8b5cf6)' : 'var(--text-secondary, #9ca3af)',
                   background: location.pathname.startsWith('/learning/fundamentals/') ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
                   border: location.pathname.startsWith('/learning/fundamentals/') ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
-                  textDecoration: 'none',
+                  cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: location.pathname.startsWith('/learning/fundamentals/') ? '700' : '500',
                   transition: 'all 0.2s ease',
@@ -298,40 +346,98 @@ export const LearningLayout = () => {
                 }}
                 className="learning-nav-item"
               >
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                </svg>
-                {!isCollapsed && <span>Lessons</span>}
-              </Link>
-
-              {/* Sub-lessons list under Lessons when expanded/active */}
-              {!isCollapsed && location.pathname.startsWith('/learning/fundamentals/') && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingLeft: '32px', borderLeft: '1px solid rgba(255,255,255,0.04)', marginLeft: '20px', marginTop: '4px' }}>
-                  {LearningRepository.getFundamentals().map((l) => {
-                    const isCur = location.pathname.endsWith(`/${l.slug}`);
-                    return (
-                      <Link
-                        key={l.id}
-                        to={`/learning/fundamentals/${l.slug}`}
-                        style={{
-                          fontSize: '12px',
-                          color: isCur ? '#fff' : 'var(--text-secondary)',
-                          fontWeight: isCur ? '700' : '500',
-                          textDecoration: 'none',
-                          padding: '4px 0',
-                          transition: 'color 0.2s',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          maxWidth: '160px'
-                        }}
-                      >
-                        {isCur ? '👉 ' : ''}{l.title}
-                      </Link>
-                    );
-                  })}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                  </svg>
+                  {!isCollapsed && <span>Lessons</span>}
                 </div>
-              )}
+                {!isCollapsed && (
+                  <span className="material-icons" style={{ fontSize: '16px', transition: 'transform 0.2s', transform: isLessonsExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+                    chevron_right
+                  </span>
+                )}
+              </div>
+
+              {/* Redesigned Sidebar Curriculum Sections */}
+              {!isCollapsed && location.pathname.startsWith('/learning/fundamentals/') && isLessonsExpanded && (() => {
+                const lessons = LearningRepository.getFundamentals();
+                const sections = [
+                  { title: 'Introduction' },
+                  { title: 'Electrical Concepts' },
+                  { title: 'Circuit Fundamentals' },
+                  { title: 'Circuit Analysis' },
+                  { title: 'Safety' },
+                  { title: 'Final Assessment' }
+                ];
+                
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingLeft: '16px', borderLeft: '1px solid rgba(255,255,255,0.04)', marginLeft: '20px', marginTop: '8px' }}>
+                    {sections.map((sect, sectIdx) => {
+                      const sectLessons = lessons.filter(l => (l.section || 'Introduction') === sect.title);
+                      if (sectLessons.length === 0) return null;
+                      
+                      return (
+                        <div key={sectIdx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {/* Section Header */}
+                          <div 
+                            onClick={() => toggleSection(sect.title)}
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'space-between',
+                              padding: '2px 0',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                          >
+                            <span style={{ fontSize: '11px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                              {sect.title}
+                            </span>
+                            <span className="material-icons" style={{ fontSize: '12px', color: 'var(--text-muted)', transition: 'transform 0.2s', transform: expandedSections[sect.title] ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+                              chevron_right
+                            </span>
+                          </div>
+                          
+                          {/* Section Lessons List */}
+                          {expandedSections[sect.title] && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '16px', borderLeft: '1px solid rgba(255,255,255,0.02)' }}>
+                              {sectLessons.map((l) => {
+                                const isCur = location.pathname.endsWith(`/${l.slug}`);
+                                
+                                return (
+                                  <Link
+                                    key={l.id}
+                                    to={`/learning/fundamentals/${l.slug}`}
+                                    style={{
+                                      fontSize: '12px',
+                                      color: isCur ? '#fff' : 'var(--text-secondary)',
+                                      fontWeight: isCur ? '750' : '500',
+                                      textDecoration: 'none',
+                                      padding: '4px 0',
+                                      transition: 'color 0.2s',
+                                      whiteSpace: 'nowrap',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      maxWidth: '160px',
+                                      display: 'flex',
+                                      alignItems: 'center'
+                                    }}
+                                  >
+                                    <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                                      {l.title}
+                                    </span>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
 
               {/* Components */}
               <Link 
@@ -434,36 +540,6 @@ export const LearningLayout = () => {
           </nav>
         </div>
 
-        {/* Bottom Section: Back Link */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {/* Back to Home Link */}
-          <Link
-            to="/"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: isCollapsed ? 'center' : 'flex-start',
-              gap: isCollapsed ? '0' : '12px',
-              padding: '10px 12px',
-              borderRadius: '6px',
-              color: 'var(--text-muted, #64748b)',
-              textDecoration: 'none',
-              fontSize: '13px',
-              fontWeight: '500',
-              whiteSpace: 'nowrap',
-              border: '1px solid transparent',
-              transition: 'all 0.2s'
-            }}
-            title={isCollapsed ? 'Back to Home' : undefined}
-            className="learning-nav-item-back"
-          >
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-            {!isCollapsed && <span>Back to Home</span>}
-          </Link>
-        </div>
       </aside>
 
       {/* Main Panel Viewport */}

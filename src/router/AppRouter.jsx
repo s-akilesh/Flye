@@ -28,6 +28,7 @@ const EngineeringWorkspace = React.lazy(() => import('../pages/learning/Engineer
 const Fundamentals = React.lazy(() => import('../pages/learning/Fundamentals').then(module => ({ default: module.Fundamentals })));
 const ComponentLibrary = React.lazy(() => import('../pages/learning/ComponentLibrary').then(module => ({ default: module.ComponentLibrary })));
 const ComponentDetails = React.lazy(() => import('../pages/learning/ComponentDetails').then(module => ({ default: module.ComponentDetails })));
+const ComponentBuildChallenge = React.lazy(() => import('../pages/learning/ComponentBuildChallenge').then(module => ({ default: module.ComponentBuildChallenge })));
 const FundamentalDetails = React.lazy(() => import('../pages/learning/FundamentalDetails').then(module => ({ default: module.FundamentalDetails })));
 const StudentDashboard = React.lazy(() => import('../pages/StudentDashboard').then(module => ({ default: module.StudentDashboard })));
 const StudentSettings = React.lazy(() => import('../pages/StudentSettings').then(module => ({ default: module.StudentSettings })));
@@ -75,6 +76,7 @@ export const AppRouter = () => {
                     <Route path={ROUTES.LEARNING_FUNDAMENTAL_DETAILS} element={<FundamentalDetails />} />
                     <Route path={ROUTES.LEARNING_COMPONENTS} element={<ComponentLibrary />} />
                     <Route path={ROUTES.LEARNING_COMPONENT_DETAILS} element={<ComponentDetails />} />
+                    <Route path={ROUTES.LEARNING_COMPONENT_BUILD} element={<ComponentBuildChallenge />} />
                   </Route>
                   
                   {/* Redirect Legacy Admin Access to Admin Login */}

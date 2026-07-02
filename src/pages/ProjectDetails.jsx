@@ -16,68 +16,35 @@ import { ProgressiveAuthModal } from '../components/auth/ProgressiveAuthModal';
 
 // Custom SVG Icons
 const DIYIcon = () => (
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-blue)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '20px', color: 'var(--accent-blue)', flexShrink: 0 }}>construction</span>
 );
 
 const CompleteIcon = () => (
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-violet)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-    <circle cx="12" cy="12" r="10" />
-    <polygon points="12 8 13.09 10.22 15.5 10.57 13.75 12.28 14.16 14.7 12 13.56 9.84 14.7 10.25 12.28 8.5 10.57 10.91 10.22 12 8" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '20px', color: 'var(--accent-violet)', flexShrink: 0 }}>workspace_premium</span>
 );
 
 const PrintedIcon = () => (
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-emerald)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-    <line x1="12" y1="22.08" x2="12" y2="12" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '20px', color: 'var(--accent-emerald)', flexShrink: 0 }}>layers</span>
 );
 
 const CustomIcon = () => (
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-    <polyline points="21 8 21 21 3 21 3 8" />
-    <rect x="1" y="3" width="22" height="5" />
-    <line x1="10" y1="12" x2="14" y2="12" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '20px', color: 'var(--text-muted)', flexShrink: 0 }}>inventory_2</span>
 );
 
 const PCBIcon = () => (
-  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="2" width="20" height="20" rx="2" />
-    <path d="M6 6h4v4H6z" />
-    <path d="M6 14h4v4H6z" />
-    <path d="M14 6h4v4h-4z" />
-    <path d="M14 14h4v4h-4z" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '14px', color: 'currentColor' }}>developer_board</span>
 );
 
 const ChipIcon = () => (
-  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="4" y="4" width="16" height="16" rx="2" />
-    <line x1="9" y1="9" x2="15" y2="9" />
-    <line x1="9" y1="13" x2="15" y2="13" />
-    <line x1="9" y1="17" x2="15" y2="17" />
-    <line x1="12" y1="4" x2="12" y2="2" />
-    <line x1="12" y1="20" x2="12" y2="22" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '14px', color: 'currentColor' }}>memory</span>
 );
 
 const CubeIcon = () => (
-  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-    <path d="M2 17l10 5 10-5" />
-    <path d="M2 12l10 5 10-5" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '14px', color: 'currentColor' }}>view_in_ar</span>
 );
 
 const BookIcon = () => (
-  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-  </svg>
+  <span className="material-icons-outlined" style={{ fontSize: '14px', color: 'currentColor' }}>menu_book</span>
 );
 
 const getKitIcon = (id) => {
@@ -100,7 +67,7 @@ export const ProjectDetails = () => {
   const { showToast } = useToast();
 
   const project = getProjectBySlug(slug);
-  const { user } = useAuth();
+  const { user, viewMode } = useAuth();
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showProgressiveAuth, setShowProgressiveAuth] = useState(false);
   const [authAction, setAuthAction] = useState('save your progress');
@@ -207,7 +174,6 @@ export const ProjectDetails = () => {
   const [contactNumber, setContactNumber] = useState('');
   const [orderStep, setOrderStep] = useState('input'); // 'input' | 'confirmed'
   const [selectedVariant, setSelectedVariant] = useState(null);
-  const [showCompare, setShowCompare] = useState(false);
 
   const openOrderModal = () => {
     const defaultKit = projectKits.find(k => k.recommended && k.recommended !== 'none') || projectKits[0];
@@ -243,7 +209,7 @@ export const ProjectDetails = () => {
     return (
       <div className="portal-section" style={{ textAlign: 'center', paddingTop: '160px' }}>
         <h2 style={{ color: 'var(--text-primary)', marginBottom: 'var(--space-4)' }}>Project not found</h2>
-        <Button className="btn-back" id="btn-back-notfound" onClick={() => navigate(ROUTES.PROJECTS)} style={{ margin: '20px auto' }}>
+        <Button className="btn-back" id="btn-back-notfound" onClick={() => navigate(viewMode === 'admin' ? ROUTES.ADMIN_PROJECTS : ROUTES.PROJECTS)} style={{ margin: '20px auto' }}>
           Back to Projects
         </Button>
       </div>
@@ -278,6 +244,7 @@ export const ProjectDetails = () => {
     <motion.section
       className="portal-section"
       id="detail-portal"
+      style={{ paddingTop: '68px' }}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
@@ -287,7 +254,7 @@ export const ProjectDetails = () => {
       <header className="mobile-learning-header">
         <button 
           type="button" 
-          onClick={() => navigate(ROUTES.PROJECTS)}
+          onClick={() => navigate(viewMode === 'admin' ? ROUTES.ADMIN_PROJECTS : ROUTES.PROJECTS)}
           style={{ 
             background: 'none', 
             border: 'none', 
@@ -299,19 +266,7 @@ export const ProjectDetails = () => {
             justifyContent: 'center'
           }}
         >
-          <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
+          <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
         </button>
         <span className="mobile-learning-title" style={{ textTransform: 'uppercase' }}>
           {title}
@@ -322,10 +277,13 @@ export const ProjectDetails = () => {
       <div
         className="portal-header"
         style={{
-          maxWidth: '100%',
-          width: '100%',
+          width: 'auto',
+          marginLeft: 'calc(-1 * var(--page-padding))',
+          marginRight: 'calc(-1 * var(--page-padding))',
           paddingLeft: 'var(--page-padding)',
           paddingRight: 'var(--page-padding)',
+          paddingTop: '12px',
+          paddingBottom: '12px',
           position: 'sticky',
           top: '68px',
           zIndex: 90,
@@ -337,10 +295,8 @@ export const ProjectDetails = () => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-          <Button variant="secondary" className="btn-back" id="btn-back-detail" onClick={() => navigate(ROUTES.PROJECTS)} style={{ padding: '8px', minWidth: 'auto' }}>
-            <svg viewBox="0 0 24 24">
-              <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
-            </svg>
+          <Button variant="secondary" className="btn-back" id="btn-back-detail" onClick={() => navigate(viewMode === 'admin' ? ROUTES.ADMIN_PROJECTS : ROUTES.PROJECTS)} style={{ padding: '8px', minWidth: 'auto' }}>
+            <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
           </Button>
           <div className="portal-title-area">
             <h2 id="detail-project-name">{title}</h2>
@@ -386,11 +342,7 @@ export const ProjectDetails = () => {
                   borderRadius: '12px'
                 }}
               >
-                <svg viewBox="0 0 24 24" style={{ width: '48px', height: '48px', fill: 'none', stroke: 'var(--accent-blue)', strokeWidth: 1 }}>
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <polyline points="21 15 16 10 5 21" />
-                </svg>
+                <span className="material-icons-outlined" style={{ fontSize: '48px', color: 'var(--accent-blue)' }}>image</span>
                 <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No image uploaded</span>
               </div>
             </div>
@@ -548,84 +500,6 @@ export const ProjectDetails = () => {
                 })}
               </div>
 
-              {/* Compare Accordion */}
-              <div className="card-glass compare-accordion" style={{ padding: '0px', marginTop: '24px', overflow: 'hidden' }}>
-                <button
-                  type="button"
-                  onClick={() => setShowCompare(!showCompare)}
-                  style={{
-                    width: '100%',
-                    background: 'none',
-                    border: 'none',
-                    padding: '16px 20px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    color: '#fff',
-                    textAlign: 'left'
-                  }}
-                >
-                  <div>
-                    <h4 style={{ fontSize: '13px', fontWeight: '800', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--accent-blue)' }}>
-                      Need Help Choosing?
-                    </h4>
-                    <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>
-                      Not sure which kit is right for you? Click here to compare features.
-                    </p>
-                  </div>
-                  <span style={{ fontSize: '18px', color: 'var(--text-muted)', transition: 'transform 200ms ease', transform: showCompare ? 'rotate(90deg)' : 'none' }}>
-                    ❯
-                  </span>
-                </button>
-
-                {showCompare && (
-                  <div style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.1)' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12.5px', color: 'var(--text-primary)' }}>
-                      <thead>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                          <th style={{ textAlign: 'left', padding: '10px', color: 'var(--text-muted)' }}>Feature</th>
-                          <th style={{ textAlign: 'center', padding: '10px', color: '#fff' }}>DIY Learning Kit</th>
-                          <th style={{ textAlign: 'center', padding: '10px', color: '#fff' }}>Complete Project Kit</th>
-                          <th style={{ textAlign: 'center', padding: '10px', color: '#fff' }}>3D Printed Parts Pack</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Electronics Included</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-red)' }}>❌ No</td>
-                        </tr>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                          <td style={{ padding: '10px', fontWeight: 'bold' }}>3D Printed Parts</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
-                        </tr>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Assembly</td>
-                          <td style={{ textAlign: 'center', padding: '10px' }}>🔧 Self Assembly</td>
-                          <td style={{ textAlign: 'center', padding: '10px' }}>📦 Pre-Assembled</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--text-muted)' }}>-</td>
-                        </tr>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Documentation</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--accent-emerald)' }}>✅ Yes</td>
-                          <td style={{ textAlign: 'center', padding: '10px', color: 'var(--text-muted)' }}>Manual Only</td>
-                        </tr>
-                        <tr>
-                          <td style={{ padding: '10px', fontWeight: 'bold' }}>Ideal For</td>
-                          <td style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Builders & Students</td>
-                          <td style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Quick Demos & Labs</td>
-                          <td style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Spare Builders</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
             </div>
 
 
@@ -959,10 +833,8 @@ export const ProjectDetails = () => {
 
       {/* 2. Expert Consultation Modal */}
       <Modal isOpen={modalType === 'expert'} onClose={() => setModalType(null)}>
-        <div className="modal-icon">
-          <svg viewBox="0 0 24 24">
-            <polyline points="20,6 9,17 4,12" />
-          </svg>
+        <div className="modal-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="material-icons" style={{ fontSize: '32px' }}>check</span>
         </div>
         <h4>EXPERT LINK ACTIVE</h4>
         <p>Your request has been logged successfully. Summary receipt details below.</p>
@@ -1030,10 +902,8 @@ export const ProjectDetails = () => {
       <Modal isOpen={targetOrderProject !== null} onClose={() => setTargetOrderProject(null)} className="modal-content purple">
         {orderStep === 'input' ? (
           <>
-            <div className="modal-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-              </svg>
+            <div className="modal-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="material-icons" style={{ fontSize: '32px', color: 'var(--accent-purple)' }}>call</span>
             </div>
             <h4>REQUEST PROJECT KIT</h4>
             <p>Enter your details below to confirm your request for <strong>{targetOrderProject?.title} ({selectedVariant?.name})</strong>.</p>
@@ -1101,10 +971,8 @@ export const ProjectDetails = () => {
           </>
         ) : (
           <>
-            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)' }}>
-              <svg viewBox="0 0 24 24">
-                <polyline points="20,6 9,17 4,12" />
-              </svg>
+            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="material-icons" style={{ fontSize: '32px' }}>check</span>
             </div>
             <h4>KIT REQUEST CONFIRMED</h4>
             <p>Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.</p>

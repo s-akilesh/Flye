@@ -1,15 +1,7 @@
 import { fundamentalsData } from './fundamentals';
 import { level1Lessons } from './level1ElectricalBasics';
-import { capacitorFamily } from './components/capacitor';
-import { resistorFamily } from './components/resistor';
-import { ledFamily } from './components/led';
+import { families } from '../components/index';
 import { ROADMAP_METADATA } from '../../constants/roadmapMetadata';
-
-const families = [
-  capacitorFamily,
-  resistorFamily,
-  ledFamily
-];
 
 const componentsData = families.reduce((acc, family) => {
   return acc.concat(family.variants);
@@ -45,12 +37,14 @@ export const LearningRepository = {
     if (family && family.variants && family.variants.length > 0) {
       return family.variants[0];
     }
-    return componentsData.find(c => c.slug === slug) || null;
+    const targetSlug = slug === 'temp-sensor' ? 'thermistor' : slug;
+    return componentsData.find(c => c.slug === targetSlug) || null;
   },
 
   // Get the parent family container for a given variant slug or family ID
   getFamilyBySlug: (slug) => {
-    return families.find(f => f.id === slug || f.variants.some(v => v.slug === slug)) || null;
+    const targetSlug = slug === 'temp-sensor' ? 'thermistor' : slug;
+    return families.find(f => f.id === targetSlug || f.variants.some(v => v.slug === targetSlug)) || null;
   },
 
   getCategories: () => {

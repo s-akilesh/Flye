@@ -55,19 +55,32 @@ export const ROADMAP_METADATA = [
       {
         name: 'Passive Components',
         components: [
-          { id: 'resistor', name: 'Resistor', description: 'Restricts the flow of electric current.', slug: 'resistor', isImplemented: true },
-          { id: 'capacitor', name: 'Capacitor', description: 'Stores electrical energy temporarily.', slug: 'capacitor', isImplemented: true },
-          { id: 'inductor', name: 'Inductor', description: 'Stores energy in a magnetic field.', slug: 'inductor', isImplemented: false },
+          { id: 'fixed-resistor', name: 'Fixed Resistor', description: 'Restricts the flow of electric current by a fixed amount.', slug: 'fixed-resistor', isImplemented: true },
+          { id: 'variable-resistor', name: 'Potentiometer', description: 'Adjustable three-terminal variable resistor.', slug: 'variable-resistor', isImplemented: true },
+          { id: 'ceramic-capacitor', name: 'Ceramic Capacitor', description: 'Non-polarized capacitor with ceramic dielectric.', slug: 'ceramic-capacitor', isImplemented: true },
+          { id: 'electrolytic-capacitor', name: 'Electrolytic Capacitor', description: 'Polarized capacitor offering higher capacitance values.', slug: 'electrolytic-capacitor', isImplemented: true },
+          { id: 'variable-capacitor', name: 'Variable Capacitor', description: 'Adjustable capacitance tuning capacitor.', slug: 'variable-capacitor', isImplemented: true },
+          { id: 'inductor', name: 'Inductor', description: 'Stores energy in a magnetic field.', slug: 'inductor', isImplemented: true },
           { id: 'transformer', name: 'Transformer', description: 'Transfers electrical energy between circuits.', slug: 'transformer', isImplemented: false }
         ]
       },
       {
         name: 'Active Components',
         components: [
-          { id: 'diode', name: 'Diode', description: 'Allows current to flow in one direction only.', slug: 'pn-junction-diode', isImplemented: true },
+          { id: 'diode', name: 'PN Junction Diode', description: 'Allows current to flow in one direction only.', slug: 'pn-junction-diode', isImplemented: true },
+          { id: 'zener-diode', name: 'Zener Diode', description: 'Regulates voltage using reverse breakdown.', slug: 'zener-diode', isImplemented: true },
+          { id: 'schottky-diode', name: 'Schottky Diode', description: 'Fast-switching diode with ultra-low voltage loss.', slug: 'schottky-diode', isImplemented: true },
+          { id: 'photodiode', name: 'Photodiode', description: 'Light-sensitive diode converting light to current.', slug: 'photodiode', isImplemented: true },
+          { id: 'laser-diode', name: 'Laser Diode', description: 'Emits coherent light via stimulated emission.', slug: 'laser-diode', isImplemented: true },
           { id: 'led', name: 'LED', description: 'Emits light when electrical current flows.', slug: 'light-emitting-diode', isImplemented: true },
-          { id: 'transistor', name: 'Transistor', description: 'Switches or amplifies electrical signals.', slug: 'transistor', isImplemented: false },
-          { id: 'mosfet', name: 'MOSFET', description: 'Field-effect transistor for switching power.', slug: 'mosfet', isImplemented: false },
+          { id: 'npn-transistor', name: 'NPN Transistor', description: 'Current-controlled switch or amplifier.', slug: 'npn-transistor', isImplemented: true },
+          { id: 'pnp-transistor', name: 'PNP Transistor', description: 'Current-controlled ground-triggered switch.', slug: 'pnp-transistor', isImplemented: true },
+          { id: 'n-channel-mosfet', name: 'N-Channel MOSFET', description: 'Voltage-controlled switch for high power.', slug: 'n-channel-mosfet', isImplemented: true },
+          { id: 'p-channel-mosfet', name: 'P-Channel MOSFET', description: 'High-side voltage-controlled switch.', slug: 'p-channel-mosfet', isImplemented: true },
+          { id: 'bridge-rectifier', name: 'Bridge Rectifier', description: 'Full-wave four-diode AC-to-DC rectifier.', slug: 'bridge-rectifier', isImplemented: true },
+          { id: 'triac', name: 'TRIAC', description: 'Solid-state switch controlling AC currents.', slug: 'triac', isImplemented: true },
+          { id: 'scr', name: 'SCR (Thyristor)', description: 'Latching unidirectional solid-state DC switch.', slug: 'scr', isImplemented: true },
+          { id: 'optocoupler', name: 'Optocoupler', description: 'Opto-isolator linking circuits using light.', slug: 'optocoupler', isImplemented: true },
           { id: 'voltage-regulator', name: 'Voltage Regulator', description: 'Stabilizes voltage levels.', slug: 'voltage-regulator', isImplemented: false }
         ]
       },
@@ -100,9 +113,9 @@ export const ROADMAP_METADATA = [
       {
         name: 'Sensors',
         components: [
-          { id: 'temp-sensor', name: 'Temperature Sensor', description: 'Measures ambient or surface temperature.', slug: 'temp-sensor', isImplemented: false },
+          { id: 'thermistor', name: 'Thermistor', description: 'Measures temperature using thermal resistance shifts.', slug: 'thermistor', isImplemented: true },
           { id: 'humidity-sensor', name: 'Humidity Sensor', description: 'Measures environmental moisture.', slug: 'humidity-sensor', isImplemented: false },
-          { id: 'ldr', name: 'LDR', description: 'Light Dependent Resistor that varies resistance based on light.', slug: 'ldr', isImplemented: false },
+          { id: 'ldr', name: 'LDR', description: 'Light Dependent Resistor that varies resistance based on light.', slug: 'ldr', isImplemented: true },
           { id: 'ultrasonic', name: 'Ultrasonic Sensor', description: 'Measures distance using sound waves.', slug: 'ultrasonic', isImplemented: false },
           { id: 'pir-motion', name: 'PIR Motion Sensor', description: 'Detects infrared heat movement.', slug: 'pir-motion', isImplemented: false },
           { id: 'gas-sensor', name: 'Gas Sensor', description: 'Measures concentrations of gas leaks.', slug: 'gas-sensor', isImplemented: false },

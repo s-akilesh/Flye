@@ -81,16 +81,29 @@ export const ProjectListing = () => {
     <motion.section
       className="portal-section portal-layout-fixed-height"
       id="kits-portal"
+      style={{ paddingTop: '68px', height: 'calc(100vh - 68px)' }}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
     >
-      <div className="portal-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)', marginBottom: 'var(--space-4)' }}>
+      <div
+        className="portal-header"
+        style={{
+          width: 'auto',
+          marginLeft: 'calc(-1 * var(--page-padding))',
+          marginRight: 'calc(-1 * var(--page-padding))',
+          paddingLeft: 'var(--page-padding)',
+          paddingRight: 'var(--page-padding)',
+          paddingTop: '12px',
+          paddingBottom: '12px',
+          background: 'rgba(10, 10, 18, 0.92)',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          marginBottom: '0px'
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
-            <svg viewBox="0 0 24 24">
-              <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
-            </svg>
+            <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
           </Button>
           <div className="portal-title-area">
             <h2>Project Kits</h2>
@@ -106,92 +119,105 @@ export const ProjectListing = () => {
               Clear AI Search ✕
             </span>
           )}
-          <span className="badge-count" id="project-count-badge">
-            {filteredList.length} Projects Found
-          </span>
         </div>
       </div>
 
-      <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
-        <AdminToolbar
-          className="marketplace-toolbar"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 100 }}
-          searchId="marketplace-search"
-          searchLabel="Search Projects"
-          searchPlaceholder="Search projects, technologies, or keywords..."
-          searchValue={searchQuery}
-          onSearchChange={(e) => setSearchQuery(e.target.value)}
-          activeFilterCount={
-            (activeCategories.includes('all') ? 0 : activeCategories.length) +
-            activeFeatures.length
-          }
-          sortValue={sortBy}
-          onSortChange={(e) => setSortBy(e.target.value)}
-          sortOptions={[
-            { value: 'popular', label: 'Most Popular' },
-            { value: 'newest', label: 'Newest' },
-            { value: 'price-low', label: 'Price: Low to High' },
-            { value: 'price-high', label: 'Price: High to Low' }
-          ]}
-          onReset={handleClearAll}
-        >
-          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Categories */}
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
-              <div className="admin-chip-group">
+      <AdminToolbar
+        className="marketplace-toolbar"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          zIndex: 100,
+          width: 'auto',
+          maxWidth: 'none',
+          marginLeft: 'calc(-1 * var(--page-padding))',
+          marginRight: 'calc(-1 * var(--page-padding))',
+          paddingLeft: 'var(--page-padding)',
+          paddingRight: 'var(--page-padding)',
+          paddingTop: '12px',
+          paddingBottom: '12px',
+          borderRadius: '0px',
+          borderLeft: 'none',
+          borderRight: 'none',
+          borderTop: 'none',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          background: 'rgba(10, 10, 18, 0.92)'
+        }}
+        searchId="marketplace-search"
+        searchLabel="Search Projects"
+        searchPlaceholder="Search projects, technologies, or keywords..."
+        searchValue={searchQuery}
+        onSearchChange={(e) => setSearchQuery(e.target.value)}
+        activeFilterCount={
+          (activeCategories.includes('all') ? 0 : activeCategories.length) +
+          activeFeatures.length
+        }
+        sortValue={sortBy}
+        onSortChange={(e) => setSortBy(e.target.value)}
+        sortOptions={[
+          { value: 'popular', label: 'Most Popular' },
+          { value: 'newest', label: 'Newest' },
+          { value: 'price-low', label: 'Price: Low to High' },
+          { value: 'price-high', label: 'Price: High to Low' }
+        ]}
+        onReset={handleClearAll}
+      >
+        <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Categories */}
+          <div className="calc-row">
+            <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
+            <div className="admin-chip-group">
+              <button
+                type="button"
+                onClick={() => toggleCategory('all')}
+                className={`admin-chip ${activeCategories.includes('all') ? 'active' : ''}`}
+              >
+                All
+              </button>
+              {Object.values(CATEGORIES).map((cat) => (
                 <button
+                  key={cat}
                   type="button"
-                  onClick={() => toggleCategory('all')}
-                  className={`admin-chip ${activeCategories.includes('all') ? 'active' : ''}`}
+                  onClick={() => toggleCategory(cat)}
+                  className={`admin-chip ${activeCategories.includes(cat) && !activeCategories.includes('all') ? 'active' : ''}`}
                 >
-                  All
+                  {CATEGORY_LABELS[cat]}
                 </button>
-                {Object.values(CATEGORIES).map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => toggleCategory(cat)}
-                    className={`admin-chip ${activeCategories.includes(cat) && !activeCategories.includes('all') ? 'active' : ''}`}
-                  >
-                    {CATEGORY_LABELS[cat]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-
-
-            {/* Included Features */}
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Included Features</label>
-              <div className="admin-chip-group">
-                <button
-                  type="button"
-                  onClick={() => {
-                    activeFeatures.forEach(f => toggleFeature(f));
-                  }}
-                  className={`admin-chip ${activeFeatures.length === 0 ? 'active' : ''}`}
-                >
-                  All
-                </button>
-                {Object.values(PROJECT_FEATURES).map((f) => (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => toggleFeature(f)}
-                    className={`admin-chip ${activeFeatures.includes(f) ? 'active' : ''}`}
-                  >
-                    {FEATURE_LABELS[f]}
-                  </button>
-                ))}
-              </div>
+              ))}
             </div>
           </div>
-        </AdminToolbar>
 
+          {/* Included Features */}
+          <div className="calc-row">
+            <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Included Features</label>
+            <div className="admin-chip-group">
+              <button
+                type="button"
+                onClick={() => {
+                  activeFeatures.forEach(f => toggleFeature(f));
+                }}
+                className={`admin-chip ${activeFeatures.length === 0 ? 'active' : ''}`}
+              >
+                All
+              </button>
+              {Object.values(PROJECT_FEATURES).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => toggleFeature(f)}
+                  className={`admin-chip ${activeFeatures.includes(f) ? 'active' : ''}`}
+                >
+                  {FEATURE_LABELS[f]}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </AdminToolbar>
+
+      <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', marginTop: '16px' }}>
         <div className="marketplace-main" style={{ width: '100%' }}>
-
           {filteredList.length > 0 ? (
             <ProjectGrid projects={filteredList} onRequestOrder={handleOpenOrderModal} />
           ) : (
@@ -218,10 +244,8 @@ export const ProjectListing = () => {
       <Modal isOpen={orderedProject !== null} onClose={() => setOrderedProject(null)} className="modal-content purple">
         {orderStep === 'input' ? (
           <>
-            <div className="modal-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-              </svg>
+            <div className="modal-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="material-icons" style={{ fontSize: '32px', color: 'var(--accent-purple)' }}>call</span>
             </div>
             <h4>REQUEST PROJECT KIT</h4>
             <p>Enter your details below to confirm your request for <strong>{orderedProject?.title}</strong>.</p>
@@ -288,10 +312,8 @@ export const ProjectListing = () => {
           </>
         ) : (
           <>
-            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)' }}>
-              <svg viewBox="0 0 24 24">
-                <polyline points="20,6 9,17 4,12" />
-              </svg>
+            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="material-icons" style={{ fontSize: '32px' }}>check</span>
             </div>
             <h4>KIT REQUEST CONFIRMED</h4>
             <p>Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.</p>

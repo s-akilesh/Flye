@@ -164,6 +164,8 @@ export const AddProject = () => {
 
   // Related Projects State (array of project IDs)
   const [relatedProjects, setRelatedProjects] = useState([]);
+  const [showRelated, setShowRelated] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Section scroll state
   const [activeSection, setActiveSection] = useState('sec-basic');
@@ -439,7 +441,7 @@ export const AddProject = () => {
         operatingVoltage: '5V DC',
         programmingLanguage: 'C++'
       },
-      relatedProjects,
+      relatedProjects: showRelated ? relatedProjects : [],
       stockStatus: 'in-stock',
       featured,
       status: targetStatus,
@@ -474,7 +476,7 @@ export const AddProject = () => {
 
   return (
     <motion.section
-      className="portal-section portal-layout-fixed-height"
+      className="portal-section portal-layout-fixed-height page-container"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
@@ -526,12 +528,10 @@ export const AddProject = () => {
       </header>
 
       {/* Header with Relocated Actions */}
-      <div className="portal-header desktop-only-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
+      <div className="portal-header desktop-only-header" style={{ maxWidth: '100%', width: '100%', paddingLeft: '0px', paddingRight: '0px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} style={{ padding: '8px', minWidth: 'auto' }}>
-            <svg viewBox="0 0 24 24">
-              <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
-            </svg>
+            <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
           </Button>
           <div className="portal-title-area">
             <h2>Create New Engineering Kit</h2>
@@ -551,7 +551,7 @@ export const AddProject = () => {
         </div>
       </div>
 
-      <div className="portal-content-flex" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
+      <div className="portal-content-flex" style={{ maxWidth: '100%', width: '100%', paddingLeft: '0px', paddingRight: '0px' }}>
         {/* Left Sticky Section Navigation */}
         <div className="portal-form-navigation">
           <button
@@ -860,7 +860,7 @@ export const AddProject = () => {
                   style={{ padding: '4px 10px', fontSize: '11px' }}
                   onClick={handleAddCustomKit}
                 >
-                  + Add Custom Kit
+                  Add Custom Kit
                 </button>
               </div>
 
@@ -1103,7 +1103,7 @@ export const AddProject = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
               <h3 style={{ color: 'var(--accent-blue)' }}>Hardware Components</h3>
               <Button type="button" variant="secondary" onClick={handleAddComponent} style={{ padding: '4px 10px', fontSize: '12px' }}>
-                + Add row
+                Add row
               </Button>
             </div>
             <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: 'var(--space-3)' }}>
@@ -1139,7 +1139,7 @@ export const AddProject = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
               <h3 style={{ color: 'var(--accent-blue)' }}>Resource Files</h3>
               <Button type="button" variant="secondary" onClick={handleAddResource} style={{ padding: '4px 10px', fontSize: '12px' }}>
-                + Add resource
+                Add resource
               </Button>
             </div>
 
@@ -1281,39 +1281,105 @@ export const AddProject = () => {
 
           {/* Section 8: Related Projects */}
           <div id="sec-related" className="card-glass" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-5)' }}>
-            <h3 style={{ marginBottom: 'var(--space-2)', color: 'var(--accent-blue)' }}>Related kits recommendation</h3>
-            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: 'var(--space-3)' }}>
-              Select other kits to suggest in the details footer.
-            </p>
-            <div style={{ maxHeight: '140px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', padding: '6px', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '4px', background: 'rgba(0,0,0,0.1)' }}>
-              {allProjects.map((p) => (
-                <label key={p.id} style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '12px', cursor: 'pointer', margin: 0 }}>
-                  <input
-                    type="checkbox"
-                    checked={relatedProjects.includes(p.id)}
-                    onChange={() => handleToggleRelated(p.id)}
-                    style={{ cursor: 'pointer' }}
-                  />
-                  {p.title}
-                </label>
-              ))}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
+              <div>
+                <h3 style={{ marginBottom: 'var(--space-1)', color: 'var(--accent-blue)' }}>Related kits recommendation</h3>
+                <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>
+                  Select other kits to suggest in the details footer.
+                </p>
+              </div>
+              {/* Toggle switch */}
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
+                <span style={{ fontSize: '12px', color: showRelated ? 'var(--accent-violet)' : 'var(--text-muted)', fontWeight: 500 }}>
+                  {showRelated ? 'Enabled' : 'Disabled'}
+                </span>
+                <div 
+                  onClick={() => setShowRelated(!showRelated)}
+                  style={{
+                    width: '38px',
+                    height: '20px',
+                    borderRadius: '10px',
+                    background: showRelated ? 'var(--accent-violet)' : 'rgba(255,255,255,0.1)',
+                    position: 'relative',
+                    transition: 'background 0.2s',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <div style={{
+                    width: '14px',
+                    height: '14px',
+                    borderRadius: '50%',
+                    background: '#fff',
+                    position: 'absolute',
+                    top: '3px',
+                    left: showRelated ? '21px' : '3px',
+                    transition: 'left 0.2s'
+                  }} />
+                </div>
+              </label>
             </div>
+
+            {showRelated && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <input
+                    type="text"
+                    placeholder="Search projects to relate..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="form-input"
+                    style={{
+                      height: '36px',
+                      paddingLeft: '32px',
+                      paddingRight: '12px',
+                      fontSize: '12px'
+                    }}
+                  />
+                  <span className="material-icons-outlined" style={{
+                    position: 'absolute',
+                    left: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    fontSize: '16px',
+                    color: 'var(--text-muted)'
+                  }}>
+                    search
+                  </span>
+                </div>
+                
+                {/* Scrollable Checkbox List */}
+                <div style={{ maxHeight: '160px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', padding: '10px', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '6px', background: 'rgba(0,0,0,0.15)' }}>
+                  {allProjects.filter((p) =>
+                    p.title.toLowerCase().includes(searchQuery.toLowerCase())
+                  ).length > 0 ? (
+                    allProjects
+                      .filter((p) => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .map((p) => (
+                        <label key={p.id} style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '12px', cursor: 'pointer', margin: 0, padding: '4px 0' }}>
+                          <input
+                            type="checkbox"
+                            checked={relatedProjects.includes(p.id)}
+                            onChange={() => handleToggleRelated(p.id)}
+                            style={{ cursor: 'pointer' }}
+                          />
+                          <span style={{ color: relatedProjects.includes(p.id) ? '#fff' : 'var(--text-secondary)' }}>
+                            {p.title}
+                          </span>
+                        </label>
+                      ))
+                  ) : (
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', padding: '12px 0' }}>
+                      No projects found matching search.
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </form>
       </div>
 
-      {/* Mobile Sticky Action Bar */}
-      <div className="mobile-sticky-actions">
-        <Button variant="ghost" onClick={() => navigate(ROUTES.ADMIN_PROJECTS)} className="btn-mobile-action">
-          Cancel
-        </Button>
-        <Button variant="secondary" onClick={() => handleSaveProject('draft')} className="btn-mobile-action" disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Draft'}
-        </Button>
-        <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-mobile-action btn-submit-calc" disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Publish'}
-        </Button>
-      </div>
+
     </motion.section>
   );
 };

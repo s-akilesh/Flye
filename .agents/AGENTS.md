@@ -253,3 +253,53 @@ Before approving any new screen ask:
 5. Does it improve the user journey?
 
 If the answer is "No" to any item, revise before implementation.
+
+---
+
+## 16. Architecture Enhancement – Data-Driven Component Development Rule
+
+This is a mandatory architecture rule for the Flyen Component Library.
+
+Do **not** treat each new electronic component as a new feature.
+
+The Component Learning Engine has already been completed and should now become the single reusable rendering engine for all current and future components.
+
+### Core Development Principle
+From this point forward, **adding a new component must never require building new page layouts or modifying existing React UI components** unless a completely new platform-wide feature is being introduced. The UI architecture is considered complete. Future work should focus on **content and structured data**, not additional UI development.
+
+### Standard Workflow for Every New Component
+1. Create Component Data File (e.g. `src/data/components/passive/capacitor.js`).
+2. Add SVG / Visual Assets (illustrations, exploded layers, circuit symbol, pin diagram, wiring guide).
+3. Register Component (component index or routes config).
+4. Automatically render using existing Component Learning Engine.
+
+### Reusable Architecture Rule
+The following React components are considered reusable platform components. They must dynamically render based entirely on the component data model and must never be duplicated or recreated for individual components:
+- ComponentLearningEngine
+- ComponentDetails
+- ComponentExplorer
+- ExplodedView
+- AssemblyView
+- InternalWorkingView
+- PinExplorer
+- CircuitViewer
+- BeforeYouStartCard
+- ProgressCard
+- SpecificationCard
+- EngineeringChecklist
+- ComponentComparison
+- AiLearningAssistant
+- QuizCard
+- BuildItYourselfCard
+- RelatedComponents
+- RelatedProjects
+- ContinueLearningFooter
+
+### Feature Expansion Rule
+If a future feature is introduced (e.g., AR View, 3D Viewer, AI Circuit Simulator, Engineering Lab, etc.), implement it once inside the reusable Component Learning Engine. Every existing and future component should automatically gain the new capability without requiring modifications to individual component files.
+
+### Scalability and Maintainability Goals
+- The architecture should support 500+ components, keeping the workflow identical.
+- Improving a reusable UI component automatically updates every component page.
+- Render entirely from structured data with optimized bundle sizes, lazy loading where appropriate, and zero layout duplication.
+

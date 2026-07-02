@@ -482,7 +482,7 @@ export const ManageProjects = () => {
                     onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
                     onMouseLeave={(e) => e.target.style.background = 'none'}
                   >
-                    <span className="material-icons" style={{ fontSize: '16px' }}>download</span>
+                    <span className="material-icons-outlined" style={{ fontSize: '16px' }}>download</span>
                     Import
                   </button>
                   <button
@@ -505,7 +505,7 @@ export const ManageProjects = () => {
                     onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
                     onMouseLeave={(e) => e.target.style.background = 'none'}
                   >
-                    <span className="material-icons" style={{ fontSize: '16px' }}>upload</span>
+                    <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span>
                     Export
                   </button>
                   <button
@@ -528,7 +528,7 @@ export const ManageProjects = () => {
                     onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
                     onMouseLeave={(e) => e.target.style.background = 'none'}
                   >
-                    <span className="material-icons" style={{ fontSize: '16px' }}>description</span>
+                    <span className="material-icons-outlined" style={{ fontSize: '16px' }}>description</span>
                     Template
                   </button>
                 </div>
@@ -558,7 +558,7 @@ export const ManageProjects = () => {
             disabled={isProcessing}
             style={{ fontSize: '13px', padding: '8px 16px' }}
           >
-            + Add New Kit
+            Add New Kit
           </Button>
         </div>
       </div>
@@ -623,7 +623,7 @@ export const ManageProjects = () => {
                   disabled={isProcessing}
                   style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  📥 Template
+                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>description</span> Template
                 </Button>
                 <Button
                   variant="secondary"
@@ -631,7 +631,7 @@ export const ManageProjects = () => {
                   disabled={isProcessing}
                   style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  📤 Export Excel
+                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span> Export Excel
                 </Button>
                 <Button
                   variant="secondary"
@@ -639,7 +639,7 @@ export const ManageProjects = () => {
                   disabled={isProcessing}
                   style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  📥 Import Excel
+                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>download</span> Import Excel
                 </Button>
               </>
             }

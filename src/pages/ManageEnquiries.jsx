@@ -275,7 +275,7 @@ export const ManageEnquiries = () => {
             color: '#fff'
           }}
         >
-          <span className="material-icons" style={{ fontSize: '16px' }}>file_upload</span>
+          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span>
           Export
         </Button>
       </header>
@@ -295,23 +295,23 @@ export const ManageEnquiries = () => {
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text-primary)', margin: 'var(--space-2) 0 0 0' }}>{totalEnquiries}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟡 New Enquiries</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>New Enquiries</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: '#eab308', margin: 'var(--space-2) 0 0 0' }}>{newCount}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🔵 Contacted</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Contacted</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-blue)', margin: 'var(--space-2) 0 0 0' }}>{contactedCount}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟣 Quoted</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Quoted</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-violet)', margin: 'var(--space-2) 0 0 0' }}>{quotedCount}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🟢 Completed</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Completed</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-emerald)', margin: 'var(--space-2) 0 0 0' }}>{completedCount}</h3>
           </Card>
           <Card style={{ padding: 'var(--space-4)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>🔴 Rejected</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Rejected</span>
             <h3 style={{ fontSize: '28px', fontWeight: '700', color: 'var(--accent-crimson, #ef4444)', margin: 'var(--space-2) 0 0 0' }}>{rejectedCount}</h3>
           </Card>
         </div>
@@ -353,7 +353,7 @@ export const ManageEnquiries = () => {
                 disabled={isProcessing}
                 style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
               >
-                📤 Export Excel
+                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span> Export Excel
               </Button>
             }
           >

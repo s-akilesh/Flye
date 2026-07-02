@@ -257,52 +257,78 @@ export const AchievementCard = ({ title, description, badge }) => (
 );
 
 // 10. ProgressCard
-export const ProgressCard = ({ stats }) => (
-  <div 
-    className="card-glass" 
-    style={{ 
-      padding: '20px', 
-      borderRadius: '12px', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      gap: '16px'
-    }}
-  >
-    <div>
-      <span style={{ fontSize: '9px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-        Electrical Basics Progress
-      </span>
-      <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#fff', margin: '4px 0 0 0' }}>
-        Level {stats.level} Mastery
-      </h3>
+export const ProgressCard = ({ stats }) => {
+  const estimatedTimeRemaining = Math.max(0, (stats.total - stats.completed) * 3); // Assume 3 min avg per remaining lesson
+  
+  return (
+    <div 
+      className="card-glass" 
+      style={{ 
+        padding: '24px', 
+        borderRadius: '12px', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '16px',
+        border: '1px solid rgba(255, 255, 255, 0.06)'
+      }}
+    >
+      <div>
+        <span style={{ fontSize: '9px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+          Course Progress
+        </span>
+        <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#fff', margin: '4px 0 0 0', letterSpacing: '-0.4px' }}>
+          Electrical Basics
+        </h3>
+      </div>
+      
+      {/* Progress Bar */}
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px' }}>
+          <span style={{ color: 'var(--text-muted)' }}>Progress</span>
+          <span style={{ color: 'var(--accent-violet)', fontWeight: 'bold' }}>{stats.percentage}% Complete</span>
+        </div>
+        <div style={{ height: '8px', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', overflow: 'hidden', position: 'relative' }}>
+          <div 
+            style={{ 
+              width: `${stats.percentage}%`, 
+              height: '100%', 
+              background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-violet))',
+              borderRadius: '4px',
+              boxShadow: '0 0 8px var(--accent-violet)'
+            }} 
+          />
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '4px' }}>
+        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.02)' }}>
+          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Lessons Completed</span>
+          <span style={{ fontSize: '15px', color: '#fff', fontWeight: '800', display: 'block', marginTop: '4px' }}>{stats.completed} / {stats.total}</span>
+        </div>
+        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.02)' }}>
+          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>XP Balance</span>
+          <span style={{ fontSize: '15px', color: '#fbbf24', fontWeight: '800', display: 'block', marginTop: '4px' }}>⭐ {stats.xp} XP</span>
+        </div>
+        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.02)' }}>
+          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Time Remaining</span>
+          <span style={{ fontSize: '15px', color: '#fff', fontWeight: '800', display: 'block', marginTop: '4px' }}>⏱️ ~{estimatedTimeRemaining} min</span>
+        </div>
+        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.02)' }}>
+          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Learning Streak</span>
+          <span style={{ fontSize: '15px', color: '#fbbf24', fontWeight: '800', display: 'block', marginTop: '4px' }}>🔥 {stats.streak} Days</span>
+        </div>
+      </div>
+      
+      {/* Badge Progress Placeholder */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', background: 'rgba(251, 191, 36, 0.02)', border: '1px solid rgba(251, 191, 36, 0.1)', borderRadius: '8px' }}>
+        <span style={{ fontSize: '16px' }}>🏆</span>
+        <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: '600' }}>
+          {stats.completed >= stats.total ? 'Mastery Badge Unlocked!' : `${stats.total - stats.completed} more lessons for Mastery Badge`}
+        </span>
+      </div>
     </div>
-    
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-      <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.02)' }}>
-        <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>XP EARNED</span>
-        <p style={{ fontSize: '16px', color: '#fff', margin: '2px 0 0 0', fontWeight: 'bold' }}>{stats.xp} XP</p>
-      </div>
-      <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.02)' }}>
-        <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>COMPLETED</span>
-        <p style={{ fontSize: '16px', color: '#fff', margin: '2px 0 0 0', fontWeight: 'bold' }}>{stats.completed}/{stats.total}</p>
-      </div>
-      <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.02)' }}>
-        <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>STREAK</span>
-        <p style={{ fontSize: '16px', color: '#fbbf24', margin: '2px 0 0 0', fontWeight: 'bold' }}>🔥 {stats.streak} Days</p>
-      </div>
-    </div>
-    
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px' }}>
-        <span style={{ color: 'var(--text-muted)' }}>Overall Mastery</span>
-        <span style={{ color: 'var(--accent-violet)', fontWeight: 'bold' }}>{stats.percentage}%</span>
-      </div>
-      <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
-        <div style={{ width: `${stats.percentage}%`, height: '100%', background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-violet))' }} />
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 // 11. QuizCard
 export const QuizCard = ({ quiz, onQuizSubmit }) => {
@@ -503,6 +529,162 @@ export const NavigationFooter = ({ currentProgress = 50, onPrev, onNext, prevLab
           {nextLabel} →
         </button>
       ) : <div />}
+    </div>
+  </div>
+);
+
+// 13. SectionTitle
+export const SectionTitle = ({ label }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '32px 0 16px 0' }}>
+    <span style={{ fontSize: '11px', fontWeight: '850', textTransform: 'uppercase', color: 'var(--accent-blue)', letterSpacing: '1.5px', whiteSpace: 'nowrap' }}>
+      {label}
+    </span>
+    <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)', width: '100%' }} />
+  </div>
+);
+
+// 14. LearningCard
+export const LearningCard = ({ type = 'learn', title, description }) => {
+  let icon = '📖';
+  let color = 'var(--accent-blue)';
+  let bg = 'rgba(59, 130, 246, 0.02)';
+  let border = '1px solid rgba(59, 130, 246, 0.15)';
+
+  if (type === 'goal') {
+    icon = '🎯';
+    color = 'var(--accent-emerald)';
+    bg = 'rgba(16, 185, 129, 0.02)';
+    border = '1px solid rgba(16, 185, 129, 0.15)';
+  } else if (type === 'why') {
+    icon = '💡';
+    color = '#fbbf24';
+    bg = 'rgba(251, 191, 36, 0.02)';
+    border = '1px solid rgba(251, 191, 36, 0.15)';
+  }
+
+  return (
+    <div 
+      className="card-glass" 
+      style={{ 
+        padding: '16px 20px', 
+        display: 'flex', 
+        gap: '16px',
+        background: bg,
+        border: border,
+        borderRadius: '12px',
+        alignItems: 'flex-start'
+      }}
+    >
+      <div style={{ fontSize: '24px', flexShrink: 0, marginTop: '2px' }}>{icon}</div>
+      <div>
+        <h4 style={{ fontSize: '13px', fontWeight: '850', color: color, textTransform: 'uppercase', margin: '0 0 4px 0', letterSpacing: '0.5px' }}>
+          {title}
+        </h4>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+// 15. TipCard
+export const TipCard = ({ description }) => (
+  <div 
+    className="card-glass" 
+    style={{ 
+      padding: '16px 20px', 
+      background: 'rgba(139, 92, 246, 0.02)',
+      border: '1px solid rgba(139, 92, 246, 0.15)',
+      borderRadius: '12px',
+      display: 'flex',
+      gap: '12px',
+      alignItems: 'flex-start'
+    }}
+  >
+    <div style={{ fontSize: '18px', flexShrink: 0 }}>💡</div>
+    <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+      <strong style={{ color: 'var(--accent-violet)', display: 'block', marginBottom: '2px', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.5px' }}>
+        Tip / Highlighted Note
+      </strong>
+      {description}
+    </div>
+  </div>
+);
+
+// 16. WarningCard
+export const WarningCard = ({ title, description }) => (
+  <div 
+    className="card-glass" 
+    style={{ 
+      padding: '16px 20px', 
+      background: 'rgba(239, 68, 68, 0.02)',
+      border: '1px solid rgba(239, 68, 68, 0.15)',
+      borderRadius: '12px',
+      display: 'flex',
+      gap: '12px',
+      alignItems: 'flex-start'
+    }}
+  >
+    <div style={{ fontSize: '18px', flexShrink: 0 }}>⚠️</div>
+    <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+      <strong style={{ color: 'var(--accent-crimson, #ef4444)', display: 'block', marginBottom: '2px', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.5px' }}>
+        {title}
+      </strong>
+      {description}
+    </div>
+  </div>
+);
+
+// 17. ExperimentCard
+export const ExperimentCard = ({ title, description, steps }) => (
+  <div 
+    className="card-glass" 
+    style={{ 
+      padding: '20px', 
+      border: '1px solid rgba(59, 130, 246, 0.15)', 
+      background: 'rgba(59, 130, 246, 0.02)',
+      borderRadius: '12px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '16px'
+    }}
+  >
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <span style={{ fontSize: '18px' }}>🛠️</span>
+      <span style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--accent-blue)', letterSpacing: '0.5px' }}>
+        {title}
+      </span>
+    </div>
+    <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
+      {description}
+    </p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '4px' }}>
+      <span style={{ fontSize: '10px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+        Lab Steps
+      </span>
+      {steps.map((step, idx) => (
+        <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <span style={{ 
+            fontSize: '11px', 
+            fontWeight: '800', 
+            color: 'var(--accent-blue)', 
+            background: 'rgba(59, 130, 246, 0.1)', 
+            width: '20px', 
+            height: '20px', 
+            borderRadius: '4px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            {idx + 1}
+          </span>
+          <span style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+            {step}
+          </span>
+        </div>
+      ))}
     </div>
   </div>
 );

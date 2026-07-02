@@ -7,17 +7,17 @@ export const ComponentLibrary = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Load parent component families
-  const families = useMemo(() => LearningRepository.getFamilies(), []);
+  // Load individual components
+  const components = useMemo(() => LearningRepository.getComponents(), []);
   
   // Get all unique categories for tabs
   const categories = useMemo(() => {
     const cats = new Set();
-    families.forEach(f => {
-      if (f.category) cats.add(f.category);
+    components.forEach(c => {
+      if (c.category) cats.add(c.category);
     });
     return ['All', ...Array.from(cats)];
-  }, [families]);
+  }, [components]);
 
   // Filter States
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -31,35 +31,28 @@ export const ComponentLibrary = () => {
     }
   }, [searchParams]);
 
-  // Perform dynamic filtering of parent families
-  const filteredFamilies = useMemo(() => {
-    return families.filter((family) => {
-      const matchesCategory = selectedCategory === 'All' || family.category === selectedCategory;
+  // Perform dynamic filtering of components
+  const filteredComponents = useMemo(() => {
+    return components.filter((comp) => {
+      const matchesCategory = selectedCategory === 'All' || comp.category === selectedCategory;
       
       const query = searchQuery.toLowerCase().trim();
       if (!query) return matchesCategory;
 
-      // Matches family name/desc/category or matches any of its variants
-      const matchesFamily = 
-        family.name.toLowerCase().includes(query) ||
-        (family.description || '').toLowerCase().includes(query) ||
-        family.category.toLowerCase().includes(query);
-      
-      const matchesVariants = family.variants?.some(v => 
-        v.name.toLowerCase().includes(query) ||
-        v.description.toLowerCase().includes(query)
+      return matchesCategory && (
+        comp.name.toLowerCase().includes(query) ||
+        (comp.description || '').toLowerCase().includes(query) ||
+        comp.category.toLowerCase().includes(query)
       );
-
-      return matchesCategory && (matchesFamily || matchesVariants);
     });
-  }, [families, selectedCategory, searchQuery]);
+  }, [components, selectedCategory, searchQuery]);
 
   return (
     <div>
       <div className="workspace-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1>Explore Components</h1>
-          <p>Explore basic component families and take them apart to inspect their internal anatomy.</p>
+          <p>Explore basic electrical components, inspect their internal anatomy, and build practical circuits.</p>
         </div>
 
         {/* Search Bar */}
@@ -85,7 +78,7 @@ export const ComponentLibrary = () => {
             What am I learning?
           </span>
           <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-            Parent components and electronic families. Instead of scanning single parts, you learn their general category and main physics goals.
+            Independent electronic components. Every component is treated as its own complete topic with targeted learning goals.
           </p>
         </div>
         
@@ -94,7 +87,7 @@ export const ComponentLibrary = () => {
             Why is it important?
           </span>
           <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-            Grouping components into families simplifies your learning curve. Once you master a Resistor or Capacitor, you understand all its subclasses.
+            Students search, track, and complete lessons for each component individually. Achievements, XP points, and quizzes are tracked per component.
           </p>
         </div>
         
@@ -103,7 +96,7 @@ export const ComponentLibrary = () => {
             What should I learn next?
           </span>
           <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-            Select a component card (like <strong>Capacitor</strong>) to open its workspace, then toggle variants to compare electrolytic and ceramic structures.
+            Select any component card (such as <strong>LDR</strong> or <strong>Thermistor</strong>) to inspect its layers, take its quiz, and complete the build challenge.
           </p>
         </div>
       </div>
@@ -130,36 +123,33 @@ export const ComponentLibrary = () => {
       </div>
 
       {/* Components Grid */}
-      {filteredFamilies.length > 0 ? (
+      {filteredComponents.length > 0 ? (
         <div className="component-card-grid">
-          {filteredFamilies.map((family) => {
-            // Get sample details from first variant
-            const sampleVariant = family.variants?.[0] || {};
-            
+          {filteredComponents.map((comp) => {
             return (
               <div
-                key={family.id}
+                key={comp.slug}
                 className="workspace-card component-card"
-                onClick={() => navigate(`${ROUTES.LEARNING_COMPONENTS}/${family.id}`)}
+                onClick={() => navigate(`${ROUTES.LEARNING_COMPONENTS}/${comp.slug}`)}
                 style={{ cursor: 'pointer' }}
               >
                 <div className="component-card-header">
-                  <span className="component-card-category">{family.category}</span>
-                  {sampleVariant.symbolSvg && (
+                  <span className="component-card-category">{comp.category}</span>
+                  {comp.symbolSvg && (
                     <div 
                       className="component-card-symbol"
-                      dangerouslySetInnerHTML={{ __html: sampleVariant.symbolSvg }}
+                      dangerouslySetInnerHTML={{ __html: comp.symbolSvg }}
                     />
                   )}
                 </div>
-                <h3 className="component-card-title">{family.name}</h3>
+                <h3 className="component-card-title">{comp.name}</h3>
                 <p className="component-card-desc">
-                  {sampleVariant.description || 'Explore the complete family of variants, internal layers, schematic specifications and everyday applications.'}
+                  {comp.description || 'Explore internal anatomy, exploded view layers, schematic specifications, quiz assessments, and build guides.'}
                 </p>
                 
                 <div className="component-card-footer">
                   <span style={{ fontSize: '11px', color: 'var(--accent-blue)', fontWeight: '600' }}>
-                    Open Family Workspace ({family.variants?.length || 0} variants) →
+                    Start Learning Component →
                   </span>
                 </div>
               </div>
@@ -170,10 +160,10 @@ export const ComponentLibrary = () => {
         /* Empty State */
         <div className="workspace-card" style={{ padding: '64px 32px', textAlign: 'center', opacity: 0.8 }}>
           <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '8px' }}>
-            No Component Families Found
+            No Components Found
           </h3>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>
-            We couldn't find any component families matching "{searchQuery}". Try clearing search or selecting another category.
+            We couldn't find any components matching "{searchQuery}". Try clearing search or selecting another category.
           </p>
           <button 
             className="product-btn" 

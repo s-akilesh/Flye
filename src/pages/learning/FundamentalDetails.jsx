@@ -13,7 +13,12 @@ import {
   QuizCard,
   ProgressCard,
   AchievementCard,
-  NavigationFooter
+  NavigationFooter,
+  SectionTitle,
+  LearningCard,
+  TipCard,
+  WarningCard,
+  ExperimentCard
 } from '../../components/learning/lesson/LessonComponents';
 import { ExperimentWidget } from '../../components/learning/lesson/ExperimentWidgets';
 
@@ -183,51 +188,133 @@ export const FundamentalDetails = () => {
             </div>
           </div>
 
-          {/* SVG illustration & experiment simulation widget */}
-          <ExperimentWidget slug={lesson.slug} />
-
-          {/* Working Principle section */}
-          <div className="card-glass" style={{ padding: '24px', background: 'rgba(255,255,255,0.005)', borderRadius: '12px' }}>
-            <span style={{ fontSize: '10px', fontWeight: '850', textTransform: 'uppercase', color: 'var(--accent-emerald)', letterSpacing: '0.5px' }}>
-              🔬 Working Principle
-            </span>
-            <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.5', marginTop: '12px', margin: '12px 0 0 0' }}>
-              {lesson.workingPrinciple}
-            </p>
-          </div>
-
-          {/* Formula Card if available */}
-          {lesson.formula && (
-            <FormulaCard 
-              equation={lesson.formula.equation} 
-              variables={lesson.formula.variables} 
-            />
+          {/* Key Concepts (Learning Cards) */}
+          {lesson.keyConcepts && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <SectionTitle label="Key Concepts" />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                <LearningCard 
+                  type="learn" 
+                  title="What you will learn" 
+                  description={
+                    <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '13px' }}>
+                      {lesson.keyConcepts.map((item, idx) => (
+                        <li key={idx} style={{ marginBottom: '4px' }}>{item}</li>
+                      ))}
+                    </ul>
+                  } 
+                />
+                <LearningCard 
+                  type="goal" 
+                  title="Learning Goal" 
+                  description={lesson.learningObjective} 
+                />
+                {lesson.whyItMatters && (
+                  <LearningCard 
+                    type="why" 
+                    title="Why it matters" 
+                    description={lesson.whyItMatters} 
+                  />
+                )}
+              </div>
+            </div>
           )}
 
-          {/* Real World Applications section */}
+          {/* Visual Explanation & Simulator */}
           <div>
-            <SectionDivider label="Real World Applications" />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginTop: '12px' }}>
-              {lesson.applications.map((app, idx) => (
-                <ApplicationCard
-                  key={idx}
-                  title={app.title}
-                  value={app.value}
-                  description={app.description}
-                />
-              ))}
+            <SectionTitle label="Visual Explanation & Lab" />
+            <ExperimentWidget slug={lesson.slug} />
+          </div>
+
+          {/* Working Principle section */}
+          <div>
+            <SectionTitle label="Working Principle" />
+            <div className="card-glass" style={{ padding: '24px', background: 'rgba(255,255,255,0.005)', borderRadius: '12px', borderLeft: '3px solid var(--accent-emerald)' }}>
+              <p style={{ fontSize: '14.5px', color: 'var(--text-secondary)', lineHeight: '1.6', margin: 0 }}>
+                {lesson.workingPrinciple}
+              </p>
             </div>
           </div>
 
+          {/* Real World Applications or Technical Specifications */}
+          {lesson.applications && lesson.applications.length > 0 ? (
+            <div>
+              <SectionTitle label="Real World Applications" />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                {lesson.applications.map((app, idx) => (
+                  <ApplicationCard
+                    key={idx}
+                    title={app.title}
+                    value={app.value}
+                    description={app.description}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : lesson.specs && lesson.specs.length > 0 ? (
+            <div>
+              <SectionTitle label="Technical Specifications" />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                {lesson.specs.map((spec, idx) => (
+                  <div 
+                    key={idx}
+                    className="card-glass" 
+                    style={{ 
+                      padding: '16px 20px', 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: '4px',
+                      background: 'rgba(255,255,255,0.005)',
+                      borderRadius: '12px'
+                    }}
+                  >
+                    <span style={{ fontSize: '10px', fontWeight: '750', textTransform: 'uppercase', color: 'var(--accent-blue)', letterSpacing: '0.5px' }}>
+                      {spec.label}
+                    </span>
+                    <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#fff', margin: '4px 0 0 0' }}>
+                      {spec.value}
+                    </h3>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {/* Formula Card or Note Card if available */}
+          {lesson.formula && (
+            <div>
+              <SectionTitle label="Key Formula & Calculations" />
+              <FormulaCard 
+                equation={lesson.formula.equation} 
+                variables={lesson.formula.variables} 
+              />
+            </div>
+          )}
+
+          {/* Hands-on Mini Experiment */}
+          {lesson.miniExperiment && (
+            <div>
+              <SectionTitle label="Hands-on Mini Experiment" />
+              <ExperimentCard 
+                title={lesson.miniExperiment.title} 
+                description={lesson.miniExperiment.description} 
+                steps={lesson.miniExperiment.steps} 
+              />
+            </div>
+          )}
+
           {/* Common Mistakes */}
           {lesson.commonMistakes && lesson.commonMistakes.length > 0 && (
-            <CommonMistakes mistakes={lesson.commonMistakes} />
+            <div>
+              <SectionTitle label="Avoid Common Mistakes" />
+              <CommonMistakes mistakes={lesson.commonMistakes} />
+            </div>
           )}
 
           {/* Interactive Quiz card */}
           {lesson.quiz && lesson.quiz.length > 0 && (
             <div>
-              <SectionDivider label="Quick Check Quiz" />
+              <SectionTitle label="Concept Challenge Quiz" />
               <QuizCard 
                 quiz={lesson.quiz[0]} 
                 onQuizSubmit={handleQuizSubmit} 
@@ -236,25 +323,28 @@ export const FundamentalDetails = () => {
           )}
 
           {/* Related Hardware Components & Projects */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div>
-              <span style={{ fontSize: '10px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', letterSpacing: '0.5px' }}>
-                Related Components
-              </span>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {lesson.relatedComponents.map((comp, idx) => (
-                  <ComponentCard key={idx} name={comp.name} description={comp.description} />
-                ))}
+          <div>
+            <SectionTitle label="Related Hardware & Projects" />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+              <div>
+                <span style={{ fontSize: '10px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', letterSpacing: '0.5px' }}>
+                  Related Components
+                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {lesson.relatedComponents.map((comp, idx) => (
+                    <ComponentCard key={idx} name={comp.name} description={comp.description} />
+                  ))}
+                </div>
               </div>
-            </div>
-            <div>
-              <span style={{ fontSize: '10px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', letterSpacing: '0.5px' }}>
-                Related Projects
-              </span>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {lesson.relatedProjects.map((proj, idx) => (
-                  <ComponentCard key={idx} name={proj.name} description={proj.description} />
-                ))}
+              <div>
+                <span style={{ fontSize: '10px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', letterSpacing: '0.5px' }}>
+                  Related Projects
+                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {lesson.relatedProjects.map((proj, idx) => (
+                    <ComponentCard key={idx} name={proj.name} description={proj.description} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -264,7 +354,7 @@ export const FundamentalDetails = () => {
             onPrev={handlePrev}
             onNext={handleNext}
             prevLabel={prevLesson ? prevLesson.title : 'Back'}
-            nextLabel={nextLesson ? nextLesson.title : 'Complete Level 1'}
+            nextLabel={nextLesson ? `Continue: ${nextLesson.title}` : 'Complete Level 1'}
           />
 
         </div>

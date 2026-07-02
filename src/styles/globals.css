@@ -2457,6 +2457,16 @@ header {
     padding: var(--space-3) var(--space-4) !important;
   }
 
+}
+
+/* Tablet & Mobile Layout: Portal Form and Navigation Redesign */
+@media (max-width: 991px) {
+  .portal-layout-fixed-height.page-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: none !important;
+  }
+
   /* Hide page header subcontent and project counts on mobile */
   .portal-title-area p {
     display: none !important;
@@ -2578,13 +2588,6 @@ header {
   }
 }
 
-/* Tablet Layout Variable Width Override */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .portal-form-navigation {
-    width: 200px !important;
-  }
-}
-
 /* Compare and AI Search Dialog Elements */
 .compare-modal-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -2664,7 +2667,7 @@ header {
 }
 
 .portal-form-navigation {
-  width: 250px;
+  width: 200px;
   flex-shrink: 0;
   overflow-y: auto;
   display: flex;
@@ -4126,7 +4129,7 @@ input[type="radio"]:checked::after {
 }
 
 /* Responsive Rules for Mobile Navigation Layout elements */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .mobile-bottom-nav {
     display: flex;
   }
@@ -4253,7 +4256,7 @@ header {
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .admin-mobile-header {
     display: flex !important;
   }
@@ -4300,7 +4303,11 @@ header {
 }
 
 /* Hide header role switcher icon on mobile and tablet viewports */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
+  .mobile-learning-header {
+    display: flex !important;
+  }
+
   .header-role-switcher,
   .header-admin-avatar {
     display: none !important;
@@ -4315,7 +4322,7 @@ header {
   .learning-main-content {
     padding-left: 12px !important;
     padding-right: 12px !important;
-    padding-top: 60px !important; /* Offset for fixed sub-header (52px) + 8px gap */
+    padding-top: 52px !important; /* Offset for fixed sub-header (52px) */
   }
 
   header {
@@ -4324,14 +4331,14 @@ header {
 
   /* 2. Set the gap between page header and main header to 0px */
   .main-viewport-content {
-    padding-top: 60px !important; /* Clears the 12px padding + 36px height header */
+    padding-top: 52px !important; /* Clears the 12px padding + 28px height header logo */
   }
   .learning-workspace-container {
     padding-top: 0px !important; /* Clears the header */
   }
   .mobile-learning-header {
     position: fixed !important;
-    top: 60px !important; /* Align sticky sub-header exactly below main header */
+    top: 52px !important; /* Align sticky sub-header exactly below main header */
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
@@ -4339,7 +4346,7 @@ header {
     z-index: 999 !important;
   }
   .admin-main-content {
-    padding-top: 60px !important; /* Clears the header */
+    padding-top: 52px !important; /* Clears the header */
   }
   .workspace-page-header, 
   .portal-header {
@@ -4569,6 +4576,9 @@ body.in-learning-portal header {
   .dynamic-word {
     font-size: 32px !important;
   }
+}
+
+@media (max-width: 991px) {
   .desktop-only-header,
   .desktop-only {
     display: none !important;
@@ -4612,4 +4622,8 @@ body.in-learning-portal header {
   .portal-header {
     margin-bottom: 20px !important;
   }
+}
+
+#kits-portal .portal-header {
+  margin-bottom: 0px !important;
 }
