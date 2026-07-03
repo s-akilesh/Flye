@@ -114,16 +114,20 @@ export const ROADMAP_METADATA = [
         name: 'Sensors',
         components: [
           { id: 'thermistor', name: 'Thermistor', description: 'Measures temperature using thermal resistance shifts.', slug: 'thermistor', isImplemented: true },
-          { id: 'humidity-sensor', name: 'Humidity Sensor', description: 'Measures environmental moisture.', slug: 'humidity-sensor', isImplemented: false },
+          { id: 'dht11', name: 'DHT11 Temp & Humidity Sensor', description: 'Basic digital temperature and humidity sensor.', slug: 'dht11', isImplemented: true },
+          { id: 'dht22', name: 'DHT22 Temp & Humidity Sensor', description: 'Precision digital temperature and humidity sensor.', slug: 'dht22', isImplemented: true },
+          { id: 'bmp280', name: 'BMP280 Barometric Pressure Sensor', description: 'Measures barometric pressure and altitude.', slug: 'bmp280', isImplemented: true },
           { id: 'ldr', name: 'LDR', description: 'Light Dependent Resistor that varies resistance based on light.', slug: 'ldr', isImplemented: true },
-          { id: 'ultrasonic', name: 'Ultrasonic Sensor', description: 'Measures distance using sound waves.', slug: 'ultrasonic', isImplemented: false },
-          { id: 'pir-motion', name: 'PIR Motion Sensor', description: 'Detects infrared heat movement.', slug: 'pir-motion', isImplemented: false },
-          { id: 'gas-sensor', name: 'Gas Sensor', description: 'Measures concentrations of gas leaks.', slug: 'gas-sensor', isImplemented: false },
-          { id: 'sound-sensor', name: 'Sound Sensor', description: 'Detects ambient noise levels.', slug: 'sound-sensor', isImplemented: false },
-          { id: 'ir-sensor', name: 'IR Sensor', description: 'Detects reflection or transmission of IR light.', slug: 'ir-sensor', isImplemented: false },
-          { id: 'hall-effect', name: 'Hall Effect Sensor', description: 'Detects magnetic fields.', slug: 'hall-effect', isImplemented: false },
-          { id: 'soil-moisture', name: 'Soil Moisture Sensor', description: 'Measures water content in soil.', slug: 'soil-moisture', isImplemented: false },
-          { id: 'rain-sensor', name: 'Rain Sensor', description: 'Detects water droplets on a plate.', slug: 'rain-sensor', isImplemented: false }
+          { id: 'ultrasonic-sensor', name: 'Ultrasonic Sensor (HC-SR04)', description: 'Measures distance using sound waves.', slug: 'ultrasonic-sensor', isImplemented: true },
+          { id: 'pir-motion-sensor', name: 'PIR Motion Sensor', description: 'Detects infrared heat movement.', slug: 'pir-motion-sensor', isImplemented: true },
+          { id: 'mpu6050', name: 'MPU6050 Accelerometer & Gyro', description: '6-axis inertial motion tracking sensor.', slug: 'mpu6050', isImplemented: true },
+          { id: 'mq2-gas-sensor', name: 'MQ2 Gas Sensor', description: 'Measures concentrations of gas leaks.', slug: 'mq2-gas-sensor', isImplemented: true },
+          { id: 'soil-moisture-sensor', name: 'Soil Moisture Sensor', description: 'Measures water content in soil.', slug: 'soil-moisture-sensor', isImplemented: true },
+          { id: 'rain-sensor', name: 'Rain Sensor', description: 'Detects water droplets on a plate.', slug: 'rain-sensor', isImplemented: true },
+          { id: 'rfid-rc522', name: 'RFID RC522 Reader Module', description: 'Contactless RFID reader and writer.', slug: 'rfid-rc522', isImplemented: true },
+          { id: 'gps-module', name: 'GPS Module (NEO-6M)', description: 'Satellite positioning receiver.', slug: 'gps-module', isImplemented: true },
+          { id: 'hall-effect-sensor', name: 'Hall Effect Sensor', description: 'Detects magnetic fields.', slug: 'hall-effect-sensor', isImplemented: true },
+          { id: 'flame-sensor', name: 'Flame Sensor', description: 'Detects fire sources by monitoring infrared.', slug: 'flame-sensor', isImplemented: true }
         ]
       },
       {
@@ -164,22 +168,22 @@ export const ROADMAP_METADATA = [
       {
         name: 'Arduino',
         components: [
-          { id: 'arduino-uno', name: 'Arduino Uno', description: 'Popular 8-bit entry-level board.', slug: 'arduino-uno', isImplemented: false },
-          { id: 'arduino-nano', name: 'Arduino Nano', description: 'Breadboard-friendly small controller.', slug: 'arduino-nano', isImplemented: false },
+          { id: 'arduino-uno', name: 'Arduino Uno', description: 'Popular 8-bit entry-level board.', slug: 'arduino-uno', isImplemented: true },
+          { id: 'arduino-nano', name: 'Arduino Nano', description: 'Breadboard-friendly small controller.', slug: 'arduino-nano', isImplemented: true },
           { id: 'arduino-mega', name: 'Arduino Mega', description: 'Large controller with more pins/memory.', slug: 'arduino-mega', isImplemented: false }
         ]
       },
       {
         name: 'ESP Series',
         components: [
-          { id: 'esp8266', name: 'ESP8266', description: 'Low-cost Wi-Fi module.', slug: 'esp8266', isImplemented: false },
-          { id: 'esp32', name: 'ESP32', description: 'Wi-Fi & Bluetooth microcontroller.', slug: 'esp32', isImplemented: false }
+          { id: 'esp8266', name: 'ESP8266 NodeMCU', description: 'Low-cost Wi-Fi module.', slug: 'esp8266-nodemcu', isImplemented: true },
+          { id: 'esp32', name: 'ESP32 DevKit', description: 'Wi-Fi & Bluetooth microcontroller.', slug: 'esp32-devkit', isImplemented: true }
         ]
       },
       {
         name: 'Other Controllers',
         components: [
-          { id: 'rpi-pico', name: 'Raspberry Pi Pico', description: 'Dual-core ARM Cortex-M0+ board.', slug: 'rpi-pico', isImplemented: false },
+          { id: 'rpi-pico', name: 'Raspberry Pi Pico', description: 'Dual-core ARM Cortex-M0+ board.', slug: 'raspberry-pi-pico', isImplemented: true },
           { id: 'stm32', name: 'STM32', description: '32-bit ARM microcontroller.', slug: 'stm32', isImplemented: false },
           { id: 'pic', name: 'PIC', description: 'Microchip family of controllers.', slug: 'pic', isImplemented: false },
           { id: 'avr', name: 'AVR', description: 'Atmel 8-bit controllers.', slug: 'avr', isImplemented: false }

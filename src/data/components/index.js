@@ -4,7 +4,9 @@ import { ledFamily } from './semiconductors/led';
 import { inductorFamily } from './passive/inductor';
 import { diodeFamily } from './semiconductors/diode';
 import { transistorFamily } from './semiconductors/transistor';
-import { specialSemiconductorFamily } from './semiconductors/special';
+import { powerSwitchingFamily } from './semiconductors/power-switching';
+import { boardFamily } from './boards/index';
+import { sensorFamily } from './sensors/index';
 
 export const families = [
   capacitorFamily,
@@ -13,5 +15,7 @@ export const families = [
   inductorFamily,
   diodeFamily,
   transistorFamily,
-  specialSemiconductorFamily
+  powerSwitchingFamily,
+  boardFamily,
+  sensorFamily
 ];

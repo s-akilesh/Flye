@@ -1,6 +1,6 @@
-export const specialSemiconductorFamily = {
-  "id": "special-semiconductor",
-  "name": "Thyristors & Isolators",
+export const powerSwitchingFamily = {
+  "id": "power-switching",
+  "name": "Power Switching Devices",
   "category": "Semiconductors",
   "variants": [
     {

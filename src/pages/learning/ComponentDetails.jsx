@@ -41,6 +41,21 @@ export const ComponentDetails = () => {
   });
   const [activeAnswers, setActiveAnswers] = useState({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [compareSlug, setCompareSlug] = useState('');
+
+  // Auto-select first comparison option when component changes
+  useEffect(() => {
+    const list = componentData?.comparisonBoards || componentData?.comparisonSensors || [];
+    if (list.length > 0) {
+      setCompareSlug(list[0]);
+    } else {
+      setCompareSlug('');
+    }
+  }, [componentData]);
+
+  const compareBoardData = useMemo(() => {
+    return compareSlug ? LearningRepository.getComponentBySlug(compareSlug) : null;
+  }, [compareSlug]);
 
   // Sync recent history on visit
   useEffect(() => {
@@ -166,6 +181,43 @@ export const ComponentDetails = () => {
       {/* 3. Before You Start Card */}
       <BeforeYouStartCard component={componentData} />
 
+      {/* Highlighted Sensor Specifications */}
+      {(componentData.measures || componentData.outputType || componentData.operatingVoltage) && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+          {componentData.measures && (
+            <div className="card-glass" style={{ padding: '16px 20px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Measures</span>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#fff' }}>{componentData.measures}</span>
+            </div>
+          )}
+          {componentData.outputType && (
+            <div className="card-glass" style={{ padding: '16px 20px', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.15)', background: 'rgba(139, 92, 246, 0.01)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '9px', color: 'var(--accent-violet)', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 'bold' }}>Output Type</span>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--accent-violet)' }}>{componentData.outputType}</span>
+            </div>
+          )}
+          {componentData.operatingVoltage && (
+            <div className="card-glass" style={{ padding: '16px 20px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Operating Voltage</span>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--accent-emerald)' }}>{componentData.operatingVoltage}</span>
+            </div>
+          )}
+          {(componentData.logicLevel || componentData.powerConsumption) && (
+            <div className="card-glass" style={{ padding: '16px 20px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Logic Level & Power</span>
+              <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>
+                {componentData.logicLevel && <span>{componentData.logicLevel}</span>}
+                {componentData.logicLevel && componentData.powerConsumption && <span> / </span>}
+                {componentData.powerConsumption && <span style={{ color: 'var(--text-secondary)' }}>{componentData.powerConsumption}</span>}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 5. Flagship Interactive Component Explorer ⭐ */}
+      <ComponentExplorer component={componentData} />
+
       {/* 4. Overview Section */}
       <div 
         className="card-glass" 
@@ -216,8 +268,94 @@ export const ComponentDetails = () => {
         </div>
       </div>
 
-      {/* 5. Flagship Interactive Component Explorer ⭐ */}
-      <ComponentExplorer component={componentData} />
+      {/* Buying Guide & When to Use Grid */}
+      {componentData.buyingGuide && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          {/* Buying Guide Card */}
+          <div 
+            className="card-glass" 
+            style={{ 
+              padding: '24px', 
+              borderRadius: '12px', 
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}
+          >
+            <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              🛒 Beginner Buying Guide
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+              <div>
+                <strong style={{ color: '#fff' }}>Suitability:</strong>{' '}
+                <span style={{ color: 'var(--accent-violet)', fontWeight: 'bold' }}>
+                  {'★'.repeat(Math.round(componentData.buyingGuide.beginnerRating)) + '☆'.repeat(5 - Math.round(componentData.buyingGuide.beginnerRating))}
+                </span>
+                <span style={{ marginLeft: '6px', fontSize: '11px', color: 'var(--text-muted)' }}>Beginner Rating</span>
+              </div>
+              <div>
+                <strong style={{ color: '#fff' }}>Approx. Price Range:</strong>{' '}
+                <span style={{ color: 'var(--accent-emerald)', fontWeight: 'bold' }}>{componentData.buyingGuide.priceRange}</span>
+              </div>
+              <div>
+                <strong style={{ color: '#fff' }}>Market Availability:</strong> {componentData.buyingGuide.availability}
+              </div>
+              <div>
+                <strong style={{ color: '#fff' }}>Recommended Accessories:</strong>
+                <ul style={{ margin: '6px 0 0 0', paddingLeft: '16px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {componentData.buyingGuide.recommendedAccessories.map((acc, idx) => (
+                    <li key={idx}>{acc}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* When Should I Use This Board? */}
+          <div 
+            className="card-glass" 
+            style={{ 
+              padding: '24px', 
+              borderRadius: '12px', 
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}
+          >
+            <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              🎯 Application Matchmaker
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
+              <div>
+                <span style={{ fontSize: '10px', color: 'var(--accent-emerald)', fontWeight: 'bold', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>Perfect For</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {componentData.bestFor?.map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                      <span className="material-icons" style={{ fontSize: '13px', color: 'var(--accent-emerald)' }}>check</span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span style={{ fontSize: '10px', color: 'var(--accent-crimson, #ef4444)', fontWeight: 'bold', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>Not Ideal For</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {componentData.notRecommendedFor?.map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                      <span className="material-icons" style={{ fontSize: '13px', color: 'var(--accent-crimson, #ef4444)' }}>close</span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {/* 6. Working Principle */}
       {componentData.workingPrinciple && (
@@ -353,6 +491,217 @@ export const ComponentDetails = () => {
           <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
             {componentData.internalStructure.description}
           </p>
+        </div>
+      )}
+
+      {/* Component Comparison Selector & Table */}
+      {(componentData.comparisonBoards || componentData.comparisonSensors) && compareBoardData && (
+        <div 
+          className="card-glass" 
+          style={{ 
+            padding: '24px', 
+            borderRadius: '12px', 
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              🔄 Interactive {componentData.comparisonSensors ? 'Sensor' : 'Board'} Comparison
+            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Compare with:</span>
+              <select 
+                value={compareSlug}
+                onChange={(e) => setCompareSlug(e.target.value)}
+                style={{
+                  background: 'rgba(0,0,0,0.4)',
+                  color: '#fff',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '6px',
+                  padding: '6px 12px',
+                  fontSize: '12px',
+                  outline: 'none'
+                }}
+              >
+                {(componentData.comparisonBoards || componentData.comparisonSensors).map((slugOption) => {
+                  const optData = LearningRepository.getComponentBySlug(slugOption);
+                  return (
+                    <option key={slugOption} value={slugOption}>
+                      {optData ? optData.name : slugOption}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+
+          {/* Comparison Table */}
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th style={{ padding: '12px 8px', color: 'var(--text-muted)', width: '30%', fontSize: '11px', textTransform: 'uppercase' }}>Feature</th>
+                  <th style={{ padding: '12px 8px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>{componentData.name}</th>
+                  <th style={{ padding: '12px 8px', color: '#60a5fa', fontWeight: 'bold' }}>{compareBoardData.name}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(!!componentData.comparisonSensors ? [
+                  { label: "Sensor Type", key: "sensorType" },
+                  { label: "Operating Voltage", key: "operatingVoltage" },
+                  { label: "Measurement Range", key: "measurementRange" },
+                  { label: "Accuracy", key: "accuracy" },
+                  { label: "Interface", key: "interface" },
+                  { label: "Response Time", key: "responseTime" },
+                  { label: "Typical Price Range", key: "typicalPrice" },
+                  { label: "Best Use Cases", key: "bestUseCases" }
+                ] : [
+                  { label: "CPU", key: "cpu" },
+                  { label: "Clock Speed", key: "clockSpeed" },
+                  { label: "RAM", key: "ram" },
+                  { label: "Flash Memory", key: "flash" },
+                  { label: "GPIO Count", key: "gpioCount" },
+                  { label: "Analog Pins", key: "analogPins" },
+                  { label: "PWM Support", key: "pwmSupport" },
+                  { label: "Wi-Fi", key: "wifi" },
+                  { label: "Bluetooth", key: "bluetooth" },
+                  { label: "USB Interface", key: "usbInterface" },
+                  { label: "Operating Voltage", key: "operatingVoltage" },
+                  { label: "Programming Environment", key: "programmingEnv" },
+                  { label: "Typical Price Range", key: "typicalPrice" },
+                  { label: "Best Use Case", key: "bestUseCases" }
+                ]).map((row, idx) => (
+                  <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                    <td style={{ padding: '10px 8px', color: 'var(--text-muted)', fontWeight: '600' }}>{row.label}</td>
+                    <td style={{ padding: '10px 8px', color: '#fff' }}>
+                      {componentData.comparisonSpecs?.[row.key] || "N/A"}
+                    </td>
+                    <td style={{ padding: '10px 8px', color: 'var(--text-secondary)' }}>
+                      {compareBoardData.comparisonSpecs?.[row.key] || "N/A"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Compatible Components */}
+      {componentData.compatibleComponents && (
+        <div 
+          className="card-glass" 
+          style={{ 
+            padding: '24px', 
+            borderRadius: '12px', 
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px'
+          }}
+        >
+          <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            🔌 Compatible Components
+          </h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {componentData.compatibleComponents.map((slugOption) => {
+              const comp = LearningRepository.getComponentBySlug(slugOption);
+              if (!comp) return null;
+              return (
+                <Link
+                  key={slugOption}
+                  to={`/learning/components/${slugOption}`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '12px',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    background: 'rgba(255,255,255,0.02)',
+                    color: 'var(--text-secondary)',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s'
+                  }}
+                  className="compatible-comp-chip"
+                >
+                  <span className="material-icons" style={{ fontSize: '13px', color: 'var(--accent-violet)' }}>extension</span>
+                  {comp.name}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Compatible Boards & Common Projects Grid */}
+      {(componentData.compatibleBoards || componentData.commonProjects) && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          {/* Compatible Boards Card */}
+          {componentData.compatibleBoards && (
+            <div 
+              className="card-glass" 
+              style={{ 
+                padding: '24px', 
+                borderRadius: '12px', 
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px'
+              }}
+            >
+              <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                💻 Board Compatibility Ratings
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {componentData.compatibleBoards.map((item, idx) => {
+                  const board = LearningRepository.getComponentBySlug(item.boardSlug);
+                  if (!board) return null;
+                  return (
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                      <Link to={`/learning/components/${item.boardSlug}`} style={{ fontSize: '13px', color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>
+                        {board.name}
+                      </Link>
+                      <span style={{ color: 'var(--accent-violet)', fontSize: '12.5px', fontWeight: 'bold' }}>
+                        {'★'.repeat(item.rating) + '☆'.repeat(5 - item.rating)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Common Projects Card */}
+          {componentData.commonProjects && (
+            <div 
+              className="card-glass" 
+              style={{ 
+                padding: '24px', 
+                borderRadius: '12px', 
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px'
+              }}
+            >
+              <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                🚀 Common Projects
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {componentData.commonProjects.map((project, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                    <span className="material-icons" style={{ fontSize: '14px', color: 'var(--accent-violet)' }}>build</span>
+                    {project}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -737,6 +1086,63 @@ export const ComponentDetails = () => {
           challenge={componentData.buildChallenge}
           slug={slug}
         />
+      )}
+
+      {/* Next Learning Path */}
+      {componentData.nextLearningPath && (
+        <div 
+          className="card-glass" 
+          style={{ 
+            padding: '24px', 
+            borderRadius: '12px', 
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px'
+          }}
+        >
+          <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            🗺️ Recommended Learning Roadmap
+          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginTop: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)', padding: '6px 12px', borderRadius: '8px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>
+              <span className="material-icons" style={{ fontSize: '14px' }}>developer_board</span>
+              {componentData.name}
+            </div>
+            
+            {componentData.nextLearningPath.map((slugOption, idx) => {
+              const comp = LearningRepository.getComponentBySlug(slugOption);
+              if (!comp) return null;
+              return (
+                <React.Fragment key={slugOption}>
+                  <span className="material-icons" style={{ color: 'var(--text-muted)', fontSize: '16px' }}>arrow_forward</span>
+                  <Link
+                    to={`/learning/components/${slugOption}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      fontSize: '12.5px',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      color: '#fff',
+                      textDecoration: 'none',
+                      transition: 'all 0.2s'
+                    }}
+                    className="roadmap-step-chip"
+                  >
+                    <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.06)', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', color: 'var(--text-secondary)', textAlign: 'center' }}>
+                      {idx + 1}
+                    </span>
+                    {comp.name}
+                  </Link>
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </div>
       )}
 
       {/* 19. Related Lessons & Projects */}

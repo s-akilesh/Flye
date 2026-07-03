@@ -146,7 +146,6 @@ export const ComponentExplorer = ({ component }) => {
         {[
           { id: 'overview', label: 'Overview', icon: 'visibility' },
           { id: 'exploded', label: 'Exploded View', icon: 'layers' },
-          { id: 'internal', label: 'Internal Working', icon: 'bolt' },
           { id: 'pinout', label: 'Pin Explorer', icon: 'pin' },
           { id: 'circuit', label: 'Circuit Wiring', icon: 'settings_ethernet' }
         ].map((mode) => (
@@ -356,55 +355,7 @@ export const ComponentExplorer = ({ component }) => {
             </div>
           )}
 
-          {/* Mode 4: Internal Working signal pulse */}
-          {activeMode === 'internal' && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-              <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {component.parts?.map((part, idx) => {
-                  const isActive = currentPulse === idx;
-                  return (
-                    <div 
-                      key={part.id} 
-                      style={{
-                        width: part.visual.width,
-                        height: part.visual.height,
-                        background: part.visual.background,
-                        borderRadius: part.visual.borderRadius || '0px',
-                        border: part.visual.border || 'none',
-                        margin: '2px 0',
-                        zIndex: part.visual.zIndex,
-                        position: 'relative',
-                        boxShadow: isActive ? '0 0 20px #fbbf24' : 'none',
-                        transition: 'box-shadow 0.3s'
-                      }}
-                    >
-                      {isActive && (
-                        <motion.div 
-                          layoutId="pulse-glow"
-                          style={{
-                            position: 'absolute',
-                            top: 0, left: 0, right: 0, bottom: 0,
-                            borderRadius: part.visual.borderRadius || '0px',
-                            background: 'rgba(251, 191, 36, 0.3)',
-                            border: '2px solid #fbbf24'
-                          }}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-              <button
-                className="product-btn"
-                onClick={() => {
-                  setCurrentPulse((prev) => (prev + 1) % (component.parts?.length || 1));
-                }}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                <span className="material-icons">play_arrow</span> Trigger Signal Pulse
-              </button>
-            </div>
-          )}
+
 
           {/* Mode 5: Pinout diagram explorer */}
           {activeMode === 'pinout' && (
