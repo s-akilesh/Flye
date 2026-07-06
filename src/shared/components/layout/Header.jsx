@@ -9,7 +9,7 @@ import { Modal } from '../ui/Modal';
 export const Header = ({ onToggleDrawer }) => {
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const { user, profile, isAdmin, logout, viewMode, setViewMode } = useAuth();
+  const { user, profile, isAdmin, logout, viewMode, setViewMode, loading } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -43,10 +43,9 @@ export const Header = ({ onToggleDrawer }) => {
       </div>
 
       {/* Desktop Navigation Links */}
-      {!isAdmin && viewMode !== 'admin' && (
+      {viewMode !== 'admin' && !window.location.pathname.startsWith('/admin') && (
         <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
-          <a href="/projects?filter=departments" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Departments</a>
           <a href="#how-it-works" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>How It Works</a>
           <a href="#about" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>About</a>
           <Link to="/contact" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
@@ -245,7 +244,7 @@ export const Header = ({ onToggleDrawer }) => {
           </div>
         )}
 
-        {!user && window.location.pathname !== '/auth' && (
+        {!loading && !user && !window.location.pathname.startsWith('/admin') && window.location.pathname !== '/auth' && (
           <Button
             type="button"
             variant="primary"

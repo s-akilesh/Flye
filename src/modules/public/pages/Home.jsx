@@ -9,12 +9,14 @@ import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { Footer } from '../../../shared/components/layout/Footer';
 import { ROUTES } from '../../../shared/constants/routes';
+import { useSettings } from '../../settings/hooks/useSettings';
 
 export const Home = () => {
   const navigate = useNavigate();
   const { projects } = useProjects();
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
+  const { settings } = useSettings();
 
   // Local state for featured project tab selection
   const [activeTab, setActiveTab] = useState('Popular');
@@ -158,7 +160,7 @@ export const Home = () => {
         }}
       >
         <div style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '2px' }}>
-          Build &bull; Print &bull; Learn
+          {settings.companyTagline || 'Build • Print • Learn'}
         </div>
         <h1 style={{ fontSize: '48px', fontWeight: '900', color: '#fff', margin: '0 max(20px, 4%)', lineHeight: '1.35', maxWidth: '800px' }}>
           Complete Your Engineering Project with Confidence
@@ -237,7 +239,7 @@ export const Home = () => {
       </section>
 
       {/* 2. SECTION 2: HOW CAN WE HELP YOU? (FULL WIDTH BACKGROUND) */}
-      <section id="how-can-we-help" style={{ padding: '80px var(--page-padding)', background: 'rgba(139, 92, 246, 0.02)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
+      <section id="how-can-we-help" style={{ padding: '110px var(--page-padding)', background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.05) 0%, transparent 100%)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>How Can We Help You?</h2>
           <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)' }}>Select the customer journey that fits your current academic needs</p>
@@ -400,7 +402,7 @@ export const Home = () => {
       </section>
 
       {/* 4. SECTION 4: WHY STUDENTS CHOOSE FLYEN (FULL WIDTH BACKGROUND) */}
-      <section id="about" style={{ padding: '80px var(--page-padding)', background: 'rgba(16, 185, 129, 0.015)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
+      <section id="about" style={{ padding: '110px var(--page-padding)', background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, transparent 100%)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>Why Students Choose Flyen</h2>
           <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)' }}>Flyen supports you step-by-step, unlike traditional sellers</p>

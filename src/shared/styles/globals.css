@@ -1620,6 +1620,8 @@ header {
   transform: scale(0.95);
   transition: transform 0.35s var(--transition-ease);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .success-modal.active .modal-content {

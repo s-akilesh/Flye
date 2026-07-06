@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Modal = ({ isOpen, onClose, children, className = '', id }) => {
+export const Modal = ({ isOpen, onClose, children, className = '', id, style }) => {
   return (
     <div
       id={id}
@@ -9,6 +9,7 @@ export const Modal = ({ isOpen, onClose, children, className = '', id }) => {
     >
       <div
         className={`modal-content ${className}`}
+        style={style}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
