@@ -1140,7 +1140,6 @@ header {
   border-radius: 12px;
   padding: var(--space-4);
   min-width: 300px;
-  height: 100%;
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   display: flex;
@@ -1161,7 +1160,6 @@ header {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: var(--space-4);
-  height: 20px;
 }
 
 .project-badge-tag {
@@ -1207,12 +1205,6 @@ header {
   font-weight: 600;
   color: #fff;
   margin-bottom: 6px;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 22px;
 }
 
 .project-card-premium .card-desc {
@@ -1225,7 +1217,7 @@ header {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 36px;
+  max-height: 36px;
 }
 
 .card-spec-row {
