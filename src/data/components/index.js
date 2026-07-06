@@ -7,6 +7,7 @@ import { transistorFamily } from './semiconductors/transistor';
 import { powerSwitchingFamily } from './semiconductors/power-switching';
 import { boardFamily } from './boards/index';
 import { sensorFamily } from './sensors/index';
+import { displaysFamily } from './displays/index';
 
 export const families = [
   capacitorFamily,
@@ -17,5 +18,6 @@ export const families = [
   transistorFamily,
   powerSwitchingFamily,
   boardFamily,
-  sensorFamily
+  sensorFamily,
+  displaysFamily
 ];

@@ -247,16 +247,57 @@ export const downloadProjectTemplate = async () => {
 // 3. Export Enquiries to Excel
 export const exportEnquiriesToExcel = async (enquiries) => {
   const XLSX = await import('xlsx');
-  const data = enquiries.map(enq => ({
-    "Project Title": enq.projectTitle || 'General Consultation',
-    "Customer Name": enq.name || '',
-    "Mobile": enq.mobile || '',
-    "Price": enq.price || '-',
-    "Status": enq.status || 'new',
-    "Notes": enq.notes || '',
-    "Created Date": enq.createdAt ? new Date(enq.createdAt).toLocaleString('en-IN') : 'N/A',
-    "Updated Date": enq.updatedAt ? new Date(enq.updatedAt).toLocaleString('en-IN') : 'N/A'
-  }));
+
+  const parseNotes = (notes) => {
+    const data = {
+      projectStatus: '-',
+      budget: '-',
+      submissionDate: '-',
+      needDocument: '-',
+      needPresentation: '-',
+      remarks: ''
+    };
+
+    if (!notes) return data;
+
+    const lines = notes.split('\n');
+    lines.forEach(line => {
+      if (line.startsWith('Project Status:')) {
+        data.projectStatus = line.replace('Project Status:', '').trim();
+      } else if (line.startsWith('Budget:')) {
+        data.budget = line.replace('Budget:', '').trim();
+      } else if (line.startsWith('Submission Date:')) {
+        data.submissionDate = line.replace('Submission Date:', '').trim();
+      } else if (line.startsWith('Need Document:')) {
+        data.needDocument = line.replace('Need Document:', '').trim();
+      } else if (line.startsWith('Need Presentation Support:')) {
+        data.needPresentation = line.replace('Need Presentation Support:', '').trim();
+      } else if (line.startsWith('Remarks:')) {
+        data.remarks = line.replace('Remarks:', '').trim();
+      }
+    });
+
+    return data;
+  };
+
+  const data = enquiries.map(enq => {
+    const parsed = parseNotes(enq.notes);
+    return {
+      "Project Title": enq.projectTitle || 'General Consultation',
+      "Customer Name": enq.name || '',
+      "Mobile": enq.mobile || '',
+      "Project Status": parsed.projectStatus,
+      "Budget": parsed.budget,
+      "Submission Date": parsed.submissionDate,
+      "Document Needed": parsed.needDocument,
+      "Presentation Support": parsed.needPresentation,
+      "Remarks": parsed.remarks || (enq.notes && !enq.notes.includes('Project Status:') ? enq.notes : ''),
+      "Base Price": enq.price || '-',
+      "Lead Status": enq.status || 'new',
+      "Created Date": enq.createdAt ? new Date(enq.createdAt).toLocaleString('en-IN') : 'N/A',
+      "Updated Date": enq.updatedAt ? new Date(enq.updatedAt).toLocaleString('en-IN') : 'N/A'
+    };
+  });
 
   const worksheet = XLSX.utils.json_to_sheet(data);
   const workbook = XLSX.utils.book_new();

@@ -9,9 +9,10 @@ import { Modal } from '../ui/Modal';
 export const Header = ({ onToggleDrawer }) => {
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const { user, isAdmin, logout, viewMode, setViewMode } = useAuth();
+  const { user, profile, isAdmin, logout, viewMode, setViewMode } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -40,46 +41,19 @@ export const Header = ({ onToggleDrawer }) => {
         )}
         <span className="logo-text">{(settings.companyName || 'Flyen').toUpperCase()}</span>
       </div>
+
+      {/* Desktop Navigation Links */}
+      {!isAdmin && viewMode !== 'admin' && (
+        <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
+          <a href="/projects?filter=departments" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Departments</a>
+          <a href="#how-it-works" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>How It Works</a>
+          <a href="#about" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>About</a>
+          <Link to="/contact" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
+        </nav>
+      )}
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-        {user && isAdmin && (
-          <button
-            type="button"
-            onClick={() => {
-              const nextMode = viewMode === 'admin' ? 'user' : 'admin';
-              setViewMode(nextMode);
-              if (nextMode === 'admin') {
-                navigate(ROUTES.ADMIN_DASHBOARD);
-              } else {
-                navigate('/');
-              }
-            }}
-            className="btn-header header-admin-avatar header-role-switcher"
-            id="header-settings-btn"
-            style={{ 
-              height: '36px',
-              padding: '0 12px', 
-              boxSizing: 'border-box',
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              gap: '6px',
-              background: 'rgba(255, 255, 255, 0.05)', 
-              border: '1px solid rgba(255, 255, 255, 0.15)', 
-              borderRadius: '6px',
-              color: viewMode === 'admin' ? 'var(--accent-violet)' : 'var(--text-muted)', 
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: '500',
-              transition: 'all 0.2s ease'
-            }}
-            title={viewMode === 'admin' ? "Switch to User View" : "Switch to Admin View"}
-          >
-            <span className="material-icons" style={{ fontSize: '18px' }}>swap_horiz</span>
-            <span>{viewMode === 'admin' ? 'Switch to User' : 'Switch to Admin'}</span>
-          </button>
-        )}
-
         {/* Notification Bell */}
         <button
           type="button"
@@ -102,22 +76,173 @@ export const Header = ({ onToggleDrawer }) => {
           <span className="material-icons" style={{ fontSize: '20px' }}>menu</span>
         </button>
 
+        {/* Profile Dropdown */}
         {user && (
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => setShowLogoutConfirm(true)}
-            style={{
-              padding: '6px 12px',
-              fontSize: '12px',
-              background: 'rgba(239, 68, 68, 0.1)',
-              color: 'var(--accent-crimson, #ef4444)',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
-              marginLeft: 'var(--space-2)'
-            }}
-          >
-            Logout
-          </Button>
+          <div style={{ position: 'relative', marginLeft: 'var(--space-1)' }}>
+            <button
+              type="button"
+              onClick={() => setShowProfileDropdown(p => !p)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '4px 8px 4px 4px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.07)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+              }}
+            >
+              {/* Avatar */}
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Profile"
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '2px solid rgba(139, 92, 246, 0.3)'
+                  }}
+                />
+              ) : (
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, var(--accent-violet), var(--accent-blue))',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '13px',
+                  fontWeight: '700',
+                  color: '#fff',
+                  flexShrink: 0
+                }}>
+                  {(profile?.full_name || user?.email || 'U').charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              {/* Name + Role */}
+              <div className="header-profile-text" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.2 }}>
+                <span style={{ fontSize: '12px', fontWeight: '600', color: '#fff', whiteSpace: 'nowrap', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {profile?.full_name || user?.email?.split('@')[0] || 'User'}
+                </span>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+                  {profile?.role || 'user'}
+                </span>
+              </div>
+
+              {/* Dropdown Icon */}
+              <span className="material-icons" style={{ fontSize: '16px', color: 'var(--text-muted)', transition: 'transform 0.2s', transform: showProfileDropdown ? 'rotate(180deg)' : 'none' }}>
+                expand_more
+              </span>
+            </button>
+
+            {/* Dropdown Menu */}
+            {showProfileDropdown && (
+              <>
+                <div style={{ position: 'fixed', inset: 0, zIndex: 999 }} onClick={() => setShowProfileDropdown(false)} />
+                <div
+                  className="card-glass"
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    right: 0,
+                    width: '180px',
+                    zIndex: 1000,
+                    padding: '4px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '2px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                    borderRadius: '8px'
+                  }}
+                >
+                  {/* Switch User Option */}
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextMode = viewMode === 'admin' ? 'user' : 'admin';
+                        setViewMode(nextMode);
+                        if (nextMode === 'admin') {
+                          navigate(ROUTES.ADMIN_DASHBOARD);
+                        } else {
+                          navigate('/');
+                        }
+                        setShowProfileDropdown(false);
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#fff',
+                        padding: '10px 12px',
+                        fontSize: '13px',
+                        textAlign: 'left',
+                        width: '100%',
+                        cursor: 'pointer',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        transition: 'background 0.15s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                    >
+                      <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>swap_horiz</span>
+                      <span>{viewMode === 'admin' ? 'Switch to User' : 'Switch to Admin'}</span>
+                    </button>
+                  )}
+
+                  {/* Divider */}
+                  {isAdmin && (
+                    <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.06)', margin: '2px 8px' }} />
+                  )}
+
+                  {/* Logout Option */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowProfileDropdown(false);
+                      setShowLogoutConfirm(true);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--accent-crimson, #ef4444)',
+                      padding: '10px 12px',
+                      fontSize: '13px',
+                      textAlign: 'left',
+                      width: '100%',
+                      cursor: 'pointer',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      transition: 'background 0.15s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.06)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                  >
+                    <span className="material-icons-outlined" style={{ fontSize: '18px' }}>logout</span>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         )}
 
         {!user && window.location.pathname !== '/auth' && (

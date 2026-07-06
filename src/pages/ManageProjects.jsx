@@ -63,6 +63,7 @@ export const ManageProjects = () => {
 
   // Deletion Modal State
   const [projectToDelete, setProjectToDelete] = useState(null);
+  const [projectToClone, setProjectToClone] = useState(null);
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
 
   // Export Confirmation State
@@ -76,6 +77,8 @@ export const ManageProjects = () => {
   // Excel Import & Export States
   const fileInputRef = useRef(null);
   const [importPreview, setImportPreview] = useState(null);
+  const [showImportUploadModal, setShowImportUploadModal] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
 
   const handleExportProjects = () => {
     if (selectedIds.length === 0) {
@@ -96,8 +99,7 @@ export const ManageProjects = () => {
     }
   };
 
-  const handleImportProjects = (e) => {
-    const file = e.target.files[0];
+  const processImportFile = (file) => {
     if (!file) return;
 
     setIsProcessing(true);
@@ -179,6 +181,7 @@ export const ManageProjects = () => {
           invalid: invalidRows,
           errors
         });
+        setShowImportUploadModal(false);
       } catch (err) {
         showToast("❌ Failed to parse Excel file.", "error");
         console.error(err);
@@ -187,6 +190,13 @@ export const ManageProjects = () => {
       }
     };
     reader.readAsArrayBuffer(file);
+  };
+
+  const handleImportProjects = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      processImportFile(file);
+    }
   };
 
   const handleConfirmImport = async () => {
@@ -265,11 +275,13 @@ export const ManageProjects = () => {
   }, [location, showToast]);
 
   // Duplicate Action Handler
-  const handleDuplicate = async (id) => {
+  const handleCloneConfirm = async () => {
+    if (!projectToClone) return;
     setIsProcessing(true);
     try {
-      const duplicated = await duplicateProject(id);
+      const duplicated = await duplicateProject(projectToClone.id);
       showToast(`✅ Project duplicated successfully! Created copy: "${duplicated.title}"`, 'success');
+      setProjectToClone(null);
     } catch (e) {
       showToast("❌ Failed to duplicate project.", "error");
     } finally {
@@ -393,6 +405,7 @@ export const ManageProjects = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.4 }}
+      style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', overflow: 'hidden' }}
     >
       {/* Mobile Sticky Sub-Header */}
       <header className="mobile-learning-header">
@@ -464,7 +477,7 @@ export const ManageProjects = () => {
                 >
                   <button
                     type="button"
-                    onClick={() => { triggerFileInput(); setMobileMenuOpen(false); }}
+                    onClick={() => { setShowImportUploadModal(true); setMobileMenuOpen(false); }}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -508,29 +521,7 @@ export const ManageProjects = () => {
                     <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span>
                     Export
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => { handleDownloadTemplate(); setMobileMenuOpen(false); }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#fff',
-                      padding: '8px 12px',
-                      fontSize: '13px',
-                      textAlign: 'left',
-                      width: '100%',
-                      cursor: 'pointer',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                    onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
-                    onMouseLeave={(e) => e.target.style.background = 'none'}
-                  >
-                    <span className="material-icons-outlined" style={{ fontSize: '16px' }}>description</span>
-                    Template
-                  </button>
+
                 </div>
               </>
             )}
@@ -540,7 +531,7 @@ export const ManageProjects = () => {
 
       <div className="portal-header">
         <div className="portal-title-area">
-          <h2>Project Catalog Management</h2>
+          <h2>Manage Projects</h2>
           <p>Visual database management panel for Flyen engineering catalog</p>
         </div>
         <div className="portal-header-meta" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
@@ -558,12 +549,12 @@ export const ManageProjects = () => {
             disabled={isProcessing}
             style={{ fontSize: '13px', padding: '8px 16px' }}
           >
-            Add New Kit
+            Add Project
           </Button>
         </div>
       </div>
 
-      <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+      <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)', flex: 1, minHeight: 0 }}>
         {/* KPI Cards — 2-column grid */}
         <div className="admin-kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
           <Card style={{ padding: 'var(--space-4)' }}>
@@ -585,7 +576,7 @@ export const ManageProjects = () => {
         </div>
 
         {/* Tabular Visual Grid Container Card */}
-        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden' }}>
+        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', flex: 1, minHeight: 0 }}>
           {/* Toolbar: Search + Filter Icon + Sort Icon */}
           <AdminToolbar
             searchId="admin-search"
@@ -617,29 +608,22 @@ export const ManageProjects = () => {
             style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', position: 'relative', zIndex: 100 }}
             desktopActions={
               <>
-                <Button
-                  variant="secondary"
-                  onClick={handleDownloadTemplate}
-                  disabled={isProcessing}
-                  style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
-                >
-                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>description</span> Template
-                </Button>
+
                 <Button
                   variant="secondary"
                   onClick={handleExportProjects}
                   disabled={isProcessing}
                   style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span> Export Excel
+                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span> Export
                 </Button>
                 <Button
                   variant="secondary"
-                  onClick={triggerFileInput}
+                  onClick={() => setShowImportUploadModal(true)}
                   disabled={isProcessing}
                   style={{ fontSize: '12px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '0 12px' }}
                 >
-                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>download</span> Import Excel
+                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>download</span> Import
                 </Button>
               </>
             }
@@ -759,7 +743,7 @@ export const ManageProjects = () => {
               <h3>Loading database records...</h3>
             </div>
           ) : sortedList.length > 0 ? (
-            <div style={{ overflowX: 'auto', padding: 'var(--space-4)' }}>
+            <div style={{ overflowX: 'auto', overflowY: 'auto', padding: 'var(--space-4)', flex: 1, minHeight: 0 }}>
               <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -773,9 +757,6 @@ export const ManageProjects = () => {
                     </th>
                     <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px' }}>
                       Project Name
-                    </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '120px' }}>
-                      Category & Level
                     </th>
                     <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
                       Pricing
@@ -826,14 +807,7 @@ export const ManageProjects = () => {
                             </span>
                           </div>
                         </td>
-                        <td className="tbl-td" style={{ minWidth: '120px' }}>
-                          <span style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-primary)' }}>
-                            {CATEGORY_LABELS[proj.category] || proj.category}
-                          </span>
-                          <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-                            {proj.projectLevel || 'School'}
-                          </span>
-                        </td>
+
                         <td className="tbl-td" style={{ minWidth: '110px' }}>
                           <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--accent-emerald, #10b981)' }}>
                             {proj.currency === 'INR' ? '₹' : '$'}{mainPrice}
@@ -867,40 +841,44 @@ export const ManageProjects = () => {
                           {proj.lastUpdated}
                         </td>
                         <td className="tbl-td" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>
-                          <div style={{ display: 'inline-flex', gap: 'var(--space-1)' }}>
+                          <div style={{ display: 'inline-flex', gap: '4px', justifyContent: 'flex-end' }}>
                             <Button
                               type="button"
                               variant="ghost"
                               onClick={() => navigate(ROUTES.PROJECT_DETAILS.replace(':slug', proj.slug))}
-                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              title="View Project"
                             >
-                              View
+                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>visibility</span>
                             </Button>
                             <Button
                               type="button"
                               variant="primary"
                               onClick={() => navigate(ROUTES.ADMIN_EDIT_PROJECT.replace(':slug', proj.slug))}
-                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              title="Edit Project"
                             >
-                              Edit
+                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>edit</span>
                             </Button>
                             <Button
                               type="button"
                               variant="secondary"
-                              onClick={() => handleDuplicate(proj.id)}
-                              style={{ padding: '4px 8px', fontSize: '12px' }}
+                              onClick={() => setProjectToClone(proj)}
+                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              title="Clone Project"
                               disabled={isProcessing}
                             >
-                              Copy
+                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>content_copy</span>
                             </Button>
                             <Button
                               type="button"
                               variant="ghost"
                               onClick={() => setProjectToDelete(proj)}
-                              style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent-crimson, #ef4444)' }}
+                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}
+                              title="Delete Project"
                               disabled={isProcessing}
                             >
-                              Delete
+                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>delete</span>
                             </Button>
                           </div>
                         </td>
@@ -930,6 +908,17 @@ export const ManageProjects = () => {
         message={projectToDelete ? `Are you sure you want to permanently delete "${projectToDelete.title}"? This operation cannot be undone.` : ''}
         confirmLabel="Delete"
         isDanger={true}
+        isLoading={isProcessing}
+      />
+
+      {/* Clone Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={projectToClone !== null}
+        onClose={() => setProjectToClone(null)}
+        onConfirm={handleCloneConfirm}
+        title="Clone Project Kit"
+        message={projectToClone ? `Are you sure you want to duplicate "${projectToClone.title}"?` : ''}
+        confirmLabel="Clone"
         isLoading={isProcessing}
       />
 
@@ -1100,6 +1089,133 @@ export const ManageProjects = () => {
           </div>
         </Modal>
       )}
+
+      {/* Import File Upload Modal */}
+      <Modal 
+        isOpen={showImportUploadModal} 
+        onClose={() => setShowImportUploadModal(false)} 
+        style={{ maxWidth: '500px' }}
+      >
+        <div style={{ textAlign: 'left', padding: 'var(--space-2)' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: 'var(--space-2)', color: 'var(--accent-violet)' }}>
+            Import Projects
+          </h3>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: 'var(--space-4)' }}>
+            Upload spreadsheet templates to add project kits in bulk.
+          </p>
+
+          {/* Section 1: Download import template */}
+          <div style={{ marginBottom: 'var(--space-5)' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', fontWeight: '600' }}>
+              Section 1: Download Import Template
+            </span>
+            <div 
+              onClick={handleDownloadTemplate}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px',
+                borderRadius: '8px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px dashed rgba(255, 255, 255, 0.1)',
+                cursor: 'pointer',
+                transition: 'background 0.2s, border-color 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.borderColor = 'var(--accent-violet)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+              }}
+            >
+              <div style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '6px',
+                background: 'rgba(124, 58, 237, 0.1)',
+                color: 'var(--accent-violet)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <span className="material-icons-outlined" style={{ fontSize: '20px' }}>description</span>
+              </div>
+              <div>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff', display: 'block' }}>
+                  Download the import template
+                </span>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  Use this template file to format your project kit records correctly.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Drop your file or select your file */}
+          <div style={{ marginBottom: 'var(--space-5)' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', fontWeight: '600' }}>
+              Section 2: Upload Data File
+            </span>
+            <div
+              onDragEnter={(e) => { e.preventDefault(); setDragActive(true); }}
+              onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+              onDragLeave={(e) => { e.preventDefault(); setDragActive(false); }}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragActive(false);
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                  processImportFile(e.dataTransfer.files[0]);
+                }
+              }}
+              onClick={triggerFileInput}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '32px 16px',
+                borderRadius: '8px',
+                background: dragActive ? 'rgba(124, 58, 237, 0.05)' : 'rgba(0, 0, 0, 0.15)',
+                border: `2px dashed ${dragActive ? 'var(--accent-violet)' : 'rgba(255, 255, 255, 0.1)'}`,
+                cursor: 'pointer',
+                textAlign: 'center',
+                transition: 'background 0.2s, border-color 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                if (!dragActive) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!dragActive) {
+                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.15)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                }
+              }}
+            >
+              <span className="material-icons-outlined" style={{ fontSize: '36px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                cloud_upload
+              </span>
+              <span style={{ fontSize: '13px', fontWeight: '500', color: '#fff', display: 'block', marginBottom: '4px' }}>
+                Drop your file or select your file
+              </span>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                Supports Excel (.xlsx, .xls) files up to 100 rows
+              </span>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)' }}>
+            <Button variant="secondary" onClick={() => setShowImportUploadModal(false)} style={{ width: '100px' }}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </motion.section>
   );
 };

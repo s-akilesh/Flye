@@ -27,19 +27,9 @@ export const XPBadge = ({ amount = 20 }) => (
 export const LessonHeader = ({ title, difficulty, time, objective, xp = 20 }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--accent-violet)', background: 'rgba(139, 92, 246, 0.1)', padding: '2px 8px', borderRadius: '4px', letterSpacing: '0.5px' }}>
-            {difficulty}
-          </span>
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            ⏱️ {time}
-          </span>
-        </div>
-        <h1 style={{ fontSize: '32px', fontWeight: '900', color: '#fff', margin: '8px 0 0 0', letterSpacing: '-0.8px' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: '900', color: '#fff', margin: '0', letterSpacing: '-0.8px' }}>
           {title}
         </h1>
-      </div>
       <XPBadge amount={xp} />
     </div>
     

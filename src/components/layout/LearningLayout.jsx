@@ -12,11 +12,21 @@ export const LearningLayout = () => {
   const [completedLessons, setCompletedLessons] = useState([]);
   const [expandedSections, setExpandedSections] = useState({});
   const [isLessonsExpanded, setIsLessonsExpanded] = useState(true);
+  const [isCompLibExpanded, setIsCompLibExpanded] = useState(() => {
+    return location.pathname.startsWith('/learning/components');
+  });
 
   // Auto expand parent when entering lessons path
   useEffect(() => {
     if (location.pathname.startsWith('/learning/fundamentals/')) {
       setIsLessonsExpanded(true);
+    }
+  }, [location.pathname]);
+
+  // Auto expand when entering components path
+  useEffect(() => {
+    if (location.pathname.startsWith('/learning/components')) {
+      setIsCompLibExpanded(true);
     }
   }, [location.pathname]);
 
@@ -439,20 +449,26 @@ export const LearningLayout = () => {
                 );
               })()}
 
-              {/* Components */}
-              <Link 
-                to={ROUTES.LEARNING_COMPONENTS} 
+              {/* Component Library Dropdown */}
+              <div 
+                onClick={() => {
+                  if (isCollapsed) {
+                    navigate(ROUTES.LEARNING_COMPONENTS);
+                  } else {
+                    setIsCompLibExpanded(!isCompLibExpanded);
+                  }
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  justifyContent: isCollapsed ? 'center' : 'space-between',
                   gap: isCollapsed ? '0' : '12px',
                   padding: '10px 12px',
                   borderRadius: '6px',
                   color: location.pathname.startsWith('/learning/components') ? 'var(--accent-violet, #8b5cf6)' : 'var(--text-secondary, #9ca3af)',
                   background: location.pathname.startsWith('/learning/components') ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
                   border: location.pathname.startsWith('/learning/components') ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
-                  textDecoration: 'none',
+                  cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: location.pathname.startsWith('/learning/components') ? '700' : '500',
                   transition: 'all 0.2s ease',
@@ -460,13 +476,155 @@ export const LearningLayout = () => {
                 }}
                 className="learning-nav-item"
               >
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="8" y1="12" x2="16" y2="12" />
-                  <line x1="12" y1="8" x2="12" y2="16" />
-                </svg>
-                {!isCollapsed && <span>Components</span>}
-              </Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="7" height="9" />
+                    <rect x="14" y="3" width="7" height="5" />
+                    <rect x="14" y="12" width="7" height="9" />
+                    <rect x="3" y="16" width="7" height="5" />
+                  </svg>
+                  {!isCollapsed && <span>Component Library</span>}
+                </div>
+                {!isCollapsed && (
+                  <span className="material-icons" style={{ fontSize: '16px', transition: 'transform 0.2s', transform: isCompLibExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+                    chevron_right
+                  </span>
+                )}
+              </div>
+
+              {/* Subcategories (nested hierarchy) */}
+              {!isCollapsed && isCompLibExpanded && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingLeft: '16px', borderLeft: '1px solid rgba(255,255,255,0.04)', marginLeft: '20px', marginTop: '8px', marginBottom: '8px' }}>
+                  
+                  {/* Category 1: Core Electronics */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <span style={{ fontSize: '9px', fontWeight: '800', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                      Core Electronics
+                    </span>
+                    {[
+                      { label: 'Passive Components', path: '/learning/components?category=Passive%20Components' },
+                      { label: 'Semiconductor Components', path: '/learning/components?category=Semiconductors' },
+                      { label: 'Integrated Circuits', path: '/learning/components?category=Integrated%20Circuits' }
+                    ].map((sub) => {
+                      const isSubActive = location.pathname.startsWith('/learning/components') && decodeURIComponent(location.search).includes(`category=${sub.label === 'Semiconductor Components' ? 'Semiconductors' : sub.label}`);
+                      return (
+                        <Link
+                          key={sub.label}
+                          to={sub.path}
+                          style={{
+                            fontSize: '12px',
+                            color: isSubActive ? '#fff' : 'var(--text-secondary, #9ca3af)',
+                            fontWeight: isSubActive ? '750' : '500',
+                            textDecoration: 'none',
+                            padding: '4px 0',
+                            transition: 'color 0.2s',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '160px',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          {sub.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  {/* Category 2: Embedded Systems */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <span style={{ fontSize: '9px', fontWeight: '800', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                      Embedded Systems
+                    </span>
+                    {[
+                      { label: 'Development Boards', path: '/learning/components?category=Boards' },
+                      { label: 'Sensors', path: '/learning/components?category=Sensors' },
+                      { label: 'Displays', path: '/learning/components?category=Displays' },
+                      { label: 'Communication Modules', path: '/learning/components?category=Communication%20Modules' },
+                      { label: 'Driver Modules', path: '/learning/components?category=Driver%20Modules' }
+                    ].map((sub) => {
+                      const isSubActive = location.pathname.startsWith('/learning/components') && decodeURIComponent(location.search).includes(`category=${sub.label === 'Development Boards' ? 'Boards' : sub.label}`);
+                      return (
+                        <Link
+                          key={sub.label}
+                          to={sub.path}
+                          style={{
+                            fontSize: '12px',
+                            color: isSubActive ? '#fff' : 'var(--text-secondary, #9ca3af)',
+                            fontWeight: isSubActive ? '750' : '500',
+                            textDecoration: 'none',
+                            padding: '4px 0',
+                            transition: 'color 0.2s',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '160px',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          {sub.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  {/* Category 3: Power & Robotics */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <span style={{ fontSize: '9px', fontWeight: '800', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                      Power & Robotics
+                    </span>
+                    {[
+                      { label: 'Power Components', path: '/learning/components?category=Power%20Components' },
+                      { label: 'Actuators', path: '/learning/components?category=Actuators' },
+                      { label: 'Mechanical Components (Future)', path: '#', future: true }
+                    ].map((sub) => {
+                      const isSubActive = !sub.future && location.pathname.startsWith('/learning/components') && decodeURIComponent(location.search).includes(`category=${sub.label}`);
+                      return sub.future ? (
+                        <span
+                          key={sub.label}
+                          style={{
+                            fontSize: '11.5px',
+                            color: 'rgba(255,255,255,0.25)',
+                            fontWeight: '400',
+                            padding: '4px 0',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '160px',
+                            cursor: 'default'
+                          }}
+                        >
+                          {sub.label}
+                        </span>
+                      ) : (
+                        <Link
+                          key={sub.label}
+                          to={sub.path}
+                          style={{
+                            fontSize: '12px',
+                            color: isSubActive ? '#fff' : 'var(--text-secondary, #9ca3af)',
+                            fontWeight: isSubActive ? '750' : '500',
+                            textDecoration: 'none',
+                            padding: '4px 0',
+                            transition: 'color 0.2s',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '160px',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          {sub.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                </div>
+              )}
 
               {/* Inactive sidebar placeholders */}
               <div 

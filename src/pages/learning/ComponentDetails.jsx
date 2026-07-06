@@ -9,7 +9,6 @@ import {
   ProgressCard, 
   ComponentExplorer, 
   ComponentComparison, 
-  AiLearningAssistant, 
   BuildItYourselfCard 
 } from '../../components/learning/ComponentLearningEngine';
 
@@ -253,6 +252,95 @@ export const ComponentDetails = () => {
           )}
         </div>
         
+        {/* Quick Information Section (only renders if componentData.overview exists) */}
+        {componentData.overview && (
+          <div 
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', 
+              gap: '16px', 
+              background: 'rgba(255, 255, 255, 0.01)', 
+              border: '1px solid rgba(255, 255, 255, 0.04)',
+              padding: '16px', 
+              borderRadius: '8px', 
+              marginBottom: '4px' 
+            }}
+          >
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                Display Type
+              </span>
+              <span style={{ fontSize: '13px', color: '#fff', fontWeight: 'bold' }}>
+                {componentData.overview.displayType}
+              </span>
+            </div>
+
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                Controller IC
+              </span>
+              <span style={{ fontSize: '13px', color: 'var(--accent-violet, #8b5cf6)', fontWeight: 'bold' }}>
+                {componentData.overview.controllerIC}
+              </span>
+            </div>
+
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+                Communication Interface
+              </span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {componentData.overview.communicationInterface?.map((inf) => (
+                  <span 
+                    key={inf} 
+                    style={{ 
+                      fontSize: '10px', 
+                      background: 'rgba(59, 130, 246, 0.1)', 
+                      border: '1px solid rgba(59, 130, 246, 0.2)', 
+                      color: 'var(--accent-blue, #3b82f6)', 
+                      padding: '2px 6px', 
+                      borderRadius: '4px' 
+                    }}
+                  >
+                    {inf}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+                Can Display
+              </span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {componentData.overview.displayCapabilities?.map((cap) => (
+                  <span 
+                    key={cap} 
+                    style={{ 
+                      fontSize: '10px', 
+                      background: 'rgba(16, 185, 129, 0.1)', 
+                      border: '1px solid rgba(16, 185, 129, 0.2)', 
+                      color: 'var(--accent-emerald, #10b981)', 
+                      padding: '2px 6px', 
+                      borderRadius: '4px' 
+                    }}
+                  >
+                    {cap}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                Operating Voltage
+              </span>
+              <span style={{ fontSize: '13px', color: '#fbbf24', fontWeight: 'bold' }}>
+                {componentData.overview.operatingVoltage}
+              </span>
+            </div>
+          </div>
+        )}
+        
         <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.6' }}>
           {componentData.description}
         </p>
@@ -472,27 +560,6 @@ export const ComponentDetails = () => {
         </div>
       </div>
 
-      {/* 8. Internal Structure */}
-      {componentData.internalStructure && (
-        <div 
-          className="card-glass" 
-          style={{ 
-            padding: '24px', 
-            borderRadius: '12px', 
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px'
-          }}
-        >
-          <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            🔬 Internal Physical Anatomy
-          </h3>
-          <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
-            {componentData.internalStructure.description}
-          </p>
-        </div>
-      )}
 
       {/* Component Comparison Selector & Table */}
       {(componentData.comparisonBoards || componentData.comparisonSensors) && compareBoardData && (
@@ -590,53 +657,7 @@ export const ComponentDetails = () => {
         </div>
       )}
 
-      {/* Compatible Components */}
-      {componentData.compatibleComponents && (
-        <div 
-          className="card-glass" 
-          style={{ 
-            padding: '24px', 
-            borderRadius: '12px', 
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px'
-          }}
-        >
-          <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            🔌 Compatible Components
-          </h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {componentData.compatibleComponents.map((slugOption) => {
-              const comp = LearningRepository.getComponentBySlug(slugOption);
-              if (!comp) return null;
-              return (
-                <Link
-                  key={slugOption}
-                  to={`/learning/components/${slugOption}`}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '12px',
-                    padding: '6px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(255,255,255,0.05)',
-                    background: 'rgba(255,255,255,0.02)',
-                    color: 'var(--text-secondary)',
-                    textDecoration: 'none',
-                    transition: 'all 0.2s'
-                  }}
-                  className="compatible-comp-chip"
-                >
-                  <span className="material-icons" style={{ fontSize: '13px', color: 'var(--accent-violet)' }}>extension</span>
-                  {comp.name}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
+
 
       {/* Compatible Boards & Common Projects Grid */}
       {(componentData.compatibleBoards || componentData.commonProjects) && (
@@ -852,125 +873,7 @@ export const ComponentDetails = () => {
         <ComponentComparison comparisonList={componentData.comparisonComponents} />
       )}
 
-      {/* 13. Arduino Examples */}
-      {componentData.arduinoExamples && (
-        <div 
-          className="card-glass" 
-          style={{ 
-            padding: '24px', 
-            borderRadius: '12px', 
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px'
-          }}
-        >
-          <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            💻 Arduino Programming Code
-          </h3>
-          {componentData.arduinoExamples.map((ex, idx) => (
-            <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <span style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: 'bold' }}>{ex.title}</span>
-              <pre 
-                style={{ 
-                  background: 'rgba(0,0,0,0.3)', 
-                  padding: '16px', 
-                  borderRadius: '8px', 
-                  border: '1px solid rgba(255,255,255,0.06)', 
-                  overflowX: 'auto',
-                  fontSize: '12px',
-                  fontFamily: 'monospace',
-                  color: '#a7f3d0'
-                }}
-              >
-                <code>{ex.code.trim()}</code>
-              </pre>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {/* 14. Wiring Example & Simulation */}
-      <div 
-        className="card-glass" 
-        style={{ 
-          padding: '24px', 
-          borderRadius: '12px', 
-          border: '1px solid rgba(255, 255, 255, 0.06)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px'
-        }}
-      >
-        <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          🔌 Wiring Connections & Simulation
-        </h3>
-        
-        {componentData.wiringExamples?.map((ex, idx) => (
-          <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', margin: 0 }}>
-              {ex.description}
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '6px' }}>
-              {ex.connections.map((conn, cIdx) => (
-                <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', background: 'rgba(255,255,255,0.02)', padding: '4px 10px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                  <span style={{ color: '#fff', fontWeight: 'bold' }}>{conn.from}</span>
-                  <span style={{ color: 'var(--accent-violet)' }}>➔</span>
-                  <span style={{ color: 'var(--text-secondary)' }}>{conn.to}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 15. Downloads */}
-      <div 
-        className="card-glass" 
-        style={{ 
-          padding: '24px', 
-          borderRadius: '12px', 
-          border: '1px solid rgba(255, 255, 255, 0.06)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px'
-        }}
-      >
-        <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          📥 Available Datasheets & Resources
-        </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
-          {componentData.downloads?.map((res, idx) => (
-            <div 
-              key={idx} 
-              style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center', 
-                background: 'rgba(255,255,255,0.01)', 
-                padding: '12px 16px', 
-                borderRadius: '8px', 
-                border: '1px solid rgba(255,255,255,0.03)' 
-              }}
-            >
-              <div>
-                <span style={{ fontSize: '12.5px', color: '#fff', fontWeight: 'bold', display: 'block' }}>{res.type}</span>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>{res.filename} ({res.size})</span>
-              </div>
-              <button 
-                onClick={() => alert(`Downloading: ${res.filename}`)}
-                className="product-btn" 
-                style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                <span className="material-icons" style={{ fontSize: '14px' }}>download</span> Download
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 16. AI Learning Assistant Panel */}
-      <AiLearningAssistant component={componentData} />
 
       {/* 17. Quick Quiz Challenge */}
       {componentData.quiz && (
@@ -1087,126 +990,6 @@ export const ComponentDetails = () => {
           slug={slug}
         />
       )}
-
-      {/* Next Learning Path */}
-      {componentData.nextLearningPath && (
-        <div 
-          className="card-glass" 
-          style={{ 
-            padding: '24px', 
-            borderRadius: '12px', 
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px'
-          }}
-        >
-          <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            🗺️ Recommended Learning Roadmap
-          </h3>
-          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginTop: '4px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)', padding: '6px 12px', borderRadius: '8px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>
-              <span className="material-icons" style={{ fontSize: '14px' }}>developer_board</span>
-              {componentData.name}
-            </div>
-            
-            {componentData.nextLearningPath.map((slugOption, idx) => {
-              const comp = LearningRepository.getComponentBySlug(slugOption);
-              if (!comp) return null;
-              return (
-                <React.Fragment key={slugOption}>
-                  <span className="material-icons" style={{ color: 'var(--text-muted)', fontSize: '16px' }}>arrow_forward</span>
-                  <Link
-                    to={`/learning/components/${slugOption}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '12.5px',
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
-                      padding: '6px 12px',
-                      borderRadius: '8px',
-                      color: '#fff',
-                      textDecoration: 'none',
-                      transition: 'all 0.2s'
-                    }}
-                    className="roadmap-step-chip"
-                  >
-                    <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.06)', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', color: 'var(--text-secondary)', textAlign: 'center' }}>
-                      {idx + 1}
-                    </span>
-                    {comp.name}
-                  </Link>
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* 19. Related Lessons & Projects */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-        
-        {/* Related Lessons */}
-        <div 
-          className="card-glass" 
-          style={{ 
-            padding: '24px', 
-            borderRadius: '12px', 
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px'
-          }}
-        >
-          <h4 style={{ fontSize: '13px', fontWeight: '850', color: '#fff', textTransform: 'uppercase', margin: 0, letterSpacing: '0.5px' }}>
-            📚 Related Lessons
-          </h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {componentData.relatedLessons?.map((lessonSlug, idx) => (
-              <Link 
-                key={idx} 
-                to={`/learning/fundamentals/${lessonSlug}`}
-                style={{ fontSize: '12.5px', color: 'var(--accent-violet)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                <span className="material-icons" style={{ fontSize: '13px' }}>auto_stories</span>
-                {lessonSlug.replace(/-/g, ' ')}
-              </Link>
-            )) || <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>None suggested</span>}
-          </div>
-        </div>
-
-        {/* Related Projects */}
-        <div 
-          className="card-glass" 
-          style={{ 
-            padding: '24px', 
-            borderRadius: '12px', 
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px'
-          }}
-        >
-          <h4 style={{ fontSize: '13px', fontWeight: '850', color: '#fff', textTransform: 'uppercase', margin: 0, letterSpacing: '0.5px' }}>
-            🚀 Related Projects Kits
-          </h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {componentData.relatedProjects?.map((projectSlug, idx) => (
-              <Link 
-                key={idx} 
-                to={`/projects`} // Route to project listing
-                style={{ fontSize: '12.5px', color: 'var(--accent-violet)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                <span className="material-icons" style={{ fontSize: '13px' }}>construction</span>
-                {projectSlug.replace(/-/g, ' ')}
-              </Link>
-            )) || <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>None suggested</span>}
-          </div>
-        </div>
-      </div>
-
       {/* 20. Continue Learning Navigation Footer */}
       {nextVariant && (
         <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '20px' }}>

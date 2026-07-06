@@ -7,11 +7,6 @@ export const BOTTOM_NAVIGATION = [
     path: '/'
   },
   {
-    id: 'workspace',
-    label: 'Workspace',
-    path: '/learning/workspace'
-  },
-  {
     id: 'projects',
     label: 'Projects',
     path: '/projects'
@@ -101,4 +96,12 @@ export const QUICK_ACTIONS = [
     path: '/admin/settings',
     requiresAdmin: true
   }
+];
+
+export const HOMEPAGE_NAVIGATION = [
+  { id: 'projects', label: 'Projects', path: '/projects' },
+  { id: 'departments', label: 'Departments', path: '/projects?filter=departments' },
+  { id: 'how-it-works', label: 'How It Works', path: '/#how-it-works' },
+  { id: 'about', label: 'About', path: '/#about' },
+  { id: 'contact', label: 'Contact', path: '/contact' }
 ];

@@ -98,7 +98,8 @@ export const AdminLayout = () => {
           <nav>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {navItems.map((item) => {
-                const isActive = location.pathname === item.path || (item.id === 'projects' && (location.pathname === ROUTES.ADMIN_ADD_PROJECT || location.pathname.startsWith('/admin/projects/edit/')));
+                const isActive = location.pathname === item.path || 
+                  (item.id === 'projects' && (location.pathname === ROUTES.ADMIN_ADD_PROJECT || location.pathname.startsWith('/admin/projects/edit/')));
                 return (
                   <li key={item.id}>
                     <Link

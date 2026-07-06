@@ -51,15 +51,6 @@ export const Fundamentals = () => {
                 </p>
               </div>
 
-              {/* Card Footer badges */}
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '2px 6px', borderRadius: '4px' }}>
-                  ⏱️ {concept.learningTime || concept.time}
-                </span>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '2px 6px', borderRadius: '4px' }}>
-                  {concept.difficulty}
-                </span>
-              </div>
             </div>
           );
         })}

@@ -23,13 +23,34 @@ export const ComponentLibrary = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Read search query from URL params if present
+  // Read search/category query from URL params if present
   useEffect(() => {
     const urlQuery = searchParams.get('search');
     if (urlQuery) {
       setSearchQuery(urlQuery);
     }
-  }, [searchParams]);
+    const catQuery = searchParams.get('category');
+    if (catQuery) {
+      const found = categories.find(c => c.toLowerCase() === catQuery.toLowerCase());
+      if (found) {
+        setSelectedCategory(found);
+      } else {
+        if (catQuery.toLowerCase().includes('semiconductor') || catQuery.toLowerCase().includes('semiconductors')) {
+          const match = categories.find(c => c.toLowerCase().includes('semiconductor') || c.toLowerCase().includes('semiconductors'));
+          if (match) setSelectedCategory(match);
+        } else if (catQuery.toLowerCase().includes('passive')) {
+          const match = categories.find(c => c.toLowerCase().includes('passive'));
+          if (match) setSelectedCategory(match);
+        } else if (catQuery.toLowerCase().includes('sensor') || catQuery.toLowerCase().includes('sensors')) {
+          const match = categories.find(c => c.toLowerCase().includes('sensor') || c.toLowerCase().includes('sensors'));
+          if (match) setSelectedCategory(match);
+        } else if (catQuery.toLowerCase() === 'boards' || catQuery.toLowerCase().includes('board')) {
+          const match = categories.find(c => c.toLowerCase().includes('board') || c.toLowerCase() === 'boards');
+          if (match) setSelectedCategory(match);
+        }
+      }
+    }
+  }, [searchParams, categories]);
 
   // Perform dynamic filtering of components
   const filteredComponents = useMemo(() => {
@@ -71,56 +92,7 @@ export const ComponentLibrary = () => {
         </div>
       </div>
 
-      {/* Answer Three Questions Callout Banner - 3 Separate Cards */}
-      <div className="workspace-info-grid">
-        <div className="workspace-info-card violet">
-          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-violet)' }}>
-            What am I learning?
-          </span>
-          <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-            Independent electronic components. Every component is treated as its own complete topic with targeted learning goals.
-          </p>
-        </div>
-        
-        <div className="workspace-info-card blue">
-          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-blue)' }}>
-            Why is it important?
-          </span>
-          <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-            Students search, track, and complete lessons for each component individually. Achievements, XP points, and quizzes are tracked per component.
-          </p>
-        </div>
-        
-        <div className="workspace-info-card emerald">
-          <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-emerald)' }}>
-            What should I learn next?
-          </span>
-          <p style={{ fontSize: '11.5px', color: 'var(--text-primary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-            Select any component card (such as <strong>LDR</strong> or <strong>Thermistor</strong>) to inspect its layers, take its quiz, and complete the build challenge.
-          </p>
-        </div>
-      </div>
-
-      {/* Category Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
-        {categories.map((cat) => {
-          const isActive = selectedCategory === cat;
-          return (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className="product-btn"
-              style={{
-                background: isActive ? 'rgba(139, 92, 246, 0.1)' : 'rgba(255, 255, 255, 0.02)',
-                borderColor: isActive ? 'rgba(139, 92, 246, 0.3)' : 'var(--border-subtle)',
-                color: isActive ? 'var(--accent-violet)' : 'var(--text-secondary)'
-              }}
-            >
-              {cat}
-            </button>
-          );
-        })}
-      </div>
+      <div style={{ marginBottom: '24px' }} />
 
       {/* Components Grid */}
       {filteredComponents.length > 0 ? (

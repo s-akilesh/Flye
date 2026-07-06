@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LEARNING_NAVIGATION, 
   PROJECTS_NAVIGATION, 
-  QUICK_ACTIONS 
+  QUICK_ACTIONS,
+  HOMEPAGE_NAVIGATION
 } from '../../config/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/Button';
@@ -296,30 +297,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                       </span>
                     </div>
                   </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      navigate(ROUTES.STUDENT_AUTH);
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px',
-                      fontSize: '12.5px',
-                      fontWeight: '700',
-                      background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
-                      border: 'none',
-                      borderRadius: '6px',
-                      color: 'white',
-                      cursor: 'pointer',
-                      boxShadow: '0 2px 10px rgba(139, 92, 246, 0.2)',
-                      marginBottom: '12px'
-                    }}
-                  >
-                    Sign In / Sign Up
-                  </button>
-                )}
+                ) : null}
 
                 {/* Switch view mode button inside drawer for admins */}
                 {user && isAdmin && (
@@ -398,31 +376,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                 </svg>
               </form>
 
-              {/* Continue Learning card */}
-              {!user && (
-                <div 
-                  onClick={() => handleLinkClick(`/learning/fundamentals/${lastLesson.slug}`)}
-                  style={{ 
-                    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%)', 
-                    border: '1px solid rgba(139, 92, 246, 0.25)', 
-                    padding: '14px', 
-                    borderRadius: '10px', 
-                    cursor: 'pointer' 
-                  }}
-                >
-                  <span style={{ fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent-violet)', display: 'block', marginBottom: '2px' }}>
-                    Continue Learning
-                  </span>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h5 style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: '#fff' }}>
-                      {lastLesson.name}
-                    </h5>
-                    <span style={{ fontSize: '11px', color: 'var(--accent-blue)', fontWeight: 'bold' }}>
-                      Continue →
-                    </span>
-                  </div>
-                </div>
-              )}
+
 
               {/* Menu Items Render */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -566,82 +520,55 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                     </ul>
                   </div>
                 ) : (
-                  /* Standard Mode groups */
-                  <>
-                    {/* 1. Learning Group */}
-                    <div>
-                      <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent-blue)', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
-                        Curriculum
-                      </span>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        {LEARNING_NAVIGATION.map((item) => {
-                          if (item.disabled) return null;
-                          return (
-                            <li key={item.id}>
-                              <button
-                                type="button"
-                                onClick={() => handleLinkClick(item.path)}
-                                style={{
-                                  width: '100%',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '10px',
-                                  padding: '8px 12px',
-                                  borderRadius: '6px',
-                                  background: 'none',
-                                  border: 'none',
-                                  color: 'var(--text-primary)',
-                                  cursor: 'pointer',
-                                  fontSize: '12.5px',
-                                  textAlign: 'left'
-                                }}
-                              >
-                                <DrawerIcon id={item.id} />
-                                {item.label}
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-
-                    {/* 2. Projects Group */}
-                    <div>
-                      <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent-emerald)', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
-                        Hardware Catalog
-                      </span>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        {PROJECTS_NAVIGATION.map((item) => {
-                          if (item.disabled) return null;
-                          return (
-                            <li key={item.id}>
-                              <button
-                                type="button"
-                                onClick={() => handleLinkClick(item.path)}
-                                style={{
-                                  width: '100%',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '10px',
-                                  padding: '8px 12px',
-                                  borderRadius: '6px',
-                                  background: 'none',
-                                  border: 'none',
-                                  color: 'var(--text-primary)',
-                                  cursor: 'pointer',
-                                  fontSize: '12.5px',
-                                  textAlign: 'left'
-                                }}
-                              >
-                                <DrawerIcon id={item.id} />
-                                {item.label}
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </>
+                  /* Simplified Homepage Navigation */
+                  <div>
+                    <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent-violet)', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
+                      Navigation
+                    </span>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {HOMEPAGE_NAVIGATION.map((item) => {
+                        const isNavActive = location.pathname === item.path;
+                        if (item.id === 'login' && user) return null; // Hide login if user is logged in
+                        return (
+                          <li key={item.id}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                onClose();
+                                if (item.path.startsWith('/#')) {
+                                  // Scroll to anchor on home page
+                                  navigate('/');
+                                  setTimeout(() => {
+                                    const el = document.getElementById(item.path.substring(2));
+                                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                  }, 100);
+                                } else {
+                                  navigate(item.path);
+                                }
+                              }}
+                              style={{
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                padding: '8px 12px',
+                                borderRadius: '6px',
+                                background: isNavActive ? 'rgba(139,92,246,0.08)' : 'none',
+                                border: 'none',
+                                color: isNavActive ? 'var(--accent-violet)' : 'var(--text-primary)',
+                                cursor: 'pointer',
+                                fontSize: '12.5px',
+                                textAlign: 'left'
+                              }}
+                            >
+                              <DrawerIcon id={item.id} />
+                              {item.label}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 )}
 
                 {/* Recently Visited */}

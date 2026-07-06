@@ -11,8 +11,6 @@ import {
   CommonMistakes,
   ComponentCard,
   QuizCard,
-  ProgressCard,
-  AchievementCard,
   NavigationFooter,
   SectionTitle,
   LearningCard,
@@ -162,8 +160,8 @@ export const FundamentalDetails = () => {
       {/* 2-Column Dashboard Layout */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px', alignItems: 'flex-start' }}>
         
-        {/* Left main content block */}
-        <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        {/* Main content block */}
+        <div style={{ gridColumn: 'span 12', display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Reusable LessonHeader */}
           <LessonHeader
@@ -356,82 +354,6 @@ export const FundamentalDetails = () => {
             prevLabel={prevLesson ? prevLesson.title : 'Back'}
             nextLabel={nextLesson ? `Continue: ${nextLesson.title}` : 'Complete Level 1'}
           />
-
-        </div>
-
-        {/* Right side stats panel */}
-        <div style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '24px', position: 'sticky', top: '100px' }}>
-          
-          {/* Reusable ProgressCard */}
-          <ProgressCard stats={progressStats} />
-
-          {/* Achievements earned widget */}
-          {completedList.length >= 5 && (
-            <AchievementCard
-              title="Electrical Disciple"
-              description="Completed at least 5 core electrical basics modules!"
-              badge="🥇"
-            />
-          )}
-
-          {completedList.length === allLessons.length && (
-            <AchievementCard
-              title="Level 1 Champion"
-              description="Mastered all 19 Electrical Basics lessons!"
-              badge="🏆"
-            />
-          )}
-
-          {/* Quick Lesson Jump sidebar box */}
-          <div className="card-glass" style={{ padding: '20px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <span style={{ fontSize: '9px', fontWeight: '850', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Lesson Navigation
-            </span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '320px', overflowY: 'auto', paddingRight: '4px' }}>
-              {allLessons.map((l) => {
-                const isCurrent = l.slug === lesson.slug;
-                const isDone = completedList.includes(l.slug);
-                return (
-                  <button
-                    key={l.id}
-                    onClick={() => {
-                      navigate(`/learning/fundamentals/${l.slug}`);
-                      window.scrollTo(0,0);
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      borderRadius: '6px',
-                      border: `1px solid ${isCurrent ? 'var(--accent-violet)' : 'transparent'}`,
-                      background: isCurrent 
-                        ? 'rgba(139, 92, 246, 0.08)' 
-                        : isDone 
-                          ? 'rgba(16, 185, 129, 0.02)' 
-                          : 'transparent',
-                      color: isCurrent 
-                        ? '#fff' 
-                        : isDone 
-                          ? 'var(--accent-emerald)' 
-                          : 'var(--text-secondary)',
-                      fontSize: '12px',
-                      fontWeight: isCurrent ? '700' : '500',
-                      textAlign: 'left',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}
-                    className="lesson-jump-item"
-                  >
-                    <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '80%' }}>
-                      {l.title}
-                    </span>
-                    {isDone && <span style={{ fontSize: '10px' }}>✓</span>}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
 
         </div>
 

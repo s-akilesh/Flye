@@ -81,7 +81,6 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
-  const [showWorkspaceDrawer, setShowWorkspaceDrawer] = useState(false);
 
   const isAdminContext = location.pathname.startsWith('/admin');
 
@@ -95,110 +94,20 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
   const menuItems = isAdminContext ? adminNavItems : BOTTOM_NAVIGATION;
 
   const handleItemClick = (item) => {
-    if (item.id === 'workspace') {
-      setShowWorkspaceDrawer(prev => !prev);
-    } else if (item.action === 'toggleDrawer') {
+    if (item.action === 'toggleDrawer') {
       onToggleDrawer();
     } else {
-      setShowWorkspaceDrawer(false);
       navigate(item.path);
     }
   };
 
-  // 1. Render Workspace Quick Selector Drawer (overlay above footer menu)
-  const learningWorkspaceItems = [
-    { label: 'Dashboard', path: ROUTES.STUDENT_DASHBOARD },
-    { label: 'Engineering Workspace', path: ROUTES.LEARNING_WORKSPACE },
-    { label: 'Component Library', path: ROUTES.LEARNING_COMPONENTS },
-    { label: 'Electrical Basics', path: ROUTES.LEARNING_FUNDAMENTALS }
-  ];
-
   return (
     <>
-      {showWorkspaceDrawer && !isAdminContext && (
-        <div 
-          className="workspace-selector-drawer"
-          style={{
-            position: 'fixed',
-            bottom: '64px', // height of bottom navigation
-            left: 0,
-            right: 0,
-            background: 'rgba(10, 10, 15, 0.92)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            borderTop: '1px solid var(--accent-violet)',
-            borderBottom: '1px solid rgba(255,255,255,0.05)',
-            padding: '16px var(--space-4)',
-            zIndex: 999,
-            boxShadow: '0 -10px 25px rgba(139, 92, 246, 0.15)',
-            animation: 'slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-        >
-          <style>{`
-            @keyframes slideUp {
-              from { transform: translateY(100%); }
-              to { transform: translateY(0); }
-            }
-          `}</style>
-          
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--accent-violet)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Select Workspace Section
-            </span>
-            <button 
-              onClick={() => setShowWorkspaceDrawer(false)}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '14px' }}
-            >
-              ✕
-            </button>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-            {learningWorkspaceItems.map((subItem) => {
-              const isSubActive = location.pathname === subItem.path;
-              return (
-                <button
-                  key={subItem.path}
-                  type="button"
-                  onClick={() => {
-                    setShowWorkspaceDrawer(false);
-                    navigate(subItem.path);
-                  }}
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    background: isSubActive ? 'rgba(139, 92, 246, 0.08)' : 'rgba(255, 255, 255, 0.02)',
-                    border: isSubActive ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid rgba(255, 255, 255, 0.05)',
-                    color: isSubActive ? 'var(--accent-violet)' : '#fff',
-                    cursor: 'pointer',
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    textAlign: 'left',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: isSubActive ? 'var(--accent-violet)' : 'var(--text-muted)' }} />
-                  {subItem.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       <nav className="mobile-bottom-nav" style={{ zIndex: 1000 }}>
         {menuItems.map((item) => {
           // Evaluate active status
           let isActive = false;
-          if (showWorkspaceDrawer) {
-            isActive = item.id === 'workspace';
-          } else if (item.id === 'workspace') {
-            isActive = location.pathname.startsWith('/learning') || location.pathname === '/dashboard';
-          } else if (item.action === 'toggleDrawer') {
+          if (item.action === 'toggleDrawer') {
             isActive = isDrawerOpen;
           } else {
             const targetPath = item.path || (item.guestPath && !user ? item.guestPath : item.adminPath);

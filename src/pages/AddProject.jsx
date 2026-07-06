@@ -136,7 +136,6 @@ export const AddProject = () => {
   // Media State
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
 
   const handleThumbnailUpload = (file) => {
     if (!file) return;
@@ -151,9 +150,6 @@ export const AddProject = () => {
     reader.readAsDataURL(file);
   };
 
-  // Dynamic Components State (array of strings)
-  const [componentsList, setComponentsList] = useState(['']);
-
   // Dynamic Resources State (array of { name, type, size, status })
   const [resourcesList, setResourcesList] = useState([
     { name: '', type: 'pdf', size: '', status: 'available' }
@@ -161,11 +157,6 @@ export const AddProject = () => {
 
   // Search Keywords State (comma-separated string)
   const [keywords, setKeywords] = useState('');
-
-  // Related Projects State (array of project IDs)
-  const [relatedProjects, setRelatedProjects] = useState([]);
-  const [showRelated, setShowRelated] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Section scroll state
   const [activeSection, setActiveSection] = useState('sec-basic');
@@ -186,11 +177,8 @@ export const AddProject = () => {
     const sections = [
       'sec-basic',
       'sec-pricing',
-      'sec-media',
-      'sec-components',
       'sec-resources',
-      'sec-keywords',
-      'sec-related'
+      'sec-keywords'
     ];
 
     const observerOptions = {
@@ -237,22 +225,6 @@ export const AddProject = () => {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  };
-
-  // Dynamic Component List handlers
-  const handleAddComponent = () => {
-    setComponentsList([...componentsList, '']);
-  };
-
-  const handleRemoveComponent = (index) => {
-    const nextList = componentsList.filter((_, idx) => idx !== index);
-    setComponentsList(nextList.length === 0 ? [''] : nextList);
-  };
-
-  const handleComponentChange = (index, value) => {
-    const nextList = [...componentsList];
-    nextList[index] = value;
-    setComponentsList(nextList);
   };
 
   // Dynamic Resource List handlers
@@ -350,13 +322,6 @@ export const AddProject = () => {
     setResourcesList(nextList);
   };
 
-  // Related project checkbox toggle
-  const handleToggleRelated = (id) => {
-    setRelatedProjects((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
   // Parameterized Save Project flow
   const handleSaveProject = async (targetStatus) => {
     if (!title.trim() || !description.trim()) {
@@ -376,9 +341,6 @@ export const AddProject = () => {
       }
     }
 
-    // Clean Dynamic Components
-    const finalComponents = componentsList.map((c) => c.trim()).filter((c) => c !== '');
-    
     // Clean Dynamic Resources
     const finalResources = resourcesList
        .map((r) => ({
@@ -431,9 +393,9 @@ export const AddProject = () => {
         schematic: '',
         circuit: ''
       },
-      videoUrl: videoUrl.trim() || 'https://www.youtube.com/embed/placeholder',
+      videoUrl: '',
       resources: finalResources,
-      components: finalComponents,
+      components: [],
       specifications: {
         controller: technology.trim() || 'Arduino Uno',
         sensors: 'Standard sensor configuration',
@@ -441,7 +403,7 @@ export const AddProject = () => {
         operatingVoltage: '5V DC',
         programmingLanguage: 'C++'
       },
-      relatedProjects: showRelated ? relatedProjects : [],
+      relatedProjects: [],
       stockStatus: 'in-stock',
       featured,
       status: targetStatus,
@@ -573,22 +535,6 @@ export const AddProject = () => {
           </button>
           <button
             type="button"
-            className={`nav-sec-btn ${activeSection === 'sec-media' ? 'active' : ''}`}
-            onClick={() => scrollToSection('sec-media')}
-          >
-            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>play_circle</span>
-            Media
-          </button>
-          <button
-            type="button"
-            className={`nav-sec-btn ${activeSection === 'sec-components' ? 'active' : ''}`}
-            onClick={() => scrollToSection('sec-components')}
-          >
-            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>memory</span>
-            Components
-          </button>
-          <button
-            type="button"
             className={`nav-sec-btn ${activeSection === 'sec-resources' ? 'active' : ''}`}
             onClick={() => scrollToSection('sec-resources')}
           >
@@ -602,14 +548,6 @@ export const AddProject = () => {
           >
             <span className="material-icons-outlined" style={{ fontSize: '18px' }}>search</span>
             Search Keywords
-          </button>
-          <button
-            type="button"
-            className={`nav-sec-btn ${activeSection === 'sec-related' ? 'active' : ''}`}
-            onClick={() => scrollToSection('sec-related')}
-          >
-            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>link</span>
-            Related Projects
           </button>
         </div>
 
@@ -910,38 +848,13 @@ export const AddProject = () => {
                     {kit.enabled && (
                       <div className="grid-12" style={{ gap: '12px' }}>
                         {/* Price */}
-                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
+                        <div style={{ gridColumn: 'span 12' }} className="calc-row">
                           <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Price (₹) *</label>
                           <input 
                             type="number" 
                             value={kit.price} 
                             className="form-input" 
                             onChange={(e) => updateKitField(kitIdx, 'price', Number(e.target.value))}
-                          />
-                        </div>
-
-                        {/* Highlight/Recommended */}
-                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Recommended Highlight</label>
-                          <select
-                            value={kit.recommended || 'none'}
-                            className="form-select"
-                            onChange={(e) => updateKitField(kitIdx, 'recommended', e.target.value)}
-                          >
-                            <option value="none">None</option>
-                            <option value="best-value">Best Value</option>
-                            <option value="most-popular">Most Popular</option>
-                          </select>
-                        </div>
-
-                        {/* Short Description */}
-                        <div style={{ gridColumn: 'span 4' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Short Description</label>
-                          <input 
-                            type="text" 
-                            value={kit.description || ''} 
-                            className="form-input" 
-                            onChange={(e) => updateKitField(kitIdx, 'description', e.target.value)}
                           />
                         </div>
 
@@ -1078,59 +991,6 @@ export const AddProject = () => {
               <label htmlFor="proj-featured" style={{ cursor: 'pointer', margin: 0, fontWeight: '500' }}>
                 Promote to Homepage Featured list
               </label>
-            </div>
-          </div>
-
-          {/* Section 4: Video Guide URL */}
-          <div id="sec-media" className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <h3 style={{ marginBottom: 'var(--space-3)', color: 'var(--accent-blue)' }}>Video Guide URL</h3>
-
-            <div className="calc-row">
-              <label htmlFor="proj-video">Video Guide URL (YouTube embed link)</label>
-              <Input
-                type="url"
-                id="proj-video"
-                className="form-input"
-                placeholder="e.g. https://www.youtube.com/embed/XXXXXX"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Section 5: Components */}
-          <div id="sec-components" className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-              <h3 style={{ color: 'var(--accent-blue)' }}>Hardware Components</h3>
-              <Button type="button" variant="secondary" onClick={handleAddComponent} style={{ padding: '4px 10px', fontSize: '12px' }}>
-                Add row
-              </Button>
-            </div>
-            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: 'var(--space-3)' }}>
-              List the hardware modules, chips, and wires included in this prototyped kit.
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-              {componentsList.map((comp, idx) => (
-                <div key={idx} style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
-                  <span style={{ fontSize: '12px', color: 'var(--text-muted)', width: '20px' }}>#{idx+1}</span>
-                  <Input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. HC-SR501 PIR sensor"
-                    value={comp}
-                    onChange={(e) => handleComponentChange(idx, e.target.value)}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleRemoveComponent(idx)}
-                    style={{ padding: '8px', color: 'var(--accent-crimson, #ef4444)' }}
-                  >
-                    ✕
-                  </Button>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -1279,104 +1139,7 @@ export const AddProject = () => {
             </div>
           </div>
 
-          {/* Section 8: Related Projects */}
-          <div id="sec-related" className="card-glass" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-5)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-              <div>
-                <h3 style={{ marginBottom: 'var(--space-1)', color: 'var(--accent-blue)' }}>Related kits recommendation</h3>
-                <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>
-                  Select other kits to suggest in the details footer.
-                </p>
-              </div>
-              {/* Toggle switch */}
-              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
-                <span style={{ fontSize: '12px', color: showRelated ? 'var(--accent-violet)' : 'var(--text-muted)', fontWeight: 500 }}>
-                  {showRelated ? 'Enabled' : 'Disabled'}
-                </span>
-                <div 
-                  onClick={() => setShowRelated(!showRelated)}
-                  style={{
-                    width: '38px',
-                    height: '20px',
-                    borderRadius: '10px',
-                    background: showRelated ? 'var(--accent-violet)' : 'rgba(255,255,255,0.1)',
-                    position: 'relative',
-                    transition: 'background 0.2s',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <div style={{
-                    width: '14px',
-                    height: '14px',
-                    borderRadius: '50%',
-                    background: '#fff',
-                    position: 'absolute',
-                    top: '3px',
-                    left: showRelated ? '21px' : '3px',
-                    transition: 'left 0.2s'
-                  }} />
-                </div>
-              </label>
-            </div>
-
-            {showRelated && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ position: 'relative', width: '100%' }}>
-                  <input
-                    type="text"
-                    placeholder="Search projects to relate..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="form-input"
-                    style={{
-                      height: '36px',
-                      paddingLeft: '32px',
-                      paddingRight: '12px',
-                      fontSize: '12px'
-                    }}
-                  />
-                  <span className="material-icons-outlined" style={{
-                    position: 'absolute',
-                    left: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    fontSize: '16px',
-                    color: 'var(--text-muted)'
-                  }}>
-                    search
-                  </span>
-                </div>
-                
-                {/* Scrollable Checkbox List */}
-                <div style={{ maxHeight: '160px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', padding: '10px', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '6px', background: 'rgba(0,0,0,0.15)' }}>
-                  {allProjects.filter((p) =>
-                    p.title.toLowerCase().includes(searchQuery.toLowerCase())
-                  ).length > 0 ? (
-                    allProjects
-                      .filter((p) => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
-                      .map((p) => (
-                        <label key={p.id} style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '12px', cursor: 'pointer', margin: 0, padding: '4px 0' }}>
-                          <input
-                            type="checkbox"
-                            checked={relatedProjects.includes(p.id)}
-                            onChange={() => handleToggleRelated(p.id)}
-                            style={{ cursor: 'pointer' }}
-                          />
-                          <span style={{ color: relatedProjects.includes(p.id) ? '#fff' : 'var(--text-secondary)' }}>
-                            {p.title}
-                          </span>
-                        </label>
-                      ))
-                  ) : (
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', padding: '12px 0' }}>
-                      No projects found matching search.
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </form>
+          </form>
       </div>
 
 

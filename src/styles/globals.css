@@ -115,7 +115,7 @@ body {
   font-family: var(--font-sans);
   font-size: 13px;
   color: var(--text-primary);
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--form-bg);
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   padding: 10px 14px;
@@ -134,7 +134,7 @@ body {
 .form-textarea:focus {
   border-color: var(--accent-primary);
   box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--form-bg-focus);
 }
 
 /* --- LAYERED ATMOSPHERIC BACKGROUND --- */
@@ -158,7 +158,7 @@ body {
   height: 70vw;
   max-width: 1000px;
   max-height: 1000px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, rgba(10, 10, 15, 0) 70%);
+  background: radial-gradient(circle, var(--radial-glow-1) 0%, transparent 70%);
   filter: blur(150px);
   z-index: -1;
   pointer-events: none;
@@ -170,7 +170,7 @@ body {
   width: 55vw;
   height: 55vw;
   max-width: 800px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.09) 0%, rgba(59, 130, 246, 0.07) 50%, rgba(10, 10, 15, 0) 80%);
+  background: radial-gradient(circle, var(--radial-glow-2) 0%, var(--radial-glow-3) 50%, transparent 80%);
   filter: blur(130px);
   z-index: -2;
   pointer-events: none;
@@ -184,7 +184,7 @@ body {
   width: 50vw;
   height: 50vw;
   max-width: 700px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(10, 10, 15, 0) 70%);
+  background: radial-gradient(circle, var(--radial-glow-2) 0%, transparent 70%);
   filter: blur(120px);
   z-index: -3;
   pointer-events: none;
@@ -4308,8 +4308,7 @@ header {
     display: flex !important;
   }
 
-  .header-role-switcher,
-  .header-admin-avatar {
+  .header-profile-text {
     display: none !important;
   }
 
@@ -4626,4 +4625,226 @@ body.in-learning-portal header {
 
 #kits-portal .portal-header {
   margin-bottom: 0px !important;
+}
+
+.desktop-nav-menu {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav-menu {
+    display: none !important;
+  }
+}
+
+/* Section 2 Journey Cards with animated gradient borders */
+.journey-card {
+  position: relative;
+  padding: 32px 24px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  /* Base gradient border starts very subtle/low opacity */
+  background: linear-gradient(#050508, #050508) padding-box, 
+              linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)) border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  box-sizing: border-box;
+  z-index: 1;
+  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Layered border glow overlay to fade-in seamlessly without snaps */
+.journey-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px; bottom: -1px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  /* Card interior remains dark (#06060c) while the border-box gets the bright gradient */
+  background: linear-gradient(#06060c, #06060c) padding-box, 
+              linear-gradient(155deg, rgba(59, 130, 246, 0.85), rgba(139, 92, 246, 0.85)) border-box;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.journey-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(139, 92, 246, 0.18);
+}
+
+.journey-card:hover::before {
+  opacity: 1;
+}
+
+/* Timeline Journey Steps (3D Tilt & Expand Cards) */
+.journey-step-wrapper {
+  flex: 1 1 240px;
+  max-width: 280px;
+  height: 160px; /* Locked footprint height */
+  position: relative;
+  box-sizing: border-box;
+}
+
+.journey-step-card-v2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Default height matches wrapper */
+  padding: 24px; /* Card all side spacing 24px */
+  border-radius: 12px;
+  border: 1px solid transparent; /* Default card has no border */
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center align number and title horizontally */
+  justify-content: flex-start;
+  gap: 12px;
+  z-index: 1;
+  will-change: transform, height;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+/* Hover: expand visually downward to 240px and pop on top of Z index */
+.journey-step-wrapper:hover .journey-step-card-v2 {
+  height: 245px;
+  z-index: 10;
+  transform: scale(1.05) rotateX(-8deg) rotateY(-8deg);
+  border-color: rgba(139, 92, 246, 0.35); /* Lite border */
+  background-color: rgba(10, 10, 15, 0.98); /* Solid dark backdrop to cover layout content below */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 10px 30px rgba(139, 92, 246, 0.12);
+}
+
+/* Step number circle badge with background */
+.journey-step-number-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #09090d; /* Solid dark background to mask the connector line */
+  border: 2px solid var(--accent-violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 950;
+  color: var(--accent-violet);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+  transition: all 0.3s ease;
+  z-index: 2; /* Sits above the line */
+}
+
+.journey-step-wrapper:hover .journey-step-number-badge {
+  border-color: #fff;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+}
+
+/* Card title positioned below the number */
+.journey-step-title-v2 {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  line-height: 1.35;
+  text-align: center; /* Center title */
+}
+
+/* Detailed checklist content hidden by default, reveal on hover */
+.journey-step-details-v2 {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  width: 100%;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.journey-step-wrapper:hover .journey-step-details-v2 {
+  opacity: 1;
+  max-height: 145px;
+}
+
+.journey-step-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.journey-step-bullet-list li {
+  font-size: 11.5px;
+  color: var(--text-secondary, #9ca3af);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Responsive Journey Winding Flow Layout */
+.desktop-connector-svg {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .journey-grid-container {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
+  }
+  .desktop-connector-svg {
+    display: block !important;
+  }
+  .journey-step-wrapper.offset-low {
+    margin-top: 80px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .journey-grid-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    align-items: center !important;
+  }
+  .journey-step-wrapper {
+    width: 100% !important;
+    max-width: 400px !important;
+    height: auto !important; /* Stack naturally on mobile */
+    min-height: auto !important;
+  }
+  .journey-step-card-v2 {
+    position: relative !important;
+    height: auto !important;
+    min-height: auto !important;
+    transform: none !important;
+  }
+  .journey-step-wrapper:hover .journey-step-card-v2 {
+    height: auto !important;
+    transform: none !important;
+    box-shadow: none !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    border-color: transparent !important;
+  }
+  .journey-step-details-v2 {
+    opacity: 1 !important;
+    max-height: none !important;
+    margin-top: 8px !important;
+  }
 }

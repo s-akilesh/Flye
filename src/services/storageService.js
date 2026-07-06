@@ -31,7 +31,7 @@ export const storageService = {
     const fileExt = file.name.split('.').pop().toLowerCase();
     
     if (type === 'image') {
-      const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+      const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'gif'];
       const maxSize = 10 * 1024 * 1024; // 10MB
       if (!allowedExts.includes(fileExt)) {
         throw new Error(`Invalid image type. Allowed: ${allowedExts.join(', ')}`);
@@ -86,7 +86,7 @@ export const storageService = {
 
       // Determine public URL if it is a public bucket
       let publicUrl = '';
-      const publicBuckets = ['logos', 'favicons', 'profiles', 'project-images', 'learning-images', 'website-assets'];
+      const publicBuckets = ['logos', 'favicons', 'profiles', 'project-images', 'learning-images', 'website-assets', 'component-assets'];
       if (publicBuckets.includes(bucket)) {
         publicUrl = this.getPublicUrl(bucket, filePath);
       }

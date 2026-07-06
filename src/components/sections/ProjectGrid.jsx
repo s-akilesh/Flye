@@ -69,7 +69,6 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
             
             <div className="card-spec-row">
               <span className={`status-pill diff-${diff}`}>{difficultyLabel}</span>
-              <span className="status-pill status-time">⏱ {proj.buildTime}</span>
               <span className={`status-pill level-${proj.projectLevel?.toLowerCase()}`}>{proj.projectLevel}</span>
             </div>
 

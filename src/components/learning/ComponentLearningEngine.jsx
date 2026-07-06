@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../../context/ToastContext';
+import { supabase } from '../../lib/supabase';
 
 // 1. BeforeYouStartCard
 export const BeforeYouStartCard = ({ component }) => (
@@ -19,9 +20,8 @@ export const BeforeYouStartCard = ({ component }) => (
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-        📋 Before You Start
+        Before You Start
       </h3>
-      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>⏱️ {component.estimatedTime || '10 min'} read</span>
     </div>
 
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginTop: '4px' }}>
@@ -44,15 +44,6 @@ export const BeforeYouStartCard = ({ component }) => (
           )) || <li>Understand component usage in circuit loops.</li>}
         </ul>
       </div>
-
-      {component.safetyNotes && component.safetyNotes.length > 0 && (
-        <div>
-          <span style={{ fontSize: '10px', color: 'var(--accent-crimson, #ef4444)', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>⚠️ Safety Warning</span>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-            {component.safetyNotes[0]}
-          </p>
-        </div>
-      )}
     </div>
   </div>
 );
@@ -129,6 +120,33 @@ export const ComponentExplorer = ({ component }) => {
     setSelectedPart(null);
   }, [activeMode]);
 
+  const [workingGifUrl, setWorkingGifUrl] = useState(null);
+
+  useEffect(() => {
+    const fetchWorkingGif = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('component_assets')
+          .select('storage_path')
+          .eq('component_slug', component.slug)
+          .eq('asset_type', 'working_gif')
+          .maybeSingle();
+
+        if (error) throw error;
+        if (data?.storage_path) {
+          setWorkingGifUrl(`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/component-assets/${data.storage_path}`);
+        } else {
+          setWorkingGifUrl(null);
+        }
+      } catch (err) {
+        console.error('Error fetching working gif:', err);
+      }
+    };
+    if (component?.slug) {
+      fetchWorkingGif();
+    }
+  }, [component?.slug]);
+
   return (
     <div 
       className="card-glass" 
@@ -147,7 +165,7 @@ export const ComponentExplorer = ({ component }) => {
           { id: 'overview', label: 'Overview', icon: 'visibility' },
           { id: 'exploded', label: 'Exploded View', icon: 'layers' },
           { id: 'pinout', label: 'Pin Explorer', icon: 'pin' },
-          { id: 'circuit', label: 'Circuit Wiring', icon: 'settings_ethernet' }
+          { id: 'working_gif', label: 'Working Animation', icon: 'play_circle' }
         ].map((mode) => (
           <button
             key={mode.id}
@@ -387,77 +405,25 @@ export const ComponentExplorer = ({ component }) => {
             </div>
           )}
 
-          {/* Mode 6: Circuit Connection */}
-          {activeMode === 'circuit' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', alignItems: 'center' }}>
-              <div 
-                className="card-glass" 
-                style={{ 
-                  width: '90%', 
-                  height: '180px', 
-                  border: '1px dashed rgba(255,255,255,0.06)', 
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative'
-                }}
-              >
-                <div style={{ display: 'flex', gap: '48px', alignItems: 'center', zIndex: 2 }}>
-                  <div style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)', fontSize: '12px' }}>
-                    Arduino Pin 13
-                  </div>
-                  <div style={{ padding: '8px 12px', background: 'rgba(139, 92, 246, 0.08)', borderRadius: '6px', border: '1px solid rgba(139, 92, 246, 0.15)', fontSize: '12px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>
-                    {component.name}
-                  </div>
-                  <div style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)', fontSize: '12px' }}>
-                    GND Pin
-                  </div>
+          {activeMode === 'working_gif' && (
+            <div style={{ width: '100%', height: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+              {workingGifUrl ? (
+                <img 
+                  src={workingGifUrl} 
+                  alt={`${component.name} Working Animation`} 
+                  style={{ maxHeight: '360px', maxWidth: '90%', objectFit: 'contain', borderRadius: '8px' }}
+                />
+              ) : (
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+                  <span className="material-icons" style={{ fontSize: '48px', color: 'rgba(255,255,255,0.1)', marginBottom: '12px', display: 'block' }}>play_circle</span>
+                  <p style={{ fontSize: '13.5px', margin: 0 }}>No working animation uploaded for this component.</p>
+                  <p style={{ fontSize: '11px', margin: '4px 0 0 0', color: 'var(--text-muted)' }}>Upload a GIF in the admin workspace to enable this view.</p>
                 </div>
-                
-                {/* SVG connection lines mapping */}
-                <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
-                  {wiringConnected.left && (
-                    <line x1="25%" y1="50%" x2="45%" y2="50%" stroke="var(--accent-emerald)" strokeWidth="3" strokeDasharray="5,5" />
-                  )}
-                  {wiringConnected.right && (
-                    <line x1="55%" y1="50%" x2="75%" y2="50%" stroke="var(--accent-emerald)" strokeWidth="3" strokeDasharray="5,5" />
-                  )}
-                </svg>
-              </div>
-              
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-                  <input 
-                    type="checkbox" 
-                    checked={!!wiringConnected.left}
-                    onChange={(e) => setWiringConnected(prev => ({ ...prev, left: e.target.checked }))}
-                    style={{ accentColor: 'var(--accent-violet)' }}
-                  />
-                  Connect Input
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-                  <input 
-                    type="checkbox" 
-                    checked={!!wiringConnected.right}
-                    onChange={(e) => setWiringConnected(prev => ({ ...prev, right: e.target.checked }))}
-                    style={{ accentColor: 'var(--accent-violet)' }}
-                  />
-                  Connect Ground
-                </label>
-              </div>
+              )}
             </div>
           )}
 
-          {/* AR/3D future ready overlay */}
-          <div style={{ position: 'absolute', right: '12px', bottom: '12px', display: 'flex', gap: '6px' }}>
-            <span style={{ fontSize: '9px', background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: '4px' }}>
-              🔍 AR Ready
-            </span>
-            <span style={{ fontSize: '9px', background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: '4px' }}>
-              📦 3D View Ready
-            </span>
-          </div>
+
 
           {/* Floating Anatomy Overlay Information Card */}
           <AnimatePresence>
@@ -682,16 +648,79 @@ export const AiLearningAssistant = ({ component }) => {
 
 // 6. BuildItYourselfCard
 export const BuildItYourselfCard = ({ challenge, slug }) => {
+  const { showToast } = useToast();
   const [claimed, setClaimed] = useState(() => {
     return localStorage.getItem(`flyen_completed_${slug}`) === 'true';
   });
 
-  // Keep state synced on route changes
+  const [videoUrl, setVideoUrl] = useState(null);
+  const [videoTitle, setVideoTitle] = useState(null);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+
+  // Sync state on slug changes
   useEffect(() => {
     setClaimed(localStorage.getItem(`flyen_completed_${slug}`) === 'true');
   }, [slug]);
 
+  // Load build video config dynamically from database
+  useEffect(() => {
+    const fetchBuildVideo = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('component_build_videos')
+          .select('video_url, video_title')
+          .eq('component_slug', slug)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (data) {
+          setVideoUrl(data.video_url);
+          setVideoTitle(data.video_title);
+        } else {
+          setVideoUrl(null);
+          setVideoTitle(null);
+        }
+      } catch (err) {
+        console.error('[BuildItYourselfCard] Error fetching build video:', err);
+      }
+    };
+    if (slug) {
+      fetchBuildVideo();
+    }
+  }, [slug]);
+
   if (!challenge) return null;
+
+  // Claim XP Reward handler
+  const handleClaimReward = () => {
+    if (claimed) return;
+
+    localStorage.setItem(`flyen_completed_${slug}`, 'true');
+    setClaimed(true);
+
+    const currentXp = parseInt(localStorage.getItem(`flyen_xp_${slug}`) || '0');
+    const rewardXp = challenge.xpReward || 100;
+    const newXp = currentXp + rewardXp;
+    localStorage.setItem(`flyen_xp_${slug}`, newXp.toString());
+
+    // Dispatches storage event to sync headers/progress widgets
+    window.dispatchEvent(new Event('storage'));
+
+    showToast(`Claimed +${rewardXp} XP reward!`, 'success');
+  };
+
+  // Extract embedded Youtube URL
+  const getEmbedUrl = (url) => {
+    if (!url) return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}`;
+    }
+    return url;
+  };
+
+  const embedUrl = getEmbedUrl(videoUrl);
 
   return (
     <div 
@@ -712,44 +741,60 @@ export const BuildItYourselfCard = ({ challenge, slug }) => {
             ⭐ Signature Practical Challenge
           </span>
           <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#fff', margin: '4px 0 0 0' }}>
-            Build It Yourself
+            ⚡ BUILD WITH FLYEN
           </h3>
         </div>
-        {claimed && (
-          <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', color: 'var(--accent-emerald)', padding: '4px 10px', borderRadius: '4px', fontWeight: 'bold' }}>
-            ✓ Challenge Completed
-          </span>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(251, 191, 36, 0.08)', border: '1px solid rgba(251, 191, 36, 0.15)', padding: '4px 10px', borderRadius: '6px' }}>
+            <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 'bold' }}>⭐ +{challenge.xpReward || 100} XP</span>
+          </div>
+          {claimed && (
+            <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', color: 'var(--accent-emerald)', padding: '4px 10px', borderRadius: '4px', fontWeight: 'bold' }}>
+              ✓ Reward Claimed
+            </span>
+          )}
+        </div>
       </div>
 
       <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
         {challenge.objective}
       </p>
 
-      {/* Metadata panel */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px' }}>
-        <div>
-          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Difficulty</span>
-          <span style={{ fontSize: '13px', color: '#fff', fontWeight: 'bold', display: 'block', marginTop: '2px' }}>{challenge.difficulty}</span>
-        </div>
-        <div>
-          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Time Estimate</span>
-          <span style={{ fontSize: '13px', color: '#fff', fontWeight: 'bold', display: 'block', marginTop: '2px' }}>⏱️ {challenge.estimatedTime}</span>
-        </div>
-        <div>
-          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Reward</span>
-          <span style={{ fontSize: '13px', color: '#fbbf24', fontWeight: 'bold', display: 'block', marginTop: '2px' }}>⭐ +{challenge.xpReward} XP</span>
-        </div>
-      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '10px' }}>
+        {videoUrl && (
+          <button 
+            type="button"
+            onClick={() => setShowVideoModal(true)}
+            className="product-btn"
+            style={{ 
+              background: 'rgba(255,255,255,0.02)', 
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: '#fff', 
+              textDecoration: 'none',
+              padding: '10px 20px', 
+              borderRadius: '6px', 
+              fontWeight: 'bold', 
+              fontSize: '13px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            <span className="material-icons" style={{ fontSize: '18px' }}>play_circle</span>
+            Start Building
+          </button>
+        )}
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-        <Link 
-          to={`/learning/components/${slug}/build`}
+        <button 
+          type="button"
+          onClick={handleClaimReward}
+          disabled={claimed}
           className="product-btn"
           style={{ 
-            background: 'var(--accent-emerald)', 
-            border: 'none', 
-            color: '#fff', 
+            background: claimed ? 'rgba(255,255,255,0.02)' : 'var(--accent-emerald)', 
+            border: claimed ? '1px solid rgba(255,255,255,0.04)' : 'none', 
+            color: claimed ? 'var(--text-muted)' : '#fff', 
             textDecoration: 'none',
             padding: '10px 24px', 
             borderRadius: '6px', 
@@ -757,12 +802,40 @@ export const BuildItYourselfCard = ({ challenge, slug }) => {
             fontSize: '13px', 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '6px' 
+            gap: '6px',
+            cursor: claimed ? 'default' : 'pointer'
           }}
         >
-          {claimed ? 'Launch Lab Guide' : 'Start Build Challenge'} <span className="material-icons" style={{ fontSize: '16px' }}>arrow_forward</span>
-        </Link>
+          {claimed ? 'Reward Claimed' : 'Claim Reward'} <span className="material-icons" style={{ fontSize: '16px' }}>workspace_premium</span>
+        </button>
       </div>
+
+      {/* Video Overlay Modal Popup */}
+      {showVideoModal && embedUrl && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+          <div className="card-glass" style={{ width: '90%', maxWidth: '800px', padding: '24px', position: 'relative', display: 'flex', flexDirection: 'column', gap: '16px', background: 'var(--surface-color, #121214)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h4 style={{ color: '#fff', fontWeight: 'bold', margin: 0, fontSize: '15px' }}>{videoTitle || 'Build Video Guide'}</h4>
+              <button 
+                onClick={() => setShowVideoModal(false)}
+                style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '18px', padding: '4px' }}
+              >
+                ✕
+              </button>
+            </div>
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '8px', background: '#000' }}>
+              <iframe
+                src={embedUrl}
+                title="Build video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
