@@ -1,34 +1,34 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { ROUTES } from '../constants/routes';
-import { MainLayout } from '../components/layout/MainLayout';
-import { Home } from '../pages/Home';
-import { ProjectListing } from '../pages/ProjectListing';
-import { ProjectDetails } from '../pages/ProjectDetails';
-import { PrintingCatalog } from '../pages/PrintingCatalog';
-import { LearningHub } from '../pages/LearningHub';
-import { Contact } from '../pages/Contact';
-import { PageLoading } from '../components/ui/PageLoading';
+import { ROUTES } from '../shared/constants/routes';
+import { MainLayout } from '../shared/components/layout/MainLayout';
+import { Home } from '../modules/public/pages/Home';
+import { ProjectListing } from '../modules/projects/pages/ProjectListing';
+import { ProjectDetails } from '../modules/projects/pages/ProjectDetails';
+import { PrintingCatalog } from '../modules/public/pages/PrintingCatalog';
+import { LearningHub } from '../modules/public/pages/LearningHub';
+import { Contact } from '../modules/public/pages/Contact';
+import { PageLoading } from '../shared/components/ui/PageLoading';
 
 // Lazy Load Admin Pages
-const AdminDashboard = React.lazy(() => import('../pages/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
-const ManageProjects = React.lazy(() => import('../pages/ManageProjects').then(module => ({ default: module.ManageProjects })));
-const AddProject = React.lazy(() => import('../pages/AddProject').then(module => ({ default: module.AddProject })));
-const EditProject = React.lazy(() => import('../pages/EditProject').then(module => ({ default: module.EditProject })));
-const ManageEnquiries = React.lazy(() => import('../pages/ManageEnquiries').then(module => ({ default: module.ManageEnquiries })));
-const AdminSettings = React.lazy(() => import('../pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
+const AdminDashboard = React.lazy(() => import('../modules/dashboard/pages/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
+const ManageProjects = React.lazy(() => import('../modules/projects/pages/ManageProjects').then(module => ({ default: module.ManageProjects })));
+const AddProject = React.lazy(() => import('../modules/projects/pages/AddProject').then(module => ({ default: module.AddProject })));
+const EditProject = React.lazy(() => import('../modules/projects/pages/EditProject').then(module => ({ default: module.EditProject })));
+const ManageEnquiries = React.lazy(() => import('../modules/enquiries/pages/ManageEnquiries').then(module => ({ default: module.ManageEnquiries })));
+const AdminSettings = React.lazy(() => import('../modules/settings/pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 
-const AdminLogin = React.lazy(() => import('../pages/AdminLogin.jsx').then(module => ({ default: module.AdminLogin })));
-const AdminLayout = React.lazy(() => import('../components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
-
-
+const AdminLogin = React.lazy(() => import('../modules/auth/pages/AdminLogin.jsx').then(module => ({ default: module.AdminLogin })));
+const AdminLayout = React.lazy(() => import('../shared/components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
 
 
-import { ProtectedRoute } from '../components/auth/ProtectedRoute.jsx';
-import { AuthProvider } from '../context/AuthContext.jsx';
-import { MaintenancePage } from '../pages/MaintenancePage';
-import { useSettings } from '../hooks/useSettings';
+
+
+import { ProtectedRoute } from '../modules/auth/components/ProtectedRoute.jsx';
+import { AuthProvider } from '../modules/auth/context/AuthContext.jsx';
+import { MaintenancePage } from '../modules/public/pages/MaintenancePage';
+import { useSettings } from '../modules/settings/hooks/useSettings';
 
 const MaintenanceGate = ({ children }) => {
   const { settings } = useSettings();

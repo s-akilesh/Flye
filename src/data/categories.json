@@ -1,9 +1,0 @@
-[
-  { "id": "arduino", "name": "Arduino" },
-  { "id": "robotics", "name": "Robotics" },
-  { "id": "iot", "name": "IoT" },
-  { "id": "gps-gsm", "name": "GPS & GSM" },
-  { "id": "automation", "name": "Automation" },
-  { "id": "school", "name": "School Projects" },
-  { "id": "college", "name": "College Projects" }
-]
