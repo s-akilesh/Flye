@@ -266,7 +266,7 @@ export const ProjectDetails = () => {
 
   return (
     <>
-      <SEO {...seoProps} />
+      <SEO {...seoProps} page={PageType.PROJECT} data={project} />
       <motion.section
         className="portal-section"
         id="detail-portal"

@@ -1,5 +1,5 @@
-import { seoConfig } from '../seoConfig';
-import { generateCanonicalUrl } from '../canonical';
+import { seoConfig } from '../config/seoConfig.js';
+import { generateCanonicalUrl } from '../builders/canonical.js';
 
 export const printingSEO = () => {
   // TODO: In a future sprint, this page should be enhanced to use the "Service" structured data type

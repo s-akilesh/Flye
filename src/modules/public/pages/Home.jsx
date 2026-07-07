@@ -124,7 +124,7 @@ export const Home = () => {
 
   return (
     <>
-      <SEO {...seoProps} />
+      <SEO {...seoProps} page={PageType.HOME} />
       <motion.main
         id="main-gateway"
       initial={{ opacity: 0, y: 15 }}

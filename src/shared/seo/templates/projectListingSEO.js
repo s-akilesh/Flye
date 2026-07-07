@@ -1,5 +1,5 @@
-import { seoConfig } from '../seoConfig';
-import { generateCanonicalUrl } from '../canonical';
+import { seoConfig } from '../config/seoConfig.js';
+import { generateCanonicalUrl } from '../builders/canonical.js';
 
 export const projectListingSEO = () => {
   return {

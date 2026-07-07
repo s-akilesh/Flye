@@ -96,7 +96,7 @@ export const ProjectListing = () => {
 
   return (
     <>
-      <SEO {...seoProps} />
+      <SEO {...seoProps} page={PageType.PROJECT_LISTING} />
       <motion.section
         className="portal-section portal-layout-fixed-height"
         id="kits-portal"

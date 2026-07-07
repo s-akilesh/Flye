@@ -3,11 +3,15 @@ import { ProjectRepository } from '../services/projectRepository';
 
 export const ProjectContext = createContext();
 
-export const ProjectProvider = ({ children }) => {
-  const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+export const ProjectProvider = ({ children, initialProjects }) => {
+  const [projects, setProjects] = useState(initialProjects || []);
+  const [isLoading, setIsLoading] = useState(!initialProjects);
 
   const loadProjects = async () => {
+    if (initialProjects && initialProjects.length > 0) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     try {
       const data = await ProjectRepository.getAll();
@@ -21,7 +25,7 @@ export const ProjectProvider = ({ children }) => {
 
   useEffect(() => {
     loadProjects();
-  }, []);
+  }, [initialProjects]);
 
   const addProject = async (project) => {
     try {

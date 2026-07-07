@@ -116,7 +116,7 @@ export const PrintingCatalog = () => {
 
   return (
     <>
-      <SEO {...seoProps} />
+      <SEO {...seoProps} page={PageType.PRINTING} />
       <motion.section
         className="portal-section"
         id="printing-portal"

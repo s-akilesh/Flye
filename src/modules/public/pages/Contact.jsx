@@ -31,7 +31,7 @@ export const Contact = () => {
 
   return (
     <>
-      <SEO {...seoProps} />
+      <SEO {...seoProps} page={PageType.CONTACT} />
       <style>{`
         @keyframes wave {
           0% { transform: rotate(0.0deg) }

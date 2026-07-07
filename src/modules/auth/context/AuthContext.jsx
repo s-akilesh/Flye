@@ -12,11 +12,16 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const [viewMode, setViewModeState] = useState(() => {
-    return localStorage.getItem('flyen_view_mode') || 'user';
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('flyen_view_mode') || 'user';
+    }
+    return 'user';
   });
 
   const setViewMode = (mode) => {
-    localStorage.setItem('flyen_view_mode', mode);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('flyen_view_mode', mode);
+    }
     setViewModeState(mode);
   };
 

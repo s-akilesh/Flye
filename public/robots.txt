@@ -1,0 +1,11 @@
+User-agent: *
+
+Allow: /
+
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /login
+
+Sitemap: https://flyen.in/sitemap.xml

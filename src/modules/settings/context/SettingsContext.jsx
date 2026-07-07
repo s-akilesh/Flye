@@ -97,13 +97,17 @@ const mapContextToDb = (contextData) => {
   return dbRow;
 };
 
-export const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useState({ ...DEFAULT_SETTINGS });
-  const [loading, setLoading] = useState(true);
+export const SettingsProvider = ({ children, initialSettings }) => {
+  const [settings, setSettings] = useState(initialSettings || { ...DEFAULT_SETTINGS });
+  const [loading, setLoading] = useState(!initialSettings);
   const [error, setError] = useState(null);
 
   // Load settings from Supabase on startup
   useEffect(() => {
+    if (initialSettings) {
+      setLoading(false);
+      return;
+    }
     const loadPlatformSettings = async () => {
       try {
         setLoading(true);
@@ -123,10 +127,11 @@ export const SettingsProvider = ({ children }) => {
     };
 
     loadPlatformSettings();
-  }, []);
+  }, [initialSettings]);
 
   // Update Favicon and Document Title reactively when settings change
   useEffect(() => {
+    if (typeof document === 'undefined') return;
     if (settings.websiteFavicon) {
       let link = document.querySelector("link[rel~='icon']");
       if (!link) {
