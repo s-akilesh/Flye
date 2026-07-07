@@ -263,9 +263,9 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               <div className="drawer-user-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
                 {user ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                    {profile?.avatar_url ? (
+                    {profile?.profile_photo || profile?.avatar_url ? (
                       <img 
-                        src={profile.avatar_url} 
+                        src={profile.profile_photo || profile.avatar_url} 
                         alt="Profile" 
                         style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
                         onError={(e) => {
@@ -279,7 +279,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                       height: '40px', 
                       borderRadius: '50%', 
                       background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-violet))', 
-                      display: profile?.avatar_url ? 'none' : 'flex', 
+                      display: profile?.profile_photo || profile?.avatar_url ? 'none' : 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       fontWeight: '800', 

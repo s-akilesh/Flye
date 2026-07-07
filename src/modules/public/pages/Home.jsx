@@ -10,6 +10,7 @@ import { Input } from '../../../shared/components/ui/Input';
 import { Footer } from '../../../shared/components/layout/Footer';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useSettings } from '../../settings/hooks/useSettings';
+import { SEO, PageType, generateSEO } from '../../../shared/seo';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ export const Home = () => {
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
   const { settings } = useSettings();
+
+  const seoProps = generateSEO(PageType.HOME);
 
   // Local state for featured project tab selection
   const [activeTab, setActiveTab] = useState('Popular');
@@ -120,8 +123,10 @@ export const Home = () => {
   };
 
   return (
-    <motion.main
-      id="main-gateway"
+    <>
+      <SEO {...seoProps} />
+      <motion.main
+        id="main-gateway"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
@@ -633,7 +638,7 @@ export const Home = () => {
                       }
                     }}
                     className="form-select"
-                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
+                    style={{ height: '38px', background: '#0a0a0f', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
                   >
                     <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
                     <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
@@ -816,5 +821,6 @@ export const Home = () => {
       </Modal>
 
     </motion.main>
+    </>
   );
 };

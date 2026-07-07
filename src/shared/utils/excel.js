@@ -48,27 +48,11 @@ export const downloadProjectTemplate = async () => {
       Description: "An IoT based home automation system using Arduino and Wi-Fi.",
       "Full Description": "<h3>Introduction</h3><p>This project allows you to control home appliances remotely...</p>",
       Price: 2499,
-      Currency: "INR",
-      Level: "Engineering",
-      Difficulty: "intermediate",
-      Technology: "Arduino",
       Category: "automation",
-      "Build Time": "6-8 Hours",
-      Badge: "Best Seller",
-      Features: "hardware, code, circuit, docs, support",
+      Technology: "Arduino",
       "Search Keywords": "iot, home automation, arduino, smart home",
-      "Video URL": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      Resources: JSON.stringify([{ name: "Source Code", type: "zip", size: "1.2 MB", status: "available", url: "https://example.com/code.zip", source: "url" }]),
-      Components: "Arduino Uno, ESP8266 Wi-Fi Module, 4-Channel Relay Board, Jumper Wires",
-      Specifications: JSON.stringify({ controller: "Arduino Uno", sensors: "DHT11 Temperature Sensor", communication: "Wi-Fi", operatingVoltage: "5V DC", programmingLanguage: "C++" }),
-      "Stock Status": "in-stock",
       Featured: "Yes",
       Status: "active",
-      "How It Works": "The system reads temperature data and allows switching relays via a web page.",
-      Applications: "Home Automation, Smart Buildings, Academic Labs",
-      Benefits: "Energy saving, Convenient appliance control, Easy learning setup",
-      "Estimated Delivery": "3-5 Business Days",
-      "WhatsApp Number": "919876543210",
       Slug: "smart-home-automation-system"
     }
   ];
@@ -100,22 +84,10 @@ export const downloadProjectTemplate = async () => {
       "Description": "Unit cost in INR (digits only). Example: 2499."
     },
     {
-      "Field Name": "Currency",
+      "Field Name": "Category",
       "Required": "No",
       "Type": "Text",
-      "Description": "Currency abbreviation. Defaults to 'INR'."
-    },
-    {
-      "Field Name": "Level",
-      "Required": "No",
-      "Type": "Text (School/Diploma/Engineering)",
-      "Description": "Educational target level. Example: 'Engineering'."
-    },
-    {
-      "Field Name": "Difficulty",
-      "Required": "No",
-      "Type": "Text (beginner/intermediate/advanced)",
-      "Description": "Difficulty tier. Example: 'intermediate'."
+      "Description": "Category code (e.g. 'automation', 'iot', 'robotics', 'gps-gsm')."
     },
     {
       "Field Name": "Technology",
@@ -124,64 +96,10 @@ export const downloadProjectTemplate = async () => {
       "Description": "Main microcontroller used. Example: 'Arduino'."
     },
     {
-      "Field Name": "Category",
-      "Required": "No",
-      "Type": "Text",
-      "Description": "Category code (e.g. 'automation', 'iot', 'robotics', 'gps-gsm')."
-    },
-    {
-      "Field Name": "Build Time",
-      "Required": "No",
-      "Type": "Text",
-      "Description": "Estimated assembly duration. Example: '6-8 Hours'."
-    },
-    {
-      "Field Name": "Badge",
-      "Required": "No",
-      "Type": "Text",
-      "Description": "Marketing banner label (e.g. 'Best Seller', 'New Arrival')."
-    },
-    {
-      "Field Name": "Features",
-      "Required": "No",
-      "Type": "Comma-Separated Text",
-      "Description": "List of features. Example: 'hardware, code, circuit, docs, support'."
-    },
-    {
       "Field Name": "Search Keywords",
       "Required": "No",
       "Type": "Comma-Separated Text",
       "Description": "List of tags for search matching. Example: 'iot, home, arduino'."
-    },
-    {
-      "Field Name": "Video URL",
-      "Required": "No",
-      "Type": "URL",
-      "Description": "YouTube embed link. Example: 'https://www.youtube.com/embed/dQw4w9WgXcQ'."
-    },
-    {
-      "Field Name": "Resources",
-      "Required": "No",
-      "Type": "JSON String",
-      "Description": "Serialized list of downloads. Example: '[{\"name\":\"Source Code\",\"type\":\"zip\",\"size\":\"1.2 MB\",\"status\":\"available\",\"url\":\"https://example.com/code.zip\",\"source\":\"url\"}]'"
-    },
-    {
-      "Field Name": "Components",
-      "Required": "No",
-      "Type": "Comma-Separated Text",
-      "Description": "Hardware components list. Example: 'Arduino Uno, ESP8266 Wi-Fi, Relay Board'."
-    },
-    {
-      "Field Name": "Specifications",
-      "Required": "No",
-      "Type": "JSON String",
-      "Description": "Key-value technical parameters. Example: '{\"controller\":\"Arduino Uno\",\"sensors\":\"DHT11\"}'"
-    },
-    {
-      "Field Name": "Stock Status",
-      "Required": "No",
-      "Type": "Text (in-stock/out-of-stock)",
-      "Description": "Inventory status. Example: 'in-stock'."
     },
     {
       "Field Name": "Featured",
@@ -194,36 +112,6 @@ export const downloadProjectTemplate = async () => {
       "Required": "No",
       "Type": "Text (active/draft/coming-soon/archived)",
       "Description": "Publication state. Example: 'active'."
-    },
-    {
-      "Field Name": "How It Works",
-      "Required": "No",
-      "Type": "Text",
-      "Description": "Operating summary. Example: 'Reads sensor inputs and triggers relay output...'"
-    },
-    {
-      "Field Name": "Applications",
-      "Required": "No",
-      "Type": "Comma-Separated Text",
-      "Description": "Target use-cases. Example: 'Home Automation, Smart Buildings'."
-    },
-    {
-      "Field Name": "Benefits",
-      "Required": "No",
-      "Type": "Comma-Separated Text",
-      "Description": "Key benefits. Example: 'Easy assembly, Ready code, support'."
-    },
-    {
-      "Field Name": "Estimated Delivery",
-      "Required": "No",
-      "Type": "Text",
-      "Description": "Shipping duration. Example: '3-5 Business Days'."
-    },
-    {
-      "Field Name": "WhatsApp Number",
-      "Required": "No",
-      "Type": "Text",
-      "Description": "Contact phone. Example: '919876543210'."
     },
     {
       "Field Name": "Slug",
@@ -340,7 +228,7 @@ export const parseImportedProjects = (jsonData) => {
     const stockStatus = getVal(["Stock Status", "stockStatus", "stock_status"]) || 'in-stock';
     const featuredVal = getVal(["Featured", "featured"]);
     const status = getVal(["Status", "status"]) || 'draft';
-    const howItWorks = getVal(["How It Works", "howItWorks", "how_it_works"]) || '';
+    const howItWorks = getVal(["How It Works", "howItWorks", "how_it_works"]) || 'This system reads sensor/input coordinates and communicates commands to actuator outputs.';
     const estimatedDelivery = getVal(["Estimated Delivery", "estimatedDelivery", "estimated_delivery"]) || '3-5 Business Days';
     const whatsappNumber = getVal(["WhatsApp Number", "whatsappNumber", "whatsapp_number", "phone"]) || '919876543210';
     const slugInput = getVal(["Slug", "slug"]);
@@ -380,6 +268,18 @@ export const parseImportedProjects = (jsonData) => {
     const resources = parseObject(getVal(["Resources", "resources"]), []);
     const specifications = parseObject(getVal(["Specifications", "specifications"]), {});
 
+    const finalApps = applications.length > 0 ? applications : [
+      'Educational physical setups for lab research',
+      'Custom prototyping designs for innovator kits',
+      'Academic engineering project implementations'
+    ];
+
+    const finalBenefits = benefits.length > 0 ? benefits : [
+      'Ready-to-assemble structured components',
+      'Validated wiring diagrams and code bases',
+      '24/7 technical query troubleshooting support'
+    ];
+
     const featured = featuredVal === true || String(featuredVal).toLowerCase() === 'yes' || String(featuredVal) === '1';
 
     // Generate slug automatically if missing
@@ -406,8 +306,8 @@ export const parseImportedProjects = (jsonData) => {
       features: features.length > 0 ? features : ['hardware', 'code', 'circuit', 'docs', 'support'],
       searchKeywords,
       components,
-      applications,
-      benefits,
+      applications: finalApps,
+      benefits: finalBenefits,
       resources,
       specifications: Object.keys(specifications).length > 0 ? specifications : {
         controller: technology || 'Arduino Uno',

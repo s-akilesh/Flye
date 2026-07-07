@@ -13,6 +13,7 @@ import { useSettings } from '../../settings/hooks/useSettings';
 import { useToast } from '../../../shared/context/ToastContext';
 import { useAuth } from '../../auth/context/AuthContext';
 import { ProgressiveAuthModal } from '../../auth/components/ProgressiveAuthModal';
+import { SEO, PageType, generateSEO } from '../../../shared/seo';
 
 // Custom SVG Icons
 const DIYIcon = () => (
@@ -28,7 +29,7 @@ const PrintedIcon = () => (
 );
 
 const CustomIcon = () => (
-  <span className="material-icons-outlined" style={{ fontSize: '20px', color: 'var(--text-muted)', flexShrink: 0 }}>inventory_2</span>
+  <span className="material-icons-outlined" style={{ fontSize: '20px', color: 'var(--accent-amber, #f59e0b)', flexShrink: 0 }}>extension</span>
 );
 
 const PCBIcon = () => (
@@ -71,6 +72,8 @@ export const ProjectDetails = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showProgressiveAuth, setShowProgressiveAuth] = useState(false);
   const [authAction, setAuthAction] = useState('save your progress');
+
+  const seoProps = generateSEO(PageType.PROJECT, project);
 
   const handleBookmarkClick = () => {
     if (!user) {
@@ -262,15 +265,17 @@ export const ProjectDetails = () => {
   const reviews = project.reviews || [];
 
   return (
-    <motion.section
-      className="portal-section"
-      id="detail-portal"
-      style={{ paddingTop: '73px' }}
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 15 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <>
+      <SEO {...seoProps} />
+      <motion.section
+        className="portal-section"
+        id="detail-portal"
+        style={{ paddingTop: '73px' }}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 15 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
       {/* Mobile Sticky Header */}
       <header className="mobile-learning-header">
         <button 
@@ -871,7 +876,7 @@ export const ProjectDetails = () => {
                       }
                     }}
                     className="form-select"
-                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
+                    style={{ height: '38px', background: '#0a0a0f', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
                   >
                     <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
                     <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
@@ -1116,5 +1121,6 @@ export const ProjectDetails = () => {
         actionName={authAction} 
       />
     </motion.section>
+    </>
   );
 };

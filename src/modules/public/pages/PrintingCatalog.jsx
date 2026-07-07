@@ -7,6 +7,7 @@ import { Input } from '../../../shared/components/ui/Input';
 import { ROUTES } from '../../../shared/constants/routes';
 import { usePrintingProducts } from '../hooks/usePrintingProducts';
 import { useToast } from '../../../shared/context/ToastContext';
+import { SEO, PageType, generateSEO } from '../../../shared/seo';
 
 const SVG_MAP = {
   gears: <polygon points="32,8 56,22 56,50 32,58 8,50 8,22" stroke="currentColor" strokeWidth="1.5" fill="none" />,
@@ -24,6 +25,8 @@ export const PrintingCatalog = () => {
   const navigate = useNavigate();
   const { printingProducts } = usePrintingProducts();
   const { showToast } = useToast();
+
+  const seoProps = generateSEO(PageType.PRINTING);
 
   // State
   const [activeTab, setActiveTab] = useState('all');
@@ -112,14 +115,16 @@ export const PrintingCatalog = () => {
     : printingProducts.filter(item => item.category === activeTab);
 
   return (
-    <motion.section
-      className="portal-section"
-      id="printing-portal"
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 15 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <>
+      <SEO {...seoProps} />
+      <motion.section
+        className="portal-section"
+        id="printing-portal"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 15 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
       <div className="portal-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
@@ -339,5 +344,6 @@ export const PrintingCatalog = () => {
         </Button>
       </Modal>
     </motion.section>
+    </>
   );
 };

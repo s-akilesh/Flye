@@ -122,9 +122,9 @@ export const Header = ({ onToggleDrawer }) => {
               }}
             >
               {/* Avatar */}
-              {profile?.avatar_url ? (
+              {profile?.profile_photo || profile?.avatar_url ? (
                 <img
-                  src={profile.avatar_url}
+                  src={profile.profile_photo || profile.avatar_url}
                   alt="Profile"
                   style={{
                     width: '32px',
@@ -173,7 +173,7 @@ export const Header = ({ onToggleDrawer }) => {
               <>
                 <div style={{ position: 'fixed', inset: 0, zIndex: 999 }} onClick={() => setShowProfileDropdown(false)} />
                 <div
-                  className="card-glass"
+                  className="card-glass header-profile-dropdown"
                   style={{
                     position: 'absolute',
                     top: 'calc(100% + 8px)',
@@ -184,6 +184,7 @@ export const Header = ({ onToggleDrawer }) => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '2px',
+                    background: '#0b0a10',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
                     borderRadius: '8px'
@@ -223,6 +224,37 @@ export const Header = ({ onToggleDrawer }) => {
                     >
                       <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>swap_horiz</span>
                       <span>{viewMode === 'admin' ? 'Switch to User' : 'Switch to Admin'}</span>
+                    </button>
+                  )}
+
+                  {/* Profile Settings Option */}
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigate(`${ROUTES.ADMIN_SETTINGS}?page=profile`);
+                        setShowProfileDropdown(false);
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#fff',
+                        padding: '10px 12px',
+                        fontSize: '13px',
+                        textAlign: 'left',
+                        width: '100%',
+                        cursor: 'pointer',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        transition: 'background 0.15s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                    >
+                      <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>manage_accounts</span>
+                      <span>Profile Settings</span>
                     </button>
                   )}
 

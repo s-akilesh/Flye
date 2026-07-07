@@ -7,6 +7,7 @@ import { Input } from '../../../shared/components/ui/Input';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../../../shared/context/ToastContext';
+import { SEO } from '../../../shared/seo';
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
@@ -50,20 +51,22 @@ export const AdminLogin = () => {
   };
 
   return (
-    <motion.section
-      className="portal-section"
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 15 }}
-      transition={{ duration: 0.4 }}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: 'calc(100vh - 160px)',
-        padding: 'var(--space-4)'
-      }}
-    >
+    <>
+      <SEO noindex={true} />
+      <motion.section
+        className="portal-section"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 15 }}
+        transition={{ duration: 0.4 }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 'calc(100vh - 160px)',
+          padding: 'var(--space-4)'
+        }}
+      >
       <Card
         className="card-glass"
         style={{
@@ -210,5 +213,6 @@ export const AdminLogin = () => {
         }
       `}</style>
     </motion.section>
+    </>
   );
 };

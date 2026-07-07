@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
+import { SEO } from '../../seo';
 
 export const AdminLayout = () => {
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ export const AdminLayout = () => {
 
   return (
     <div className="admin-layout-container">
+      <SEO noindex={true} />
       {/* Collapsible Sidebar */}
       <aside className={`admin-sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

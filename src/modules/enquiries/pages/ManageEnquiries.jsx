@@ -1218,7 +1218,7 @@ export const ManageEnquiries = () => {
                             {formatDate(enq.createdAt)}
                           </td>
                           <td className="tbl-td" style={{ minWidth: '160px', maxWidth: '180px', textAlign: 'right' }}>
-                             <div style={{ display: 'inline-flex', gap: '4px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                             <div style={{ display: 'inline-flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
                                <Button
                                  type="button"
                                  variant="ghost"

@@ -1,0 +1,8 @@
+export const PageType = {
+  HOME: 'HOME',
+  PROJECT: 'PROJECT',
+  PROJECT_LISTING: 'PROJECT_LISTING',
+  CONTACT: 'CONTACT',
+  PRINTING: 'PRINTING',
+  ADMIN: 'ADMIN'
+};

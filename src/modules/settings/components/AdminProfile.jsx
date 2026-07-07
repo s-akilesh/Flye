@@ -6,6 +6,9 @@ import { Input } from '../../../shared/components/ui/Input';
 import { storageService } from '../../../shared/services/storageService';
 import { logger } from '../../../shared/utils/logger';
 
+import { useAuth } from '../../auth/context/AuthContext.jsx';
+import { userService } from '../../auth/services/userService';
+
 const extractPathFromUrl = (url, bucket) => {
   if (!url) return null;
   const marker = `/storage/v1/object/public/${bucket}/`;
@@ -18,14 +21,15 @@ const extractPathFromUrl = (url, bucket) => {
 
 export const AdminProfile = ({ onBack }) => {
   const { settings, saveSettings } = useSettings();
+  const { user, profile, refreshProfile } = useAuth();
   const photoInputRef = useRef(null);
 
   const [form, setForm] = useState({
-    profilePhoto: settings.profilePhoto || '',
-    profileName: settings.profileName || '',
-    profileEmail: settings.profileEmail || '',
-    profilePhone: settings.profilePhone || '',
-    profileDesignation: settings.profileDesignation || '',
+    profilePhoto: '',
+    profileName: '',
+    profileEmail: '',
+    profilePhone: '',
+    profileDesignation: '',
   });
 
   const [isDirty, setIsDirty] = useState(false);
@@ -33,10 +37,28 @@ export const AdminProfile = ({ onBack }) => {
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
 
+  // Helper to construct initial form values from auth/profile/settings
+  const getInitialValues = () => {
+    return {
+      profilePhoto: profile?.profile_photo || settings.profilePhoto || '',
+      profileName: profile?.full_name || settings.profileName || '',
+      profileEmail: user?.email || settings.profileEmail || '',
+      profilePhone: profile?.phone || settings.profilePhone || '',
+      profileDesignation: profile?.role || '',
+    };
+  };
+
+  // Populate form fields once auth details or settings are loaded
   useEffect(() => {
-    const changed = Object.keys(form).some(key => form[key] !== (settings[key] || ''));
+    setForm(getInitialValues());
+  }, [profile, user, settings]);
+
+  // Handle dirty state comparison against initial profile/settings values
+  useEffect(() => {
+    const initial = getInitialValues();
+    const changed = Object.keys(form).some(key => form[key] !== initial[key]);
     setIsDirty(changed);
-  }, [form, settings]);
+  }, [form, profile, user, settings]);
 
   const handleChange = (key, value) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -46,7 +68,19 @@ export const AdminProfile = ({ onBack }) => {
     setIsLoading(true);
     setSaveStatus(null);
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // 1. Update the Supabase profiles database table
+      if (user) {
+        await userService.updateProfile({
+          id: user.id,
+          full_name: form.profileName,
+          phone: form.profilePhone,
+          profile_photo: form.profilePhoto,
+          department: form.profileDesignation
+        });
+        await refreshProfile();
+      }
+
+      // 2. Also keep global website settings synchronized
       await saveSettings(form);
       setIsDirty(false);
 
@@ -154,13 +188,14 @@ export const AdminProfile = ({ onBack }) => {
         </div>
 
         <div className="calc-row settings-field-row">
-          <label className="form-label">Email Address</label>
+          <label className="form-label">Email Address (Read-only)</label>
           <Input
             type="email"
             className="form-input"
             placeholder="e.g. admin@flyenlabs.com"
             value={form.profileEmail}
-            onChange={(e) => handleChange('profileEmail', e.target.value)}
+            readOnly={true}
+            style={{ background: 'rgba(255, 255, 255, 0.03)', cursor: 'not-allowed', color: 'var(--text-muted)' }}
           />
         </div>
 
@@ -176,13 +211,13 @@ export const AdminProfile = ({ onBack }) => {
         </div>
 
         <div className="calc-row settings-field-row">
-          <label className="form-label">Designation / Role</label>
+          <label className="form-label">User Role (Read-only)</label>
           <Input
             type="text"
             className="form-input"
-            placeholder="e.g. Chief Administrator"
             value={form.profileDesignation}
-            onChange={(e) => handleChange('profileDesignation', e.target.value)}
+            readOnly={true}
+            style={{ background: 'rgba(255, 255, 255, 0.03)', cursor: 'not-allowed', color: 'var(--text-muted)', textTransform: 'capitalize' }}
           />
         </div>
 

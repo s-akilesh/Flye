@@ -27,6 +27,20 @@ export const ManageProjects = () => {
   const [statusFilters, setStatusFilters] = useState([]);
   const [sortField, setSortField] = useState('title');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeMenuId, setActiveMenuId] = useState(null);
+
+  useEffect(() => {
+    const handleOutsideClick = () => {
+      setActiveMenuId(null);
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
+  const handleMenuToggle = (e, projId) => {
+    e.stopPropagation();
+    setActiveMenuId((prev) => (prev === projId ? null : projId));
+  };
 
   const toggleCategoryFilter = (cat) => {
     if (cat === 'all') {
@@ -352,6 +366,16 @@ export const ManageProjects = () => {
           await updateProject(id, { status: 'archived' });
         }
         showToast("✅ Selected projects archived successfully.", "success");
+      } else if (action === 'draft') {
+        for (const id of selectedIds) {
+          await updateProject(id, { status: 'draft' });
+        }
+        showToast("✅ Selected projects set to Draft successfully.", "success");
+      } else if (action === 'coming-soon') {
+        for (const id of selectedIds) {
+          await updateProject(id, { status: 'coming-soon' });
+        }
+        showToast("✅ Selected projects set to Coming Soon successfully.", "success");
       }
       setSelectedIds([]);
     } catch (e) {
@@ -713,7 +737,25 @@ export const ManageProjects = () => {
                   style={{ padding: '6px 12px', fontSize: '12px' }}
                   disabled={isProcessing}
                 >
-                  🟢 Activate
+                  Activate
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('draft')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  Draft
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBulkAction('coming-soon')}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                  disabled={isProcessing}
+                >
+                  Coming Soon
                 </Button>
                 <Button
                   type="button"
@@ -722,7 +764,7 @@ export const ManageProjects = () => {
                   style={{ padding: '6px 12px', fontSize: '12px' }}
                   disabled={isProcessing}
                 >
-                  🔴 Archive
+                  Archive
                 </Button>
                 <Button
                   type="button"
@@ -731,7 +773,7 @@ export const ManageProjects = () => {
                   style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson, #ef4444)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
                   disabled={isProcessing}
                 >
-                  🗑 Delete
+                  Delete
                 </Button>
               </div>
             </div>
@@ -841,7 +883,7 @@ export const ManageProjects = () => {
                           {proj.lastUpdated}
                         </td>
                         <td className="tbl-td" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>
-                          <div style={{ display: 'inline-flex', gap: '4px', justifyContent: 'flex-end' }}>
+                          <div style={{ display: 'inline-flex', gap: '8px', justifyContent: 'flex-end' }}>
                             <Button
                               type="button"
                               variant="ghost"
@@ -853,33 +895,70 @@ export const ManageProjects = () => {
                             </Button>
                             <Button
                               type="button"
-                              variant="primary"
+                              variant="secondary"
                               onClick={() => navigate(ROUTES.ADMIN_EDIT_PROJECT.replace(':slug', proj.slug))}
                               style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                               title="Edit Project"
                             >
                               <span className="material-icons-outlined" style={{ fontSize: '16px' }}>edit</span>
                             </Button>
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              onClick={() => setProjectToClone(proj)}
-                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                              title="Clone Project"
-                              disabled={isProcessing}
-                            >
-                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>content_copy</span>
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              onClick={() => setProjectToDelete(proj)}
-                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}
-                              title="Delete Project"
-                              disabled={isProcessing}
-                            >
-                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>delete</span>
-                            </Button>
+                            {/* 3-dot dropdown menu */}
+                            <div style={{ position: 'relative', display: 'inline-block' }}>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={(e) => handleMenuToggle(e, proj.id)}
+                                style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                title="More Actions"
+                                disabled={isProcessing}
+                              >
+                                <span className="material-icons-outlined" style={{ fontSize: '18px' }}>more_vert</span>
+                              </Button>
+                              {activeMenuId === proj.id && (
+                                <div
+                                  className="admin-icon-panel"
+                                  style={{
+                                    position: 'absolute',
+                                    top: 'calc(100% + 4px)',
+                                    right: 0,
+                                    minWidth: '130px',
+                                    padding: 'var(--space-1)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '2px',
+                                    background: '#0b0a10',
+                                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                                    zIndex: 100
+                                  }}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <button
+                                    type="button"
+                                    className="admin-sort-option"
+                                    onClick={() => {
+                                      setProjectToClone(proj);
+                                      setActiveMenuId(null);
+                                    }}
+                                    style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', border: 'none', background: 'none', color: '#fff', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                                  >
+                                    <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--accent-blue)' }}>content_copy</span>
+                                    <span>Clone</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="admin-sort-option"
+                                    onClick={() => {
+                                      setProjectToDelete(proj);
+                                      setActiveMenuId(null);
+                                    }}
+                                    style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', border: 'none', background: 'none', color: '#ef4444', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                                  >
+                                    <span className="material-icons-outlined" style={{ fontSize: '16px', color: '#ef4444' }}>delete</span>
+                                    <span>Delete</span>
+                                  </button>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </td>
                       </tr>
