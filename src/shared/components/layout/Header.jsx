@@ -14,6 +14,19 @@ export const Header = ({ onToggleDrawer }) => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
+  const handleScrollToSection = (id) => {
+    if (window.location.pathname === '/') {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       setShowLogoutConfirm(false);
@@ -46,8 +59,16 @@ export const Header = ({ onToggleDrawer }) => {
       {viewMode !== 'admin' && !window.location.pathname.startsWith('/admin') && (
         <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
-          <a href="#how-it-works" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>How It Works</a>
-          <a href="#about" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>About</a>
+          <a
+            href="/#about"
+            onClick={(e) => {
+              e.preventDefault();
+              handleScrollToSection('about');
+            }}
+            style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}
+          >
+            About
+          </a>
           <Link to="/contact" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
         </nav>
       )}

@@ -21,6 +21,7 @@ export const mapEnquiryToReact = (dbEnq) => {
     status: dbEnq.status || 'new',
     price: dbEnq.price || '',
     notes: dbEnq.notes || '',
+    userId: dbEnq.user_id || null,
     createdAt: dbEnq.created_at,
     updatedAt: dbEnq.updated_at
   };
@@ -32,8 +33,8 @@ export const mapEnquiryToDB = (reactEnq) => {
     id: reactEnq.id,
     project_id: reactEnq.projectId,
     project_title: reactEnq.projectTitle,
-    customer_name: reactEnq.customerName,
-    mobile_number: reactEnq.mobileNumber,
+    customer_name: reactEnq.customerName || reactEnq.name,
+    mobile_number: reactEnq.mobileNumber || reactEnq.mobile,
     email: reactEnq.email,
     message: reactEnq.message,
     status: reactEnq.status,

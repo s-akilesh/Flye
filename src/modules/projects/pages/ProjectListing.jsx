@@ -51,13 +51,27 @@ export const ProjectListing = () => {
   // Cart Order Modal state
   const [orderedProject, setOrderedProject] = useState(null);
   const [requestorName, setRequestorName] = useState('');
-  const [contactNumber, setContactNumber] = useState('');
+  const [contactNumber, setContactNumber] = useState('+91');
   const [orderStep, setOrderStep] = useState('input'); // 'input' | 'confirmed'
+  const [projectStatus, setProjectStatus] = useState('Choosed Flyen Project');
+  const [customProjectTitle, setCustomProjectTitle] = useState('');
+  const [projectBudget, setProjectBudget] = useState('');
+  const [submissionDate, setSubmissionDate] = useState('');
+  const [needDocument, setNeedDocument] = useState('No');
+  const [needPresentation, setNeedPresentation] = useState('No');
+  const [projectRemarks, setProjectRemarks] = useState('');
 
   const handleOpenOrderModal = (proj) => {
     setOrderedProject(proj);
     setRequestorName('');
-    setContactNumber('');
+    setContactNumber('+91');
+    setProjectStatus('Choosed Flyen Project');
+    setCustomProjectTitle(proj ? proj.title : '');
+    setProjectBudget(proj ? String(proj.price) : '');
+    setSubmissionDate('');
+    setNeedDocument('No');
+    setNeedPresentation('No');
+    setProjectRemarks('');
     setOrderStep('input');
   };
 
@@ -81,7 +95,7 @@ export const ProjectListing = () => {
     <motion.section
       className="portal-section portal-layout-fixed-height"
       id="kits-portal"
-      style={{ paddingTop: '68px', height: 'calc(100vh - 68px)' }}
+      style={{ paddingTop: '73px', height: 'calc(100vh - 73px)' }}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
@@ -94,8 +108,8 @@ export const ProjectListing = () => {
           marginRight: 'calc(-1 * var(--page-padding))',
           paddingLeft: 'var(--page-padding)',
           paddingRight: 'var(--page-padding)',
-          paddingTop: '12px',
-          paddingBottom: '12px',
+          paddingTop: '16px',
+          paddingBottom: '16px',
           background: 'rgba(10, 10, 18, 0.92)',
           borderBottom: '1px solid rgba(255,255,255,0.07)',
           marginBottom: '0px'
@@ -127,7 +141,7 @@ export const ProjectListing = () => {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '12px',
           zIndex: 100,
           width: 'auto',
           maxWidth: 'none',
@@ -135,18 +149,17 @@ export const ProjectListing = () => {
           marginRight: 'calc(-1 * var(--page-padding))',
           paddingLeft: 'var(--page-padding)',
           paddingRight: 'var(--page-padding)',
-          paddingTop: '12px',
+          paddingTop: '24px',
           paddingBottom: '12px',
           borderRadius: '0px',
-          borderLeft: 'none',
-          borderRight: 'none',
-          borderTop: 'none',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
-          background: 'rgba(10, 10, 18, 0.92)'
+          border: 'none',
+          background: 'transparent'
         }}
+        searchWidth="340px"
+        showSearchIcon={true}
         searchId="marketplace-search"
         searchLabel="Search Projects"
-        searchPlaceholder="Search projects, technologies, or keywords..."
+        searchPlaceholder="Seaarch"
         searchValue={searchQuery}
         onSearchChange={(e) => setSearchQuery(e.target.value)}
         activeFilterCount={
@@ -217,7 +230,7 @@ export const ProjectListing = () => {
       </AdminToolbar>
 
       <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', marginTop: '16px' }}>
-        <div className="marketplace-main" style={{ width: '100%' }}>
+        <div className="marketplace-main" style={{ width: '100%', paddingTop: '12px' }}>
           {filteredList.length > 0 ? (
             <ProjectGrid projects={filteredList} onRequestOrder={handleOpenOrderModal} />
           ) : (
@@ -241,47 +254,229 @@ export const ProjectListing = () => {
 
 
       {/* Successful Order Modal */}
-      <Modal isOpen={orderedProject !== null} onClose={() => setOrderedProject(null)} className="modal-content purple">
+      <Modal isOpen={orderedProject !== null} onClose={() => setOrderedProject(null)} className="modal-content purple" style={{ maxWidth: '600px', width: '90%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
         {orderStep === 'input' ? (
           <>
-            <div className="modal-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span className="material-icons" style={{ fontSize: '32px', color: 'var(--accent-purple)' }}>call</span>
-            </div>
-            <h4>REQUEST PROJECT KIT</h4>
-            <p>Enter your details below to confirm your request for <strong>{orderedProject?.title}</strong>.</p>
-
-            <div style={{ margin: 'var(--space-3) 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', textAlign: 'left' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Your Name *</label>
-                <Input
-                  type="text"
-                  placeholder="e.g. John Doe"
-                  value={requestorName}
-                  onChange={(e) => setRequestorName(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Contact Number *</label>
-                <Input
-                  type="tel"
-                  placeholder="e.g. 9876543210"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  className="form-input"
-                  maxLength={15}
-                />
-              </div>
+            {/* Fixed Header with Glass/Milk Background */}
+            <div style={{
+              padding: '24px 24px 16px 24px',
+              background: 'rgba(255, 255, 255, 0.015)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              zIndex: 10,
+              flexShrink: 0
+            }}>
+              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: '#fff' }}>PROJECT ENQUIRY</h4>
+              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'left', margin: '4px 0 0 0' }}>
+                Fill in your details below. Our engineering expert will coordinate with you.
+              </p>
             </div>
 
-            <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
-              <Button variant="secondary" onClick={() => setOrderedProject(null)} disabled={isProcessing}>
+            {/* Scrollable Middle Content */}
+            <div style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '20px 24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', textAlign: 'left', width: '100%' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Name *</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. John Doe"
+                    value={requestorName}
+                    onChange={(e) => setRequestorName(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
+                  <Input
+                    type="tel"
+                    placeholder="e.g. 9876543210"
+                    value={contactNumber}
+                    onChange={(e) => setContactNumber(e.target.value)}
+                    className="form-input"
+                    maxLength={15}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
+                  <select
+                    value={projectStatus}
+                    onChange={(e) => {
+                      setProjectStatus(e.target.value);
+                      if (e.target.value !== 'Choosed Flyen Project') {
+                        setOrderedProject(null);
+                      }
+                    }}
+                    className="form-select"
+                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
+                  >
+                    <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
+                    <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
+                    <option value="Need Only Support" style={{ background: '#09090d', color: '#fff' }}>Need Only Support</option>
+                    <option value="Choosed Flyen Project" style={{ background: '#09090d', color: '#fff' }}>Choosed Flyen Project</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. Smart Irrigation System"
+                    value={projectStatus === 'Choosed Flyen Project' ? (orderedProject?.title || customProjectTitle) : customProjectTitle}
+                    onChange={(e) => setCustomProjectTitle(e.target.value)}
+                    disabled={projectStatus === 'Choosed Flyen Project' && !!orderedProject}
+                    className="form-input"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. 5000"
+                    value={projectBudget}
+                    onChange={(e) => setProjectBudget(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
+                  <Input
+                    type="date"
+                    value={submissionDate}
+                    onChange={(e) => setSubmissionDate(e.target.value)}
+                    className="form-input"
+                    style={{ colorScheme: 'dark', height: '38px' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setNeedDocument('Yes')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needDocument === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
+                        border: needDocument === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
+                        color: needDocument === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNeedDocument('No')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
+                        border: needDocument === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
+                        color: needDocument === 'No' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setNeedPresentation('Yes')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needPresentation === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
+                        border: needPresentation === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
+                        color: needPresentation === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNeedPresentation('No')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
+                        border: needPresentation === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
+                        color: needPresentation === 'No' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ width: '100%', marginTop: '4px', textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Describe your project or any remark (optional)</label>
+                <textarea
+                  value={projectRemarks}
+                  onChange={(e) => setProjectRemarks(e.target.value)}
+                  placeholder="Specify any custom requirements, hardware needs, or comments..."
+                  className="form-textarea"
+                  style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-subtle)', borderRadius: '6px', color: '#fff', padding: '10px', fontSize: '12.5px' }}
+                />
+              </div>
+            </div>
+
+            {/* Fixed Footer with Glass/Milk Background */}
+            <div style={{
+              padding: '16px 24px 20px 24px',
+              background: 'rgba(255, 255, 255, 0.015)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+              display: 'flex',
+              gap: '12px',
+              width: '100%',
+              boxSizing: 'border-box',
+              flexShrink: 0
+            }}>
+              <Button variant="secondary" onClick={() => setOrderedProject(null)} disabled={isProcessing} style={{ flex: 1, height: '42px' }}>
                 Cancel
               </Button>
               <Button
                 variant="primary"
                 className="modal-btn btn-submit-calc"
-                style={{ flex: 1 }}
+                style={{ flex: 1, height: '42px' }}
                 disabled={isProcessing}
                 onClick={async () => {
                   if (!requestorName.trim()) {
@@ -289,16 +484,30 @@ export const ProjectListing = () => {
                     return;
                   }
                   if (!contactNumber.trim() || contactNumber.replace(/\D/g, '').length < 10) {
-                    showToast('Please enter a valid 10-digit contact number.', 'error');
+                    showToast('Please enter a valid contact number.', 'error');
                     return;
                   }
+                  
+                  const titleToUse = projectStatus === 'Choosed Flyen Project' ? (orderedProject?.title || customProjectTitle) : customProjectTitle;
+                  
+                  // Serialize all details cleanly into notes
+                  const serializedNotes = [
+                    `Project Status: ${projectStatus}`,
+                    `Budget: ${projectBudget ? `₹${projectBudget}` : 'Not specified'}`,
+                    `Submission Date: ${submissionDate || 'Not specified'}`,
+                    `Need Document: ${needDocument}`,
+                    `Need Presentation Support: ${needPresentation}`,
+                    projectRemarks.trim() ? `Remarks: ${projectRemarks}` : ''
+                  ].filter(Boolean).join('\n');
+
                   try {
                     await addEnquiry({
                       name: requestorName,
                       mobile: contactNumber,
-                      projectId: orderedProject.id,
-                      projectTitle: orderedProject.title,
-                      price: orderedProject.price
+                      projectId: orderedProject?.id || '',
+                      projectTitle: titleToUse || 'Custom Project Enquiry',
+                      price: projectBudget || orderedProject?.price || '',
+                      notes: serializedNotes
                     });
                     setOrderStep('confirmed');
                   } catch (err) {
@@ -306,39 +515,41 @@ export const ProjectListing = () => {
                   }
                 }}
               >
-                {isProcessing ? 'Submitting...' : 'Submit'}
+                {isProcessing ? 'Submitting...' : 'Submit Request'}
               </Button>
             </div>
           </>
         ) : (
-          <>
-            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
               <span className="material-icons" style={{ fontSize: '32px' }}>check</span>
             </div>
-            <h4>KIT REQUEST CONFIRMED</h4>
-            <p>Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.</p>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '800' }}>KIT REQUEST CONFIRMED</h4>
+            <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: 'var(--text-muted)' }}>
+              Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.
+            </p>
 
             {orderedProject && (
-              <div className="modal-receipt" id="receipt-meta">
-                <div className="receipt-row">
-                  <span>PROJECT KIT:</span>
-                  <span className="receipt-val">{orderedProject.title}</span>
+              <div className="modal-receipt" id="receipt-meta" style={{ width: '100%', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '6px', marginBottom: '24px' }}>
+                <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>PROJECT KIT:</span>
+                  <span className="receipt-val" style={{ color: '#fff', fontWeight: 'bold' }}>{orderedProject.title}</span>
                 </div>
-                <div className="receipt-row">
-                  <span>CONTACT:</span>
-                  <span className="receipt-val">{contactNumber}</span>
+                <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>CONTACT:</span>
+                  <span className="receipt-val" style={{ color: '#fff', fontWeight: 'bold' }}>{contactNumber}</span>
                 </div>
-                <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
-                  <span>UNIT COST:</span>
-                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>₹{orderedProject.price}</span>
+                <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>UNIT COST:</span>
+                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 'bold' }}>₹{projectBudget || orderedProject.price}</span>
                 </div>
               </div>
             )}
 
-            <Button variant="secondary" className="modal-btn" onClick={() => setOrderedProject(null)} style={{ marginTop: 'var(--space-3)' }}>
+            <Button variant="secondary" className="modal-btn" onClick={() => setOrderedProject(null)} style={{ width: '100%', maxWidth: '200px' }}>
               Close
             </Button>
-          </>
+          </div>
         )}
       </Modal>
     </motion.section>

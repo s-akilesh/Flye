@@ -9,7 +9,8 @@ export const Input = ({
   id,
   min,
   max,
-  required = false
+  required = false,
+  style
 }) => {
   return (
     <input
@@ -22,6 +23,7 @@ export const Input = ({
       min={min}
       max={max}
       required={required}
+      style={style}
     />
   );
 };

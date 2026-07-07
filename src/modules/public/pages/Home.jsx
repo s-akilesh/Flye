@@ -570,218 +570,248 @@ export const Home = () => {
       <Footer />
 
       {/* Order Kit Confirmation Modal */}
-      <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} className="modal-content purple" style={{ maxWidth: '600px', width: '90%' }}>
+      <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} className="modal-content purple" style={{ maxWidth: '600px', width: '90%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
         {orderStep === 'input' ? (
           <>
-            <div className="modal-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-violet)' }}>
-              <span className="material-icons" style={{ fontSize: '32px' }}>call</span>
+            {/* Fixed Header with Glass/Milk Background */}
+            <div style={{
+              padding: '24px 24px 16px 24px',
+              background: 'rgba(255, 255, 255, 0.015)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              zIndex: 10,
+              flexShrink: 0
+            }}>
+              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: '#fff' }}>PROJECT ENQUIRY</h4>
+              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'left', margin: '4px 0 0 0' }}>
+                Fill in your details below. Our engineering expert will coordinate with you.
+              </p>
             </div>
-            <h4 style={{ textAlign: 'center', margin: '12px 0 6px 0', fontSize: '16px', fontWeight: '800' }}>PROJECT ENQUIRY</h4>
-            <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 20px 0' }}>
-              Fill in your details below. Our engineering expert will coordinate with you.
-            </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', textAlign: 'left', width: '100%' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Name *</label>
-                <Input
-                  type="text"
-                  placeholder="e.g. John Doe"
-                  value={requestorName}
-                  onChange={(e) => setRequestorName(e.target.value)}
-                  className="form-input"
-                />
-              </div>
+            {/* Scrollable Middle Content */}
+            <div style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '20px 24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', textAlign: 'left', width: '100%' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Name *</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. John Doe"
+                    value={requestorName}
+                    onChange={(e) => setRequestorName(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
-                <Input
-                  type="tel"
-                  placeholder="e.g. 9876543210"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  className="form-input"
-                  maxLength={15}
-                />
-              </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
+                  <Input
+                    type="tel"
+                    placeholder="e.g. 9876543210"
+                    value={contactNumber}
+                    onChange={(e) => setContactNumber(e.target.value)}
+                    className="form-input"
+                    maxLength={15}
+                  />
+                </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
-                <select
-                  value={projectStatus}
-                  onChange={(e) => {
-                    setProjectStatus(e.target.value);
-                    if (e.target.value !== 'Choosed Flyen Project') {
-                      setOrderedProject(null);
-                    }
-                  }}
-                  className="form-select"
-                  style={{ height: '38px', background: 'rgba(0,0,0,0.3)', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
-                >
-                  <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
-                  <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
-                  <option value="Need Only Support" style={{ background: '#09090d', color: '#fff' }}>Need Only Support</option>
-                  <option value="Choosed Flyen Project" style={{ background: '#09090d', color: '#fff' }}>Choosed Flyen Project</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
-                <Input
-                  type="text"
-                  placeholder="e.g. Smart Irrigation System"
-                  value={projectStatus === 'Choosed Flyen Project' ? (orderedProject?.title || customProjectTitle) : customProjectTitle}
-                  onChange={(e) => setCustomProjectTitle(e.target.value)}
-                  disabled={projectStatus === 'Choosed Flyen Project' && !!orderedProject}
-                  className="form-input"
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
-                <Input
-                  type="text"
-                  placeholder="e.g. 5000"
-                  value={projectBudget}
-                  onChange={(e) => setProjectBudget(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
-                <Input
-                  type="date"
-                  value={submissionDate}
-                  onChange={(e) => setSubmissionDate(e.target.value)}
-                  className="form-input"
-                  style={{ colorScheme: 'dark', height: '38px' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setNeedDocument('Yes')}
-                    style={{
-                      flex: 1,
-                      height: '38px',
-                      borderRadius: '6px',
-                      fontSize: '12px',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s',
-                      background: needDocument === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                      border: needDocument === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                      color: needDocument === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
+                  <select
+                    value={projectStatus}
+                    onChange={(e) => {
+                      setProjectStatus(e.target.value);
+                      if (e.target.value !== 'Choosed Flyen Project') {
+                        setOrderedProject(null);
+                      }
                     }}
+                    className="form-select"
+                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
                   >
-                    Yes
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNeedDocument('No')}
-                    style={{
-                      flex: 1,
-                      height: '38px',
-                      borderRadius: '6px',
-                      fontSize: '12px',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s',
-                      background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                      border: needDocument === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                      color: needDocument === 'No' ? '#fff' : 'var(--text-secondary)'
-                    }}
-                  >
-                    No
-                  </button>
+                    <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
+                    <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
+                    <option value="Need Only Support" style={{ background: '#09090d', color: '#fff' }}>Need Only Support</option>
+                    <option value="Choosed Flyen Project" style={{ background: '#09090d', color: '#fff' }}>Choosed Flyen Project</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. Smart Irrigation System"
+                    value={projectStatus === 'Choosed Flyen Project' ? (orderedProject?.title || customProjectTitle) : customProjectTitle}
+                    onChange={(e) => setCustomProjectTitle(e.target.value)}
+                    disabled={projectStatus === 'Choosed Flyen Project' && !!orderedProject}
+                    className="form-input"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. 5000"
+                    value={projectBudget}
+                    onChange={(e) => setProjectBudget(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
+                  <Input
+                    type="date"
+                    value={submissionDate}
+                    onChange={(e) => setSubmissionDate(e.target.value)}
+                    className="form-input"
+                    style={{ colorScheme: 'dark', height: '38px' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setNeedDocument('Yes')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needDocument === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
+                        border: needDocument === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
+                        color: needDocument === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNeedDocument('No')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
+                        border: needDocument === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
+                        color: needDocument === 'No' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setNeedPresentation('Yes')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needPresentation === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
+                        border: needPresentation === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
+                        color: needPresentation === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNeedPresentation('No')}
+                      style={{
+                        flex: 1,
+                        height: '38px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s',
+                        background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
+                        border: needPresentation === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
+                        color: needPresentation === 'No' ? '#fff' : 'var(--text-secondary)'
+                      }}
+                    >
+                      No
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setNeedPresentation('Yes')}
-                    style={{
-                      flex: 1,
-                      height: '38px',
-                      borderRadius: '6px',
-                      fontSize: '12px',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s',
-                      background: needPresentation === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                      border: needPresentation === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                      color: needPresentation === 'Yes' ? '#fff' : 'var(--text-secondary)'
-                    }}
-                  >
-                    Yes
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNeedPresentation('No')}
-                    style={{
-                      flex: 1,
-                      height: '38px',
-                      borderRadius: '6px',
-                      fontSize: '12px',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s',
-                      background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                      border: needPresentation === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                      color: needPresentation === 'No' ? '#fff' : 'var(--text-secondary)'
-                    }}
-                  >
-                    No
-                  </button>
-                </div>
+              <div style={{ width: '100%', marginTop: '4px', textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Describe your project or any remark (optional)</label>
+                <textarea
+                  value={projectRemarks}
+                  onChange={(e) => setProjectRemarks(e.target.value)}
+                  placeholder="Specify any custom requirements, hardware needs, or comments..."
+                  className="form-textarea"
+                  style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-subtle)', borderRadius: '6px', color: '#fff', padding: '10px', fontSize: '12.5px' }}
+                />
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left', marginTop: '16px', width: '100%' }}>
-              <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>Describe your project or any remark (optional)</label>
-              <textarea
-                placeholder="Specify any custom requirements, hardware needs, or comments..."
-                value={projectRemarks}
-                onChange={(e) => setProjectRemarks(e.target.value)}
-                className="form-textarea"
-                style={{ height: '70px', resize: 'none', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-subtle)', borderRadius: '6px', color: '#fff', padding: '10px 14px', outline: 'none' }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', gap: '12px', marginTop: '24px', width: '100%' }}>
-              <Button variant="secondary" onClick={() => setIsOpenModal(false)} disabled={isProcessing} style={{ flex: 1 }}>
+            {/* Fixed Footer with Glass/Milk Background */}
+            <div style={{
+              padding: '16px 24px 20px 24px',
+              background: 'rgba(255, 255, 255, 0.015)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+              display: 'flex',
+              gap: '12px',
+              width: '100%',
+              boxSizing: 'border-box',
+              flexShrink: 0
+            }}>
+              <Button variant="secondary" onClick={() => setIsOpenModal(false)} disabled={isProcessing} style={{ flex: 1, height: '42px' }}>
                 Cancel
               </Button>
               <Button
                 variant="primary"
                 disabled={isProcessing}
                 onClick={handleRequestSubmit}
-                style={{ flex: 1 }}
+                style={{ flex: 1, height: '42px' }}
               >
-                Submit Request
+                {isProcessing ? 'Submitting...' : 'Submit Request'}
               </Button>
             </div>
           </>
         ) : (
-          <>
-            <div className="modal-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-emerald, #10b981)' }}>
+          <div style={{ padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            <div className="modal-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-emerald, #10b981)', marginBottom: '16px' }}>
               <span className="material-icons" style={{ fontSize: '32px' }}>check_circle</span>
             </div>
-            <h4 style={{ textAlign: 'center', margin: '12px 0 6px 0', fontSize: '16px', fontWeight: '800' }}>REQUEST RECEIVED</h4>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'center', margin: '0 0 24px 0', lineHeight: '1.5' }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '800' }}>REQUEST RECEIVED</h4>
+            <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
               Our engineering team has received your enquiry. We will call you back within 2 to 4 hours to coordinate project delivery and support details.
             </p>
-            <Button variant="secondary" className="width-100" onClick={() => setIsOpenModal(false)} style={{ padding: '8px 0' }}>
+            <Button variant="secondary" className="width-100" onClick={() => setIsOpenModal(false)} style={{ width: '100%', maxWidth: '200px' }}>
               Got It
             </Button>
-          </>
+          </div>
         )}
       </Modal>
 

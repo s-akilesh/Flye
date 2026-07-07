@@ -581,17 +581,7 @@ export const ManageEnquiries = () => {
     const parsed = parseNotes(enq.notes);
     
     // Priority math
-    let priority = 'Low';
-    const now = new Date();
-    now.setHours(0,0,0,0);
-    if (parsed.submissionDate && parsed.submissionDate !== '-') {
-      const subDate = new Date(parsed.submissionDate);
-      if (!isNaN(subDate.getTime())) {
-        const diffDays = Math.ceil((subDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (diffDays <= 3 && diffDays >= 0) priority = 'High';
-        else if (diffDays <= 7 && diffDays >= 0) priority = 'Medium';
-      }
-    }
+    const priority = parsed.priority || 'Medium';
 
     const priorityColors = {
       High: { text: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
@@ -1135,17 +1125,7 @@ export const ManageEnquiries = () => {
                       const parsed = parseNotes(enq.notes);
 
                       // Priority calculation
-                      let priority = 'Low';
-                      const now = new Date();
-                      now.setHours(0,0,0,0);
-                      if (parsed.submissionDate && parsed.submissionDate !== '-') {
-                        const subDate = new Date(parsed.submissionDate);
-                        if (!isNaN(subDate.getTime())) {
-                          const diffDays = Math.ceil((subDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-                          if (diffDays <= 3 && diffDays >= 0) priority = 'High';
-                          else if (diffDays <= 7 && diffDays >= 0) priority = 'Medium';
-                        }
-                      }
+                      const priority = parsed.priority || 'Medium';
 
                       const priorityBadgeColors = {
                         High: { text: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },

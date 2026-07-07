@@ -26,6 +26,8 @@ export const AdminToolbar = ({
   style = { display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', position: 'relative', zIndex: 100 },
   children,
   desktopActions,
+  searchWidth,
+  showSearchIcon = false
 }) => {
   const [activeDrawer, setActiveDrawer] = useState(null); // 'filter' | 'sort' | null
 
@@ -38,7 +40,7 @@ export const AdminToolbar = ({
   return (
     <div className={className} style={style}>
       {/* Search Input */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: searchWidth ? 'none' : 1, width: searchWidth || 'auto', position: 'relative' }}>
         <Input
           type="text"
           id={searchId}
@@ -46,9 +48,29 @@ export const AdminToolbar = ({
           placeholder={searchPlaceholder}
           value={searchValue}
           onChange={onSearchChange}
-          style={{ width: '100%' }}
+          style={{ width: '100%', paddingRight: showSearchIcon ? '36px' : '14px' }}
         />
+        {showSearchIcon && (
+          <span style={{
+            position: 'absolute',
+            right: '12px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: 'var(--text-muted, #9ca3af)',
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+        )}
       </div>
+
+      {searchWidth && <div style={{ flex: 1 }} />}
 
       {/* Filter Button */}
       <Button

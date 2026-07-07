@@ -11,187 +11,135 @@ export const Contact = () => {
   const navigate = useNavigate();
   const { settings } = useSettings();
   
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phonePrefix, setPhonePrefix] = useState('+1');
+  const [name, setName] = useState('');
+  const [phonePrefix, setPhonePrefix] = useState('+91');
   const [phone, setPhone] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
-  const [companyName, setCompanyName] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !phone || !message) return;
+    if (!name || !phone || !message) return;
     setIsSubmitted(true);
-    setFirstName('');
-    setLastName('');
-    setEmail('');
+    setName('');
     setPhone('');
-    setJobTitle('');
-    setCompanyName('');
     setMessage('');
   };
 
   return (
     <>
       <style>{`
-        /* Contact Page Redesign Styles */
-        .contact-container {
-          display: grid;
-          grid-template-columns: repeat(12, 1fr);
-          gap: var(--space-8);
-          align-items: start;
-          margin-top: var(--space-6);
+        @keyframes wave {
+          0% { transform: rotate(0.0deg) }
+          10% { transform: rotate(14.0deg) }
+          20% { transform: rotate(-8.0deg) }
+          30% { transform: rotate(14.0deg) }
+          40% { transform: rotate(-4.0deg) }
+          50% { transform: rotate(10.0deg) }
+          60% { transform: rotate(0.0deg) }
+          100% { transform: rotate(0.0deg) }
         }
 
-        .contact-left {
-          grid-column: span 6;
+        .contact-page-wrapper {
+          position: relative;
+          width: 100%;
+          min-height: calc(100vh - 190px); /* accounting for main layout header/footer */
           display: flex;
           flex-direction: column;
-          gap: var(--space-6);
+          align-items: center;
+          padding: var(--space-8) 0;
+          overflow: visible;
         }
 
-        .contact-right {
-          grid-column: span 6;
+        .contact-header-center {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          margin-bottom: var(--space-7);
+          z-index: 2;
         }
 
-        @media (max-width: 991px) {
-          .contact-container {
-            grid-template-columns: 1fr;
-            gap: var(--space-8);
-          }
-          .contact-left, .contact-right {
-            grid-column: span 12;
-          }
-        }
-
-        .contact-badge {
+        /* Status Pill */
+        .contact-status-pill {
           display: inline-flex;
           align-items: center;
-          gap: var(--space-2);
-          background: rgba(59, 130, 246, 0.08);
-          border: 1px solid rgba(59, 130, 246, 0.15);
-          color: var(--accent-blue, #3b82f6);
-          padding: 6px var(--space-3);
+          gap: 12px;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          color: var(--text-secondary, #9ca3af);
+          padding: 6px 16px;
           border-radius: 50px;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.8px;
-          text-transform: uppercase;
-          align-self: flex-start;
+          font-size: 11.5px;
+          font-weight: 500;
+          letter-spacing: 0.3px;
+          margin-bottom: var(--space-6);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
 
-        .contact-title-group h1 {
-          font-size: 40px;
-          font-weight: 800;
-          line-height: 1.2;
-          margin: var(--space-3) 0 var(--space-4) 0;
-          font-family: 'Inter', sans-serif;
+        .contact-status-divider {
+          width: 1px;
+          height: 12px;
+          background: rgba(255, 255, 255, 0.15);
         }
 
-        .contact-title-blue {
-          color: var(--accent-blue, #3b82f6);
-          display: block;
-        }
-
-        .contact-title-main {
-          color: var(--text-main, #f9fafb);
-          display: block;
-        }
-
-        .contact-desc {
-          font-size: 15px;
-          line-height: 1.6;
-          color: var(--text-muted, #9ca3af);
-          max-width: 480px;
-        }
-
-        .contact-info-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: var(--space-4);
-          margin-top: var(--space-4);
-        }
-
-        @media (max-width: 480px) {
-          .contact-info-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        .contact-info-card {
-          background: var(--surface-card, rgba(20, 20, 30, 0.75));
-          border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
-          border-radius: 12px;
-          padding: var(--space-4);
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-2);
-          text-decoration: none;
-        }
-
-        .contact-info-card:hover {
-          border-color: var(--border-active, rgba(255, 255, 255, 0.16));
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .contact-card-header {
+        .contact-status-item {
           display: flex;
           align-items: center;
-          gap: var(--space-3);
-          color: var(--text-main, #f9fafb);
+          gap: 6px;
         }
 
-        .contact-card-icon {
-          color: var(--accent-blue, #3b82f6);
+        .contact-status-icon {
+          color: #a78bfa;
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 20px;
-          height: 20px;
         }
 
-        .contact-card-title {
-          font-size: 14px;
-          font-weight: 600;
+        .contact-title-centered {
+          font-family: 'Inter', sans-serif;
+          font-size: 40px;
+          font-weight: 700;
+          line-height: 1.2;
+          margin-bottom: var(--space-3);
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         }
 
-        .contact-card-body {
-          font-size: 12.5px;
+        .contact-desc-centered {
+          font-size: 14.5px;
+          line-height: 1.6;
           color: var(--text-muted, #9ca3af);
-          line-height: 1.4;
-          word-break: break-word;
+          max-width: 520px;
         }
 
-        /* Form Card Styles */
-        .contact-form-card {
-          background: var(--surface-card, rgba(20, 20, 30, 0.75));
-          border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
-          border-top: 6px solid var(--accent-blue, #3b82f6);
-          border-radius: 12px;
-          padding: var(--space-6);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-          backdrop-filter: blur(25px);
-          -webkit-backdrop-filter: blur(25px);
+        /* Centered Form Wrapper */
+        .contact-form-wrapper-centered {
+          width: 100%;
+          max-width: 640px;
+          margin: 0 auto;
+          z-index: 2;
         }
 
         .contact-form-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: var(--space-4);
+          gap: var(--space-5);
         }
 
         .contact-form-full {
           grid-column: span 2;
         }
 
-        @media (max-width: 576px) {
+        @media (max-width: 640px) {
           .contact-form-grid > div {
             grid-column: span 2;
+          }
+          .contact-title-centered {
+            font-size: 32px;
           }
         }
 
@@ -204,79 +152,143 @@ export const Contact = () => {
         .form-group label {
           font-size: 12.5px;
           font-weight: 500;
-          color: var(--text-main, #f9fafb);
+          color: var(--text-secondary, #9ca3af);
         }
 
         .phone-input-container {
           display: flex;
           align-items: center;
-          background: var(--form-bg, rgba(0, 0, 0, 0.3));
-          border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
+          background: rgba(255, 255, 255, 0.01);
+          border: 1px solid rgba(255, 255, 255, 0.06);
           border-radius: 6px;
           transition: all 0.25s var(--transition-ease);
           overflow: hidden;
+          height: 38px;
         }
 
         .phone-input-container:hover {
-          border-color: var(--border-active, rgba(255, 255, 255, 0.16));
+          border-color: rgba(255, 255, 255, 0.12);
         }
 
         .phone-input-container:focus-within {
-          border-color: var(--accent-primary, #8b5cf6);
+          border-color: #8b5cf6;
           box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
-          background: var(--form-bg-focus, rgba(0, 0, 0, 0.4));
+          background: rgba(0, 0, 0, 0.2);
         }
 
         .phone-prefix-select {
           background: transparent;
           border: none;
-          border-right: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.09));
+          border-right: 1px solid rgba(255, 255, 255, 0.06);
           color: var(--text-main, #f9fafb);
-          padding: 10px var(--space-3);
+          padding: 0 var(--space-3);
+          height: 100%;
           font-size: 13px;
           outline: none;
           cursor: pointer;
         }
 
         .phone-prefix-select option {
-          background: var(--bg-color, #030305);
+          background: #0d0c15;
           color: var(--text-main, #f9fafb);
         }
 
         .phone-number-field {
           flex: 1;
+          height: 100%;
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
-          padding: 10px 14px;
+          padding: 0 14px;
           color: var(--text-main, #f9fafb);
           font-size: 13px;
           outline: none;
         }
 
+        /* Customize regular Inputs style for premium translucent look */
+        .contact-form-grid .form-input,
+        .contact-form-grid .form-textarea {
+          background: rgba(255, 255, 255, 0.01) !important;
+          border: 1px solid rgba(255, 255, 255, 0.06) !important;
+          border-radius: 6px !important;
+          color: #ffffff !important;
+          padding: 10px 14px !important;
+          font-size: 13px !important;
+          transition: all 0.25s var(--transition-ease) !important;
+        }
+
+        .contact-form-grid .form-input:hover,
+        .contact-form-grid .form-textarea:hover {
+          border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+
+        .contact-form-grid .form-input:focus,
+        .contact-form-grid .form-textarea:focus {
+          border-color: #8b5cf6 !important;
+          box-shadow: 0 0 10px rgba(139, 92, 246, 0.15) !important;
+          background: rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .contact-form-grid ::placeholder {
+          color: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        /* Rectangular submit button styling */
         .contact-submit-btn {
           width: 100%;
-          background: linear-gradient(135deg, var(--accent-blue, #3b82f6) 0%, var(--accent-violet, #8b5cf6) 100%) !important;
-          border: none !important;
+          background: rgba(255, 255, 255, 0.02) !important;
+          border: 1px solid rgba(255, 255, 255, 0.08) !important;
           color: #ffffff !important;
-          font-weight: 600 !important;
+          font-weight: 500 !important;
           padding: 12px var(--space-4) !important;
-          height: auto !important;
-          border-radius: 50px !important;
-          margin-top: var(--space-5);
+          height: 42px !important;
+          border-radius: 6px !important;
+          margin-top: var(--space-3);
           cursor: pointer;
           transition: all 0.25s var(--transition-ease);
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          font-size: 13.5px;
-          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+          font-size: 13px;
         }
 
         .contact-submit-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
-          filter: brightness(1.1);
+          background: rgba(255, 255, 255, 0.06) !important;
+          border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Social Divider Footer */
+        .contact-social-footer {
+          margin-top: 56px;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          z-index: 2;
+        }
+
+        .contact-social-line {
+          width: 100%;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.05);
+          margin-bottom: 24px;
+        }
+
+        .contact-social-icons {
+          display: flex;
+          gap: 24px;
+        }
+
+        .contact-social-link {
+          color: rgba(255, 255, 255, 0.3);
+          transition: color 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .contact-social-link:hover {
+          color: #ffffff;
         }
       `}</style>
 
@@ -286,230 +298,109 @@ export const Contact = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 15 }}
         transition={{ duration: 0.4 }}
+        style={{ position: 'relative', overflow: 'hidden' }}
       >
-        <div className="portal-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
-              <svg viewBox="0 0 24 24">
-                <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
-              </svg>
-            </Button>
-            <div className="portal-title-area">
-              <h2>Contact Us</h2>
-              <p>Get in Touch with FLYEN Labs Engineering Team</p>
-            </div>
+
+        <div className="contact-page-wrapper">
+          <div className="contact-header-center">
+
+            <h1 className="contact-title-centered">
+              Lets Have a Chat
+              <span style={{ display: 'inline-block', animation: 'wave 2.5s infinite', transformOrigin: '70% 70%' }}>👋</span>
+            </h1>
+            <p className="contact-desc-centered">
+              Questions about our products/services, orders, or just want to say hello? We're here to help
+            </p>
           </div>
-        </div>
 
-        <div className="contact-container">
-          {/* Left Column - Contact Info */}
-          <div className="contact-left">
-            <div className="contact-badge">
-              <svg className="contact-card-icon" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.28-5.116-3.573-6.4-6.4l1.293-.97a2.25 2.25 0 0 0 .417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25z" />
-              </svg>
-              Contact Us
-            </div>
-            
-            <div className="contact-title-group">
-              <h1>
-                <span className="contact-title-blue">Get In Touch</span>
-                <span className="contact-title-main">With Our Team</span>
-              </h1>
-              <p className="contact-desc">
-                Fill out the form below and our team will get back to you within 1-2 business days.
-              </p>
-            </div>
+          {/* Centered Form Wrapper */}
+          <div className="contact-form-wrapper-centered">
+            <form onSubmit={handleSubmit} className="contact-form-grid">
+              
+              {/* Name */}
+              <div className="form-group">
+                <label htmlFor="name">Name</label>
+                <Input
+                  id="name"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter name"
+                  className="form-input"
+                />
+              </div>
 
-            <div className="contact-info-grid">
-              {/* Head Office Card */}
-              <div className="contact-info-card">
-                <div className="contact-card-header">
-                  <div className="contact-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-                      <line x1="9" y1="22" x2="9" y2="16" />
-                      <line x1="15" y1="22" x2="15" y2="16" />
-                      <line x1="9" y1="16" x2="15" y2="16" />
-                      <path d="M8 6h.01M16 6h.01M9 10h.01M15 10h.01M9 14h.01M15 14h.01" />
-                    </svg>
-                  </div>
-                  <span className="contact-card-title">Head Office</span>
-                </div>
-                <div className="contact-card-body">
-                  {settings.companyAddress || 'Metrotech Center, NY 11201'}
+              {/* Phone Number */}
+              <div className="form-group">
+                <label htmlFor="phone-number">Phone number</label>
+                <div className="phone-input-container">
+                  <select
+                    className="phone-prefix-select"
+                    value={phonePrefix}
+                    onChange={(e) => setPhonePrefix(e.target.value)}
+                  >
+                    <option value="+1">+1</option>
+                    <option value="+91">+91</option>
+                    <option value="+44">+44</option>
+                    <option value="+61">+61</option>
+                    <option value="+81">+81</option>
+                    <option value="+33">+33</option>
+                  </select>
+                  <input
+                    id="phone-number"
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Enter phone number"
+                    className="phone-number-field"
+                  />
                 </div>
               </div>
 
-              {/* Call Center Card */}
-              <a href={`tel:${settings.contactPhone || '+1499549194004'}`} className="contact-info-card">
-                <div className="contact-card-header">
-                  <div className="contact-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </svg>
-                  </div>
-                  <span className="contact-card-title">Call Center</span>
-                </div>
-                <div className="contact-card-body">
-                  {settings.contactPhone || '+1 4995 4919 4004'}
-                </div>
-              </a>
-
-              {/* Email Card */}
-              <a href={`mailto:${settings.contactEmail || 'hello@moniveo.com'}`} className="contact-info-card">
-                <div className="contact-card-header">
-                  <div className="contact-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
-                    </svg>
-                  </div>
-                  <span className="contact-card-title">Email</span>
-                </div>
-                <div className="contact-card-body">
-                  {settings.contactEmail || 'hello@moniveo.com'}
-                </div>
-              </a>
-
-              {/* Working Hours Card */}
-              <div className="contact-info-card">
-                <div className="contact-card-header">
-                  <div className="contact-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                  </div>
-                  <span className="contact-card-title">Working Hours</span>
-                </div>
-                <div className="contact-card-body">
-                  Monday - Friday<br />(07 am - 05 pm)
-                </div>
+              {/* Message */}
+              <div className="form-group contact-form-full">
+                <label htmlFor="contact-msg">Message</label>
+                <textarea
+                  id="contact-msg"
+                  required
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Enter message"
+                  className="form-textarea"
+                  style={{ minHeight: '120px', resize: 'vertical' }}
+                />
               </div>
-            </div>
+
+              {/* Submit Button */}
+              <div className="contact-form-full">
+                <Button type="submit" variant="primary" style={{ width: '100%', height: '42px', marginTop: '12px' }}>
+                  Send message
+                </Button>
+              </div>
+
+            </form>
           </div>
 
-          {/* Right Column - Form Card */}
-          <div className="contact-right">
-            <div className="contact-form-card">
-              <form onSubmit={handleSubmit} className="contact-form-grid">
-                
-                {/* First & Last Name */}
-                <div className="form-group">
-                  <label htmlFor="first-name">First Name</label>
-                  <Input
-                    id="first-name"
-                    type="text"
-                    required
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="Enter first name"
-                    className="form-input"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="last-name">Last Name</label>
-                  <Input
-                    id="last-name"
-                    type="text"
-                    required
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Enter last name"
-                    className="form-input"
-                  />
-                </div>
-
-                {/* Email & Phone Number */}
-                <div className="form-group">
-                  <label htmlFor="work-email">Work Email</label>
-                  <Input
-                    id="work-email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter work email"
-                    className="form-input"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="phone-number">Phone Number</label>
-                  <div className="phone-input-container">
-                    <select
-                      className="phone-prefix-select"
-                      value={phonePrefix}
-                      onChange={(e) => setPhonePrefix(e.target.value)}
-                    >
-                      <option value="+1">+1</option>
-                      <option value="+91">+91</option>
-                      <option value="+44">+44</option>
-                      <option value="+61">+61</option>
-                      <option value="+81">+81</option>
-                      <option value="+33">+33</option>
-                    </select>
-                    <input
-                      id="phone-number"
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Enter phone number"
-                      className="phone-number-field"
-                    />
-                  </div>
-                </div>
-
-                {/* Job Title & Company Name */}
-                <div className="form-group">
-                  <label htmlFor="job-title">Job Title</label>
-                  <Input
-                    id="job-title"
-                    type="text"
-                    value={jobTitle}
-                    onChange={(e) => setJobTitle(e.target.value)}
-                    placeholder="Enter job title"
-                    className="form-input"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="company-name">Company Name</label>
-                  <Input
-                    id="company-name"
-                    type="text"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Enter company name"
-                    className="form-input"
-                  />
-                </div>
-
-                {/* Message */}
-                <div className="form-group contact-form-full">
-                  <label htmlFor="contact-msg">Message</label>
-                  <textarea
-                    id="contact-msg"
-                    required
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Enter message"
-                    className="form-textarea"
-                    style={{ minHeight: '120px', resize: 'vertical' }}
-                  />
-                </div>
-
-                {/* Submit Button */}
-                <div className="contact-form-full">
-                  <button type="submit" className="contact-submit-btn">
-                    Submit
-                  </button>
-                </div>
-
-              </form>
+          {/* Bottom Social Icons */}
+          <div className="contact-social-footer">
+            <div className="contact-social-icons">
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="contact-social-link">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="contact-social-link">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                </svg>
+              </a>
+              <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="contact-social-link">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.873-.894.077.077 0 0 1-.008-.128c.126-.093.252-.19.372-.287a.075.075 0 0 1 .077-.011c3.92 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .078.009c.12.099.246.195.373.289a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.156 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.156 2.418z"/>
+                </svg>
+              </a>
             </div>
           </div>
         </div>

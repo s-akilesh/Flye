@@ -81,11 +81,6 @@ export const PROJECTS_NAVIGATION = [
 
 export const QUICK_ACTIONS = [
   {
-    id: 'ai',
-    label: 'Ask Flyen AI',
-    action: 'ai-mentor'
-  },
-  {
     id: 'contact',
     label: 'Contact Support',
     path: '/contact'
@@ -100,8 +95,5 @@ export const QUICK_ACTIONS = [
 
 export const HOMEPAGE_NAVIGATION = [
   { id: 'projects', label: 'Projects', path: '/projects' },
-  { id: 'departments', label: 'Departments', path: '/projects?filter=departments' },
-  { id: 'how-it-works', label: 'How It Works', path: '/#how-it-works' },
-  { id: 'about', label: 'About', path: '/#about' },
-  { id: 'contact', label: 'Contact', path: '/contact' }
+  { id: 'about', label: 'About', path: '/#about' }
 ];

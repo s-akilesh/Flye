@@ -354,28 +354,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                 )}
               </div>
 
-              {/* Search Widget */}
-              <form onSubmit={handleSearchSubmit} style={{ position: 'relative' }}>
-                <input
-                  type="text"
-                  placeholder="Search components..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{
-                    width: '100%',
-                    background: 'rgba(255,255,255,0.02)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: '8px',
-                    padding: '8px 12px 8px 32px',
-                    fontSize: '12px',
-                    color: '#fff'
-                  }}
-                />
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--text-muted)" strokeWidth="2" style={{ position: 'absolute', left: '10px', top: '10px' }}>
-                  <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </form>
-
+              {/* Search functionality removed */}
 
 
               {/* Menu Items Render */}
@@ -406,7 +385,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                             textAlign: 'left'
                           }}
                         >
-                          <DrawerIcon id="dashboard" />
                           Dashboard
                         </button>
                       </li>
@@ -429,7 +407,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                             textAlign: 'left'
                           }}
                         >
-                          <DrawerIcon id="components" />
                           Manage Projects
                         </button>
                       </li>
@@ -452,7 +429,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                             textAlign: 'left'
                           }}
                         >
-                          <DrawerIcon id="bookmarks" />
                           Manage Enquiries
                         </button>
                       </li>
@@ -475,7 +451,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                             textAlign: 'left'
                           }}
                         >
-                          <DrawerIcon id="settings" />
                           Settings
                         </button>
                       </li>
@@ -511,7 +486,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                                 textAlign: 'left'
                               }}
                             >
-                              <DrawerIcon id={item.id} />
                               {item.label}
                             </button>
                           </li>
@@ -522,9 +496,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                 ) : (
                   /* Simplified Homepage Navigation */
                   <div>
-                    <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent-violet)', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
-                      Navigation
-                    </span>
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       {HOMEPAGE_NAVIGATION.map((item) => {
                         const isNavActive = location.pathname === item.path;
@@ -561,7 +532,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                                 textAlign: 'left'
                               }}
                             >
-                              <DrawerIcon id={item.id} />
                               {item.label}
                             </button>
                           </li>
@@ -635,7 +605,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                         textAlign: 'left'
                       }}
                     >
-                      <DrawerIcon id={act.id} />
                       {act.label}
                     </button>
                   );
