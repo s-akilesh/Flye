@@ -14,17 +14,17 @@
                 "children": [
                   {
                     "name": "constants/routes.js",
-                    "uid": "d816a0f3-1"
+                    "uid": "0992afac-1"
                   },
                   {
                     "name": "services",
                     "children": [
                       {
-                        "uid": "d816a0f3-3",
+                        "uid": "0992afac-3",
                         "name": "supabaseClient.js"
                       },
                       {
-                        "uid": "d816a0f3-109",
+                        "uid": "0992afac-119",
                         "name": "storageService.js"
                       }
                     ]
@@ -33,18 +33,43 @@
                     "name": "utils",
                     "children": [
                       {
-                        "uid": "d816a0f3-5",
+                        "uid": "0992afac-5",
                         "name": "mapper.js"
                       },
                       {
-                        "uid": "d816a0f3-27",
+                        "uid": "0992afac-37",
                         "name": "logger.js"
                       }
                     ]
                   },
                   {
+                    "name": "analytics",
+                    "children": [
+                      {
+                        "uid": "0992afac-15",
+                        "name": "analytics.js"
+                      },
+                      {
+                        "uid": "0992afac-17",
+                        "name": "AnalyticsProvider.jsx"
+                      },
+                      {
+                        "uid": "0992afac-19",
+                        "name": "eventTracker.js"
+                      },
+                      {
+                        "uid": "0992afac-21",
+                        "name": "useAnalytics.js"
+                      },
+                      {
+                        "uid": "0992afac-23",
+                        "name": "index.js"
+                      }
+                    ]
+                  },
+                  {
                     "name": "context/ToastContext.jsx",
-                    "uid": "d816a0f3-19"
+                    "uid": "0992afac-29"
                   },
                   {
                     "name": "components",
@@ -53,34 +78,34 @@
                         "name": "ui",
                         "children": [
                           {
-                            "uid": "d816a0f3-21",
+                            "uid": "0992afac-31",
                             "name": "Button.jsx"
                           },
                           {
-                            "uid": "d816a0f3-23",
+                            "uid": "0992afac-33",
                             "name": "Modal.jsx"
                           },
                           {
-                            "uid": "d816a0f3-25",
+                            "uid": "0992afac-35",
                             "name": "Input.jsx"
                           },
                           {
-                            "uid": "d816a0f3-89",
+                            "uid": "0992afac-99",
                             "name": "AdminToolbar.jsx"
                           },
                           {
-                            "uid": "d816a0f3-99",
+                            "uid": "0992afac-109",
                             "name": "Badge.jsx"
                           },
                           {
-                            "uid": "d816a0f3-101",
+                            "uid": "0992afac-111",
                             "name": "Card.jsx"
                           }
                         ]
                       },
                       {
                         "name": "layout/Footer.jsx",
-                        "uid": "d816a0f3-35"
+                        "uid": "0992afac-45"
                       }
                     ]
                   },
@@ -89,25 +114,25 @@
                     "children": [
                       {
                         "name": "config/seoConfig.js",
-                        "uid": "d816a0f3-37"
+                        "uid": "0992afac-47"
                       },
                       {
                         "name": "builders",
                         "children": [
                           {
-                            "uid": "d816a0f3-39",
+                            "uid": "0992afac-49",
                             "name": "metaBuilder.js"
                           },
                           {
-                            "uid": "d816a0f3-41",
+                            "uid": "0992afac-51",
                             "name": "canonical.js"
                           },
                           {
-                            "uid": "d816a0f3-43",
+                            "uid": "0992afac-53",
                             "name": "ogGenerator.js"
                           },
                           {
-                            "uid": "d816a0f3-45",
+                            "uid": "0992afac-55",
                             "name": "twitterCard.js"
                           }
                         ]
@@ -116,85 +141,85 @@
                         "name": "schemas",
                         "children": [
                           {
-                            "uid": "d816a0f3-47",
+                            "uid": "0992afac-57",
                             "name": "OrganizationSchema.js"
                           },
                           {
-                            "uid": "d816a0f3-49",
+                            "uid": "0992afac-59",
                             "name": "WebsiteSchema.js"
                           },
                           {
-                            "uid": "d816a0f3-51",
+                            "uid": "0992afac-61",
                             "name": "ProductSchema.js"
                           },
                           {
-                            "uid": "d816a0f3-53",
+                            "uid": "0992afac-63",
                             "name": "BreadcrumbSchema.js"
                           },
                           {
-                            "uid": "d816a0f3-55",
+                            "uid": "0992afac-65",
                             "name": "LocalBusinessSchema.js"
                           }
                         ]
                       },
                       {
                         "name": "constants/pageTypes.js",
-                        "uid": "d816a0f3-57"
+                        "uid": "0992afac-67"
                       },
                       {
-                        "uid": "d816a0f3-59",
+                        "uid": "0992afac-69",
                         "name": "SEO.jsx"
                       },
                       {
                         "name": "templates",
                         "children": [
                           {
-                            "uid": "d816a0f3-61",
+                            "uid": "0992afac-71",
                             "name": "homeSEO.js"
                           },
                           {
-                            "uid": "d816a0f3-63",
+                            "uid": "0992afac-73",
                             "name": "projectListingSEO.js"
                           },
                           {
-                            "uid": "d816a0f3-65",
+                            "uid": "0992afac-75",
                             "name": "projectSEO.js"
                           },
                           {
-                            "uid": "d816a0f3-67",
+                            "uid": "0992afac-77",
                             "name": "contactSEO.js"
                           },
                           {
-                            "uid": "d816a0f3-69",
+                            "uid": "0992afac-79",
                             "name": "printingSEO.js"
                           },
                           {
-                            "uid": "d816a0f3-71",
+                            "uid": "0992afac-81",
                             "name": "aboutSEO.js"
                           },
                           {
-                            "uid": "d816a0f3-73",
+                            "uid": "0992afac-83",
                             "name": "departmentsSEO.js"
                           }
                         ]
                       },
                       {
-                        "uid": "d816a0f3-75",
+                        "uid": "0992afac-85",
                         "name": "generateSEO.js"
                       },
                       {
-                        "uid": "d816a0f3-77",
+                        "uid": "0992afac-87",
                         "name": "routeMetadata.js"
                       },
                       {
-                        "uid": "d816a0f3-79",
+                        "uid": "0992afac-89",
                         "name": "index.js"
                       }
                     ]
                   },
                   {
                     "name": "config/printingProducts.json",
-                    "uid": "d816a0f3-121"
+                    "uid": "0992afac-131"
                   }
                 ]
               },
@@ -206,29 +231,29 @@
                     "children": [
                       {
                         "name": "services/projectRepository.js",
-                        "uid": "d816a0f3-7"
+                        "uid": "0992afac-7"
                       },
                       {
                         "name": "context/ProjectContext.jsx",
-                        "uid": "d816a0f3-9"
+                        "uid": "0992afac-9"
                       },
                       {
                         "name": "hooks",
                         "children": [
                           {
-                            "uid": "d816a0f3-11",
+                            "uid": "0992afac-11",
                             "name": "useProjects.js"
                           },
                           {
-                            "uid": "d816a0f3-83",
+                            "uid": "0992afac-93",
                             "name": "useFilters.js"
                           },
                           {
-                            "uid": "d816a0f3-85",
+                            "uid": "0992afac-95",
                             "name": "useSearch.js"
                           },
                           {
-                            "uid": "d816a0f3-87",
+                            "uid": "0992afac-97",
                             "name": "useProjectFilters.js"
                           }
                         ]
@@ -237,19 +262,19 @@
                         "name": "constants",
                         "children": [
                           {
-                            "uid": "d816a0f3-91",
+                            "uid": "0992afac-101",
                             "name": "categories.js"
                           },
                           {
-                            "uid": "d816a0f3-93",
+                            "uid": "0992afac-103",
                             "name": "difficulties.js"
                           },
                           {
-                            "uid": "d816a0f3-95",
+                            "uid": "0992afac-105",
                             "name": "projectFeatures.js"
                           },
                           {
-                            "uid": "d816a0f3-97",
+                            "uid": "0992afac-107",
                             "name": "projectBadges.js"
                           }
                         ]
@@ -258,11 +283,11 @@
                         "name": "components",
                         "children": [
                           {
-                            "uid": "d816a0f3-103",
+                            "uid": "0992afac-113",
                             "name": "ProjectGrid.jsx"
                           },
                           {
-                            "uid": "d816a0f3-107",
+                            "uid": "0992afac-117",
                             "name": "RelatedProjects.jsx"
                           }
                         ]
@@ -271,11 +296,11 @@
                         "name": "pages",
                         "children": [
                           {
-                            "uid": "d816a0f3-105",
+                            "uid": "0992afac-115",
                             "name": "ProjectListing.jsx"
                           },
                           {
-                            "uid": "d816a0f3-119",
+                            "uid": "0992afac-129",
                             "name": "ProjectDetails.jsx"
                           }
                         ]
@@ -287,15 +312,15 @@
                     "children": [
                       {
                         "name": "services/enquiryService.js",
-                        "uid": "d816a0f3-13"
+                        "uid": "0992afac-13"
                       },
                       {
                         "name": "context/EnquiryContext.jsx",
-                        "uid": "d816a0f3-15"
+                        "uid": "0992afac-25"
                       },
                       {
                         "name": "hooks/useEnquiries.js",
-                        "uid": "d816a0f3-17"
+                        "uid": "0992afac-27"
                       }
                     ]
                   },
@@ -304,15 +329,15 @@
                     "children": [
                       {
                         "name": "services/settingsService.js",
-                        "uid": "d816a0f3-29"
+                        "uid": "0992afac-39"
                       },
                       {
                         "name": "context/SettingsContext.jsx",
-                        "uid": "d816a0f3-31"
+                        "uid": "0992afac-41"
                       },
                       {
                         "name": "hooks/useSettings.js",
-                        "uid": "d816a0f3-33"
+                        "uid": "0992afac-43"
                       }
                     ]
                   },
@@ -323,22 +348,22 @@
                         "name": "pages",
                         "children": [
                           {
-                            "uid": "d816a0f3-81",
+                            "uid": "0992afac-91",
                             "name": "Home.jsx"
                           },
                           {
-                            "uid": "d816a0f3-125",
+                            "uid": "0992afac-135",
                             "name": "PrintingCatalog.jsx"
                           },
                           {
-                            "uid": "d816a0f3-127",
+                            "uid": "0992afac-137",
                             "name": "Contact.jsx"
                           }
                         ]
                       },
                       {
                         "name": "hooks/usePrintingProducts.js",
-                        "uid": "d816a0f3-123"
+                        "uid": "0992afac-133"
                       }
                     ]
                   },
@@ -349,29 +374,29 @@
                         "name": "services",
                         "children": [
                           {
-                            "uid": "d816a0f3-111",
+                            "uid": "0992afac-121",
                             "name": "userService.js"
                           },
                           {
-                            "uid": "d816a0f3-113",
+                            "uid": "0992afac-123",
                             "name": "authService.js"
                           }
                         ]
                       },
                       {
                         "name": "context/AuthContext.jsx",
-                        "uid": "d816a0f3-115"
+                        "uid": "0992afac-125"
                       },
                       {
                         "name": "components/ProgressiveAuthModal.jsx",
-                        "uid": "d816a0f3-117"
+                        "uid": "0992afac-127"
                       }
                     ]
                   }
                 ]
               },
               {
-                "uid": "d816a0f3-129",
+                "uid": "0992afac-139",
                 "name": "entry-server.jsx"
               }
             ]
@@ -382,2435 +407,2624 @@
     "isRoot": true
   },
   "nodeParts": {
-    "d816a0f3-1": {
+    "0992afac-1": {
       "renderedLength": 942,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-0"
+      "metaUid": "0992afac-0"
     },
-    "d816a0f3-3": {
+    "0992afac-3": {
       "renderedLength": 416,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-2"
+      "metaUid": "0992afac-2"
     },
-    "d816a0f3-5": {
+    "0992afac-5": {
       "renderedLength": 4049,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-4"
+      "metaUid": "0992afac-4"
     },
-    "d816a0f3-7": {
+    "0992afac-7": {
       "renderedLength": 4530,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-6"
+      "metaUid": "0992afac-6"
     },
-    "d816a0f3-9": {
+    "0992afac-9": {
       "renderedLength": 1989,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-8"
+      "metaUid": "0992afac-8"
     },
-    "d816a0f3-11": {
+    "0992afac-11": {
       "renderedLength": 1358,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-10"
+      "metaUid": "0992afac-10"
     },
-    "d816a0f3-13": {
+    "0992afac-13": {
       "renderedLength": 3713,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-12"
+      "metaUid": "0992afac-12"
     },
-    "d816a0f3-15": {
-      "renderedLength": 1962,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-14"
-    },
-    "d816a0f3-17": {
-      "renderedLength": 393,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-16"
-    },
-    "d816a0f3-19": {
-      "renderedLength": 3727,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-18"
-    },
-    "d816a0f3-21": {
-      "renderedLength": 375,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-20"
-    },
-    "d816a0f3-23": {
-      "renderedLength": 413,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-22"
-    },
-    "d816a0f3-25": {
-      "renderedLength": 329,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-24"
-    },
-    "d816a0f3-27": {
-      "renderedLength": 152,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-26"
-    },
-    "d816a0f3-29": {
-      "renderedLength": 2036,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-28"
-    },
-    "d816a0f3-31": {
-      "renderedLength": 7628,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-30"
-    },
-    "d816a0f3-33": {
-      "renderedLength": 283,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-32"
-    },
-    "d816a0f3-35": {
-      "renderedLength": 9219,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-34"
-    },
-    "d816a0f3-37": {
-      "renderedLength": 552,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-36"
-    },
-    "d816a0f3-39": {
-      "renderedLength": 1564,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-38"
-    },
-    "d816a0f3-41": {
-      "renderedLength": 307,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-40"
-    },
-    "d816a0f3-43": {
-      "renderedLength": 327,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-42"
-    },
-    "d816a0f3-45": {
-      "renderedLength": 430,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-44"
-    },
-    "d816a0f3-47": {
-      "renderedLength": 670,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-46"
-    },
-    "d816a0f3-49": {
-      "renderedLength": 411,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-48"
-    },
-    "d816a0f3-51": {
-      "renderedLength": 820,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-50"
-    },
-    "d816a0f3-53": {
-      "renderedLength": 485,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-52"
-    },
-    "d816a0f3-55": {
-      "renderedLength": 572,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-54"
-    },
-    "d816a0f3-57": {
-      "renderedLength": 260,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-56"
-    },
-    "d816a0f3-59": {
-      "renderedLength": 4395,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-58"
-    },
-    "d816a0f3-61": {
-      "renderedLength": 326,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-60"
-    },
-    "d816a0f3-63": {
-      "renderedLength": 365,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-62"
-    },
-    "d816a0f3-65": {
-      "renderedLength": 703,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-64"
-    },
-    "d816a0f3-67": {
-      "renderedLength": 331,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-66"
-    },
-    "d816a0f3-69": {
-      "renderedLength": 313,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-68"
-    },
-    "d816a0f3-71": {
-      "renderedLength": 298,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-70"
-    },
-    "d816a0f3-73": {
-      "renderedLength": 347,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-72"
-    },
-    "d816a0f3-75": {
-      "renderedLength": 507,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-74"
-    },
-    "d816a0f3-77": {
-      "renderedLength": 1293,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-76"
-    },
-    "d816a0f3-79": {
-      "renderedLength": 0,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-78"
-    },
-    "d816a0f3-81": {
-      "renderedLength": 43170,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-80"
-    },
-    "d816a0f3-83": {
-      "renderedLength": 1559,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-82"
-    },
-    "d816a0f3-85": {
-      "renderedLength": 2033,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-84"
-    },
-    "d816a0f3-87": {
-      "renderedLength": 2577,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-86"
-    },
-    "d816a0f3-89": {
-      "renderedLength": 7009,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-88"
-    },
-    "d816a0f3-91": {
-      "renderedLength": 555,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-90"
-    },
-    "d816a0f3-93": {
+    "0992afac-15": {
       "renderedLength": 455,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-92"
+      "metaUid": "0992afac-14"
     },
-    "d816a0f3-95": {
-      "renderedLength": 547,
+    "0992afac-17": {
+      "renderedLength": 106,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-94"
+      "metaUid": "0992afac-16"
     },
-    "d816a0f3-97": {
-      "renderedLength": 406,
+    "0992afac-19": {
+      "renderedLength": 2235,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-96"
+      "metaUid": "0992afac-18"
     },
-    "d816a0f3-99": {
-      "renderedLength": 414,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-98"
-    },
-    "d816a0f3-101": {
-      "renderedLength": 246,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-100"
-    },
-    "d816a0f3-103": {
-      "renderedLength": 5178,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-102"
-    },
-    "d816a0f3-105": {
-      "renderedLength": 26254,
-      "gzipLength": 0,
-      "brotliLength": 0,
-      "metaUid": "d816a0f3-104"
-    },
-    "d816a0f3-107": {
+    "0992afac-21": {
       "renderedLength": 0,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-106"
+      "metaUid": "0992afac-20"
     },
-    "d816a0f3-109": {
+    "0992afac-23": {
+      "renderedLength": 0,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-22"
+    },
+    "0992afac-25": {
+      "renderedLength": 2148,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-24"
+    },
+    "0992afac-27": {
+      "renderedLength": 393,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-26"
+    },
+    "0992afac-29": {
+      "renderedLength": 3727,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-28"
+    },
+    "0992afac-31": {
+      "renderedLength": 375,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-30"
+    },
+    "0992afac-33": {
+      "renderedLength": 413,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-32"
+    },
+    "0992afac-35": {
+      "renderedLength": 329,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-34"
+    },
+    "0992afac-37": {
+      "renderedLength": 152,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-36"
+    },
+    "0992afac-39": {
+      "renderedLength": 2036,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-38"
+    },
+    "0992afac-41": {
+      "renderedLength": 7628,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-40"
+    },
+    "0992afac-43": {
+      "renderedLength": 283,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-42"
+    },
+    "0992afac-45": {
+      "renderedLength": 9219,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-44"
+    },
+    "0992afac-47": {
+      "renderedLength": 552,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-46"
+    },
+    "0992afac-49": {
+      "renderedLength": 1564,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-48"
+    },
+    "0992afac-51": {
+      "renderedLength": 307,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-50"
+    },
+    "0992afac-53": {
+      "renderedLength": 327,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-52"
+    },
+    "0992afac-55": {
+      "renderedLength": 430,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-54"
+    },
+    "0992afac-57": {
+      "renderedLength": 670,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-56"
+    },
+    "0992afac-59": {
+      "renderedLength": 411,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-58"
+    },
+    "0992afac-61": {
+      "renderedLength": 820,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-60"
+    },
+    "0992afac-63": {
+      "renderedLength": 485,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-62"
+    },
+    "0992afac-65": {
+      "renderedLength": 572,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-64"
+    },
+    "0992afac-67": {
+      "renderedLength": 260,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-66"
+    },
+    "0992afac-69": {
+      "renderedLength": 4395,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-68"
+    },
+    "0992afac-71": {
+      "renderedLength": 326,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-70"
+    },
+    "0992afac-73": {
+      "renderedLength": 365,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-72"
+    },
+    "0992afac-75": {
+      "renderedLength": 703,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-74"
+    },
+    "0992afac-77": {
+      "renderedLength": 331,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-76"
+    },
+    "0992afac-79": {
+      "renderedLength": 313,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-78"
+    },
+    "0992afac-81": {
+      "renderedLength": 298,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-80"
+    },
+    "0992afac-83": {
+      "renderedLength": 347,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-82"
+    },
+    "0992afac-85": {
+      "renderedLength": 507,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-84"
+    },
+    "0992afac-87": {
+      "renderedLength": 1293,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-86"
+    },
+    "0992afac-89": {
+      "renderedLength": 0,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-88"
+    },
+    "0992afac-91": {
+      "renderedLength": 43170,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-90"
+    },
+    "0992afac-93": {
+      "renderedLength": 1559,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-92"
+    },
+    "0992afac-95": {
+      "renderedLength": 2033,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-94"
+    },
+    "0992afac-97": {
+      "renderedLength": 2577,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-96"
+    },
+    "0992afac-99": {
+      "renderedLength": 7009,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-98"
+    },
+    "0992afac-101": {
+      "renderedLength": 555,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-100"
+    },
+    "0992afac-103": {
+      "renderedLength": 455,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-102"
+    },
+    "0992afac-105": {
+      "renderedLength": 547,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-104"
+    },
+    "0992afac-107": {
+      "renderedLength": 406,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-106"
+    },
+    "0992afac-109": {
+      "renderedLength": 414,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-108"
+    },
+    "0992afac-111": {
+      "renderedLength": 246,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-110"
+    },
+    "0992afac-113": {
+      "renderedLength": 5178,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-112"
+    },
+    "0992afac-115": {
+      "renderedLength": 26788,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-114"
+    },
+    "0992afac-117": {
+      "renderedLength": 0,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "0992afac-116"
+    },
+    "0992afac-119": {
       "renderedLength": 6411,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-108"
+      "metaUid": "0992afac-118"
     },
-    "d816a0f3-111": {
+    "0992afac-121": {
       "renderedLength": 6530,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-110"
+      "metaUid": "0992afac-120"
     },
-    "d816a0f3-113": {
+    "0992afac-123": {
       "renderedLength": 5659,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-112"
+      "metaUid": "0992afac-122"
     },
-    "d816a0f3-115": {
+    "0992afac-125": {
       "renderedLength": 3720,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-114"
+      "metaUid": "0992afac-124"
     },
-    "d816a0f3-117": {
+    "0992afac-127": {
       "renderedLength": 3082,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-116"
+      "metaUid": "0992afac-126"
     },
-    "d816a0f3-119": {
-      "renderedLength": 53969,
+    "0992afac-129": {
+      "renderedLength": 54387,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-118"
+      "metaUid": "0992afac-128"
     },
-    "d816a0f3-121": {
+    "0992afac-131": {
       "renderedLength": 1077,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-120"
+      "metaUid": "0992afac-130"
     },
-    "d816a0f3-123": {
+    "0992afac-133": {
       "renderedLength": 460,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-122"
+      "metaUid": "0992afac-132"
     },
-    "d816a0f3-125": {
+    "0992afac-135": {
       "renderedLength": 14912,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-124"
+      "metaUid": "0992afac-134"
     },
-    "d816a0f3-127": {
+    "0992afac-137": {
       "renderedLength": 19730,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-126"
+      "metaUid": "0992afac-136"
     },
-    "d816a0f3-129": {
+    "0992afac-139": {
       "renderedLength": 1314,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d816a0f3-128"
+      "metaUid": "0992afac-138"
     }
   },
   "nodeMetas": {
-    "d816a0f3-0": {
+    "0992afac-0": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/constants/routes.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-1"
+        "entry-server.js": "0992afac-1"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         },
         {
-          "uid": "d816a0f3-116"
+          "uid": "0992afac-126"
         },
         {
-          "uid": "d816a0f3-76"
+          "uid": "0992afac-86"
         }
       ]
     },
-    "d816a0f3-2": {
+    "0992afac-2": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/services/supabaseClient.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-3"
+        "entry-server.js": "0992afac-3"
       },
       "imported": [
         {
-          "uid": "d816a0f3-140"
+          "uid": "0992afac-151"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-28"
+          "uid": "0992afac-38"
         },
         {
-          "uid": "d816a0f3-6"
+          "uid": "0992afac-6"
         },
         {
-          "uid": "d816a0f3-112"
+          "uid": "0992afac-122"
         },
         {
-          "uid": "d816a0f3-110"
+          "uid": "0992afac-120"
         },
         {
-          "uid": "d816a0f3-12"
+          "uid": "0992afac-12"
         },
         {
-          "uid": "d816a0f3-108"
+          "uid": "0992afac-118"
         }
       ]
     },
-    "d816a0f3-4": {
+    "0992afac-4": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/utils/mapper.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-5"
+        "entry-server.js": "0992afac-5"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-6"
+          "uid": "0992afac-6"
         },
         {
-          "uid": "d816a0f3-12"
+          "uid": "0992afac-12"
         }
       ]
     },
-    "d816a0f3-6": {
+    "0992afac-6": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/services/projectRepository.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-7"
+        "entry-server.js": "0992afac-7"
       },
       "imported": [
         {
-          "uid": "d816a0f3-2"
+          "uid": "0992afac-2"
         },
         {
-          "uid": "d816a0f3-4"
+          "uid": "0992afac-4"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-8"
+          "uid": "0992afac-8"
         }
       ]
     },
-    "d816a0f3-8": {
+    "0992afac-8": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/context/ProjectContext.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-9"
+        "entry-server.js": "0992afac-9"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-6"
+          "uid": "0992afac-6"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-10"
+          "uid": "0992afac-10"
         }
       ]
     },
-    "d816a0f3-10": {
+    "0992afac-10": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/hooks/useProjects.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-11"
+        "entry-server.js": "0992afac-11"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-8"
+          "uid": "0992afac-8"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         }
       ]
     },
-    "d816a0f3-12": {
+    "0992afac-12": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/enquiries/services/enquiryService.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-13"
+        "entry-server.js": "0992afac-13"
       },
       "imported": [
         {
-          "uid": "d816a0f3-2"
+          "uid": "0992afac-2"
         },
         {
-          "uid": "d816a0f3-4"
+          "uid": "0992afac-4"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-14"
+          "uid": "0992afac-24"
         }
       ]
     },
-    "d816a0f3-14": {
+    "0992afac-14": {
+      "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/analytics/analytics.js",
+      "moduleParts": {
+        "entry-server.js": "0992afac-15"
+      },
+      "imported": [
+        {
+          "uid": "0992afac-150"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "0992afac-22"
+        },
+        {
+          "uid": "0992afac-16"
+        },
+        {
+          "uid": "0992afac-20"
+        },
+        {
+          "uid": "0992afac-18"
+        }
+      ]
+    },
+    "0992afac-16": {
+      "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/analytics/AnalyticsProvider.jsx",
+      "moduleParts": {
+        "entry-server.js": "0992afac-17"
+      },
+      "imported": [
+        {
+          "uid": "0992afac-140"
+        },
+        {
+          "uid": "0992afac-143"
+        },
+        {
+          "uid": "0992afac-14"
+        },
+        {
+          "uid": "0992afac-144"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "0992afac-22"
+        },
+        {
+          "uid": "0992afac-20"
+        }
+      ]
+    },
+    "0992afac-18": {
+      "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/analytics/eventTracker.js",
+      "moduleParts": {
+        "entry-server.js": "0992afac-19"
+      },
+      "imported": [
+        {
+          "uid": "0992afac-14"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "0992afac-22"
+        },
+        {
+          "uid": "0992afac-20"
+        }
+      ]
+    },
+    "0992afac-20": {
+      "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/analytics/useAnalytics.js",
+      "moduleParts": {
+        "entry-server.js": "0992afac-21"
+      },
+      "imported": [
+        {
+          "uid": "0992afac-140"
+        },
+        {
+          "uid": "0992afac-16"
+        },
+        {
+          "uid": "0992afac-18"
+        },
+        {
+          "uid": "0992afac-14"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "0992afac-22"
+        }
+      ]
+    },
+    "0992afac-22": {
+      "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/analytics/index.js",
+      "moduleParts": {
+        "entry-server.js": "0992afac-23"
+      },
+      "imported": [
+        {
+          "uid": "0992afac-16"
+        },
+        {
+          "uid": "0992afac-20"
+        },
+        {
+          "uid": "0992afac-14"
+        },
+        {
+          "uid": "0992afac-18"
+        },
+        {
+          "uid": "0992afac-150"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "0992afac-114"
+        },
+        {
+          "uid": "0992afac-24"
+        }
+      ]
+    },
+    "0992afac-24": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/enquiries/context/EnquiryContext.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-15"
+        "entry-server.js": "0992afac-25"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-12"
+          "uid": "0992afac-12"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-22"
+        },
+        {
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-16"
+          "uid": "0992afac-26"
         }
       ]
     },
-    "d816a0f3-16": {
+    "0992afac-26": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/enquiries/hooks/useEnquiries.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-17"
+        "entry-server.js": "0992afac-27"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-14"
+          "uid": "0992afac-24"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         }
       ]
     },
-    "d816a0f3-18": {
+    "0992afac-28": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/context/ToastContext.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-19"
+        "entry-server.js": "0992afac-29"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         }
       ]
     },
-    "d816a0f3-20": {
+    "0992afac-30": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/components/ui/Button.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-21"
+        "entry-server.js": "0992afac-31"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-88"
+          "uid": "0992afac-98"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         },
         {
-          "uid": "d816a0f3-116"
+          "uid": "0992afac-126"
         }
       ]
     },
-    "d816a0f3-22": {
+    "0992afac-32": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/components/ui/Modal.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-23"
+        "entry-server.js": "0992afac-33"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-116"
+          "uid": "0992afac-126"
         }
       ]
     },
-    "d816a0f3-24": {
+    "0992afac-34": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/components/ui/Input.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-25"
+        "entry-server.js": "0992afac-35"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-88"
+          "uid": "0992afac-98"
         }
       ]
     },
-    "d816a0f3-26": {
+    "0992afac-36": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/utils/logger.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-27"
+        "entry-server.js": "0992afac-37"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-30"
+          "uid": "0992afac-40"
         },
         {
-          "uid": "d816a0f3-114"
+          "uid": "0992afac-124"
         },
         {
-          "uid": "d816a0f3-28"
+          "uid": "0992afac-38"
         },
         {
-          "uid": "d816a0f3-112"
+          "uid": "0992afac-122"
         },
         {
-          "uid": "d816a0f3-110"
+          "uid": "0992afac-120"
         },
         {
-          "uid": "d816a0f3-108"
+          "uid": "0992afac-118"
         }
       ]
     },
-    "d816a0f3-28": {
+    "0992afac-38": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/settings/services/settingsService.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-29"
+        "entry-server.js": "0992afac-39"
       },
       "imported": [
         {
-          "uid": "d816a0f3-2"
+          "uid": "0992afac-2"
         },
         {
-          "uid": "d816a0f3-26"
+          "uid": "0992afac-36"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-30"
+          "uid": "0992afac-40"
         }
       ]
     },
-    "d816a0f3-30": {
+    "0992afac-40": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/settings/context/SettingsContext.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-31"
+        "entry-server.js": "0992afac-41"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-28"
+          "uid": "0992afac-38"
         },
         {
-          "uid": "d816a0f3-26"
+          "uid": "0992afac-36"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-32"
+          "uid": "0992afac-42"
         }
       ]
     },
-    "d816a0f3-32": {
+    "0992afac-42": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/settings/hooks/useSettings.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-33"
+        "entry-server.js": "0992afac-43"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-30"
+          "uid": "0992afac-40"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-34"
+          "uid": "0992afac-44"
         }
       ]
     },
-    "d816a0f3-34": {
+    "0992afac-44": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/components/layout/Footer.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-35"
+        "entry-server.js": "0992afac-45"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-32"
+          "uid": "0992afac-42"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         }
       ]
     },
-    "d816a0f3-36": {
+    "0992afac-46": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/config/seoConfig.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-37"
+        "entry-server.js": "0992afac-47"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         },
         {
-          "uid": "d816a0f3-60"
+          "uid": "0992afac-70"
         },
         {
-          "uid": "d816a0f3-62"
+          "uid": "0992afac-72"
         },
         {
-          "uid": "d816a0f3-64"
+          "uid": "0992afac-74"
         },
         {
-          "uid": "d816a0f3-66"
+          "uid": "0992afac-76"
         },
         {
-          "uid": "d816a0f3-68"
+          "uid": "0992afac-78"
         },
         {
-          "uid": "d816a0f3-70"
+          "uid": "0992afac-80"
         },
         {
-          "uid": "d816a0f3-72"
+          "uid": "0992afac-82"
         }
       ]
     },
-    "d816a0f3-38": {
+    "0992afac-48": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/builders/metaBuilder.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-39"
+        "entry-server.js": "0992afac-49"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-40": {
+    "0992afac-50": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/builders/canonical.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-41"
+        "entry-server.js": "0992afac-51"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         },
         {
-          "uid": "d816a0f3-60"
+          "uid": "0992afac-70"
         },
         {
-          "uid": "d816a0f3-62"
+          "uid": "0992afac-72"
         },
         {
-          "uid": "d816a0f3-64"
+          "uid": "0992afac-74"
         },
         {
-          "uid": "d816a0f3-66"
+          "uid": "0992afac-76"
         },
         {
-          "uid": "d816a0f3-68"
+          "uid": "0992afac-78"
         },
         {
-          "uid": "d816a0f3-70"
+          "uid": "0992afac-80"
         },
         {
-          "uid": "d816a0f3-72"
+          "uid": "0992afac-82"
         }
       ]
     },
-    "d816a0f3-42": {
+    "0992afac-52": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/builders/ogGenerator.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-43"
+        "entry-server.js": "0992afac-53"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-44": {
+    "0992afac-54": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/builders/twitterCard.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-45"
+        "entry-server.js": "0992afac-55"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-46": {
+    "0992afac-56": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/schemas/OrganizationSchema.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-47"
+        "entry-server.js": "0992afac-57"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-48": {
+    "0992afac-58": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/schemas/WebsiteSchema.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-49"
+        "entry-server.js": "0992afac-59"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-50": {
+    "0992afac-60": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/schemas/ProductSchema.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-51"
+        "entry-server.js": "0992afac-61"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-52": {
+    "0992afac-62": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/schemas/BreadcrumbSchema.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-53"
+        "entry-server.js": "0992afac-63"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-54": {
+    "0992afac-64": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/schemas/LocalBusinessSchema.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-55"
+        "entry-server.js": "0992afac-65"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         }
       ]
     },
-    "d816a0f3-56": {
+    "0992afac-66": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/constants/pageTypes.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-57"
+        "entry-server.js": "0992afac-67"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         },
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         },
         {
-          "uid": "d816a0f3-76"
+          "uid": "0992afac-86"
         }
       ]
     },
-    "d816a0f3-58": {
+    "0992afac-68": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/SEO.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-59"
+        "entry-server.js": "0992afac-69"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-38"
+          "uid": "0992afac-48"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         },
         {
-          "uid": "d816a0f3-42"
+          "uid": "0992afac-52"
         },
         {
-          "uid": "d816a0f3-44"
+          "uid": "0992afac-54"
         },
         {
-          "uid": "d816a0f3-46"
+          "uid": "0992afac-56"
         },
         {
-          "uid": "d816a0f3-48"
+          "uid": "0992afac-58"
         },
         {
-          "uid": "d816a0f3-50"
+          "uid": "0992afac-60"
         },
         {
-          "uid": "d816a0f3-52"
+          "uid": "0992afac-62"
         },
         {
-          "uid": "d816a0f3-54"
+          "uid": "0992afac-64"
         },
         {
-          "uid": "d816a0f3-56"
+          "uid": "0992afac-66"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         }
       ]
     },
-    "d816a0f3-60": {
+    "0992afac-70": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/templates/homeSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-61"
+        "entry-server.js": "0992afac-71"
       },
       "imported": [
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         }
       ]
     },
-    "d816a0f3-62": {
+    "0992afac-72": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/templates/projectListingSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-63"
+        "entry-server.js": "0992afac-73"
       },
       "imported": [
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         }
       ]
     },
-    "d816a0f3-64": {
+    "0992afac-74": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/templates/projectSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-65"
+        "entry-server.js": "0992afac-75"
       },
       "imported": [
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         }
       ]
     },
-    "d816a0f3-66": {
+    "0992afac-76": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/templates/contactSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-67"
+        "entry-server.js": "0992afac-77"
       },
       "imported": [
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         }
       ]
     },
-    "d816a0f3-68": {
+    "0992afac-78": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/templates/printingSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-69"
+        "entry-server.js": "0992afac-79"
       },
       "imported": [
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         }
       ]
     },
-    "d816a0f3-70": {
+    "0992afac-80": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/templates/aboutSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-71"
+        "entry-server.js": "0992afac-81"
       },
       "imported": [
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         }
       ]
     },
-    "d816a0f3-72": {
+    "0992afac-82": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/templates/departmentsSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-73"
+        "entry-server.js": "0992afac-83"
       },
       "imported": [
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         }
       ]
     },
-    "d816a0f3-74": {
+    "0992afac-84": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/generateSEO.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-75"
+        "entry-server.js": "0992afac-85"
       },
       "imported": [
         {
-          "uid": "d816a0f3-56"
+          "uid": "0992afac-66"
         },
         {
-          "uid": "d816a0f3-60"
+          "uid": "0992afac-70"
         },
         {
-          "uid": "d816a0f3-62"
+          "uid": "0992afac-72"
         },
         {
-          "uid": "d816a0f3-64"
+          "uid": "0992afac-74"
         },
         {
-          "uid": "d816a0f3-66"
+          "uid": "0992afac-76"
         },
         {
-          "uid": "d816a0f3-68"
+          "uid": "0992afac-78"
         },
         {
-          "uid": "d816a0f3-70"
+          "uid": "0992afac-80"
         },
         {
-          "uid": "d816a0f3-72"
+          "uid": "0992afac-82"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         }
       ]
     },
-    "d816a0f3-76": {
+    "0992afac-86": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/routeMetadata.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-77"
+        "entry-server.js": "0992afac-87"
       },
       "imported": [
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-56"
+          "uid": "0992afac-66"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         }
       ]
     },
-    "d816a0f3-78": {
+    "0992afac-88": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/index.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-79"
+        "entry-server.js": "0992afac-89"
       },
       "imported": [
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         },
         {
-          "uid": "d816a0f3-36"
+          "uid": "0992afac-46"
         },
         {
-          "uid": "d816a0f3-56"
+          "uid": "0992afac-66"
         },
         {
-          "uid": "d816a0f3-74"
+          "uid": "0992afac-84"
         },
         {
-          "uid": "d816a0f3-76"
+          "uid": "0992afac-86"
         },
         {
-          "uid": "d816a0f3-40"
+          "uid": "0992afac-50"
         },
         {
-          "uid": "d816a0f3-38"
+          "uid": "0992afac-48"
         },
         {
-          "uid": "d816a0f3-42"
+          "uid": "0992afac-52"
         },
         {
-          "uid": "d816a0f3-44"
+          "uid": "0992afac-54"
         },
         {
-          "uid": "d816a0f3-136"
+          "uid": "0992afac-146"
         },
         {
-          "uid": "d816a0f3-137"
+          "uid": "0992afac-147"
         },
         {
-          "uid": "d816a0f3-46"
+          "uid": "0992afac-56"
         },
         {
-          "uid": "d816a0f3-48"
+          "uid": "0992afac-58"
         },
         {
-          "uid": "d816a0f3-50"
+          "uid": "0992afac-60"
         },
         {
-          "uid": "d816a0f3-52"
+          "uid": "0992afac-62"
         },
         {
-          "uid": "d816a0f3-54"
+          "uid": "0992afac-64"
         },
         {
-          "uid": "d816a0f3-138"
+          "uid": "0992afac-148"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         }
       ]
     },
-    "d816a0f3-80": {
+    "0992afac-90": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/public/pages/Home.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-81"
+        "entry-server.js": "0992afac-91"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-135"
+          "uid": "0992afac-145"
         },
         {
-          "uid": "d816a0f3-10"
+          "uid": "0992afac-10"
         },
         {
-          "uid": "d816a0f3-16"
+          "uid": "0992afac-26"
         },
         {
-          "uid": "d816a0f3-18"
+          "uid": "0992afac-28"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-34"
+          "uid": "0992afac-44"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-32"
+          "uid": "0992afac-42"
         },
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         }
       ]
     },
-    "d816a0f3-82": {
+    "0992afac-92": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/hooks/useFilters.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-83"
+        "entry-server.js": "0992afac-93"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         }
       ]
     },
-    "d816a0f3-84": {
+    "0992afac-94": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/hooks/useSearch.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-85"
+        "entry-server.js": "0992afac-95"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         }
       ]
     },
-    "d816a0f3-86": {
+    "0992afac-96": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/hooks/useProjectFilters.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-87"
+        "entry-server.js": "0992afac-97"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         }
       ]
     },
-    "d816a0f3-88": {
+    "0992afac-98": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/components/ui/AdminToolbar.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-89"
+        "entry-server.js": "0992afac-99"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-139"
+          "uid": "0992afac-149"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         }
       ]
     },
-    "d816a0f3-90": {
+    "0992afac-100": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/constants/categories.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-91"
+        "entry-server.js": "0992afac-101"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         }
       ]
     },
-    "d816a0f3-92": {
+    "0992afac-102": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/constants/difficulties.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-93"
+        "entry-server.js": "0992afac-103"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         }
       ]
     },
-    "d816a0f3-94": {
+    "0992afac-104": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/constants/projectFeatures.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-95"
+        "entry-server.js": "0992afac-105"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         }
       ]
     },
-    "d816a0f3-96": {
+    "0992afac-106": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/constants/projectBadges.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-97"
+        "entry-server.js": "0992afac-107"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-98"
+          "uid": "0992afac-108"
         }
       ]
     },
-    "d816a0f3-98": {
+    "0992afac-108": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/components/ui/Badge.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-99"
+        "entry-server.js": "0992afac-109"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-96"
+          "uid": "0992afac-106"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         }
       ]
     },
-    "d816a0f3-100": {
+    "0992afac-110": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/components/ui/Card.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-101"
+        "entry-server.js": "0992afac-111"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         }
       ]
     },
-    "d816a0f3-102": {
+    "0992afac-112": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/components/ProjectGrid.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-103"
+        "entry-server.js": "0992afac-113"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-98"
+          "uid": "0992afac-108"
         },
         {
-          "uid": "d816a0f3-100"
+          "uid": "0992afac-110"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-90"
+          "uid": "0992afac-100"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-106"
+          "uid": "0992afac-116"
         }
       ]
     },
-    "d816a0f3-104": {
+    "0992afac-114": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/pages/ProjectListing.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-105"
+        "entry-server.js": "0992afac-115"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-135"
+          "uid": "0992afac-145"
         },
         {
-          "uid": "d816a0f3-10"
+          "uid": "0992afac-10"
         },
         {
-          "uid": "d816a0f3-82"
+          "uid": "0992afac-92"
         },
         {
-          "uid": "d816a0f3-84"
+          "uid": "0992afac-94"
         },
         {
-          "uid": "d816a0f3-86"
+          "uid": "0992afac-96"
         },
         {
-          "uid": "d816a0f3-88"
+          "uid": "0992afac-98"
         },
         {
-          "uid": "d816a0f3-90"
+          "uid": "0992afac-100"
         },
         {
-          "uid": "d816a0f3-92"
+          "uid": "0992afac-102"
         },
         {
-          "uid": "d816a0f3-94"
+          "uid": "0992afac-104"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-16"
+          "uid": "0992afac-26"
         },
         {
-          "uid": "d816a0f3-18"
+          "uid": "0992afac-28"
         },
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-22"
+        },
+        {
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         }
       ]
     },
-    "d816a0f3-106": {
+    "0992afac-116": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/components/RelatedProjects.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-107"
+        "entry-server.js": "0992afac-117"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         }
       ]
     },
-    "d816a0f3-108": {
+    "0992afac-118": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/services/storageService.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-109"
+        "entry-server.js": "0992afac-119"
       },
       "imported": [
         {
-          "uid": "d816a0f3-2"
+          "uid": "0992afac-2"
         },
         {
-          "uid": "d816a0f3-26"
+          "uid": "0992afac-36"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-110"
+          "uid": "0992afac-120"
         }
       ]
     },
-    "d816a0f3-110": {
+    "0992afac-120": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/auth/services/userService.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-111"
+        "entry-server.js": "0992afac-121"
       },
       "imported": [
         {
-          "uid": "d816a0f3-2"
+          "uid": "0992afac-2"
         },
         {
-          "uid": "d816a0f3-108"
+          "uid": "0992afac-118"
         },
         {
-          "uid": "d816a0f3-26"
+          "uid": "0992afac-36"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-114"
+          "uid": "0992afac-124"
         },
         {
-          "uid": "d816a0f3-112"
+          "uid": "0992afac-122"
         }
       ]
     },
-    "d816a0f3-112": {
+    "0992afac-122": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/auth/services/authService.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-113"
+        "entry-server.js": "0992afac-123"
       },
       "imported": [
         {
-          "uid": "d816a0f3-2"
+          "uid": "0992afac-2"
         },
         {
-          "uid": "d816a0f3-110"
+          "uid": "0992afac-120"
         },
         {
-          "uid": "d816a0f3-26"
+          "uid": "0992afac-36"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-114"
+          "uid": "0992afac-124"
         }
       ]
     },
-    "d816a0f3-114": {
+    "0992afac-124": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/auth/context/AuthContext.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-115"
+        "entry-server.js": "0992afac-125"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-112"
+          "uid": "0992afac-122"
         },
         {
-          "uid": "d816a0f3-110"
+          "uid": "0992afac-120"
         },
         {
-          "uid": "d816a0f3-26"
+          "uid": "0992afac-36"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         }
       ]
     },
-    "d816a0f3-116": {
+    "0992afac-126": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/auth/components/ProgressiveAuthModal.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-117"
+        "entry-server.js": "0992afac-127"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         }
       ]
     },
-    "d816a0f3-118": {
+    "0992afac-128": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/projects/pages/ProjectDetails.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-119"
+        "entry-server.js": "0992afac-129"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-135"
+          "uid": "0992afac-145"
         },
         {
-          "uid": "d816a0f3-10"
+          "uid": "0992afac-10"
         },
         {
-          "uid": "d816a0f3-106"
+          "uid": "0992afac-116"
         },
         {
-          "uid": "d816a0f3-98"
+          "uid": "0992afac-108"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-16"
+          "uid": "0992afac-26"
         },
         {
-          "uid": "d816a0f3-32"
+          "uid": "0992afac-42"
         },
         {
-          "uid": "d816a0f3-18"
+          "uid": "0992afac-28"
         },
         {
-          "uid": "d816a0f3-114"
+          "uid": "0992afac-124"
         },
         {
-          "uid": "d816a0f3-116"
+          "uid": "0992afac-126"
         },
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         }
       ]
     },
-    "d816a0f3-120": {
+    "0992afac-130": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/config/printingProducts.json",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-121"
+        "entry-server.js": "0992afac-131"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-122"
+          "uid": "0992afac-132"
         }
       ]
     },
-    "d816a0f3-122": {
+    "0992afac-132": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/public/hooks/usePrintingProducts.js",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-123"
+        "entry-server.js": "0992afac-133"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-120"
+          "uid": "0992afac-130"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         }
       ]
     },
-    "d816a0f3-124": {
+    "0992afac-134": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/public/pages/PrintingCatalog.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-125"
+        "entry-server.js": "0992afac-135"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-135"
+          "uid": "0992afac-145"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-122"
+          "uid": "0992afac-132"
         },
         {
-          "uid": "d816a0f3-18"
+          "uid": "0992afac-28"
         },
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         }
       ]
     },
-    "d816a0f3-126": {
+    "0992afac-136": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/modules/public/pages/Contact.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-127"
+        "entry-server.js": "0992afac-137"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-135"
+          "uid": "0992afac-145"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-32"
+          "uid": "0992afac-42"
         },
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         }
       ]
     },
-    "d816a0f3-128": {
+    "0992afac-138": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/entry-server.jsx",
       "moduleParts": {
-        "entry-server.js": "d816a0f3-129"
+        "entry-server.js": "0992afac-139"
       },
       "imported": [
         {
-          "uid": "d816a0f3-130"
+          "uid": "0992afac-140"
         },
         {
-          "uid": "d816a0f3-131"
+          "uid": "0992afac-141"
         },
         {
-          "uid": "d816a0f3-132"
+          "uid": "0992afac-142"
         },
         {
-          "uid": "d816a0f3-133"
+          "uid": "0992afac-143"
         },
         {
-          "uid": "d816a0f3-0"
+          "uid": "0992afac-0"
         },
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-30"
+          "uid": "0992afac-40"
         },
         {
-          "uid": "d816a0f3-8"
+          "uid": "0992afac-8"
         },
         {
-          "uid": "d816a0f3-114"
+          "uid": "0992afac-124"
         },
         {
-          "uid": "d816a0f3-18"
+          "uid": "0992afac-28"
         },
         {
-          "uid": "d816a0f3-14"
+          "uid": "0992afac-24"
         },
         {
-          "uid": "d816a0f3-134"
+          "uid": "0992afac-144"
         }
       ],
       "importedBy": [],
       "isEntry": true
     },
-    "d816a0f3-130": {
+    "0992afac-140": {
       "id": "react",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-30"
+          "uid": "0992afac-40"
         },
         {
-          "uid": "d816a0f3-8"
+          "uid": "0992afac-8"
         },
         {
-          "uid": "d816a0f3-114"
+          "uid": "0992afac-124"
         },
         {
-          "uid": "d816a0f3-18"
+          "uid": "0992afac-28"
         },
         {
-          "uid": "d816a0f3-14"
+          "uid": "0992afac-24"
         },
         {
-          "uid": "d816a0f3-10"
+          "uid": "0992afac-10"
         },
         {
-          "uid": "d816a0f3-16"
+          "uid": "0992afac-26"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-34"
+          "uid": "0992afac-44"
         },
         {
-          "uid": "d816a0f3-32"
+          "uid": "0992afac-42"
         },
         {
-          "uid": "d816a0f3-82"
+          "uid": "0992afac-92"
         },
         {
-          "uid": "d816a0f3-84"
+          "uid": "0992afac-94"
         },
         {
-          "uid": "d816a0f3-86"
+          "uid": "0992afac-96"
         },
         {
-          "uid": "d816a0f3-88"
+          "uid": "0992afac-98"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         },
         {
-          "uid": "d816a0f3-106"
+          "uid": "0992afac-116"
         },
         {
-          "uid": "d816a0f3-98"
+          "uid": "0992afac-108"
         },
         {
-          "uid": "d816a0f3-116"
+          "uid": "0992afac-126"
         },
         {
-          "uid": "d816a0f3-122"
+          "uid": "0992afac-132"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
         },
         {
-          "uid": "d816a0f3-100"
+          "uid": "0992afac-110"
+        },
+        {
+          "uid": "0992afac-16"
+        },
+        {
+          "uid": "0992afac-20"
         }
       ]
     },
-    "d816a0f3-131": {
+    "0992afac-141": {
       "id": "react-dom/server",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         }
       ]
     },
-    "d816a0f3-132": {
+    "0992afac-142": {
       "id": "react-router-dom/server.mjs",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         }
       ]
     },
-    "d816a0f3-133": {
+    "0992afac-143": {
       "id": "react-router-dom",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-34"
+          "uid": "0992afac-44"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         },
         {
-          "uid": "d816a0f3-116"
+          "uid": "0992afac-126"
         },
         {
-          "uid": "d816a0f3-58"
+          "uid": "0992afac-68"
+        },
+        {
+          "uid": "0992afac-16"
         }
       ]
     },
-    "d816a0f3-134": {
+    "0992afac-144": {
       "id": "react/jsx-runtime",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-128"
+          "uid": "0992afac-138"
         },
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         },
         {
-          "uid": "d816a0f3-30"
+          "uid": "0992afac-40"
         },
         {
-          "uid": "d816a0f3-8"
+          "uid": "0992afac-8"
         },
         {
-          "uid": "d816a0f3-114"
+          "uid": "0992afac-124"
         },
         {
-          "uid": "d816a0f3-18"
+          "uid": "0992afac-28"
         },
         {
-          "uid": "d816a0f3-14"
+          "uid": "0992afac-24"
         },
         {
-          "uid": "d816a0f3-20"
+          "uid": "0992afac-30"
         },
         {
-          "uid": "d816a0f3-22"
+          "uid": "0992afac-32"
         },
         {
-          "uid": "d816a0f3-24"
+          "uid": "0992afac-34"
         },
         {
-          "uid": "d816a0f3-34"
+          "uid": "0992afac-44"
         },
         {
-          "uid": "d816a0f3-88"
+          "uid": "0992afac-98"
         },
         {
-          "uid": "d816a0f3-102"
+          "uid": "0992afac-112"
         },
         {
-          "uid": "d816a0f3-106"
+          "uid": "0992afac-116"
         },
         {
-          "uid": "d816a0f3-98"
+          "uid": "0992afac-108"
         },
         {
-          "uid": "d816a0f3-116"
+          "uid": "0992afac-126"
         },
         {
-          "uid": "d816a0f3-100"
+          "uid": "0992afac-110"
+        },
+        {
+          "uid": "0992afac-16"
         }
       ]
     },
-    "d816a0f3-135": {
+    "0992afac-145": {
       "id": "framer-motion",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-80"
+          "uid": "0992afac-90"
         },
         {
-          "uid": "d816a0f3-104"
+          "uid": "0992afac-114"
         },
         {
-          "uid": "d816a0f3-118"
+          "uid": "0992afac-128"
         },
         {
-          "uid": "d816a0f3-124"
+          "uid": "0992afac-134"
         },
         {
-          "uid": "d816a0f3-126"
+          "uid": "0992afac-136"
         }
       ]
     },
-    "d816a0f3-136": {
+    "0992afac-146": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/robotsGenerator.js",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         }
       ]
     },
-    "d816a0f3-137": {
+    "0992afac-147": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/sitemapGenerator.js",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         }
       ]
     },
-    "d816a0f3-138": {
+    "0992afac-148": {
       "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/seo/schemas/FAQSchema.js",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-78"
+          "uid": "0992afac-88"
         }
       ]
     },
-    "d816a0f3-139": {
+    "0992afac-149": {
       "id": "react-dom",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-88"
+          "uid": "0992afac-98"
         }
       ]
     },
-    "d816a0f3-140": {
+    "0992afac-150": {
+      "id": "C:/Users/Akilesh/Documents/Flyen/src/shared/analytics/analyticsConfig.js",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "0992afac-22"
+        },
+        {
+          "uid": "0992afac-14"
+        }
+      ]
+    },
+    "0992afac-151": {
       "id": "@supabase/supabase-js",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "d816a0f3-2"
+          "uid": "0992afac-2"
         }
       ]
     }

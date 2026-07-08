@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { enquiryService } from '../services/enquiryService.js';
+import { eventTracker } from '../../../shared/analytics/index.js';
 
 export const EnquiryContext = createContext();
 
@@ -32,6 +33,14 @@ export const EnquiryProvider = ({ children }) => {
         ? await enquiryService.create(enquiryData)
         : await enquiryService.createGuestEnquiry(enquiryData);
       setEnquiries((prev) => [reactEnquiry, ...prev]);
+
+      // Track successful submission events
+      if (enquiryData.projectName) {
+        eventTracker.trackProjectEnquiry({ title: enquiryData.projectName }, enquiryData.projectStatus);
+      } else {
+        eventTracker.trackContactSubmission('form');
+      }
+
       return reactEnquiry;
     } catch (e) {
       console.error('Failed to add enquiry to Supabase', e);

@@ -17,6 +17,8 @@ import { ROUTES } from '../../../shared/constants/routes';
 import { useEnquiries } from '../../enquiries/hooks/useEnquiries';
 import { useToast } from '../../../shared/context/ToastContext';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
+import { eventTracker } from '../../../shared/analytics/index.js';
+import { useEffect } from 'react';
 
 export const ProjectListing = () => {
   const navigate = useNavigate();
@@ -63,6 +65,28 @@ export const ProjectListing = () => {
   const [needDocument, setNeedDocument] = useState('No');
   const [needPresentation, setNeedPresentation] = useState('No');
   const [projectRemarks, setProjectRemarks] = useState('');
+
+  // Analytics: Track search queries (debounced)
+  useEffect(() => {
+    if (!searchQuery) return;
+    const timer = setTimeout(() => {
+      eventTracker.trackSearch(searchQuery);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Analytics: Track filter application changes
+  useEffect(() => {
+    if (activeCategories.length > 0 && !activeCategories.includes('all')) {
+      eventTracker.trackFilterApplied('categories', activeCategories.join(','));
+    }
+  }, [activeCategories]);
+
+  useEffect(() => {
+    if (activeFeatures.length > 0) {
+      eventTracker.trackFilterApplied('features', activeFeatures.join(','));
+    }
+  }, [activeFeatures]);
 
   const handleOpenOrderModal = (proj) => {
     setOrderedProject(proj);

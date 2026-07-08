@@ -25,6 +25,7 @@ const AdminLayout = React.lazy(() => import('../shared/components/layout/AdminLa
 
 
 
+import { AnalyticsProvider } from '../shared/analytics/index.js';
 import { ProtectedRoute } from '../modules/auth/components/ProtectedRoute.jsx';
 import { AuthProvider } from '../modules/auth/context/AuthContext.jsx';
 import { MaintenancePage } from '../modules/public/pages/MaintenancePage';
@@ -45,9 +46,10 @@ const MaintenanceGate = ({ children }) => {
 export const AppRouter = () => {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <MainLayout>
-          <MaintenanceGate>
+      <AnalyticsProvider>
+        <AuthProvider>
+          <MainLayout>
+            <MaintenanceGate>
             <AnimatePresence mode="wait">
               <React.Suspense fallback={<PageLoading />}>
                 <Routes>
@@ -88,6 +90,7 @@ export const AppRouter = () => {
           </MaintenanceGate>
         </MainLayout>
       </AuthProvider>
+      </AnalyticsProvider>
     </BrowserRouter>
   );
 };

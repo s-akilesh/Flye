@@ -75,6 +75,13 @@ export const ProjectDetails = () => {
 
   const seoProps = generateSEO(PageType.PROJECT, project);
 
+  // Analytics: Track project view
+  useEffect(() => {
+    if (project) {
+      eventTracker.trackProjectView(project);
+    }
+  }, [project]);
+
   const handleBookmarkClick = () => {
     if (!user) {
       setAuthAction('save this project to your bookmarks');
@@ -186,6 +193,7 @@ export const ProjectDetails = () => {
   const [projectRemarks, setProjectRemarks] = useState('');
 
   const openOrderModal = () => {
+    eventTracker.trackFilterApplied('view_pricing', 'general_order_modal');
     const defaultKit = projectKits.find(k => k.recommended && k.recommended !== 'none') || projectKits[0];
     setSelectedVariant(defaultKit || null);
     setTargetOrderProject(project);
@@ -202,6 +210,7 @@ export const ProjectDetails = () => {
   };
 
   const openOrderModalForVariant = (kit) => {
+    eventTracker.trackFilterApplied('view_pricing', kit?.name || 'variant');
     setSelectedVariant(kit);
     setTargetOrderProject(project);
     setRequestorName('');
@@ -509,6 +518,7 @@ export const ProjectDetails = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             download={name}
+                            onClick={() => eventTracker.trackDownload(name, type)}
                             style={{ display: 'flex', justifyContent: 'space-between', width: '100%', textDecoration: 'none', color: 'inherit', alignItems: 'center' }}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -562,6 +572,7 @@ export const ProjectDetails = () => {
                       <a 
                         href={project.images.schematic} 
                         download={`Schematic_${project.slug}.svg`} 
+                        onClick={() => eventTracker.trackDownload(`Schematic_${project.slug}.svg`, 'svg')}
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="btn btn-secondary"
@@ -583,6 +594,7 @@ export const ProjectDetails = () => {
                       <a 
                         href={project.images.circuit} 
                         download={`Circuit_${project.slug}.svg`} 
+                        onClick={() => eventTracker.trackDownload(`Circuit_${project.slug}.svg`, 'svg')}
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="btn btn-secondary"
