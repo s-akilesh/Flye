@@ -141,7 +141,7 @@ export const MyProjects = () => {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          padding: 'var(--page-padding)',
+          padding: '120px var(--page-padding) var(--page-padding) var(--page-padding)',
           boxSizing: 'border-box'
         }}
       >
@@ -235,7 +235,7 @@ export const MyProjects = () => {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          padding: 'var(--page-padding)',
+          padding: '120px var(--page-padding) var(--page-padding) var(--page-padding)',
           boxSizing: 'border-box'
         }}
       >
@@ -289,14 +289,40 @@ export const MyProjects = () => {
         description="Track your submitted engineering projects and fabrication timeline progress."
         meta={[{ name: 'robots', content: 'noindex,nofollow' }]}
       />
+      <style>{`
+        @media (max-width: 768px) {
+          .portal-section-my-enquiries {
+            padding-top: 10px !important;
+          }
+        }
+      `}</style>
       
-      <section className="portal-section" style={{ padding: 'var(--page-padding) 0', minHeight: '80vh', boxSizing: 'border-box' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px' }}>
-          
-          <div className="portal-header" style={{ marginBottom: '32px', textAlign: 'left' }}>
-            <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 6px 0', letterSpacing: '0.5px' }}>My Enquiries</h2>
-            <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', margin: 0 }}>Visual logs and tracker for your submitted custom fabrication leads</p>
+      <section className="portal-section portal-section-my-enquiries" style={{ paddingTop: '73px', paddingBottom: '80px', minHeight: '80vh', boxSizing: 'border-box' }}>
+        <div
+          className="portal-header"
+          style={{
+            width: 'auto',
+            marginLeft: 'calc(-1 * var(--page-padding))',
+            marginRight: 'calc(-1 * var(--page-padding))',
+            paddingLeft: 'var(--page-padding)',
+            paddingRight: 'var(--page-padding)',
+            paddingTop: '16px',
+            paddingBottom: '16px',
+            background: 'rgba(10, 10, 18, 0.92)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
+            marginBottom: '32px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+            <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
+              <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
+            </Button>
+            <div className="portal-title-area">
+              <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 6px 0', letterSpacing: '0.5px' }}>My Enquiries</h2>
+              <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', margin: 0 }}>Visual logs and tracker for your submitted custom fabrication leads</p>
+            </div>
           </div>
+        </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
             {enquiries.map((enq) => {
@@ -314,44 +340,36 @@ export const MyProjects = () => {
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric'
-              }) : createdDate;
-
-              // Support Requested text
-              const supportRequested = [
-                parsed.needDocument === 'Yes' ? 'Docs' : '',
-                parsed.needPresentation === 'Yes' ? 'PPT' : ''
-              ].filter(Boolean).join(', ') || 'None';
+              }) : '-';
 
               return (
                 <Card 
-                  key={enq.id} 
-                  className="project-card"
+                  key={enq.id}
+                  className="project-summary-card card-glass"
                   style={{
+                    padding: '24px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'rgba(10, 10, 15, 0.6)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    padding: '24px',
-                    minHeight: '240px',
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '12px',
-                    transition: 'all 0.3s ease',
-                    textAlign: 'left'
+                    minHeight: '220px',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    cursor: 'default'
                   }}
                 >
                   <div>
-                    {/* Status Badge & ID */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                      <span style={{ fontSize: '10px', fontFamily: 'monospace', color: 'var(--text-muted, #6b7280)' }}>
-                        ID: {enq.id}
-                      </span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)', fontFamily: 'monospace' }}>ID: {enq.id}</span>
                       <span 
                         style={{ 
                           fontSize: '11px', 
-                          fontWeight: '600', 
+                          fontWeight: '700', 
                           padding: '4px 10px', 
-                          borderRadius: '20px', 
-                          background: statusStyling.bg, 
+                          borderRadius: '20px',
+                          textTransform: 'capitalize',
+                          background: statusStyling.bg,
                           color: statusStyling.text,
                           border: `1px solid ${statusStyling.text}25`
                         }}
@@ -360,37 +378,38 @@ export const MyProjects = () => {
                       </span>
                     </div>
 
-                    {/* Title */}
-                    <h4 style={{ fontSize: '16px', fontWeight: '700', color: '#fff', margin: '0 0 12px 0', lineHeight: '1.4' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#fff', margin: '0 0 16px 0', lineHeight: '1.4' }}>
                       {enq.projectTitle || 'Custom Fabrication Enquiry'}
-                    </h4>
+                    </h3>
 
-                    {/* Properties */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', fontSize: '12px', color: 'var(--text-secondary, #9ca3af)', marginBottom: '16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 16px', marginBottom: '20px' }}>
                       <div>
-                        <span style={{ color: 'var(--text-muted, #6b7280)' }}>Category:</span><br />
-                        <span style={{ color: '#fff', fontWeight: 500 }}>{relatedProject?.category || 'Custom Lead'}</span>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Category:</span>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary, #d1d5db)', fontWeight: '600' }}>
+                          {relatedProject?.category || 'Custom Lead'}
+                        </span>
                       </div>
                       <div>
-                        <span style={{ color: 'var(--text-muted, #6b7280)' }}>Budget:</span><br />
-                        <span style={{ color: '#fff', fontWeight: 500 }}>₹{enq.price || parsed.budget || 'TBD'}</span>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Budget:</span>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary, #d1d5db)', fontWeight: '600' }}>
+                          {enq.price ? `₹${enq.price}` : 'Not specified'}
+                        </span>
                       </div>
                       <div>
-                        <span style={{ color: 'var(--text-muted, #6b7280)' }}>Submitted:</span><br />
-                        <span style={{ color: '#fff' }}>{createdDate}</span>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Submitted:</span>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary, #d1d5db)' }}>{createdDate}</span>
                       </div>
                       <div>
-                        <span style={{ color: 'var(--text-muted, #6b7280)' }}>Expected Date:</span><br />
-                        <span style={{ color: 'var(--accent-blue, #60a5fa)', fontWeight: 500 }}>{parsed.submissionDate}</span>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Expected Date:</span>
+                        <span style={{ fontSize: '13px', color: parsed.submissionDate !== '-' ? 'var(--text-secondary)' : 'var(--text-muted)' }}>
+                          {parsed.submissionDate || '-'}
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Actions & Last Updated */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '16px', marginTop: '8px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--text-muted, #6b7280)' }}>
-                      Updated: {updatedDate}
-                    </span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)' }}>Updated: {updatedDate}</span>
                     <Button 
                       type="button" 
                       variant="secondary" 
@@ -404,8 +423,7 @@ export const MyProjects = () => {
               );
             })}
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Details View Modal */}
       {selectedEnquiry && (

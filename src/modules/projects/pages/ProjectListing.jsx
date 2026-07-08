@@ -15,6 +15,7 @@ import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useEnquiries } from '../../enquiries/hooks/useEnquiries';
+import { useAuth } from '../../auth/context/AuthContext';
 import { useToast } from '../../../shared/context/ToastContext';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 import { eventTracker } from '../../../shared/analytics/index.js';
@@ -25,6 +26,7 @@ export const ProjectListing = () => {
   const { projects } = useProjects();
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
+  const { user } = useAuth();
   
   const seoProps = generateSEO(PageType.PROJECT_LISTING);
   const {
@@ -601,7 +603,8 @@ export const ProjectListing = () => {
                       projectId: orderedProject?.id || '',
                       projectTitle: titleToUse || 'Custom Project Enquiry',
                       price: projectBudget || orderedProject?.price || '',
-                      notes: serializedNotes
+                      notes: serializedNotes,
+                      userId: user?.id || null
                     });
                     setOrderStep('confirmed');
                   } catch (err) {

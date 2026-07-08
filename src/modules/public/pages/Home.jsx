@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../../projects/hooks/useProjects';
 import { useEnquiries } from '../../enquiries/hooks/useEnquiries';
+import { useAuth } from '../../auth/context/AuthContext';
 import { useToast } from '../../../shared/context/ToastContext';
 import { Button } from '../../../shared/components/ui/Button';
 import { Modal } from '../../../shared/components/ui/Modal';
@@ -18,6 +19,7 @@ export const Home = () => {
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
   const { settings } = useSettings();
+  const { user } = useAuth();
 
   const seoProps = generateSEO(PageType.HOME);
 
@@ -124,7 +126,8 @@ export const Home = () => {
         projectId: orderedProject?.id || '',
         projectTitle: titleToUse || 'Custom Project Enquiry',
         price: orderedProject?.price || '',
-        notes: serializedNotes
+        notes: serializedNotes,
+        userId: user?.id || null
       });
       setOrderStep('success');
       showToast('Your request has been successfully submitted!', 'success');

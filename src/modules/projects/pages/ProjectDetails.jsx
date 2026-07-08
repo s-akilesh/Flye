@@ -1148,7 +1148,8 @@ export const ProjectDetails = () => {
                       projectId: targetOrderProject?.id || '',
                       projectTitle: titleToUse || 'Custom Project Enquiry',
                       price: projectBudget || (selectedVariant ? selectedVariant.price : targetOrderProject?.price) || '',
-                      notes: serializedNotes
+                      notes: serializedNotes,
+                      userId: user?.id || null
                     });
                     setOrderStep('confirmed');
                   } catch (err) {
