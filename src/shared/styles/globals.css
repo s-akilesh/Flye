@@ -137,6 +137,43 @@ body {
   background: var(--form-bg-focus);
 }
 
+/* Form Validation error state feedback */
+.form-input.error-state,
+.form-select.error-state,
+.form-textarea.error-state,
+.phone-input-container.error-state,
+.admin-input-group input.error-state,
+.admin-input-group textarea.error-state,
+input.error-state,
+textarea.error-state {
+  border-color: var(--accent-crimson, #ef4444) !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.15) !important;
+  background: rgba(239, 68, 68, 0.02) !important;
+}
+
+/* Reusable Phone prefix input layout */
+.phone-input-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  transition: all 0.25s var(--transition-ease);
+  overflow: hidden;
+  height: 38px;
+  width: 100%;
+}
+
+.phone-input-container:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.phone-input-container:focus-within {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
+  background: rgba(0, 0, 0, 0.2);
+}
+
 /* --- LAYERED ATMOSPHERIC BACKGROUND --- */
 .lab-background {
   position: fixed;
@@ -2347,7 +2384,7 @@ header {
   /* Mobile Toolbar Adjustments */
   .marketplace-toolbar {
     position: fixed !important;
-    top: 60px !important;
+    top: 52px !important;
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes.js';
 import { Button } from '../ui/Button';
@@ -14,6 +14,21 @@ export const Header = ({ onToggleDrawer }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
+    if (showProfileDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showProfileDropdown]);
 
   const handleScrollToSection = (id) => {
     if (location.pathname === '/') {
@@ -32,7 +47,7 @@ export const Header = ({ onToggleDrawer }) => {
     try {
       setShowLogoutConfirm(false);
       await logout();
-      navigate(ROUTES.ADMIN_LOGIN || '/admin-login');
+      navigate(ROUTES.STUDENT_AUTH);
     } catch (e) {
       console.error('Logout failed:', e);
     }
@@ -40,7 +55,7 @@ export const Header = ({ onToggleDrawer }) => {
 
   return (
     <header>
-      <div className="logo-container" onClick={() => navigate(viewMode === 'admin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.HOME)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+      <div className="logo-container" onClick={() => navigate((viewMode === 'admin' || location.pathname.startsWith('/admin')) ? ROUTES.ADMIN_DASHBOARD : ROUTES.HOME)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
         {settings.websiteLogo ? (
           <img 
             src={settings.websiteLogo} 
@@ -57,9 +72,10 @@ export const Header = ({ onToggleDrawer }) => {
       </div>
 
       {/* Desktop Navigation Links */}
-      {viewMode !== 'admin' && !location.pathname.startsWith('/admin') && (
+      {(!user || viewMode !== 'admin') && !location.pathname.startsWith('/admin') && (
         <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
+          <Link to="/printing" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
           <a
             href="/#about"
             onClick={(e) => {
@@ -99,7 +115,7 @@ export const Header = ({ onToggleDrawer }) => {
 
         {/* Profile Dropdown */}
         {user && (
-          <div style={{ position: 'relative', marginLeft: 'var(--space-1)' }}>
+          <div ref={dropdownRef} style={{ position: 'relative', marginLeft: 'var(--space-1)' }}>
             <button
               type="button"
               onClick={() => setShowProfileDropdown(p => !p)}
@@ -171,26 +187,24 @@ export const Header = ({ onToggleDrawer }) => {
 
             {/* Dropdown Menu */}
             {showProfileDropdown && (
-              <>
-                <div style={{ position: 'fixed', inset: 0, zIndex: 999 }} onClick={() => setShowProfileDropdown(false)} />
-                <div
-                  className="card-glass header-profile-dropdown"
-                  style={{
-                    position: 'absolute',
-                    top: 'calc(100% + 8px)',
-                    right: 0,
-                    width: '180px',
-                    zIndex: 1000,
-                    padding: '4px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '2px',
-                    background: '#0b0a10',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
-                    borderRadius: '8px'
-                  }}
-                >
+              <div
+                className="card-glass header-profile-dropdown"
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 8px)',
+                  right: 0,
+                  width: '180px',
+                  zIndex: 1000,
+                  padding: '4px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  background: '#0b0a10',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                  borderRadius: '8px'
+                }}
+              >
                   {/* Switch User Option */}
                   {isAdmin && (
                     <button
@@ -229,7 +243,7 @@ export const Header = ({ onToggleDrawer }) => {
                   )}
 
                   {/* Profile Settings Option */}
-                  {isAdmin && (
+                  {isAdmin && viewMode === 'admin' && (
                     <button
                       type="button"
                       onClick={() => {
@@ -260,7 +274,7 @@ export const Header = ({ onToggleDrawer }) => {
                   )}
 
                   {/* Divider */}
-                  {isAdmin && (
+                  {isAdmin && viewMode === 'admin' && (
                     <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.06)', margin: '2px 8px' }} />
                   )}
 
@@ -293,12 +307,11 @@ export const Header = ({ onToggleDrawer }) => {
                     <span>Logout</span>
                   </button>
                 </div>
-              </>
             )}
           </div>
         )}
 
-        {!loading && !user && !location.pathname.startsWith('/admin') && location.pathname !== '/auth' && (
+        {!loading && !user && !location.pathname.startsWith('/admin') && location.pathname !== ROUTES.STUDENT_AUTH && (
           <Button
             type="button"
             variant="primary"

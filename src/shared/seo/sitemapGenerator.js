@@ -22,6 +22,8 @@ export const generateSitemapXml = (config, projects = []) => {
   addUrl('/printing', '0.7', 'monthly');
   addUrl('/about', '0.5', 'monthly');
   addUrl('/departments', '0.5', 'monthly');
+  addUrl('/privacy-policy', '0.3', 'yearly');
+  addUrl('/terms-and-conditions', '0.3', 'yearly');
 
   // 2. Dynamic Projects Slugs
   projects.forEach((proj) => {

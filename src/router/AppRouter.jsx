@@ -19,8 +19,10 @@ const EditProject = React.lazy(() => import('../modules/projects/pages/EditProje
 const ManageEnquiries = React.lazy(() => import('../modules/enquiries/pages/ManageEnquiries').then(module => ({ default: module.ManageEnquiries })));
 const AdminSettings = React.lazy(() => import('../modules/settings/pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 
-const AdminLogin = React.lazy(() => import('../modules/auth/pages/AdminLogin.jsx').then(module => ({ default: module.AdminLogin })));
+const AuthGateway = React.lazy(() => import('../modules/auth/pages/AuthGateway.jsx').then(module => ({ default: module.AuthGateway })));
 const AdminLayout = React.lazy(() => import('../shared/components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
+const PrivacyPolicy = React.lazy(() => import('../modules/legal/pages/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
+const TermsConditions = React.lazy(() => import('../modules/legal/pages/TermsConditions').then(module => ({ default: module.TermsConditions })));
 
 
 
@@ -59,18 +61,17 @@ export const AppRouter = () => {
                   <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
                   <Route path={ROUTES.CONTACT} element={<Contact />} />
                   <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
+                  <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+                  <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
                   
                   {/* Redirect Learning Workspace & Student Auth to Home */}
                   <Route path="/learning/*" element={<Navigate to={ROUTES.HOME} replace />} />
                   <Route path="/dashboard" element={<Navigate to={ROUTES.HOME} replace />} />
                   <Route path="/settings" element={<Navigate to={ROUTES.HOME} replace />} />
-                  <Route path="/auth" element={<Navigate to={ROUTES.HOME} replace />} />
+                  <Route path={ROUTES.STUDENT_AUTH} element={<React.Suspense fallback={<PageLoading />}><AuthGateway /></React.Suspense>} />
 
-                  {/* Redirect Legacy Admin Access to Admin Login */}
-                  <Route path={ROUTES.ADMIN_ACCESS} element={<Navigate to={ROUTES.ADMIN_LOGIN || '/admin-login'} replace />} />
-                  
-                  {/* Admin Login Route */}
-                  <Route path={ROUTES.ADMIN_LOGIN || '/admin-login'} element={<AdminLogin />} />
+                  {/* Redirect Legacy Admin Access to Auth Gateway */}
+                  <Route path={ROUTES.ADMIN_ACCESS} element={<Navigate to={ROUTES.STUDENT_AUTH} replace />} />
 
                   {/* Protected Admin Console Routes wrapped in AdminLayout */}
                   <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>

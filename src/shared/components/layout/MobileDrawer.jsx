@@ -146,39 +146,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
   };
   const [searchQuery, setSearchQuery] = useState('');
 
-  // 1. Manage dynamic "Continue Learning" & "Recently Visited" from LocalStorage
-  const [lastLesson, setLastLesson] = useState({
-    name: 'Electrical Basics',
-    slug: 'electricity',
-    progress: 68,
-    isFallback: true
-  });
-  const [recents, setRecents] = useState([
-    { title: 'Voltage', path: '/learning/fundamentals/electricity' },
-    { title: 'Capacitor', path: '/learning/components/capacitor' },
-    { title: 'Resistor', path: '/learning/components/resistor' }
-  ]);
 
-  useEffect(() => {
-    // Load last lesson
-    const savedLast = localStorage.getItem('flyen_last_lesson');
-    if (savedLast) {
-      try {
-        setLastLesson(JSON.parse(savedLast));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    // Load recents
-    const savedRecents = localStorage.getItem('flyen_recent_history');
-    if (savedRecents) {
-      try {
-        setRecents(JSON.parse(savedRecents).slice(0, 5));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [isOpen]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -196,7 +164,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
     onClose();
     try {
       await logout();
-      navigate('/admin-login');
+      navigate(ROUTES.STUDENT_AUTH);
     } catch (e) {
       console.error(e);
     }
@@ -260,8 +228,8 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               </div>
 
               {/* Drawer Header Status block */}
-              <div className="drawer-user-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                {user ? (
+              {user && (
+                <div className="drawer-user-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                     {profile?.profile_photo || profile?.avatar_url ? (
                       <img 
@@ -297,62 +265,49 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                       </span>
                     </div>
                   </div>
-                ) : null}
 
-                {/* Switch view mode button inside drawer for admins */}
-                {user && isAdmin && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const nextMode = viewMode === 'admin' ? 'user' : 'admin';
-                      setViewMode(nextMode);
-                      onClose(); // Close drawer
-                      if (nextMode === 'admin') {
-                        navigate(ROUTES.ADMIN_DASHBOARD);
-                      } else {
-                        navigate('/');
-                      }
-                    }}
-                    style={{
-                      width: '100%',
-                      marginTop: '8px',
-                      padding: '8px 12px',
-                      borderRadius: '6px',
-                      background: 'rgba(139, 92, 246, 0.12)',
-                      border: '1px solid rgba(139, 92, 246, 0.25)',
-                      color: 'var(--accent-violet)',
-                      fontSize: '12px',
-                      fontWeight: '700',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M16 3L21 8L16 13" />
-                      <path d="M21 8H9" />
-                      <path d="M8 21L3 16L8 11" />
-                      <path d="M3 16H15" />
-                    </svg>
-                    {viewMode === 'admin' ? 'Switch to User View' : 'Switch to Admin View'}
-                  </button>
-                )}
-                
-                {/* Micro Progress Bar summary */}
-                {!user && (
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '10px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                      <span>Electrical Basics Progress</span>
-                      <span>68%</span>
-                    </div>
-                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
-                      <div style={{ width: '68%', height: '100%', background: 'var(--accent-violet)' }} />
-                    </div>
-                  </div>
-                )}
-              </div>
+                  {/* Switch view mode button inside drawer for admins */}
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextMode = viewMode === 'admin' ? 'user' : 'admin';
+                        setViewMode(nextMode);
+                        onClose(); // Close drawer
+                        if (nextMode === 'admin') {
+                          navigate(ROUTES.ADMIN_DASHBOARD);
+                        } else {
+                          navigate('/');
+                        }
+                      }}
+                      style={{
+                        width: '100%',
+                        marginTop: '8px',
+                        padding: '8px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(139, 92, 246, 0.12)',
+                        border: '1px solid rgba(139, 92, 246, 0.25)',
+                        color: 'var(--accent-violet)',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M16 3L21 8L16 13" />
+                        <path d="M21 8H9" />
+                        <path d="M8 21L3 16L8 11" />
+                        <path d="M3 16H15" />
+                      </svg>
+                      {viewMode === 'admin' ? 'Switch to User View' : 'Switch to Admin View'}
+                    </button>
+                  )}
+                </div>
+              )}
 
               {/* Search functionality removed */}
 
@@ -541,42 +496,6 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
-                {/* Recently Visited */}
-                {!user && recents.length > 0 && (
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px' }}>
-                    <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
-                      Recently Visited
-                    </span>
-                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {recents.map((item, idx) => (
-                        <li key={idx}>
-                          <button
-                            type="button"
-                            onClick={() => handleLinkClick(item.path)}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              padding: '6px 12px',
-                              borderRadius: '4px',
-                              background: 'none',
-                              border: 'none',
-                              color: 'var(--text-secondary)',
-                              cursor: 'pointer',
-                              fontSize: '11.5px',
-                              textAlign: 'left',
-                              textOverflow: 'ellipsis',
-                              overflow: 'hidden',
-                              whiteSpace: 'nowrap'
-                            }}
-                          >
-                            • {item.title}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -612,7 +531,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               </div>
 
               {/* Login / Logout button */}
-              {user && (
+              {user ? (
                 <Button 
                   type="button" 
                   variant="ghost" 
@@ -620,6 +539,22 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                   style={{ width: '100%', padding: '6px 0', fontSize: '11px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
                 >
                   Logout (Admin)
+                </Button>
+              ) : (
+                <Button 
+                  type="button" 
+                  variant="primary" 
+                  onClick={() => handleLinkClick(ROUTES.STUDENT_AUTH)} 
+                  style={{ 
+                    width: '100%', 
+                    padding: '8px 0', 
+                    fontSize: '12px', 
+                    background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+                    border: 'none',
+                    boxShadow: '0 2px 8px rgba(139, 92, 246, 0.2)'
+                  }}
+                >
+                  Sign In
                 </Button>
               )}
             </div>

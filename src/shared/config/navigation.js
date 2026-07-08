@@ -94,6 +94,9 @@ export const QUICK_ACTIONS = [
 ];
 
 export const HOMEPAGE_NAVIGATION = [
+  { id: 'home', label: 'Home', path: '/' },
   { id: 'projects', label: 'Projects', path: '/projects' },
+  { id: 'printing', label: '3D Printing', path: '/printing' },
+  { id: 'contact', label: 'Contact', path: '/contact' },
   { id: 'about', label: 'About', path: '/#about' }
 ];

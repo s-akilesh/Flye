@@ -18,6 +18,7 @@ const COMPONENT_MAPPING = {
   AdminProfile: React.lazy(() => import('../components/AdminProfile').then(m => ({ default: m.AdminProfile }))),
   SMTPSettings: React.lazy(() => import('../components/SMTPSettings').then(m => ({ default: m.SMTPSettings }))),
   SystemPrefs: React.lazy(() => import('../components/SystemPrefs').then(m => ({ default: m.SystemPrefs }))),
+  LegalPagesSettings: React.lazy(() => import('../../legal/components/LegalPagesSettings').then(m => ({ default: m.LegalPagesSettings }))),
 };
 
 export const AdminSettings = () => {

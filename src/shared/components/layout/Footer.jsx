@@ -48,22 +48,42 @@ export const Footer = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: '1 1 200px' }}>
             <span style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-primary, #fff)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Support</span>
             <Link to="/contact" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}>Contact Expert</Link>
-            <Link to="/privacy" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}>Privacy Policy</Link>
-            <Link to="/terms" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}>Terms & Conditions</Link>
+            <Link to="/privacy-policy" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}>Privacy Policy</Link>
+            <Link to="/terms-and-conditions" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}>Terms & Conditions</Link>
           </div>
 
           {/* Col 4 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: '1 1 200px' }}>
-            <span style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-primary, #fff)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contact Info</span>
-            <span style={{ fontSize: '12.5px', color: 'var(--text-secondary, #9ca3af)' }}>Email: support@flyen.in</span>
-            <span style={{ fontSize: '12.5px', color: 'var(--text-secondary, #9ca3af)' }}>Tel: +91 98765 43210</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: '1 1 200px', textAlign: 'left' }}>
+            <span style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-primary, #fff)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Contact Info</span>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="material-icons-outlined" style={{ fontSize: '16px', color: '#8b5cf6' }}>mail</span>
+              <span style={{ fontSize: '12.5px', color: 'var(--text-secondary, #9ca3af)' }}>{settings.contactEmail || 'support@flyen.in'}</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="material-icons-outlined" style={{ fontSize: '16px', color: '#8b5cf6' }}>phone</span>
+              <span style={{ fontSize: '12.5px', color: 'var(--text-secondary, #9ca3af)' }}>{settings.contactPhone || '+91 98765 43210'}</span>
+            </div>
+
+            {settings.companyAddress && (
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                <span className="material-icons-outlined" style={{ fontSize: '16px', color: '#8b5cf6', marginTop: '2px' }}>place</span>
+                <span style={{ fontSize: '12.5px', color: 'var(--text-secondary, #9ca3af)', lineHeight: '1.4' }}>{settings.companyAddress}</span>
+              </div>
+            )}
           </div>
 
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.04)', width: '100%' }}>
-          <div className="home-footer-copyright" style={{ fontSize: '12px', color: 'var(--text-muted, #6b7280)', textAlign: 'center' }}>
-            &copy; {new Date().getFullYear()} {settings.companyName || 'Flyen'}. All rights reserved.
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.04)', width: '100%' }}>
+          {settings.footerText && (
+            <div style={{ fontSize: '12px', color: 'var(--text-muted, #6b7280)', textAlign: 'center', fontStyle: 'italic' }}>
+              {settings.footerText}
+            </div>
+          )}
+          <div className="home-footer-copyright" style={{ fontSize: '12px', color: 'var(--text-muted, #6b7280)', textAlign: 'center', marginTop: '4px' }}>
+            {settings.copyrightText || `\u00A9 ${new Date().getFullYear()} ${settings.companyName || 'Flyen'}. All rights reserved.`}
           </div>
 
           {/* Social Media icons */}

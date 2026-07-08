@@ -8,6 +8,7 @@ import { ROUTES } from '../../../shared/constants/routes';
 import { usePrintingProducts } from '../hooks/usePrintingProducts';
 import { useToast } from '../../../shared/context/ToastContext';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
+import { useAuth } from '../../auth/context/AuthContext.jsx';
 
 const SVG_MAP = {
   gears: <polygon points="32,8 56,22 56,50 32,58 8,50 8,22" stroke="currentColor" strokeWidth="1.5" fill="none" />,
@@ -25,8 +26,101 @@ export const PrintingCatalog = () => {
   const navigate = useNavigate();
   const { printingProducts } = usePrintingProducts();
   const { showToast } = useToast();
+  const { profile } = useAuth();
 
   const seoProps = generateSEO(PageType.PRINTING);
+  const isSuperAdmin = profile?.role === 'super_admin';
+
+  if (!isSuperAdmin) {
+    return (
+      <>
+        <SEO {...seoProps} page={PageType.PRINTING} />
+        <div 
+          style={{ 
+            minHeight: '80vh', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            padding: 'var(--page-padding)',
+            boxSizing: 'border-box'
+          }}
+        >
+          <motion.div 
+            className="card-glass"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            style={{ 
+              maxWidth: '500px', 
+              width: '100%', 
+              padding: '48px 40px', 
+              textAlign: 'center', 
+              borderRadius: '16px',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'rgba(10, 10, 15, 0.8)',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 50px rgba(139, 92, 246, 0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '24px'
+            }}
+          >
+            <div 
+              style={{ 
+                width: '80px', 
+                height: '80px', 
+                borderRadius: '50%', 
+                background: 'rgba(139, 92, 246, 0.1)', 
+                border: '1px solid rgba(139, 92, 246, 0.2)',
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                boxShadow: '0 0 20px rgba(139, 92, 246, 0.2)'
+              }}
+            >
+              <span className="material-icons-outlined" style={{ fontSize: '40px', color: '#8b5cf6' }}>
+                3d_rotation
+              </span>
+            </div>
+            
+            <div>
+              <h2 style={{ fontSize: '24px', fontWeight: '800', margin: '0 0 8px 0', letterSpacing: '0.5px', color: '#fff' }}>
+                3D Printing Service
+              </h2>
+              <span 
+                style={{ 
+                  fontSize: '11px', 
+                  fontWeight: '800', 
+                  textTransform: 'uppercase', 
+                  color: '#8b5cf6', 
+                  letterSpacing: '1.5px',
+                  background: 'rgba(139, 92, 246, 0.15)',
+                  padding: '4px 12px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(139, 92, 246, 0.3)'
+                }}
+              >
+                Coming Soon
+              </span>
+            </div>
+
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', lineHeight: '1.6', margin: 0 }}>
+              Our industrial prototype fabrication and 3D printing estimator terminal is currently undergoing final calibration. Stay tuned for premium print services.
+            </p>
+
+            <Button 
+              type="button" 
+              variant="secondary" 
+              onClick={() => navigate(ROUTES.HOME)}
+              style={{ marginTop: '8px', width: '100%', padding: '12px 24px', fontWeight: '600' }}
+            >
+              Return Home
+            </Button>
+          </motion.div>
+        </div>
+      </>
+    );
+  }
 
   // State
   const [activeTab, setActiveTab] = useState('all');

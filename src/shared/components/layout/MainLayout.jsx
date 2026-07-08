@@ -32,7 +32,7 @@ export const MainLayout = ({ children }) => {
   }, []);
 
   const isLearningPage = location.pathname.startsWith('/learning');
-  const isAuthPage = location.pathname === '/auth' || location.pathname === '/admin-login';
+  const isAuthPage = location.pathname === '/auth';
 
   return (
     <>

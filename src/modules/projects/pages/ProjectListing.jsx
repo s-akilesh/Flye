@@ -56,7 +56,9 @@ export const ProjectListing = () => {
   // Cart Order Modal state
   const [orderedProject, setOrderedProject] = useState(null);
   const [requestorName, setRequestorName] = useState('');
-  const [contactNumber, setContactNumber] = useState('+91');
+  const [contactNumber, setContactNumber] = useState('');
+  const [contactPrefix, setContactPrefix] = useState('+91');
+  const [formErrors, setFormErrors] = useState({});
   const [orderStep, setOrderStep] = useState('input'); // 'input' | 'confirmed'
   const [projectStatus, setProjectStatus] = useState('Choosed Flyen Project');
   const [customProjectTitle, setCustomProjectTitle] = useState('');
@@ -91,7 +93,9 @@ export const ProjectListing = () => {
   const handleOpenOrderModal = (proj) => {
     setOrderedProject(proj);
     setRequestorName('');
-    setContactNumber('+91');
+    setContactNumber('');
+    setContactPrefix('+91');
+    setFormErrors({});
     setProjectStatus('Choosed Flyen Project');
     setCustomProjectTitle(proj ? proj.title : '');
     setProjectBudget(proj ? String(proj.price) : '');
@@ -318,21 +322,73 @@ export const ProjectListing = () => {
                     type="text"
                     placeholder="e.g. John Doe"
                     value={requestorName}
-                    onChange={(e) => setRequestorName(e.target.value)}
-                    className="form-input"
+                    onChange={(e) => {
+                      setRequestorName(e.target.value);
+                      if (formErrors.requestorName) setFormErrors(prev => ({ ...prev, requestorName: false }));
+                    }}
+                    className={`form-input ${formErrors.requestorName ? 'error-state' : ''}`}
                   />
                 </div>
 
                 <div>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
-                  <Input
-                    type="tel"
-                    placeholder="e.g. 9876543210"
-                    value={contactNumber}
-                    onChange={(e) => setContactNumber(e.target.value)}
-                    className="form-input"
-                    maxLength={15}
-                  />
+                  <div className={`phone-input-container ${formErrors.contactNumber ? 'error-state' : ''}`}>
+                    <select
+                      className="phone-prefix-select"
+                      value={contactPrefix}
+                      onChange={(e) => {
+                        setContactPrefix(e.target.value);
+                        const isValid = e.target.value === '+91' ? contactNumber.length === 10 : (contactNumber.length >= 7 && contactNumber.length <= 15);
+                        setFormErrors(prev => ({ ...prev, contactNumber: !isValid }));
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
+                        color: 'var(--text-main, #f9fafb)',
+                        padding: '0 8px',
+                        height: '100%',
+                        fontSize: '13px',
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <option value="+1" style={{ background: '#0d0c15', color: '#fff' }}>+1</option>
+                      <option value="+91" style={{ background: '#0d0c15', color: '#fff' }}>+91</option>
+                      <option value="+44" style={{ background: '#0d0c15', color: '#fff' }}>+44</option>
+                      <option value="+61" style={{ background: '#0d0c15', color: '#fff' }}>+61</option>
+                      <option value="+81" style={{ background: '#0d0c15', color: '#fff' }}>+81</option>
+                      <option value="+33" style={{ background: '#0d0c15', color: '#fff' }}>+33</option>
+                    </select>
+                    <input
+                      type="tel"
+                      placeholder="e.g. 9876543210"
+                      value={contactNumber}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        setContactNumber(val);
+                        const isValid = contactPrefix === '+91' ? val.length === 10 : (val.length >= 7 && val.length <= 15);
+                        setFormErrors(prev => ({ ...prev, contactNumber: !isValid }));
+                      }}
+                      style={{
+                        flex: 1,
+                        height: '100%',
+                        background: 'transparent',
+                        border: 'none',
+                        boxShadow: 'none',
+                        padding: '0 14px',
+                        color: 'var(--text-main, #f9fafb)',
+                        fontSize: '13px',
+                        outline: 'none'
+                      }}
+                      maxLength={15}
+                    />
+                  </div>
+                  {formErrors.contactNumber && (
+                    <span style={{ color: 'var(--accent-crimson, #ef4444)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                      Please enter a valid number
+                    </span>
+                  )}
                 </div>
 
                 <div>
@@ -373,7 +429,7 @@ export const ProjectListing = () => {
                     type="text"
                     placeholder="e.g. 5000"
                     value={projectBudget}
-                    onChange={(e) => setProjectBudget(e.target.value)}
+                    onChange={(e) => setProjectBudget(e.target.value.replace(/\D/g, ''))}
                     className="form-input"
                   />
                 </div>
@@ -384,6 +440,7 @@ export const ProjectListing = () => {
                     type="date"
                     value={submissionDate}
                     onChange={(e) => setSubmissionDate(e.target.value)}
+                    onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
                     className="form-input"
                     style={{ colorScheme: 'dark', height: '38px' }}
                   />
@@ -508,14 +565,22 @@ export const ProjectListing = () => {
                 style={{ flex: 1, height: '42px' }}
                 disabled={isProcessing}
                 onClick={async () => {
-                  if (!requestorName.trim()) {
-                    showToast('Please enter your name.', 'error');
+                  const newErrors = {};
+                  if (!requestorName.trim()) newErrors.requestorName = true;
+                  
+                  const isPhoneValid = contactPrefix === '+91' 
+                    ? contactNumber.length === 10 
+                    : (contactNumber.length >= 7 && contactNumber.length <= 15);
+                    
+                  if (!isPhoneValid) newErrors.contactNumber = true;
+
+                  if (Object.keys(newErrors).length > 0) {
+                    setFormErrors(newErrors);
+                    showToast('Please fill in all mandatory fields correctly.', 'error');
                     return;
                   }
-                  if (!contactNumber.trim() || contactNumber.replace(/\D/g, '').length < 10) {
-                    showToast('Please enter a valid contact number.', 'error');
-                    return;
-                  }
+
+                  setFormErrors({});
                   
                   const titleToUse = projectStatus === 'Choosed Flyen Project' ? (orderedProject?.title || customProjectTitle) : customProjectTitle;
                   
@@ -532,7 +597,7 @@ export const ProjectListing = () => {
                   try {
                     await addEnquiry({
                       name: requestorName,
-                      mobile: contactNumber,
+                      mobile: `${contactPrefix}${contactNumber}`,
                       projectId: orderedProject?.id || '',
                       projectTitle: titleToUse || 'Custom Project Enquiry',
                       price: projectBudget || orderedProject?.price || '',

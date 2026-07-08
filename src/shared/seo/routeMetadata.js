@@ -57,5 +57,21 @@ export const routeMetadata = {
     priority: '0.5',
     changeFreq: 'monthly',
     breadcrumbLabel: 'Departments'
+  },
+  [ROUTES.PRIVACY_POLICY]: {
+    path: ROUTES.PRIVACY_POLICY,
+    pageType: PageType.PRIVACY,
+    inSitemap: true,
+    priority: '0.3',
+    changeFreq: 'yearly',
+    breadcrumbLabel: 'Privacy Policy'
+  },
+  [ROUTES.TERMS_CONDITIONS]: {
+    path: ROUTES.TERMS_CONDITIONS,
+    pageType: PageType.TERMS,
+    inSitemap: true,
+    priority: '0.3',
+    changeFreq: 'yearly',
+    breadcrumbLabel: 'Terms & Conditions'
   }
 };

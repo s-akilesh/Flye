@@ -27,6 +27,14 @@ export const SETTINGS_METADATA = [
         keywords: ['footer', 'copyright', 'tagline', 'text'],
         status: (settings) => (settings.footerText && settings.copyrightText) ? 'configured' : 'attention',
         component: 'FooterSettings'
+      },
+      {
+        id: 'legal-pages',
+        title: 'Legal Pages',
+        description: 'Configure Privacy Policy and Terms & Conditions.',
+        keywords: ['privacy', 'terms', 'conditions', 'legal', 'policy', 'disclaimer'],
+        status: () => 'configured',
+        component: 'LegalPagesSettings'
       }
     ]
   },

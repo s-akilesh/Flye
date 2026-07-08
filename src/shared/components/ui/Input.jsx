@@ -10,7 +10,8 @@ export const Input = ({
   min,
   max,
   required = false,
-  style
+  style,
+  ...props
 }) => {
   return (
     <input
@@ -24,6 +25,7 @@ export const Input = ({
       max={max}
       required={required}
       style={style}
+      {...props}
     />
   );
 };

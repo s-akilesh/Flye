@@ -94,7 +94,9 @@ const routes = [
   { url: '/contact', pageType: 'CONTACT' },
   { url: '/printing', pageType: 'PRINTING' },
   { url: '/about', pageType: 'ABOUT' },
-  { url: '/departments', pageType: 'DEPARTMENTS' }
+  { url: '/departments', pageType: 'DEPARTMENTS' },
+  { url: '/privacy-policy', pageType: 'PRIVACY' },
+  { url: '/terms-and-conditions', pageType: 'TERMS' }
 ];
 
 // Add dynamic project detail routes

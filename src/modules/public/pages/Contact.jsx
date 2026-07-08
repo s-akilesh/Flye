@@ -18,11 +18,22 @@ export const Contact = () => {
   const [phonePrefix, setPhonePrefix] = useState('+91');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !phone || !message) return;
+    const newErrors = {};
+    if (!name.trim()) newErrors.name = true;
+    if (!phone.trim()) newErrors.phone = true;
+    if (!message.trim()) newErrors.message = true;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
     setIsSubmitted(true);
     setName('');
     setPhone('');
@@ -233,6 +244,14 @@ export const Contact = () => {
           background: rgba(0, 0, 0, 0.2) !important;
         }
 
+        .contact-form-grid .form-input.error-state,
+        .contact-form-grid .form-textarea.error-state,
+        .phone-input-container.error-state {
+          border-color: var(--accent-crimson, #ef4444) !important;
+          box-shadow: 0 0 10px rgba(239, 68, 68, 0.15) !important;
+          background: rgba(239, 68, 68, 0.02) !important;
+        }
+
         .contact-form-grid ::placeholder {
           color: rgba(255, 255, 255, 0.25) !important;
         }
@@ -319,7 +338,7 @@ export const Contact = () => {
 
           {/* Centered Form Wrapper */}
           <div className="contact-form-wrapper-centered">
-            <form onSubmit={handleSubmit} className="contact-form-grid">
+            <form onSubmit={handleSubmit} className="contact-form-grid" noValidate>
               
               {/* Name */}
               <div className="form-group">
@@ -329,20 +348,27 @@ export const Contact = () => {
                   type="text"
                   required
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (errors.name) setErrors(prev => ({ ...prev, name: false }));
+                  }}
                   placeholder="Enter name"
-                  className="form-input"
+                  className={`form-input ${errors.name ? 'error-state' : ''}`}
                 />
               </div>
 
               {/* Phone Number */}
               <div className="form-group">
                 <label htmlFor="phone-number">Phone number</label>
-                <div className="phone-input-container">
+                <div className={`phone-input-container ${errors.phone ? 'error-state' : ''}`}>
                   <select
                     className="phone-prefix-select"
                     value={phonePrefix}
-                    onChange={(e) => setPhonePrefix(e.target.value)}
+                    onChange={(e) => {
+                      setPhonePrefix(e.target.value);
+                      const isValid = e.target.value === '+91' ? phone.length === 10 : (phone.length >= 7 && phone.length <= 15);
+                      setErrors(prev => ({ ...prev, phone: !isValid }));
+                    }}
                   >
                     <option value="+1">+1</option>
                     <option value="+91">+91</option>
@@ -356,11 +382,21 @@ export const Contact = () => {
                     type="tel"
                     required
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      setPhone(val);
+                      const isValid = phonePrefix === '+91' ? val.length === 10 : (val.length >= 7 && val.length <= 15);
+                      setErrors(prev => ({ ...prev, phone: !isValid }));
+                    }}
                     placeholder="Enter phone number"
                     className="phone-number-field"
                   />
                 </div>
+                {errors.phone && (
+                  <span style={{ color: 'var(--accent-crimson, #ef4444)', fontSize: '11px', marginTop: '4px', textAlign: 'left' }}>
+                    Please enter a valid number
+                  </span>
+                )}
               </div>
 
               {/* Message */}
@@ -370,9 +406,12 @@ export const Contact = () => {
                   id="contact-msg"
                   required
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                    if (errors.message) setErrors(prev => ({ ...prev, message: false }));
+                  }}
                   placeholder="Enter message"
-                  className="form-textarea"
+                  className={`form-textarea ${errors.message ? 'error-state' : ''}`}
                   style={{ minHeight: '120px', resize: 'vertical' }}
                 />
               </div>

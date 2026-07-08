@@ -48,7 +48,7 @@ export const ProtectedRoute = ({ children }) => {
   }
 
   if (!user) {
-    return <Navigate to={ROUTES.ADMIN_LOGIN || '/admin-login'} replace />;
+    return <Navigate to={ROUTES.STUDENT_AUTH} replace />;
   }
 
   if (!profile) {

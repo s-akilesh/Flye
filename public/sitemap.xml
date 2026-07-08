@@ -37,19 +37,19 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://flyen.in/privacy-policy</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://flyen.in/terms-and-conditions</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://flyen.in/project/gps-gsm-based-emergency-alert-and-live-location-sharing-system-copy</loc>
-    <lastmod>2026-07-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://flyen.in/project/gps-gsm-based-emergency-alert-and-live-location-sharing-system-copy-copy</loc>
-    <lastmod>2026-07-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://flyen.in/project/gps-gsm-based-emergency-alert-and-live-location-sharing-system-copy-copy-copy</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

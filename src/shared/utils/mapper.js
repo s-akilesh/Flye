@@ -38,7 +38,9 @@ export const mapEnquiryToDB = (reactEnq) => {
     email: reactEnq.email,
     message: reactEnq.message,
     status: reactEnq.status,
-    price: reactEnq.price,
+    price: (reactEnq.price !== undefined && reactEnq.price !== null && String(reactEnq.price).trim() !== '') 
+      ? parseFloat(String(reactEnq.price).replace(/[^\d.]/g, '')) 
+      : null,
     notes: reactEnq.notes
   };
 

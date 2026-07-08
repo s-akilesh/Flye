@@ -70,6 +70,8 @@ export const AuthProvider = ({ children }) => {
         setUser(currentUser);
         if (currentUser) {
           await loadProfile(currentUser);
+        } else {
+          setViewModeState('user');
         }
       } catch (err) {
         logger.error('[AuthContext] Error during auth initialization:', err);
@@ -90,6 +92,7 @@ export const AuthProvider = ({ children }) => {
         await loadProfile(currentUser);
       } else {
         setProfile(null);
+        setViewModeState('user');
       }
       setLoading(false);
     });

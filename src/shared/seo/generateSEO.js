@@ -6,6 +6,8 @@ import { contactSEO } from './templates/contactSEO.js';
 import { printingSEO } from './templates/printingSEO.js';
 import { aboutSEO } from './templates/aboutSEO.js';
 import { departmentsSEO } from './templates/departmentsSEO.js';
+import { privacySEO } from './templates/privacySEO.js';
+import { termsSEO } from './templates/termsSEO.js';
 
 export const generateSEO = (pageType, data) => {
   switch (pageType) {
@@ -23,6 +25,10 @@ export const generateSEO = (pageType, data) => {
       return aboutSEO(data);
     case PageType.DEPARTMENTS:
       return departmentsSEO(data);
+    case PageType.PRIVACY:
+      return privacySEO(data);
+    case PageType.TERMS:
+      return termsSEO(data);
     default:
       return {};
   }
