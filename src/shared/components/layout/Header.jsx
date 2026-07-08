@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { ROUTES } from '../../constants/routes';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { ROUTES } from '../../constants/routes.js';
 import { Button } from '../ui/Button';
 import { useSettings } from '../../../modules/settings/hooks/useSettings';
 import { useAuth } from '../../../modules/auth/context/AuthContext.jsx';
@@ -8,6 +8,7 @@ import { Modal } from '../ui/Modal';
 
 export const Header = ({ onToggleDrawer }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { settings } = useSettings();
   const { user, profile, isAdmin, logout, viewMode, setViewMode, loading } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
@@ -15,7 +16,7 @@ export const Header = ({ onToggleDrawer }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   const handleScrollToSection = (id) => {
-    if (window.location.pathname === '/') {
+    if (location.pathname === '/') {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     } else {
@@ -56,7 +57,7 @@ export const Header = ({ onToggleDrawer }) => {
       </div>
 
       {/* Desktop Navigation Links */}
-      {viewMode !== 'admin' && !window.location.pathname.startsWith('/admin') && (
+      {viewMode !== 'admin' && !location.pathname.startsWith('/admin') && (
         <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
           <a
@@ -297,7 +298,7 @@ export const Header = ({ onToggleDrawer }) => {
           </div>
         )}
 
-        {!loading && !user && !window.location.pathname.startsWith('/admin') && window.location.pathname !== '/auth' && (
+        {!loading && !user && !location.pathname.startsWith('/admin') && location.pathname !== '/auth' && (
           <Button
             type="button"
             variant="primary"
