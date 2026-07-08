@@ -14,6 +14,7 @@ import { useToast } from '../../../shared/context/ToastContext';
 import { useAuth } from '../../auth/context/AuthContext';
 import { ProgressiveAuthModal } from '../../auth/components/ProgressiveAuthModal';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
+import { eventTracker } from '../../../shared/analytics/index.js';
 
 // Custom SVG Icons
 const DIYIcon = () => (
