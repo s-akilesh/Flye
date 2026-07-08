@@ -103,18 +103,46 @@ export const enquiryService = {
       throw new Error('Missing verified mobile number or authenticated user ID');
     }
 
-    console.log(`[Architecture] Linking guest enquiries for ${verifiedMobileNumber} to user ${authenticatedUserId}`);
+    // Clean formatting and extract last 10 digits for robust matching
+    const cleanUserPhone = String(verifiedMobileNumber).replace(/\D/g, '');
+    if (cleanUserPhone.length < 10) return [];
+    const userSuffix = cleanUserPhone.slice(-10);
+
+    console.log(`[enquiryService] Linking guest enquiries suffix ${userSuffix} to user ${authenticatedUserId}`);
     
-    const { data, error } = await supabase
+    // 1. Fetch all guest enquiries (user_id is null)
+    const { data: guestEnquiries, error: fetchError } = await supabase
+      .from('enquiries')
+      .select('id, mobile_number')
+      .is('user_id', null);
+
+    if (fetchError) {
+      console.error('[enquiryService] Failed to fetch guest enquiries for linking:', fetchError);
+      throw fetchError;
+    }
+    if (!guestEnquiries || guestEnquiries.length === 0) return [];
+
+    // 2. Filter matching rows by matching the 10-digit suffix of mobile numbers
+    const matchingIds = guestEnquiries
+      .filter(enq => {
+        const cleanEnqPhone = String(enq.mobile_number || '').replace(/\D/g, '');
+        if (cleanEnqPhone.length < 10) return false;
+        return cleanEnqPhone.slice(-10) === userSuffix;
+      })
+      .map(enq => enq.id);
+
+    if (matchingIds.length === 0) return [];
+
+    // 3. Update all matched rows in a single batch
+    const { data, error: updateError } = await supabase
       .from('enquiries')
       .update({ user_id: authenticatedUserId })
-      .eq('mobile_number', verifiedMobileNumber)
-      .is('user_id', null) // IDEMPOTENCY: Only update guest rows
+      .in('id', matchingIds)
       .select();
 
-    if (error) {
-      console.error('Failed to link guest enquiries:', error);
-      throw error;
+    if (updateError) {
+      console.error('[enquiryService] Failed to update linked guest enquiries:', updateError);
+      throw updateError;
     }
 
     return (data || []).map(mapEnquiryToReact);

@@ -35,6 +35,7 @@ export const Footer = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: '1 1 200px' }}>
             <span style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-primary, #fff)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Explore</span>
             <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}>Projects Kits</Link>
+            <Link to="/my-projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}>My Enquiries</Link>
           </div>
 
           {/* Col 2 */}

@@ -13,9 +13,9 @@ export const BOTTOM_NAVIGATION = [
   },
   {
     id: 'enquiries',
-    label: 'Enquiries',
+    label: 'My Enquiries',
     adminPath: '/admin/enquiries',
-    guestPath: '/contact'
+    guestPath: '/my-projects'
   }
 ];
 
@@ -97,6 +97,7 @@ export const HOMEPAGE_NAVIGATION = [
   { id: 'home', label: 'Home', path: '/' },
   { id: 'projects', label: 'Projects', path: '/projects' },
   { id: 'printing', label: '3D Printing', path: '/printing' },
+  { id: 'enquiries', label: 'My Enquiries', path: '/my-projects' },
   { id: 'contact', label: 'Contact', path: '/contact' },
   { id: 'about', label: 'About', path: '/#about' }
 ];

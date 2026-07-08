@@ -23,8 +23,10 @@ export const AuthGateway = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user) {
-      logger.log('[AuthGateway] User is already authenticated. Redirecting to home...');
-      navigate('/');
+      const params = new URLSearchParams(window.location.search);
+      const redirectTo = params.get('redirect') || '/';
+      logger.log(`[AuthGateway] User is already authenticated. Redirecting to ${redirectTo}...`);
+      navigate(redirectTo);
     }
   }, [user, loading, navigate]);
 

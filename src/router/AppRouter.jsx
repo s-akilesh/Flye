@@ -23,6 +23,7 @@ const AuthGateway = React.lazy(() => import('../modules/auth/pages/AuthGateway.j
 const AdminLayout = React.lazy(() => import('../shared/components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
 const PrivacyPolicy = React.lazy(() => import('../modules/legal/pages/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
 const TermsConditions = React.lazy(() => import('../modules/legal/pages/TermsConditions').then(module => ({ default: module.TermsConditions })));
+const MyProjects = React.lazy(() => import('../modules/my-projects/pages/MyProjects').then(module => ({ default: module.MyProjects })));
 
 
 
@@ -63,6 +64,7 @@ export const AppRouter = () => {
                   <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
                   <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
                   <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
+                  <Route path={ROUTES.MY_PROJECTS} element={<MyProjects />} />
                   
                   {/* Redirect Learning Workspace & Student Auth to Home */}
                   <Route path="/learning/*" element={<Navigate to={ROUTES.HOME} replace />} />

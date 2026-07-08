@@ -93,11 +93,21 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
 
   const menuItems = isAdminContext ? adminNavItems : BOTTOM_NAVIGATION;
 
+  const getTargetRoute = (item) => {
+    if (item.id === 'enquiries') {
+      if (user && isAdminContext) {
+        return item.adminPath || '/admin/enquiries';
+      }
+      return '/my-projects';
+    }
+    return item.path || (item.guestPath && !user ? item.guestPath : item.adminPath);
+  };
+
   const handleItemClick = (item) => {
     if (item.action === 'toggleDrawer') {
       onToggleDrawer();
     } else {
-      navigate(item.path);
+      navigate(getTargetRoute(item));
     }
   };
 
@@ -110,7 +120,7 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
           if (item.action === 'toggleDrawer') {
             isActive = isDrawerOpen;
           } else {
-            const targetPath = item.path || (item.guestPath && !user ? item.guestPath : item.adminPath);
+            const targetPath = getTargetRoute(item);
             if (targetPath === '/' || targetPath === '/admin') {
               isActive = location.pathname === targetPath;
             } else {

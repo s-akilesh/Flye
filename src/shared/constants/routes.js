@@ -7,6 +7,7 @@ export const ROUTES = {
   CONTACT: '/contact',
   PRIVACY_POLICY: '/privacy-policy',
   TERMS_CONDITIONS: '/terms-and-conditions',
+  MY_PROJECTS: '/my-projects',
   ADMIN_PROJECTS: '/admin/projects',
   ADMIN_ADD_PROJECT: '/admin/projects/add',
   ADMIN_EDIT_PROJECT: '/admin/projects/edit/:slug',

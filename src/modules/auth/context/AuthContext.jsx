@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
 import { userService } from '../services/userService';
+import { enquiryService } from '../../enquiries/services/enquiryService';
 import { logger } from '../../../shared/utils/logger';
 
 const AuthContext = createContext();
@@ -37,6 +38,16 @@ export const AuthProvider = ({ children }) => {
       logger.log(`[AuthContext] Fetching profile for user ID: ${currentUser.id}`);
       const userProfile = await userService.getProfileById(currentUser.id);
       setProfile(userProfile);
+      
+      // Perform guest enquiries linking using user's phone suffix match
+      if (userProfile?.phone) {
+        try {
+          logger.log(`[AuthContext] Triggering dynamic guest enquiries linking for phone: ${userProfile.phone}`);
+          await enquiryService.linkGuestEnquiriesToUser(userProfile.phone, currentUser.id);
+        } catch (linkErr) {
+          logger.error('[AuthContext] Failed to dynamically link guest enquiries:', linkErr);
+        }
+      }
       
       // Security Guard: If the user is not an admin, force viewMode to 'user'
       const userIsAdmin = userProfile?.role === 'admin' || userProfile?.role === 'super_admin';

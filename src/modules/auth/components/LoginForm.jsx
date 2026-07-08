@@ -25,8 +25,10 @@ export const LoginForm = ({ onForgotPassword }) => {
     try {
       logger.log('[LoginForm] Attempting sign-in for:', email);
       await login(email, password);
-      logger.log('[LoginForm] Login success. Redirecting to home...');
-      navigate('/');
+      const params = new URLSearchParams(window.location.search);
+      const redirectTo = params.get('redirect') || '/';
+      logger.log(`[LoginForm] Login success. Redirecting to ${redirectTo}...`);
+      navigate(redirectTo);
     } catch (err) {
       logger.error('[LoginForm] Login failed:', err);
       let message = 'Invalid email or password. Please try again.';

@@ -76,6 +76,7 @@ export const Header = ({ onToggleDrawer }) => {
         <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
           <Link to="/printing" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
+          <Link to="/my-projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>My Enquiries</Link>
           <a
             href="/#about"
             onClick={(e) => {
@@ -115,7 +116,7 @@ export const Header = ({ onToggleDrawer }) => {
 
         {/* Profile Dropdown */}
         {user && (
-          <div ref={dropdownRef} style={{ position: 'relative', marginLeft: 'var(--space-1)' }}>
+          <div ref={dropdownRef} className="header-profile-dropdown-wrapper" style={{ position: 'relative', marginLeft: 'var(--space-1)' }}>
             <button
               type="button"
               onClick={() => setShowProfileDropdown(p => !p)}
@@ -242,12 +243,16 @@ export const Header = ({ onToggleDrawer }) => {
                     </button>
                   )}
 
-                  {/* Profile Settings Option */}
-                  {isAdmin && viewMode === 'admin' && (
+                  {isAdmin && (
+                    <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.06)', margin: '2px 8px' }} />
+                  )}
+
+                   {/* My Enquiries */}
+                  {viewMode !== 'admin' && (
                     <button
                       type="button"
                       onClick={() => {
-                        navigate(`${ROUTES.ADMIN_SETTINGS}?page=profile`);
+                        navigate(ROUTES.MY_PROJECTS);
                         setShowProfileDropdown(false);
                       }}
                       style={{
@@ -268,15 +273,47 @@ export const Header = ({ onToggleDrawer }) => {
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                     >
-                      <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>manage_accounts</span>
-                      <span>Profile Settings</span>
+                      <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>folder</span>
+                      <span>My Enquiries</span>
                     </button>
                   )}
 
+                  {/* Profile */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isAdmin) {
+                        navigate(`${ROUTES.ADMIN_SETTINGS}?page=profile`);
+                      } else {
+                        navigate(ROUTES.STUDENT_DASHBOARD);
+                      }
+                      setShowProfileDropdown(false);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#fff',
+                      padding: '10px 12px',
+                      fontSize: '13px',
+                      textAlign: 'left',
+                      width: '100%',
+                      cursor: 'pointer',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      transition: 'background 0.15s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                  >
+                    <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>person</span>
+                    <span>Profile</span>
+                  </button>
+
+
                   {/* Divider */}
-                  {isAdmin && viewMode === 'admin' && (
-                    <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.06)', margin: '2px 8px' }} />
-                  )}
+                  <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.06)', margin: '2px 8px' }} />
 
                   {/* Logout Option */}
                   <button
@@ -391,6 +428,13 @@ export const Header = ({ onToggleDrawer }) => {
           </Button>
         </div>
       </Modal>
+      <style>{`
+        @media (max-width: 768px) {
+          .header-profile-dropdown-wrapper {
+            display: none !important;
+          }
+        }
+      `}</style>
     </header>
   );
 };
