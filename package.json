@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "browserslist": [
+    "> 0.2%",
+    "last 2 versions",
+    "not dead"
+  ],
   "scripts": {
     "dev": "vite",
     "prebuild": "node scripts/generate-seo.js",

@@ -54,7 +54,12 @@ export const Header = ({ onToggleDrawer }) => {
   };
 
   return (
-    <header>
+    <header style={{
+      background: 'var(--header-bg)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      borderBottom: '1px solid var(--header-border)'
+    }}>
       <div className="logo-container" onClick={() => navigate((viewMode === 'admin' || location.pathname.startsWith('/admin')) ? ROUTES.ADMIN_DASHBOARD : ROUTES.HOME)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
         {settings.websiteLogo ? (
           <img 

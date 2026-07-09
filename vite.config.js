@@ -12,6 +12,8 @@ export default defineConfig({
     })
   ],
   build: {
+    target: 'es2022',
+    cssTarget: 'chrome80',
     rollupOptions: {
       output: {
         manualChunks(id) {
