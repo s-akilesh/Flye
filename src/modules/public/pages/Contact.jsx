@@ -8,6 +8,9 @@ import { ROUTES } from '../../../shared/constants/routes';
 import { useSettings } from '../../settings/hooks/useSettings';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 
+import { contactService } from '../../contact/services/contactService';
+import { sendAdminNotification, sendUserConfirmation } from '../../contact/services/emailService';
+
 export const Contact = () => {
   const navigate = useNavigate();
   const { settings } = useSettings();
@@ -17,15 +20,29 @@ export const Contact = () => {
   const [name, setName] = useState('');
   const [phonePrefix, setPhonePrefix] = useState('+91');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [category, setCategory] = useState('');
+  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!name.trim()) newErrors.name = true;
-    if (!phone.trim()) newErrors.phone = true;
+    
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim() || !emailRegex.test(email)) newErrors.email = true;
+    
+    // Validate phone
+    const isValidPhone = phonePrefix === '+91' ? phone.trim().length === 10 : (phone.trim().length >= 7 && phone.trim().length <= 15);
+    if (!phone.trim() || !isValidPhone) newErrors.phone = true;
+    
+    if (!category) newErrors.category = true;
+    if (!subject.trim()) newErrors.subject = true;
     if (!message.trim()) newErrors.message = true;
 
     if (Object.keys(newErrors).length > 0) {
@@ -34,10 +51,71 @@ export const Contact = () => {
     }
 
     setErrors({});
-    setIsSubmitted(true);
-    setName('');
-    setPhone('');
-    setMessage('');
+    setIsSubmitting(true);
+
+    const contactData = {
+      name: name.trim(),
+      mobileNumber: `${phonePrefix}${phone.trim()}`,
+      email: email.trim(),
+      category: category,
+      subject: subject.trim(),
+      message: message.trim()
+    };
+
+    try {
+      // 1. Save to Supabase (Must succeed first)
+      await contactService.create(contactData);
+      
+      // 2. Track analytics event
+      try {
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'contact_form_submit', {
+            category: category,
+            subject: subject.trim()
+          });
+        }
+      } catch (ae) {
+        if (!import.meta.env.PROD) {
+          console.error('Analytics submission track error:', ae);
+        }
+      }
+
+      // 3. Send email notifications sequentially via EmailJS
+      const emailPayload = {
+        name: contactData.name,
+        phone: contactData.mobileNumber,
+        email: contactData.email,
+        category: contactData.category,
+        subject: contactData.subject,
+        message: contactData.message
+      };
+
+      try {
+        const adminEmailSent = await sendAdminNotification(emailPayload);
+        if (adminEmailSent) {
+          await sendUserConfirmation(emailPayload);
+        }
+      } catch (emailErr) {
+        if (!import.meta.env.PROD) {
+          console.error('EmailJS notification flow failed:', emailErr);
+        }
+      }
+
+      setIsSubmitted(true);
+      setName('');
+      setPhone('');
+      setEmail('');
+      setCategory('');
+      setSubject('');
+      setMessage('');
+    } catch (err) {
+      if (!import.meta.env.PROD) {
+        console.error('Failed to submit contact:', err);
+      }
+      alert('Failed to send message: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -222,6 +300,7 @@ export const Contact = () => {
 
         /* Customize regular Inputs style for premium translucent look */
         .contact-form-grid .form-input,
+        .contact-form-grid .form-select,
         .contact-form-grid .form-textarea {
           background: rgba(255, 255, 255, 0.01) !important;
           border: 1px solid rgba(255, 255, 255, 0.06) !important;
@@ -232,12 +311,26 @@ export const Contact = () => {
           transition: all 0.25s var(--transition-ease) !important;
         }
 
+        .contact-form-grid .form-select {
+          height: 38px;
+          outline: none;
+          cursor: pointer;
+          width: 100%;
+        }
+
+        .contact-form-grid .form-select option {
+          background: #0d0c15;
+          color: var(--text-main, #f9fafb);
+        }
+
         .contact-form-grid .form-input:hover,
+        .contact-form-grid .form-select:hover,
         .contact-form-grid .form-textarea:hover {
           border-color: rgba(255, 255, 255, 0.12) !important;
         }
 
         .contact-form-grid .form-input:focus,
+        .contact-form-grid .form-select:focus,
         .contact-form-grid .form-textarea:focus {
           border-color: #8b5cf6 !important;
           box-shadow: 0 0 10px rgba(139, 92, 246, 0.15) !important;
@@ -245,6 +338,7 @@ export const Contact = () => {
         }
 
         .contact-form-grid .form-input.error-state,
+        .contact-form-grid .form-select.error-state,
         .contact-form-grid .form-textarea.error-state,
         .phone-input-container.error-state {
           border-color: var(--accent-crimson, #ef4444) !important;
@@ -342,7 +436,7 @@ export const Contact = () => {
               
               {/* Name */}
               <div className="form-group">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">Name *</label>
                 <Input
                   id="name"
                   type="text"
@@ -359,7 +453,7 @@ export const Contact = () => {
 
               {/* Phone Number */}
               <div className="form-group">
-                <label htmlFor="phone-number">Phone number</label>
+                <label htmlFor="phone-number">Phone number *</label>
                 <div className={`phone-input-container ${errors.phone ? 'error-state' : ''}`}>
                   <select
                     className="phone-prefix-select"
@@ -399,9 +493,69 @@ export const Contact = () => {
                 )}
               </div>
 
+              {/* Email Address */}
+              <div className="form-group contact-form-full">
+                <label htmlFor="email">Email Address *</label>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors(prev => ({ ...prev, email: false }));
+                  }}
+                  placeholder="Enter email address"
+                  className={`form-input ${errors.email ? 'error-state' : ''}`}
+                />
+              </div>
+
+              {/* Category */}
+              <div className="form-group">
+                <label htmlFor="category">Category *</label>
+                <select
+                  id="category"
+                  required
+                  value={category}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    if (errors.category) setErrors(prev => ({ ...prev, category: false }));
+                  }}
+                  className={`form-select ${errors.category ? 'error-state' : ''}`}
+                >
+                  <option value="">Select a category</option>
+                  <option value="Project Related Query">Project Related Query</option>
+                  <option value="Technical Support">Technical Support</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Partnership / Collaboration">Partnership / Collaboration</option>
+                  <option value="Feedback">Feedback</option>
+                  <option value="Complaint">Complaint</option>
+                  <option value="Suggestion">Suggestion</option>
+                  <option value="Career / Internship">Career / Internship</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              {/* Subject */}
+              <div className="form-group">
+                <label htmlFor="subject">Subject *</label>
+                <Input
+                  id="subject"
+                  type="text"
+                  required
+                  value={subject}
+                  onChange={(e) => {
+                    setSubject(e.target.value);
+                    if (errors.subject) setErrors(prev => ({ ...prev, subject: false }));
+                  }}
+                  placeholder="Enter a short subject or title"
+                  className={`form-input ${errors.subject ? 'error-state' : ''}`}
+                />
+              </div>
+
               {/* Message */}
               <div className="form-group contact-form-full">
-                <label htmlFor="contact-msg">Message</label>
+                <label htmlFor="contact-msg">Message *</label>
                 <textarea
                   id="contact-msg"
                   required
@@ -418,8 +572,8 @@ export const Contact = () => {
 
               {/* Submit Button */}
               <div className="contact-form-full">
-                <Button type="submit" variant="primary" style={{ width: '100%', height: '42px', marginTop: '12px' }}>
-                  Send message
+                <Button type="submit" variant="primary" disabled={isSubmitting} style={{ width: '100%', height: '42px', marginTop: '12px' }}>
+                  {isSubmitting ? 'Sending...' : 'Send message'}
                 </Button>
               </div>
 
@@ -489,7 +643,7 @@ export const Contact = () => {
             </svg>
           </div>
           <h4>MESSAGE ROUTED</h4>
-          <p>Your message has been dispatched successfully. We will reply to your port email.</p>
+          <p>Your message has been dispatched successfully. We will contact you soon.</p>
           <Button variant="secondary" className="modal-btn" onClick={() => setIsSubmitted(false)}>
             Close
           </Button>

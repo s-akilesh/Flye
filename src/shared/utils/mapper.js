@@ -146,3 +146,50 @@ export const mapProjectToDB = (reactProj) => {
 
   return dbProj;
 };
+
+// ============================================================================
+// CONTACT MAPPERS
+// ============================================================================
+
+export const mapContactToReact = (dbContact) => {
+  if (!dbContact) return null;
+  return {
+    id: dbContact.id,
+    name: dbContact.name || '',
+    mobileNumber: dbContact.mobile_number || '',
+    email: dbContact.email || '',
+    category: dbContact.category || '',
+    subject: dbContact.subject || '',
+    message: dbContact.message || '',
+    status: dbContact.status || 'new',
+    internalNotes: dbContact.internal_notes || '',
+    assignedTo: dbContact.assigned_to || null,
+    createdAt: dbContact.created_at,
+    updatedAt: dbContact.updated_at
+  };
+};
+
+export const mapContactToDB = (reactContact) => {
+  if (!reactContact) return null;
+  const dbContact = {
+    id: reactContact.id,
+    name: reactContact.name,
+    mobile_number: reactContact.mobileNumber || reactContact.mobile,
+    email: reactContact.email,
+    category: reactContact.category,
+    subject: reactContact.subject,
+    message: reactContact.message,
+    status: reactContact.status,
+    internal_notes: reactContact.internalNotes,
+    assigned_to: reactContact.assignedTo
+  };
+
+  // Clean undefined keys
+  Object.keys(dbContact).forEach(key => {
+    if (dbContact[key] === undefined) {
+      delete dbContact[key];
+    }
+  });
+
+  return dbContact;
+};

@@ -64,6 +64,14 @@ export const AdminLayout = () => {
       )
     },
     {
+      id: 'contacts',
+      label: 'Contacts',
+      path: ROUTES.ADMIN_CONTACTS,
+      icon: (
+        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>email</span>
+      )
+    },
+    {
       id: 'settings',
       label: 'Settings',
       path: ROUTES.ADMIN_SETTINGS,

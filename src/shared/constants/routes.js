@@ -12,6 +12,7 @@ export const ROUTES = {
   ADMIN_ADD_PROJECT: '/admin/projects/add',
   ADMIN_EDIT_PROJECT: '/admin/projects/edit/:slug',
   ADMIN_ENQUIRIES: '/admin/enquiries',
+  ADMIN_CONTACTS: '/admin/contacts',
   ADMIN_SETTINGS: '/admin/settings',
   ADMIN_ACCESS: '/admin-access',
   ADMIN_DASHBOARD: '/admin',
