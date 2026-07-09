@@ -11,7 +11,7 @@
   --accent-amber: #f59e0b;
 
   /* Theme-specific Component Backgrounds */
-  --header-bg: rgba(5, 5, 5, 0.4);
+  --header-bg: rgba(8, 7, 13, 0.85);
   --header-border: rgba(255, 255, 255, 0.15);
   --sidebar-bg: rgba(10, 10, 15, 0.96);
   --sidebar-border: rgba(255, 255, 255, 0.08);
@@ -84,7 +84,7 @@
   --accent-amber: #d97706;
 
   /* Theme-specific Component Backgrounds */
-  --header-bg: rgba(255, 255, 255, 0.7);
+  --header-bg: rgba(255, 255, 255, 0.85);
   --header-border: rgba(0, 0, 0, 0.08);
   --sidebar-bg: rgba(255, 255, 255, 0.96);
   --sidebar-border: rgba(0, 0, 0, 0.08);
