@@ -119,110 +119,143 @@ export const ManageContacts = () => {
   }, [contacts, search, statusFilter, categoryFilter, startDate, endDate]);
 
   return (
-    <div style={{ padding: '40px', boxSizing: 'border-box', minHeight: '100vh', width: '100%', position: 'relative' }}>
-      
-      {/* Header Area */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-        <div>
-          <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 6px 0', letterSpacing: '0.5px' }}>
-            Manage Contacts
-          </h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', margin: 0 }}>
-            Audit, track, and resolve user submissions and collaboration queries
-          </p>
+    <motion.section
+      id="manage-contacts-portal"
+      className="portal-section page-container"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 15 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="portal-header">
+        <div className="portal-title-area">
+          <h2>Manage Contacts</h2>
+          <p>Audit, track, and resolve user submissions and collaboration queries</p>
         </div>
       </div>
 
-      {/* Toolbar / Filters Panel */}
-      <Card style={{ padding: '20px', marginBottom: '24px', background: 'rgba(10, 10, 15, 0.4)', border: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', alignItems: 'end' }}>
-          
-          {/* Search bar */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Search</label>
-            <Input
-              type="text"
-              placeholder="Search name, mobile, email..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}
-            />
-          </div>
+      <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+        {/* Main Table/Grid */}
+        <Card style={{ background: 'rgba(10, 10, 15, 0.25)', border: '1px solid rgba(255,255,255,0.06)', padding: 0, overflow: 'hidden' }}>
+        
+        {/* Toolbar / Filters Panel inside the Table Card */}
+        <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', alignItems: 'end' }}>
+            
+            {/* Search bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Search</label>
+              <Input
+                type="text"
+                placeholder="Search name, mobile, email..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="form-input"
+                style={{
+                  height: '38px',
+                  background: 'rgba(15, 15, 25, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#fff',
+                  borderRadius: '6px',
+                  padding: '0 12px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
 
-          {/* Status filter */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Status</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              style={{
-                height: '38px',
-                background: 'rgba(15, 15, 25, 0.8)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#fff',
-                borderRadius: '6px',
-                padding: '0 12px',
-                outline: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="all">All Statuses</option>
-              {STATUS_WORKFLOW.map(st => (
-                <option key={st} value={st}>{STATUS_LABELS[st]}</option>
-              ))}
-            </select>
-          </div>
+            {/* Status filter */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Status</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={{
+                  height: '38px',
+                  background: 'rgba(15, 15, 25, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#fff',
+                  borderRadius: '6px',
+                  padding: '0 12px',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="all">All Statuses</option>
+                {STATUS_WORKFLOW.map(st => (
+                  <option key={st} value={st}>{STATUS_LABELS[st]}</option>
+                ))}
+              </select>
+            </div>
 
-          {/* Category filter */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Category</label>
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              style={{
-                height: '38px',
-                background: 'rgba(15, 15, 25, 0.8)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#fff',
-                borderRadius: '6px',
-                padding: '0 12px',
-                outline: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="all">All Categories</option>
-              {CATEGORY_OPTIONS.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
+            {/* Category filter */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Category</label>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                style={{
+                  height: '38px',
+                  background: 'rgba(15, 15, 25, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#fff',
+                  borderRadius: '6px',
+                  padding: '0 12px',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="all">All Categories</option>
+                {CATEGORY_OPTIONS.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
 
-          {/* Date range picker */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>From Date</label>
-            <Input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}
-            />
-          </div>
+            {/* Date range picker */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>From Date</label>
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="form-input"
+                style={{
+                  height: '38px',
+                  background: 'rgba(15, 15, 25, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#fff',
+                  borderRadius: '6px',
+                  padding: '0 12px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>To Date</label>
-            <Input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}
-            />
-          </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>To Date</label>
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="form-input"
+                style={{
+                  height: '38px',
+                  background: 'rgba(15, 15, 25, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#fff',
+                  borderRadius: '6px',
+                  padding: '0 12px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
 
+          </div>
         </div>
-      </Card>
 
-      {/* Main Table/Grid */}
-      <Card style={{ background: 'rgba(10, 10, 15, 0.4)', border: '1px solid rgba(255,255,255,0.06)', padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-muted, #6b7280)' }}>
             Loading contact requests...
@@ -299,6 +332,7 @@ export const ManageContacts = () => {
           </div>
         )}
       </Card>
+    </div>
 
       {/* Details View Drawer / Modal */}
       {selectedContact && (
@@ -471,6 +505,6 @@ export const ManageContacts = () => {
         }
       `}</style>
 
-    </div>
+    </motion.section>
   );
 };

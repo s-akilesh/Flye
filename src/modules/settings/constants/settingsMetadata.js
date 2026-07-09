@@ -73,14 +73,6 @@ export const SETTINGS_METADATA = [
         keywords: ['email', 'routing', 'alert', 'notifications', 'inquiry', 'routing'],
         status: (settings) => (settings.contactEmail && settings.notificationEmail) ? 'configured' : 'attention',
         component: 'EmailRouting'
-      },
-      {
-        id: 'smtp',
-        title: 'SMTP Mail Server',
-        description: 'Set outbound mail servers, ports, and authentication details.',
-        keywords: ['smtp', 'mail', 'server', 'port', 'host', 'username', 'password'],
-        status: () => 'coming_soon',
-        component: 'SMTPSettings'
       }
     ]
   },

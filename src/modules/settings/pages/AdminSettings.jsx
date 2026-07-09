@@ -16,7 +16,6 @@ const COMPONENT_MAPPING = {
   EmailRouting: React.lazy(() => import('../components/EmailRouting').then(m => ({ default: m.EmailRouting }))),
   SocialNetworks: React.lazy(() => import('../components/SocialNetworks').then(m => ({ default: m.SocialNetworks }))),
   AdminProfile: React.lazy(() => import('../components/AdminProfile').then(m => ({ default: m.AdminProfile }))),
-  SMTPSettings: React.lazy(() => import('../components/SMTPSettings').then(m => ({ default: m.SMTPSettings }))),
   SystemPrefs: React.lazy(() => import('../components/SystemPrefs').then(m => ({ default: m.SystemPrefs }))),
   LegalPagesSettings: React.lazy(() => import('../../legal/components/LegalPagesSettings').then(m => ({ default: m.LegalPagesSettings }))),
 };
@@ -29,9 +28,6 @@ export const AdminSettings = () => {
   // Search States
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-
-  // Accordion States (Default first category open)
-  const [expandedCategory, setExpandedCategory] = useState('website');
 
   const activePage = searchParams.get('page');
 
@@ -78,13 +74,7 @@ export const AdminSettings = () => {
   }, [debouncedQuery]);
 
   const handleBack = () => {
-    // Preserve the current expanded category state when returning
     setSearchParams({});
-  };
-
-  const handleToggleCategory = (catId) => {
-    if (isSearchMode) return; // All are forced open during search
-    setExpandedCategory(prev => prev === catId ? null : catId);
   };
 
   const handleNavigateToPage = (rowId) => {
@@ -200,81 +190,53 @@ export const AdminSettings = () => {
               </div>
             </div>
 
-            {/* Accordion Categorized Rows List */}
+            {/* Categorized Rows List as Separate Clickable Cards */}
             {filteredCategories.length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                {filteredCategories.map((cat) => {
-                  const isOpen = isSearchMode || expandedCategory === cat.id;
-
-                  return (
-                    <div key={cat.id} className="settings-accordion-section" style={{ border: '1px solid var(--border-subtle)', borderRadius: '8px', background: 'rgba(255,255,255,0.01)', overflow: 'hidden' }}>
-                      
-                      {/* Accordion Category Header */}
-                      <div
-                        className="settings-accordion-header"
-                        onClick={() => handleToggleCategory(cat.id)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: 'var(--space-3) var(--space-4)',
-                          background: 'rgba(255,255,255,0.015)',
-                          cursor: isSearchMode ? 'default' : 'pointer',
-                          userSelect: 'none',
-                          borderBottom: isOpen ? '1px solid var(--border-subtle)' : 'none',
-                          transition: 'background 0.2s ease'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>{cat.icon}</span>
-                          <span style={{ fontSize: '13px', fontWeight: '700', color: '#fff', letterSpacing: '0.5px' }}>
-                            {cat.title}
-                          </span>
-                        </div>
-                        {!isSearchMode && (
-                          <span style={{ fontSize: '10px', color: 'var(--text-dim)', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}>
-                            ▼
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Accordion Children Rows */}
-                      <AnimatePresence initial={false}>
-                        {isOpen && (
-                          <motion.div
-                            initial={{ height: 0 }}
-                            animate={{ height: 'auto' }}
-                            exit={{ height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            style={{ overflow: 'hidden' }}
-                          >
-                            <div className="settings-list-container">
-                              {cat.rows.map((row) => (
-                                <div
-                                  key={row.id}
-                                  className="settings-list-row"
-                                  onClick={() => handleNavigateToPage(row.id)}
-                                >
-                                  <div className="settings-row-left">
-                                    <div className="settings-row-info">
-                                      <h4>{row.title}</h4>
-                                      <p>{row.description}</p>
-                                    </div>
-                                  </div>
-                                  <div className="settings-row-right">
-                                    {renderStatusTag(row.status(settings))}
-                                    <span className="settings-row-arrow">→</span>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {filteredCategories.map((cat) => (
+                  <div key={cat.id} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    
+                    {/* Category Title Heading */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 4px', marginBottom: '4px' }}>
+                      <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet, #8b5cf6)' }}>{cat.icon}</span>
+                      <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#fff', letterSpacing: '0.5px', margin: 0 }}>
+                        {cat.title}
+                      </h3>
                     </div>
-                  );
-                })}
+
+                    {/* Section Cards */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {cat.rows.map((row) => (
+                        <div
+                          key={row.id}
+                          className="settings-clickable-card"
+                          onClick={() => handleNavigateToPage(row.id)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '16px 20px',
+                            background: 'rgba(255, 255, 255, 0.01)',
+                            border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                          }}
+                        >
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'left' }}>
+                            <h4 style={{ fontSize: '13px', fontWeight: '700', color: '#fff', margin: 0 }}>{row.title}</h4>
+                            <p style={{ fontSize: '12px', color: 'var(--text-secondary, #9ca3af)', margin: 0, lineHeight: '1.4' }}>{row.description}</p>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            {renderStatusTag(row.status(settings))}
+                            <span style={{ color: 'var(--text-dim, #6b7280)', fontSize: '14px', transition: 'transform 0.2s ease' }} className="card-arrow-icon">→</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                  </div>
+                ))}
               </div>
             ) : (
               /* suggestions-driven empty state */
@@ -317,6 +279,18 @@ export const AdminSettings = () => {
           </div>
         </>
       )}
+      <style>{`
+        .settings-clickable-card:hover {
+          background: rgba(255, 255, 255, 0.02) !important;
+          border-color: rgba(255, 255, 255, 0.12) !important;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .settings-clickable-card:hover .card-arrow-icon {
+          color: #fff !important;
+          transform: translateX(2px);
+        }
+      `}</style>
     </motion.section>
   );
 };

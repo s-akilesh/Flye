@@ -823,7 +823,7 @@ export const ManageEnquiries = () => {
         </div>
 
         {/* Tabular Visual Grid Container Card */}
-        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', minHeight: 'calc(100vh - 280px)', marginBottom: '20px' }}>
+        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', minHeight: 'calc(100vh - 280px)', marginBottom: '20px', background: 'rgba(10, 10, 15, 0.25)' }}>
           {/* Toolbar: Search + Filter Icon + Sort Icon */}
           <AdminToolbar
             searchId="enquiry-search"

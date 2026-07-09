@@ -1053,7 +1053,7 @@ export const AdminDashboard = () => {
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>No records match the current filter.</p>
             </Card>
           ) : (
-            <Card className="card-glass" style={{ padding: '0', overflowX: 'auto' }}>
+            <Card className="card-glass" style={{ padding: '0', overflowX: 'auto', background: 'rgba(10, 10, 15, 0.25)' }}>
               <table className="tbl-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.01)' }}>
@@ -1218,7 +1218,7 @@ export const AdminDashboard = () => {
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>No upcoming student submissions scheduled.</p>
             </Card>
           ) : (
-            <Card className="card-glass" style={{ padding: 0 }}>
+            <Card className="card-glass" style={{ padding: 0, background: 'rgba(10, 10, 15, 0.25)' }}>
               <table className="tbl-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.01)' }}>

@@ -600,7 +600,7 @@ export const ManageProjects = () => {
         </div>
 
         {/* Tabular Visual Grid Container Card */}
-        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', flex: 1, minHeight: 0 }}>
+        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', flex: 1, minHeight: 0, background: 'rgba(10, 10, 15, 0.25)' }}>
           {/* Toolbar: Search + Filter Icon + Sort Icon */}
           <AdminToolbar
             searchId="admin-search"
