@@ -9,6 +9,7 @@ import { RichTextEditor } from '../../../shared/components/ui/RichTextEditor';
 import { ROUTES } from '../../../shared/constants/routes';
 import { CATEGORY_LABELS } from '../constants/categories';
 import { storageService } from '../../../shared/services/storageService';
+import { masterDataService } from '../../../shared/services/masterDataService';
 
 export const EditProject = () => {
   const { slug: urlSlug } = useParams();
@@ -26,15 +27,66 @@ export const EditProject = () => {
   const [fullDescription, setFullDescription] = useState('');
 
   // Classification State
-  const [categories, setCategories] = useState(['automation']);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [dbCategories, setDbCategories] = useState([]);
+  const [dbTechnologies, setDbTechnologies] = useState([]);
+  const [dbDepartments, setDbDepartments] = useState([]);
+  const [showAddNewCategory, setShowAddNewCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
   const [technology, setTechnology] = useState('');
+  const [department, setDepartment] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [techDropdownOpen, setTechDropdownOpen] = useState(false);
+  const techDropdownRef = useRef(null);
+  const [deptDropdownOpen, setDeptDropdownOpen] = useState(false);
+  const deptDropdownRef = useRef(null);
+
+  const loadMasterData = async () => {
+    try {
+      const cats = await masterDataService.getValues('project_category');
+      setDbCategories(cats);
+      const techs = await masterDataService.getValues('technology');
+      setDbTechnologies(techs);
+      const depts = await masterDataService.getValues('department');
+      setDbDepartments(depts);
+    } catch (err) {
+      console.error("Failed to load master data:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadMasterData();
+  }, []);
+
+  const handleAddNewCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    try {
+      await masterDataService.ensureValueExists('project_category', newCategoryName);
+      const updatedCats = await masterDataService.getValues('project_category');
+      setDbCategories(updatedCats);
+      
+      const cleanValue = masterDataService.normalizeValue(newCategoryName);
+      setSelectedCategory(cleanValue);
+      
+      setNewCategoryName('');
+      setShowAddNewCategory(false);
+      showToast("Category added successfully!", "success");
+    } catch (err) {
+      showToast("Failed to add category.", "error");
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+      }
+      if (techDropdownRef.current && !techDropdownRef.current.contains(event.target)) {
+        setTechDropdownOpen(false);
+      }
+      if (deptDropdownRef.current && !deptDropdownRef.current.contains(event.target)) {
+        setDeptDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -144,12 +196,12 @@ export const EditProject = () => {
       setDescription(project.description || '');
       setFullDescription(project.fullDescription || '');
       if (project.category) {
-        const loadedCats = project.category.split(',').map(c => c.trim().toLowerCase());
-        setCategories(loadedCats);
+        setSelectedCategory(project.category);
       } else {
-        setCategories(['automation']);
+        setSelectedCategory('');
       }
       setTechnology(project.technology || '');
+      setDepartment(project.department || '');
       setCurrency(project.currency || 'INR');
       if (project.variants && Array.isArray(project.variants) && project.variants.length > 0) {
         setVariants(project.variants);
@@ -394,6 +446,18 @@ export const EditProject = () => {
       return;
     }
 
+    if (!selectedCategory) {
+      showToast("Please select a project category.", "error");
+      return;
+    }
+
+    if (!department.trim()) {
+      showToast("Please select or enter a department.", "error");
+      return;
+    }
+
+    setIsSaving(true);
+
     let finalThumbnailUrl = thumbnailPreview || 'src/assets/projects/smart-home/main.svg';
     if (thumbnailFile) {
       try {
@@ -455,7 +519,8 @@ export const EditProject = () => {
       projectLevel: 'Engineering',
       difficulty: 'intermediate',
       technology: technology.trim() || 'Arduino',
-      category: categories.join(', '),
+      category: selectedCategory,
+      department: department.trim(),
       buildTime: '4-6 Hours',
       features: ['hardware', 'code', 'circuit', 'dots', 'support'],
       badge: badge.trim(),
@@ -472,7 +537,7 @@ export const EditProject = () => {
       specifications: {
         controller: technology.trim() || 'Arduino Uno',
         sensors: 'Standard sensor configuration',
-        communication: categories.includes('iot') ? 'Wi-Fi' : categories.includes('gps-gsm') ? 'GSM' : 'None',
+        communication: selectedCategory.toLowerCase().includes('iot') ? 'Wi-Fi' : selectedCategory.toLowerCase().includes('gps') ? 'GSM' : 'None',
         operatingVoltage: '5V DC',
         programmingLanguage: 'C++'
       },
@@ -694,6 +759,92 @@ export const EditProject = () => {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
+            
+            <div className="calc-row" style={{ marginBottom: 'var(--space-3)' }}>
+              <label htmlFor="proj-dept">Department *</label>
+              <div ref={deptDropdownRef} style={{ position: 'relative', width: '100%' }}>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="text"
+                    id="proj-dept"
+                    className="form-input"
+                    placeholder="e.g. Mechanical, Electronics, Computer Science"
+                    value={department}
+                    onChange={(e) => {
+                      setDepartment(e.target.value);
+                      setDeptDropdownOpen(true);
+                    }}
+                    onFocus={() => setDeptDropdownOpen(true)}
+                    style={{ paddingRight: '30px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setDeptDropdownOpen(!deptDropdownOpen)}
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--text-muted)',
+                      cursor: 'pointer',
+                      fontSize: '10px',
+                      padding: 0
+                    }}
+                  >
+                    ▼
+                  </button>
+                </div>
+
+                {deptDropdownOpen && (
+                  <div
+                    className="card-glass"
+                    style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 4px)',
+                      left: 0,
+                      right: 0,
+                      zIndex: 100,
+                      maxHeight: '200px',
+                      overflowY: 'auto',
+                      padding: '8px 0',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      background: '#141416',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                    }}
+                  >
+                    {dbDepartments
+                      .filter(d => !department || d.value.toLowerCase().includes(department.toLowerCase()))
+                      .map((d) => (
+                        <div
+                          key={d.id}
+                          style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            fontSize: '13px',
+                            color: 'var(--text-secondary)',
+                            transition: 'background 0.15s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                          onClick={() => {
+                            setDepartment(d.value);
+                            setDeptDropdownOpen(false);
+                          }}
+                        >
+                          {d.value}
+                        </div>
+                      ))}
+                    {dbDepartments.filter(d => !department || d.value.toLowerCase().includes(department.toLowerCase())).length === 0 && (
+                      <div style={{ padding: '8px 12px', fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                        No matching options found. Type to add a new one.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="grid-12" style={{ gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
               <div style={{ gridColumn: 'span 6' }} className="calc-row">
                 <label>Categories *</label>
@@ -719,12 +870,10 @@ export const EditProject = () => {
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       maxWidth: '90%',
-                      color: categories.length > 0 ? '#fff' : 'var(--text-muted)',
+                      color: selectedCategory ? '#fff' : 'var(--text-muted)',
                       fontSize: '13px'
                     }}>
-                      {categories.length > 0 
-                        ? categories.map(c => CATEGORY_LABELS[c] || c).join(', ') 
-                        : 'Select Categories'}
+                      {selectedCategory ? (CATEGORY_LABELS[selectedCategory] || selectedCategory) : 'Select Category'}
                     </span>
                     <span style={{
                       transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -746,7 +895,7 @@ export const EditProject = () => {
                         left: 0,
                         right: 0,
                         zIndex: 100,
-                        maxHeight: '240px',
+                        maxHeight: '260px',
                         overflowY: 'auto',
                         padding: '8px 0',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -754,15 +903,15 @@ export const EditProject = () => {
                         boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
                       }}
                     >
-                      {Object.entries(CATEGORY_LABELS).map(([key, label]) => {
-                        const isSelected = categories.includes(key);
+                      {dbCategories.map((item) => {
+                        const isSelected = selectedCategory === item.value;
                         return (
-                          <label
-                            key={key}
+                          <div
+                            key={item.id}
                             style={{
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '10px',
+                              justifyContent: 'space-between',
                               padding: '8px 12px',
                               cursor: 'pointer',
                               transition: 'background 0.15s',
@@ -771,48 +920,183 @@ export const EditProject = () => {
                             }}
                             onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                            onClick={() => {
+                              setSelectedCategory(item.value);
+                              setDropdownOpen(false);
+                            }}
                           >
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              style={{
-                                width: '15px',
-                                height: '15px',
-                                accentColor: 'var(--accent-violet)',
-                                cursor: 'pointer',
-                                margin: 0
-                              }}
-                              onChange={() => {
-                                setCategories(prev => {
-                                  if (prev.includes(key)) {
-                                    if (prev.length === 1) return prev;
-                                    return prev.filter(c => c !== key);
-                                  } else {
-                                    return [...prev, key];
-                                  }
-                                });
-                              }}
-                            />
                             <span style={{ fontSize: '13px', color: isSelected ? '#fff' : 'var(--text-secondary)' }}>
-                              {label}
+                              {item.value}
                             </span>
-                          </label>
+                            {isSelected && (
+                              <span className="material-icons" style={{ fontSize: '16px', color: 'var(--accent-violet)' }}>check</span>
+                            )}
+                          </div>
                         );
                       })}
+
+                      {dbCategories.length === 0 && !showAddNewCategory && (
+                        <div style={{ padding: '8px 12px', fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                          No categories found
+                        </div>
+                      )}
+
+                      {!showAddNewCategory ? (
+                        <div 
+                          style={{ 
+                            padding: '8px 12px', 
+                            borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                            display: 'flex',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); setShowAddNewCategory(true); }}
+                            className="btn-secondary"
+                            style={{
+                              width: '100%',
+                              height: '30px',
+                              padding: '0 8px',
+                              fontSize: '11px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px'
+                            }}
+                          >
+                            <span className="material-icons" style={{ fontSize: '12px' }}>add</span>
+                            Add New Category
+                          </button>
+                        </div>
+                      ) : (
+                        <div 
+                          style={{ 
+                            padding: '8px 12px', 
+                            borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '8px'
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <input
+                            type="text"
+                            placeholder="Category name..."
+                            className="form-input"
+                            value={newCategoryName}
+                            onChange={(e) => setNewCategoryName(e.target.value)}
+                            style={{ height: '30px', fontSize: '12px', width: '100%', padding: '0 8px', background: '#1d1d22', color: '#fff', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '4px' }}
+                          />
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <button
+                              type="button"
+                              onClick={handleAddNewCategory}
+                              className="btn-primary"
+                              style={{ flex: 1, height: '26px', fontSize: '11px', padding: 0 }}
+                            >
+                              Add
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { setShowAddNewCategory(false); setNewCategoryName(''); }}
+                              className="btn-secondary"
+                              style={{ flex: 1, height: '26px', fontSize: '11px', padding: 0 }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
               </div>
               <div style={{ gridColumn: 'span 6' }} className="calc-row">
                 <label htmlFor="proj-tech">Primary Microcontroller / Chipset</label>
-                <Input
-                  type="text"
-                  id="proj-tech"
-                  className="form-input"
-                  placeholder="e.g. Arduino Uno R3, ESP32"
-                  value={technology}
-                  onChange={(e) => setTechnology(e.target.value)}
-                />
+                <div ref={techDropdownRef} style={{ position: 'relative', width: '100%' }}>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type="text"
+                      id="proj-tech"
+                      className="form-input"
+                      placeholder="e.g. Arduino Uno R3, ESP32"
+                      value={technology}
+                      onChange={(e) => {
+                        setTechnology(e.target.value);
+                        setTechDropdownOpen(true);
+                      }}
+                      onFocus={() => setTechDropdownOpen(true)}
+                      style={{ paddingRight: '30px' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setTechDropdownOpen(!techDropdownOpen)}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--text-muted)',
+                        cursor: 'pointer',
+                        fontSize: '10px',
+                        padding: 0
+                      }}
+                    >
+                      ▼
+                    </button>
+                  </div>
+
+                  {techDropdownOpen && (
+                    <div
+                      className="card-glass"
+                      style={{
+                        position: 'absolute',
+                        top: 'calc(100% + 4px)',
+                        left: 0,
+                        right: 0,
+                        zIndex: 100,
+                        maxHeight: '200px',
+                        overflowY: 'auto',
+                        padding: '8px 0',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        background: '#141416',
+                        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                      }}
+                    >
+                      {dbTechnologies
+                        .filter(t => !technology || t.value.toLowerCase().includes(technology.toLowerCase()))
+                        .map((t) => (
+                          <div
+                            key={t.id}
+                            style={{
+                              padding: '8px 12px',
+                              cursor: 'pointer',
+                              fontSize: '13px',
+                              color: 'var(--text-secondary)',
+                              transition: 'background 0.15s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                            onClick={() => {
+                              setTechnology(t.value);
+                              setTechDropdownOpen(false);
+                            }}
+                          >
+                            {t.value}
+                          </div>
+                        ))}
+                      {dbTechnologies.filter(t => !technology || t.value.toLowerCase().includes(technology.toLowerCase())).length === 0 && (
+                        <div style={{ padding: '8px 12px', fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                          No matching options found. Type to add a new one.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

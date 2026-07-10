@@ -557,7 +557,8 @@ header {
 #manage-projects-portal .portal-header,
 #manage-enquiries-portal .portal-header,
 #manage-contacts-portal .portal-header,
-#admin-settings-portal .portal-header {
+#admin-settings-portal .portal-header,
+#activity-logs-portal .portal-header {
   padding-top: 16px !important;
   padding-bottom: 16px !important;
 }
@@ -4563,7 +4564,8 @@ header {
   #manage-projects-portal,
   #manage-enquiries-portal,
   #manage-contacts-portal,
-  #admin-settings-portal {
+  #admin-settings-portal,
+  #activity-logs-portal {
     padding-top: 16px !important;
     padding-left: 0px !important;
     padding-right: 0px !important;
@@ -4572,7 +4574,8 @@ header {
   #manage-projects-portal .portal-header,
   #manage-enquiries-portal .portal-header,
   #manage-contacts-portal .portal-header,
-  #admin-settings-portal .portal-header {
+  #admin-settings-portal .portal-header,
+  #activity-logs-portal .portal-header {
     display: none !important;
   }
 

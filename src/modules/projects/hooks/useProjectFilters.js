@@ -20,12 +20,13 @@ export const useProjectFilters = (
 
     // 1. Category Filter: Bypassed if activeCategories is empty or contains 'all'
     if (activeCategories && activeCategories.length > 0 && !activeCategories.includes('all')) {
+      const lowercaseActive = activeCategories.map(c => c.toLowerCase());
       list = list.filter((p) => {
         if (!p.category) return false;
         const pCats = Array.isArray(p.category) 
-          ? p.category 
+          ? p.category.map(c => c.toLowerCase()) 
           : p.category.split(',').map(c => c.trim().toLowerCase());
-        return pCats.some(c => activeCategories.includes(c));
+        return pCats.some(c => lowercaseActive.includes(c));
       });
     }
 

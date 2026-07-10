@@ -390,6 +390,50 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                       <li>
                         <button
                           type="button"
+                          onClick={() => handleLinkClick('/admin/contacts')}
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            padding: '8px 12px',
+                            borderRadius: '6px',
+                            background: location.pathname === '/admin/contacts' ? 'rgba(139,92,246,0.08)' : 'none',
+                            border: 'none',
+                            color: location.pathname === '/admin/contacts' ? 'var(--accent-violet)' : 'var(--text-primary)',
+                            cursor: 'pointer',
+                            fontSize: '12.5px',
+                            textAlign: 'left'
+                          }}
+                        >
+                          Contacts
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => handleLinkClick('/admin/activity-logs')}
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            padding: '8px 12px',
+                            borderRadius: '6px',
+                            background: location.pathname === '/admin/activity-logs' ? 'rgba(139,92,246,0.08)' : 'none',
+                            border: 'none',
+                            color: location.pathname === '/admin/activity-logs' ? 'var(--accent-violet)' : 'var(--text-primary)',
+                            cursor: 'pointer',
+                            fontSize: '12.5px',
+                            textAlign: 'left'
+                          }}
+                        >
+                          Activity Logs
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
                           onClick={() => handleLinkClick('/admin/settings')}
                           style={{
                             width: '100%',

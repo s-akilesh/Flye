@@ -77,6 +77,10 @@ export const ManageEnquiries = () => {
   const [dateFilter, setDateFilter] = useState('all');
   const [sortField, setSortField] = useState('date-desc');
 
+  // Staging filters states
+  const [stagedStatusFilters, setStagedStatusFilters] = useState([]);
+  const [stagedDateFilter, setStagedDateFilter] = useState('all');
+
   // View switch state
   const [viewMode, setViewMode] = useState(() => {
     return localStorage.getItem('kanban-view-pref') || 'kanban';
@@ -89,12 +93,26 @@ export const ManageEnquiries = () => {
 
   const toggleStatusFilter = (st) => {
     if (st === 'all') {
-      setStatusFilters([]);
+      setStagedStatusFilters([]);
     } else {
-      setStatusFilters((prev) =>
+      setStagedStatusFilters((prev) =>
         prev.includes(st) ? prev.filter((s) => s !== st) : [...prev, st]
       );
     }
+  };
+
+  const handleApplyFilters = () => {
+    setStatusFilters([...stagedStatusFilters]);
+    setDateFilter(stagedDateFilter);
+  };
+
+  const handleResetFilters = () => {
+    setSearch('');
+    setStatusFilters([]);
+    setDateFilter('all');
+    setStagedStatusFilters([]);
+    setStagedDateFilter('all');
+    setSortField('date-desc');
   };
 
   // Drag & Drop States
@@ -843,12 +861,8 @@ export const ManageEnquiries = () => {
               { value: 'name', label: 'Customer Name' },
               { value: 'title', label: 'Project Title' },
             ]}
-            onReset={() => {
-              setSearch('');
-              setStatusFilters([]);
-              setDateFilter('all');
-              setSortField('date-desc');
-            }}
+            onReset={handleResetFilters}
+            onApply={handleApplyFilters}
             className="admin-toolbar-wrapper"
             style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', position: 'relative', zIndex: 10 }}
             desktopActions={
@@ -927,7 +941,7 @@ export const ManageEnquiries = () => {
                   <button
                     type="button"
                     onClick={() => toggleStatusFilter('all')}
-                    className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
+                    className={`admin-chip ${stagedStatusFilters.length === 0 ? 'active' : ''}`}
                   >
                     All
                   </button>
@@ -936,7 +950,7 @@ export const ManageEnquiries = () => {
                       key={k}
                       type="button"
                       onClick={() => toggleStatusFilter(k)}
-                      className={`admin-chip ${statusFilters.includes(k) ? 'active' : ''}`}
+                      className={`admin-chip ${stagedStatusFilters.includes(k) ? 'active' : ''}`}
                     >
                       {statusLabels[k]}
                     </button>
@@ -955,8 +969,8 @@ export const ManageEnquiries = () => {
                     <button
                       key={opt.key}
                       type="button"
-                      onClick={() => setDateFilter(opt.key)}
-                      className={`admin-chip ${dateFilter === opt.key ? 'active' : ''}`}
+                      onClick={() => setStagedDateFilter(opt.key)}
+                      className={`admin-chip ${stagedDateFilter === opt.key ? 'active' : ''}`}
                     >
                       {opt.label}
                     </button>

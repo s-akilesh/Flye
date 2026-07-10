@@ -1,5 +1,6 @@
 import { supabase } from '../../../shared/services/supabaseClient.js';
 import { logger } from '../../../shared/utils/logger.js';
+import { activityLogService } from '../../../services/activityLogService.js';
 
 export const settingsService = {
   /**
@@ -67,6 +68,10 @@ export const settingsService = {
       }
 
       logger.log('[settingsService] Update Success Response:', data);
+      
+      // Log settings update activity
+      activityLogService.settings.updated('Platform Config', settingsData);
+
       return data;
     } catch (err) {
       logger.error('[settingsService] Exception in updateSettings:', err);

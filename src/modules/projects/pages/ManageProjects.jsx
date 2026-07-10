@@ -11,6 +11,7 @@ import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast } from '../../../shared/context/ToastContext';
 import { ROUTES } from '../../../shared/constants/routes';
 import { CATEGORY_LABELS } from '../constants/categories';
+import { masterDataService } from '../../../shared/services/masterDataService';
 import { exportProjectsToExcel, downloadProjectTemplate, parseImportedProjects, generateSlugHelper } from '../../../shared/utils/excel.js';
 
 export const ManageProjects = () => {
@@ -23,11 +24,34 @@ export const ManageProjects = () => {
   const [search, setSearch] = useState('');
   const [categoryFilters, setCategoryFilters] = useState([]);
   const [difficultyFilter, setDifficultyFilter] = useState('all');
-  const [levelFilters, setLevelFilters] = useState([]);
+  const [departmentFilters, setDepartmentFilters] = useState([]);
   const [statusFilters, setStatusFilters] = useState([]);
   const [sortField, setSortField] = useState('title');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState(null);
+
+  // Staging filters states
+  const [stagedCategoryFilters, setStagedCategoryFilters] = useState([]);
+  const [stagedDifficultyFilter, setStagedDifficultyFilter] = useState('all');
+  const [stagedDepartmentFilters, setStagedDepartmentFilters] = useState([]);
+  const [stagedStatusFilters, setStagedStatusFilters] = useState([]);
+
+  const [dbCategories, setDbCategories] = useState([]);
+  const [dbDepartments, setDbDepartments] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const cats = await masterDataService.getValues('project_category');
+        setDbCategories(cats);
+        const depts = await masterDataService.getValues('department');
+        setDbDepartments(depts);
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    };
+    loadCategories();
+  }, []);
 
   useEffect(() => {
     const handleOutsideClick = () => {
@@ -44,32 +68,52 @@ export const ManageProjects = () => {
 
   const toggleCategoryFilter = (cat) => {
     if (cat === 'all') {
-      setCategoryFilters([]);
+      setStagedCategoryFilters([]);
     } else {
-      setCategoryFilters((prev) =>
+      setStagedCategoryFilters((prev) =>
         prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
       );
     }
   };
 
-  const toggleLevelFilter = (lvl) => {
-    if (lvl === 'all') {
-      setLevelFilters([]);
+  const toggleDepartmentFilter = (dept) => {
+    if (dept === 'all') {
+      setStagedDepartmentFilters([]);
     } else {
-      setLevelFilters((prev) =>
-        prev.includes(lvl) ? prev.filter((l) => l !== lvl) : [...prev, lvl]
+      setStagedDepartmentFilters((prev) =>
+        prev.includes(dept) ? prev.filter((d) => d !== dept) : [...prev, dept]
       );
     }
   };
 
   const toggleStatusFilter = (st) => {
     if (st === 'all') {
-      setStatusFilters([]);
+      setStagedStatusFilters([]);
     } else {
-      setStatusFilters((prev) =>
+      setStagedStatusFilters((prev) =>
         prev.includes(st) ? prev.filter((s) => s !== st) : [...prev, st]
       );
     }
+  };
+
+  const handleApplyFilters = () => {
+    setCategoryFilters([...stagedCategoryFilters]);
+    setDifficultyFilter(stagedDifficultyFilter);
+    setDepartmentFilters([...stagedDepartmentFilters]);
+    setStatusFilters([...stagedStatusFilters]);
+  };
+
+  const handleResetFilters = () => {
+    setSearch('');
+    setCategoryFilters([]);
+    setDifficultyFilter('all');
+    setDepartmentFilters([]);
+    setStatusFilters([]);
+    setStagedCategoryFilters([]);
+    setStagedDifficultyFilter('all');
+    setStagedDepartmentFilters([]);
+    setStatusFilters([]);
+    setSortField('title');
   };
 
   // Bulk selection state
@@ -396,11 +440,23 @@ export const ManageProjects = () => {
       if (!matchesTitle && !matchesTech && !matchesKeywords) return false;
     }
     // 2. Category
-    if (categoryFilters.length > 0 && !categoryFilters.includes(proj.category)) return false;
+    if (categoryFilters.length > 0) {
+      if (!proj.category) return false;
+      const projCats = proj.category.split(',').map(c => c.trim().toLowerCase());
+      const filterKeys = categoryFilters.map(f => f.trim().toLowerCase());
+      const hasMatch = projCats.some(c => filterKeys.includes(c));
+      if (!hasMatch) return false;
+    }
     // 3. Difficulty
     if (difficultyFilter !== 'all' && proj.difficulty !== difficultyFilter) return false;
-    // 4. Project Level
-    if (levelFilters.length > 0 && !levelFilters.includes(proj.projectLevel)) return false;
+    // 4. Department
+    if (departmentFilters.length > 0) {
+      if (!proj.department) return false;
+      const projDepts = proj.department.split(',').map(d => d.trim().toLowerCase());
+      const filterKeys = departmentFilters.map(d => d.trim().toLowerCase());
+      const hasMatch = projDepts.some(d => filterKeys.includes(d));
+      if (!hasMatch) return false;
+    }
     // 5. Status
     if (statusFilters.length > 0 && !statusFilters.includes(proj.status)) return false;
 
@@ -610,7 +666,8 @@ export const ManageProjects = () => {
             onSearchChange={(e) => setSearch(e.target.value)}
             activeFilterCount={
               categoryFilters.length +
-              levelFilters.length +
+              (difficultyFilter !== 'all' ? 1 : 0) +
+              departmentFilters.length +
               statusFilters.length
             }
             sortValue={sortField}
@@ -621,13 +678,8 @@ export const ManageProjects = () => {
               { value: 'price-high', label: 'Price: High to Low' },
               { value: 'level', label: 'Project Level' },
             ]}
-            onReset={() => {
-              setSearch('');
-              setCategoryFilters([]);
-              setLevelFilters([]);
-              setStatusFilters([]);
-              setSortField('title');
-            }}
+            onReset={handleResetFilters}
+            onApply={handleApplyFilters}
             className="admin-toolbar-wrapper"
             style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', position: 'relative', zIndex: 100 }}
             desktopActions={
@@ -660,40 +712,40 @@ export const ManageProjects = () => {
                   <button
                     type="button"
                     onClick={() => toggleCategoryFilter('all')}
-                    className={`admin-chip ${categoryFilters.length === 0 ? 'active' : ''}`}
+                    className={`admin-chip ${stagedCategoryFilters.length === 0 ? 'active' : ''}`}
                   >
                     All
                   </button>
-                  {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                  {dbCategories.map((item) => (
                     <button
-                      key={key}
+                      key={item.key}
                       type="button"
-                      onClick={() => toggleCategoryFilter(key)}
-                      className={`admin-chip ${categoryFilters.includes(key) ? 'active' : ''}`}
+                      onClick={() => toggleCategoryFilter(item.value)}
+                      className={`admin-chip ${stagedCategoryFilters.includes(item.value) ? 'active' : ''}`}
                     >
-                      {label}
+                      {item.value}
                     </button>
                   ))}
                 </div>
               </div>
               <div className="calc-row">
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Level</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Departments</label>
                 <div className="admin-chip-group">
                   <button
                     type="button"
-                    onClick={() => toggleLevelFilter('all')}
-                    className={`admin-chip ${levelFilters.length === 0 ? 'active' : ''}`}
+                    onClick={() => toggleDepartmentFilter('all')}
+                    className={`admin-chip ${stagedDepartmentFilters.length === 0 ? 'active' : ''}`}
                   >
                     All
                   </button>
-                  {['School', 'Diploma', 'Engineering'].map((lvl) => (
+                  {dbDepartments.map((dept) => (
                     <button
-                      key={lvl}
+                      key={dept.key}
                       type="button"
-                      onClick={() => toggleLevelFilter(lvl)}
-                      className={`admin-chip ${levelFilters.includes(lvl) ? 'active' : ''}`}
+                      onClick={() => toggleDepartmentFilter(dept.value)}
+                      className={`admin-chip ${stagedDepartmentFilters.includes(dept.value) ? 'active' : ''}`}
                     >
-                      {lvl}
+                      {dept.value}
                     </button>
                   ))}
                 </div>
@@ -704,7 +756,7 @@ export const ManageProjects = () => {
                   <button
                     type="button"
                     onClick={() => toggleStatusFilter('all')}
-                    className={`admin-chip ${statusFilters.length === 0 ? 'active' : ''}`}
+                    className={`admin-chip ${stagedStatusFilters.length === 0 ? 'active' : ''}`}
                   >
                     All
                   </button>
@@ -713,7 +765,7 @@ export const ManageProjects = () => {
                       key={key}
                       type="button"
                       onClick={() => toggleStatusFilter(key)}
-                      className={`admin-chip ${statusFilters.includes(key) ? 'active' : ''}`}
+                      className={`admin-chip ${stagedStatusFilters.includes(key) ? 'active' : ''}`}
                     >
                       {label}
                     </button>

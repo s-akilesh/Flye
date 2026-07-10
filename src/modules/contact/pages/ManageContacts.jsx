@@ -342,44 +342,44 @@ export const ManageContacts = () => {
           title="Contact Submission Details"
           style={{ maxWidth: '680px' }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '10px 0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '10px 0', textAlign: 'left' }}>
             
             {/* Meta Info */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '20px' }}>
-              <div>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px' }}>Name</span>
-                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600' }}>{selectedContact.name}</span>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '20px', textAlign: 'left' }}>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Name</span>
+                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600', textAlign: 'left' }}>{selectedContact.name}</span>
               </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px' }}>Mobile Number</span>
-                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600' }}>{selectedContact.mobileNumber}</span>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Mobile Number</span>
+                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600', textAlign: 'left' }}>{selectedContact.mobileNumber}</span>
               </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px' }}>Email Address</span>
-                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600' }}>{selectedContact.email}</span>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Email Address</span>
+                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600', textAlign: 'left' }}>{selectedContact.email}</span>
               </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px' }}>Submitted Date</span>
-                <span style={{ fontSize: '14px', color: 'var(--text-secondary, #d1d5db)' }}>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Submitted Date</span>
+                <span style={{ fontSize: '14px', color: 'var(--text-secondary, #d1d5db)', textAlign: 'left' }}>
                   {selectedContact.createdAt ? new Date(selectedContact.createdAt).toLocaleString('en-IN') : '-'}
                 </span>
               </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px' }}>Category</span>
-                <span style={{ fontSize: '13px', color: 'var(--accent-violet, #a78bfa)', fontWeight: '600' }}>{selectedContact.category}</span>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Category</span>
+                <span style={{ fontSize: '13px', color: 'var(--accent-violet, #a78bfa)', fontWeight: '600', textAlign: 'left' }}>{selectedContact.category}</span>
               </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px' }}>Last Updated</span>
-                <span style={{ fontSize: '14px', color: 'var(--text-secondary, #d1d5db)' }}>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Last Updated</span>
+                <span style={{ fontSize: '14px', color: 'var(--text-secondary, #d1d5db)', textAlign: 'left' }}>
                   {selectedContact.updatedAt ? new Date(selectedContact.updatedAt).toLocaleString('en-IN') : '-'}
                 </span>
               </div>
             </div>
 
             {/* Subject */}
-            <div>
-              <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '6px' }}>Subject / Title</span>
-              <h4 style={{ fontSize: '16px', fontWeight: '700', color: '#fff', margin: 0 }}>{selectedContact.subject}</h4>
+            <div style={{ width: '100%', textAlign: 'left' }}>
+              <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '6px', textAlign: 'left' }}>Subject / Title</span>
+              <h4 style={{ fontSize: '16px', fontWeight: '700', color: '#fff', margin: 0, textAlign: 'left', wordBreak: 'break-word' }}>{selectedContact.subject}</h4>
             </div>
 
             {/* Message Body */}

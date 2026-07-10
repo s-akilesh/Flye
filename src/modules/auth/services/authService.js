@@ -1,6 +1,7 @@
 import { supabase } from '../../../shared/services/supabaseClient.js';
 import { userService } from './userService';
 import { logger } from '../../../shared/utils/logger.js';
+import { activityLogService } from '../../../services/activityLogService.js';
 
 export const authService = {
   /**
@@ -64,11 +65,16 @@ export const authService = {
         userService.updateLastLogin(user.id).catch(err => {
           logger.error('[authService] Failed to update last login timestamp:', err);
         });
+
+        // Log successful login activity
+        activityLogService.auth.login(email.trim(), true);
       }
 
       return data;
     } catch (err) {
       logger.error('[authService] Login failed:', err);
+      // Log failed login activity
+      activityLogService.auth.login(email.trim(), false, err.message);
       throw err;
     }
   },
@@ -79,8 +85,21 @@ export const authService = {
   async signOut() {
     try {
       logger.log('[authService] Logging out current session...');
+      
+      let email = 'Unknown';
+      try {
+        const user = await this.getCurrentUser();
+        if (user?.email) email = user.email;
+      } catch (e) {
+        // ignore
+      }
+
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+
+      // Log logout activity
+      activityLogService.auth.logout(email);
+
       return { success: true };
     } catch (err) {
       logger.error('[authService] Logout failed:', err);

@@ -1,5 +1,7 @@
 import { supabase } from '../../../shared/services/supabaseClient.js';
 import { mapProjectToReact, mapProjectToDB } from '../../../shared/utils/mapper.js';
+import { activityLogService } from '../../../services/activityLogService.js';
+import { masterDataService } from '../../../shared/services/masterDataService.js';
 
 // Helper to generate a URL-friendly slug
 const generateSlug = (title) => {
@@ -95,10 +97,42 @@ export const ProjectRepository = {
       console.error("Failed to create project in Supabase", error);
       throw error;
     }
-    return mapProjectToReact(data);
+    const createdProject = mapProjectToReact(data);
+
+    // Non-blocking Master Data Sync
+    try {
+      if (createdProject.category) {
+        await masterDataService.ensureValueExists('project_category', createdProject.category);
+      }
+      if (createdProject.technology) {
+        await masterDataService.ensureValueExists('technology', createdProject.technology);
+      }
+      if (createdProject.department) {
+        await masterDataService.ensureValueExists('department', createdProject.department);
+      }
+    } catch (err) {
+      console.error("[Master Data Sync Error] Failed to sync master data on create:", err);
+    }
+
+    activityLogService.projects.created(createdProject);
+    return createdProject;
   },
 
   update: async (id, updatedFields) => {
+    let oldCategory = null;
+    let oldTechnology = null;
+    let oldDepartment = null;
+    try {
+      const original = await ProjectRepository.getById(id);
+      if (original) {
+        oldCategory = original.category;
+        oldTechnology = original.technology;
+        oldDepartment = original.department;
+      }
+    } catch (e) {
+      // ignore
+    }
+
     let newSlug = updatedFields.slug;
     if (updatedFields.title) {
       const baseSlug = generateSlug(updatedFields.title);
@@ -141,10 +175,55 @@ export const ProjectRepository = {
       console.error(`Failed to update project ${id} in Supabase`, error);
       throw error;
     }
-    return mapProjectToReact(data);
+    const updatedProject = mapProjectToReact(data);
+
+    // Non-blocking Master Data Sync
+    try {
+      if (updatedProject.category) {
+        await masterDataService.ensureValueExists('project_category', updatedProject.category);
+      }
+      if (oldCategory && oldCategory !== updatedProject.category) {
+        await masterDataService.syncUsageStatus('project_category', oldCategory);
+      }
+
+      if (updatedProject.technology) {
+        await masterDataService.ensureValueExists('technology', updatedProject.technology);
+      }
+      if (oldTechnology && oldTechnology !== updatedProject.technology) {
+        await masterDataService.syncUsageStatus('technology', oldTechnology);
+      }
+
+      if (updatedProject.department) {
+        await masterDataService.ensureValueExists('department', updatedProject.department);
+      }
+      if (oldDepartment && oldDepartment !== updatedProject.department) {
+        await masterDataService.syncUsageStatus('department', oldDepartment);
+      }
+    } catch (err) {
+      console.error("[Master Data Sync Error] Failed to sync master data on update:", err);
+    }
+
+    activityLogService.projects.updated(updatedProject, updatedFields);
+    return updatedProject;
   },
 
   delete: async (id) => {
+    let projectTitle = 'Unknown';
+    let oldCategory = null;
+    let oldTechnology = null;
+    let oldDepartment = null;
+    try {
+      const original = await ProjectRepository.getById(id);
+      if (original) {
+        projectTitle = original.title || 'Unknown';
+        oldCategory = original.category;
+        oldTechnology = original.technology;
+        oldDepartment = original.department;
+      }
+    } catch (e) {
+      // ignore
+    }
+
     const { error } = await supabase
       .from('projects')
       .delete()
@@ -153,6 +232,23 @@ export const ProjectRepository = {
       console.error(`Failed to delete project ${id} from Supabase`, error);
       throw error;
     }
+
+    // Non-blocking Master Data Sync
+    try {
+      if (oldCategory) {
+        await masterDataService.syncUsageStatus('project_category', oldCategory);
+      }
+      if (oldTechnology) {
+        await masterDataService.syncUsageStatus('technology', oldTechnology);
+      }
+      if (oldDepartment) {
+        await masterDataService.syncUsageStatus('department', oldDepartment);
+      }
+    } catch (err) {
+      console.error("[Master Data Sync Error] Failed to sync master data on delete:", err);
+    }
+
+    activityLogService.projects.deleted(id, projectTitle);
   },
 
   duplicate: async (id) => {
@@ -204,7 +300,25 @@ export const ProjectRepository = {
       console.error(`Failed to duplicate project ${id} in Supabase`, error);
       throw error;
     }
-    return mapProjectToReact(data);
+    const duplicatedProject = mapProjectToReact(data);
+
+    // Non-blocking Master Data Sync
+    try {
+      if (duplicatedProject.category) {
+        await masterDataService.ensureValueExists('project_category', duplicatedProject.category);
+      }
+      if (duplicatedProject.technology) {
+        await masterDataService.ensureValueExists('technology', duplicatedProject.technology);
+      }
+      if (duplicatedProject.department) {
+        await masterDataService.ensureValueExists('department', duplicatedProject.department);
+      }
+    } catch (err) {
+      console.error("[Master Data Sync Error] Failed to sync master data on duplicate:", err);
+    }
+
+    activityLogService.projects.created(duplicatedProject);
+    return duplicatedProject;
   }
 };
 

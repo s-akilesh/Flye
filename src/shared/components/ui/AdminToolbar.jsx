@@ -22,6 +22,7 @@ export const AdminToolbar = ({
   onSortChange,
   sortOptions = [],
   onReset,
+  onApply,
   className = "admin-toolbar-wrapper card-glass",
   style = { display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', position: 'relative', zIndex: 100 },
   children,
@@ -35,6 +36,13 @@ export const AdminToolbar = ({
     if (onReset) {
       onReset();
     }
+  };
+
+  const handleApply = () => {
+    if (onApply) {
+      onApply();
+    }
+    setActiveDrawer(null);
   };
 
   return (
@@ -149,7 +157,7 @@ export const AdminToolbar = ({
                   <Button variant="secondary" onClick={handleReset} style={{ flex: 1 }}>
                     Reset
                   </Button>
-                  <Button variant="primary" onClick={() => setActiveDrawer(null)} style={{ flex: 1 }}>
+                  <Button variant="primary" onClick={handleApply} style={{ flex: 1 }}>
                     Apply
                   </Button>
                 </div>

@@ -326,3 +326,30 @@ export const parseImportedProjects = (jsonData) => {
     };
   });
 };
+
+// 5. Export Activity Logs to Excel
+export const exportActivityLogsToExcel = async (logs) => {
+  const XLSX = await import('xlsx');
+  const data = logs.map(log => ({
+    "Log ID": `LOG-${log.id.slice(0, 8).toUpperCase()}`,
+    "Time": log.created_at ? new Date(log.created_at).toLocaleString('en-IN') : 'N/A',
+    "User": log.profiles?.full_name || 'System',
+    "Module": log.module,
+    "Action": log.action,
+    "Description": log.description,
+    "Status": log.status,
+    "Severity": log.severity,
+    "Source": log.source,
+    "Entity Type": log.entity_type || '-',
+    "Entity ID": log.entity_id || '-',
+    "User Agent": log.user_agent || '-',
+    "Session ID": log.session_id || '-'
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Activity Logs");
+  
+  XLSX.writeFile(workbook, `flyen_activity_logs_${new Date().toISOString().slice(0, 10)}.xlsx`);
+};
+

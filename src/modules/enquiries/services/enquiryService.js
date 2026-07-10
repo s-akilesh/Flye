@@ -1,5 +1,6 @@
 import { supabase } from '../../../shared/services/supabaseClient.js';
 import { mapEnquiryToReact, mapEnquiryToDB } from '../../../shared/utils/mapper.js';
+import { activityLogService, ACTIVITY_MODULES, ACTIVITY_ACTIONS, ACTIVITY_STATUS, ACTIVITY_SEVERITY } from '../../../services/activityLogService.js';
 
 export const enquiryService = {
   /**
@@ -42,7 +43,9 @@ export const enquiryService = {
       .single();
 
     if (error) throw error;
-    return mapEnquiryToReact(data);
+    const result = mapEnquiryToReact(data);
+    activityLogService.enquiries.created(result);
+    return result;
   },
 
   /**
@@ -60,6 +63,20 @@ export const enquiryService = {
    * Updates an existing enquiry's fields.
    */
   update: async (id, fields) => {
+    let oldStatus = null;
+    let currentEnquiry = null;
+    if (fields.status) {
+      try {
+        const { data: currentData } = await supabase.from('enquiries').select('*').eq('id', id).single();
+        if (currentData) {
+          currentEnquiry = mapEnquiryToReact(currentData);
+          oldStatus = currentEnquiry.status;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
     const dbPayload = mapEnquiryToDB(fields);
 
     const { data, error } = await supabase
@@ -70,19 +87,45 @@ export const enquiryService = {
       .single();
 
     if (error) throw error;
-    return mapEnquiryToReact(data);
+    const updated = mapEnquiryToReact(data);
+
+    if (fields.status && oldStatus && oldStatus !== fields.status) {
+      activityLogService.enquiries.statusChanged(updated, oldStatus, fields.status);
+    } else {
+      activityLogService.logActivity({
+        module: ACTIVITY_MODULES.ENQUIRIES,
+        action: ACTIVITY_ACTIONS.UPDATED,
+        description: `Updated enquiry details for "${updated.requestorName}"`,
+        status: ACTIVITY_STATUS.SUCCESS,
+        severity: ACTIVITY_SEVERITY.INFO,
+        entityType: 'Enquiry',
+        entityId: id,
+        metadata: { requestor: updated.requestorName, fieldsChanged: Object.keys(fields) }
+      });
+    }
+
+    return updated;
   },
 
   /**
    * Deletes an enquiry.
    */
   delete: async (id) => {
+    let requestor = 'Unknown';
+    try {
+      const { data: currentData } = await supabase.from('enquiries').select('requestor_name').eq('id', id).single();
+      if (currentData?.requestor_name) requestor = currentData.requestor_name;
+    } catch (e) {
+      // ignore
+    }
+
     const { error } = await supabase
       .from('enquiries')
       .delete()
       .eq('id', id);
 
     if (error) throw error;
+    activityLogService.enquiries.deleted(id, requestor);
     return true;
   },
 

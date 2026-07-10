@@ -109,7 +109,7 @@ export const SETTINGS_METADATA = [
         title: 'System Preferences',
         description: 'Configure dashboard timezones, languages, and accessibility options.',
         keywords: ['timezone', 'language', 'locale', 'preferences', 'dark', 'light'],
-        status: () => 'coming_soon',
+        status: () => 'configured',
         component: 'SystemPrefs'
       }
     ]

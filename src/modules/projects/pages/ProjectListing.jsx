@@ -7,6 +7,7 @@ import { useSearch } from '../hooks/useSearch';
 import { useProjectFilters } from '../hooks/useProjectFilters';
 import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
 import { CATEGORIES, CATEGORY_LABELS } from '../constants/categories';
+import { masterDataService } from '../../../shared/services/masterDataService';
 import { DIFFICULTIES, DIFFICULTY_LABELS } from '../constants/difficulties';
 import { PROJECT_FEATURES, FEATURE_LABELS } from '../constants/projectFeatures';
 import { ProjectGrid } from '../components/ProjectGrid';
@@ -28,6 +29,20 @@ export const ProjectListing = () => {
   const { showToast } = useToast();
   const { user } = useAuth();
   
+  const [dbCategories, setDbCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const cats = await masterDataService.getValues('project_category');
+        setDbCategories(cats);
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    };
+    loadCategories();
+  }, []);
+
   const seoProps = generateSEO(PageType.PROJECT_LISTING);
   const {
     activeCategories,
@@ -108,18 +123,31 @@ export const ProjectListing = () => {
     setOrderStep('input');
   };
 
+  const [appliedCategories, setAppliedCategories] = useState(['all']);
+  const [appliedFeatures, setAppliedFeatures] = useState([]);
+
+  const handleApplyFilters = () => {
+    setAppliedCategories([...activeCategories]);
+    setAppliedFeatures([...activeFeatures]);
+  };
+
   // Filter and sort projects using centralized hook
   const filteredList = useProjectFilters(
     projects,
-    { activeCategories, activeDifficulties, activeProjectLevels, activeFeatures },
+    { 
+      activeCategories: appliedCategories, 
+      activeDifficulties: [], 
+      activeProjectLevels: [], 
+      activeFeatures: appliedFeatures 
+    },
     { searchQuery, aiFilterResult },
     sortBy
   );
 
-
-
   const handleClearAll = () => {
     resetFilters();
+    setAppliedCategories(['all']);
+    setAppliedFeatures([]);
     setSearchQuery('');
     clearAISearch();
   };
@@ -178,28 +206,24 @@ export const ProjectListing = () => {
           alignItems: 'center',
           gap: '12px',
           zIndex: 100,
+          background: 'rgba(10, 10, 18, 0.92)',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          padding: '12px var(--page-padding)',
           width: 'auto',
-          maxWidth: 'none',
           marginLeft: 'calc(-1 * var(--page-padding))',
           marginRight: 'calc(-1 * var(--page-padding))',
-          paddingLeft: 'var(--page-padding)',
-          paddingRight: 'var(--page-padding)',
-          paddingTop: '24px',
-          paddingBottom: '12px',
-          borderRadius: '0px',
-          border: 'none',
-          background: 'transparent'
+          borderRadius: 0,
+          position: 'sticky',
+          top: '80px'
         }}
-        searchWidth="340px"
-        showSearchIcon={true}
-        searchId="marketplace-search"
-        searchLabel="Search Projects"
-        searchPlaceholder="Seaarch"
+        searchId="search-kits"
+        searchPlaceholder="Ask AI or search by title/keywords..."
         searchValue={searchQuery}
         onSearchChange={(e) => setSearchQuery(e.target.value)}
+        showSearchIcon={true}
         activeFilterCount={
-          (activeCategories.includes('all') ? 0 : activeCategories.length) +
-          activeFeatures.length
+          (appliedCategories.includes('all') ? 0 : appliedCategories.length) +
+          appliedFeatures.length
         }
         sortValue={sortBy}
         onSortChange={(e) => setSortBy(e.target.value)}
@@ -210,6 +234,7 @@ export const ProjectListing = () => {
           { value: 'price-high', label: 'Price: High to Low' }
         ]}
         onReset={handleClearAll}
+        onApply={handleApplyFilters}
       >
         <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Categories */}
@@ -223,14 +248,14 @@ export const ProjectListing = () => {
               >
                 All
               </button>
-              {Object.values(CATEGORIES).map((cat) => (
+              {dbCategories.map((item) => (
                 <button
-                  key={cat}
+                  key={item.key}
                   type="button"
-                  onClick={() => toggleCategory(cat)}
-                  className={`admin-chip ${activeCategories.includes(cat) && !activeCategories.includes('all') ? 'active' : ''}`}
+                  onClick={() => toggleCategory(item.value)}
+                  className={`admin-chip ${activeCategories.includes(item.value) && !activeCategories.includes('all') ? 'active' : ''}`}
                 >
-                  {CATEGORY_LABELS[cat]}
+                  {item.value}
                 </button>
               ))}
             </div>

@@ -72,6 +72,14 @@ export const AdminLayout = () => {
       )
     },
     {
+      id: 'activity-logs',
+      label: 'Activity Logs',
+      path: ROUTES.ADMIN_ACTIVITY_LOGS,
+      icon: (
+        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>list_alt</span>
+      )
+    },
+    {
       id: 'settings',
       label: 'Settings',
       path: ROUTES.ADMIN_SETTINGS,

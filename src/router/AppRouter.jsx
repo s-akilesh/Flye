@@ -19,6 +19,7 @@ const EditProject = React.lazy(() => import('../modules/projects/pages/EditProje
 const ManageEnquiries = React.lazy(() => import('../modules/enquiries/pages/ManageEnquiries').then(module => ({ default: module.ManageEnquiries })));
 const AdminSettings = React.lazy(() => import('../modules/settings/pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 const ManageContacts = React.lazy(() => import('../modules/contact/pages/ManageContacts').then(module => ({ default: module.ManageContacts })));
+const ActivityLogs = React.lazy(() => import('../modules/dashboard/pages/ActivityLogs').then(module => ({ default: module.ActivityLogs })));
 
 const AuthGateway = React.lazy(() => import('../modules/auth/pages/AuthGateway.jsx').then(module => ({ default: module.AuthGateway })));
 const AdminLayout = React.lazy(() => import('../shared/components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
@@ -85,6 +86,7 @@ export const AppRouter = () => {
                     <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ManageEnquiries />} />
                     <Route path={ROUTES.ADMIN_CONTACTS} element={<ManageContacts />} />
                     <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
+                    <Route path={ROUTES.ADMIN_ACTIVITY_LOGS} element={<ActivityLogs />} />
                     <Route path="/admin/components/*" element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
                   </Route>
                   
