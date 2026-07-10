@@ -1,4 +1,5 @@
 import emailjs from '@emailjs/browser';
+import { notificationService } from '../../../shared/services/notificationService.js';
 
 /**
  * Sends a notification email to the Flyen admin using EmailJS.
@@ -21,6 +22,9 @@ export const sendAdminNotification = async (data) => {
     if (!import.meta.env.PROD) {
       console.error('[EmailJS Admin] Configuration missing in environment variables.');
     }
+    notificationService.email.deliveryFailed(data.email, 'Configuration missing in environment variables').catch(err => {
+      console.error('[emailService] Failed to create email delivery failed notification:', err);
+    });
     return false;
   }
 
@@ -41,18 +45,13 @@ export const sendAdminNotification = async (data) => {
   try {
     await emailjs.send(serviceId, templateId, templateParams, publicKey);
     return true;
-
-    // } catch (error) {
-    //   console.error("Status:", error.status);
-    //   console.error("Text:", error.text);
-    //   console.error("Full Error:", error);
-    //   return false;
-    // }
-
   } catch (error) {
     if (!import.meta.env.PROD) {
       console.error('[EmailJS Admin] Failed to send email:', error);
     }
+    notificationService.email.deliveryFailed(data.email, error?.text || error?.message || 'EmailJS rejected send').catch(err => {
+      console.error('[emailService] Failed to create email delivery failed notification:', err);
+    });
     return false;
   }
 };
@@ -78,6 +77,9 @@ export const sendUserConfirmation = async (data) => {
     if (!import.meta.env.PROD) {
       console.error('[EmailJS User] Configuration missing in environment variables.');
     }
+    notificationService.email.deliveryFailed(data.email, 'Configuration missing in environment variables').catch(err => {
+      console.error('[emailService] Failed to create email delivery failed notification:', err);
+    });
     return false;
   }
 
@@ -98,6 +100,9 @@ export const sendUserConfirmation = async (data) => {
     if (!import.meta.env.PROD) {
       console.error('[EmailJS User] Failed to send email:', error);
     }
+    notificationService.email.deliveryFailed(data.email, error?.text || error?.message || 'EmailJS rejected send').catch(err => {
+      console.error('[emailService] Failed to create email delivery failed notification:', err);
+    });
     return false;
   }
 };

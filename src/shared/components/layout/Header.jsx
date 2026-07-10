@@ -5,6 +5,9 @@ import { Button } from '../ui/Button';
 import { useSettings } from '../../../modules/settings/hooks/useSettings';
 import { useAuth } from '../../../modules/auth/context/AuthContext.jsx';
 import { Modal } from '../ui/Modal';
+import { supabase } from '../../services/supabaseClient.js';
+import { notificationService } from '../../services/notificationService.js';
+import { NotificationDropdown } from './NotificationDropdown.jsx';
 
 export const Header = ({ onToggleDrawer }) => {
   const navigate = useNavigate();
@@ -12,9 +15,45 @@ export const Header = ({ onToggleDrawer }) => {
   const { settings } = useSettings();
   const { user, profile, isAdmin, logout, viewMode, setViewMode, loading } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showAdminNotifications, setShowAdminNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const dropdownRef = useRef(null);
+
+  const [notificationsList, setNotificationsList] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const loadNotifications = async () => {
+    if (!user || !isAdmin) return;
+    try {
+      const list = await notificationService.getNotifications();
+      setNotificationsList(list);
+      const count = await notificationService.getUnreadCount();
+      setUnreadCount(count);
+    } catch (err) {
+      console.error("Failed to load notifications in header:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+    loadNotifications();
+
+    const channel = supabase
+      .channel('header-notifications-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'notifications' },
+        () => {
+          loadNotifications();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, isAdmin]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -98,15 +137,61 @@ export const Header = ({ onToggleDrawer }) => {
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
         {/* Notification Bell */}
-        <button
-          type="button"
-          onClick={() => setShowNotifications(true)}
-          className="btn-header header-notify-bell"
-          style={{ padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
-          title="Notifications"
-        >
-          <span className="material-icons" style={{ fontSize: '18px' }}>notifications</span>
-        </button>
+        {user && isAdmin && (
+          <div style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setShowAdminNotifications(!showAdminNotifications)}
+              className="btn-header header-notify-bell"
+              style={{
+                padding: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'none',
+                border: 'none',
+                color: unreadCount > 0 ? 'var(--accent-blue)' : 'var(--text-muted)',
+                cursor: 'pointer',
+                position: 'relative'
+              }}
+              title="Notifications"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              {unreadCount > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '2px',
+                    right: '2px',
+                    background: '#EF4444',
+                    color: '#fff',
+                    borderRadius: '50%',
+                    width: '16px',
+                    height: '16px',
+                    fontSize: '9px',
+                    fontWeight: '800',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 0 5px rgba(239, 68, 68, 0.5)'
+                  }}
+                >
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            <NotificationDropdown
+              isOpen={showAdminNotifications}
+              onClose={() => setShowAdminNotifications(false)}
+              notifications={notificationsList}
+              onRefresh={loadNotifications}
+            />
+          </div>
+        )}
 
         {/* Hamburger Trigger for Mobile */}
         <button

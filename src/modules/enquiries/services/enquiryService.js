@@ -1,6 +1,7 @@
 import { supabase } from '../../../shared/services/supabaseClient.js';
 import { mapEnquiryToReact, mapEnquiryToDB } from '../../../shared/utils/mapper.js';
 import { activityLogService, ACTIVITY_MODULES, ACTIVITY_ACTIONS, ACTIVITY_STATUS, ACTIVITY_SEVERITY } from '../../../services/activityLogService.js';
+import { notificationService } from '../../../shared/services/notificationService.js';
 
 export const enquiryService = {
   /**
@@ -45,6 +46,12 @@ export const enquiryService = {
     if (error) throw error;
     const result = mapEnquiryToReact(data);
     activityLogService.enquiries.created(result);
+    
+    // Create new contact enquiry notification
+    notificationService.contact.newEnquiry(result.id, result.customerName).catch((err) => {
+      console.error('[enquiryService] Failed to create contact notification:', err);
+    });
+
     return result;
   },
 

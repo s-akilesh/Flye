@@ -2,6 +2,10 @@ import { supabase } from '../../../shared/services/supabaseClient.js';
 import { userService } from './userService';
 import { logger } from '../../../shared/utils/logger.js';
 import { activityLogService } from '../../../services/activityLogService.js';
+import { notificationService } from '../../../shared/services/notificationService.js';
+
+// In-memory failed sign-in counter
+const failedAttemptsCache = {};
 
 export const authService = {
   /**
@@ -49,6 +53,8 @@ export const authService = {
       throw new Error('Email and password are required for login.');
     }
 
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
       logger.log(`[authService] Attempting login for: ${email}`);
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -61,6 +67,10 @@ export const authService = {
       const user = data?.user;
       if (user) {
         logger.log(`[authService] Login successful. Updating last login for ID: ${user.id}`);
+        
+        // Reset failed login counter on success
+        failedAttemptsCache[cleanEmail] = 0;
+
         // Asynchronously update last login without blocking return
         userService.updateLastLogin(user.id).catch(err => {
           logger.error('[authService] Failed to update last login timestamp:', err);
@@ -73,6 +83,18 @@ export const authService = {
       return data;
     } catch (err) {
       logger.error('[authService] Login failed:', err);
+      
+      // Increment failed login count
+      failedAttemptsCache[cleanEmail] = (failedAttemptsCache[cleanEmail] || 0) + 1;
+      if (failedAttemptsCache[cleanEmail] >= 3) {
+        // Trigger high priority alert
+        notificationService.security.failedLogin(cleanEmail).catch(nErr => {
+          console.error('[authService] Failed to trigger security notification:', nErr);
+        });
+        // Reset so we don't spam on every failure
+        failedAttemptsCache[cleanEmail] = 0;
+      }
+
       // Log failed login activity
       activityLogService.auth.login(email.trim(), false, err.message);
       throw err;
