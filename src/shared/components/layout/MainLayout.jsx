@@ -6,8 +6,10 @@ import { BottomNavigation } from './BottomNavigation';
 import { MobileDrawer } from './MobileDrawer';
 import { PageSettingsButton } from './PageSettingsButton';
 import { PageSettingsDrawer } from './PageSettingsDrawer';
+import { usePageMetadata } from '../../seo/usePageMetadata.js';
 
 export const MainLayout = ({ children }) => {
+  usePageMetadata();
   const navigate = useNavigate();
   const location = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

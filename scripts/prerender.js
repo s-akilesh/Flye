@@ -20,6 +20,7 @@ if (fs.existsSync('.env')) {
 // 2. Fetch Projects and Settings from Supabase
 let projects = [];
 let dbSettings = {};
+let dbPageSettings = [];
 
 if (supabaseUrl && supabaseKey) {
   try {
@@ -41,6 +42,14 @@ if (supabaseUrl && supabaseKey) {
     if (setErr) throw setErr;
     dbSettings = setDocs || {};
     console.log('[Prerender] Mapped platform settings from Supabase.');
+
+    // Fetch page settings overrides
+    const { data: seoData, error: seoErr } = await supabase
+      .from('page_settings')
+      .select('*');
+    if (seoErr) throw seoErr;
+    dbPageSettings = seoData || [];
+    console.log(`[Prerender] Fetched ${dbPageSettings.length} page settings from Supabase.`);
   } catch (e) {
     console.warn('⚠️ Supabase fetch warning:', e.message);
   }
@@ -144,23 +153,64 @@ for (const route of routes) {
       settings: settingsPayload
     });
 
-    // B. Build SEO metadata
-    const seoProps = generateSEO(pageType, data);
-    const resolvedTitle = seoProps.title || seoConfig.defaultTitle;
-    
-    let metaHtml = `\n  <title>${resolvedTitle}</title>\n`;
-    
-    const ogMeta = generateOgMeta(seoProps, seoConfig);
-    const twitterMeta = generateTwitterCard(seoProps, seoConfig, ogMeta);
+    // B. Build SEO metadata, checking database overrides first
+    const dbSetting = dbPageSettings.find(s => s.route === url);
+
+    let resolvedTitle = '';
+    let resolvedDescription = '';
+    let resolvedKeywords = '';
+    let resolvedRobots = '';
+    let resolvedCanonical = '';
+    let resolvedOgTitle = '';
+    let resolvedOgDescription = '';
+    let resolvedOgImage = '';
+
+    if (dbSetting && dbSetting.is_enabled) {
+      resolvedTitle = dbSetting.page_title;
+      resolvedDescription = dbSetting.meta_description;
+      resolvedKeywords = dbSetting.keywords;
+      resolvedRobots = `${dbSetting.robots_index ? 'index' : 'noindex'}, ${dbSetting.robots_follow ? 'follow' : 'nofollow'}`;
+      resolvedCanonical = dbSetting.canonical_url || `https://flyen.in${url === '/' ? '' : url}`;
+      resolvedOgTitle = dbSetting.og_title || dbSetting.page_title;
+      resolvedOgDescription = dbSetting.og_description || dbSetting.meta_description;
+      resolvedOgImage = dbSetting.og_image || '';
+    } else {
+      const seoProps = generateSEO(pageType, data);
+      resolvedTitle = seoProps.title || seoConfig.defaultTitle;
+      resolvedDescription = seoProps.description || seoConfig.defaultDescription;
+      resolvedKeywords = seoProps.keywords || seoConfig.defaultKeywords;
+      resolvedRobots = seoProps.robots || seoConfig.robotsDefault;
+      resolvedCanonical = seoProps.canonicalUrl || generateCanonicalUrl(url, seoConfig);
+      
+      const ogMeta = generateOgMeta(seoProps, seoConfig);
+      resolvedOgTitle = ogMeta.ogTitle;
+      resolvedOgDescription = ogMeta.ogDescription;
+      resolvedOgImage = ogMeta.ogImage;
+    }
+
+    const ogMeta = {
+      ogTitle: resolvedOgTitle,
+      ogDescription: resolvedOgDescription,
+      ogImage: resolvedOgImage
+    };
+
+    const twitterMeta = generateTwitterCard({
+      title: resolvedTitle,
+      description: resolvedDescription,
+      ...ogMeta
+    }, seoConfig, ogMeta);
+
     const metaTags = buildMetaTags({
-      description: seoProps.description,
-      keywords: seoProps.keywords,
-      robots: seoProps.robots,
-      pageType: seoProps.pageType || 'website',
+      description: resolvedDescription,
+      keywords: resolvedKeywords,
+      robots: resolvedRobots,
+      pageType: pageType === 'PROJECT' ? 'article' : 'website',
       noindex: false,
       ...ogMeta,
       ...twitterMeta
     }, seoConfig);
+
+    let metaHtml = `\n  <title>${resolvedTitle}</title>\n`;
 
     metaTags.forEach(tag => {
       if (tag.name) {
@@ -170,8 +220,8 @@ for (const route of routes) {
       }
     });
 
-    const canonical = seoProps.canonicalUrl || generateCanonicalUrl(url, seoConfig);
-    metaHtml += `  <link rel="canonical" href="${canonical}" />\n`;
+    metaHtml += `  <link rel="canonical" href="${resolvedCanonical}" />\n`;
+    metaHtml += `  <meta property="og:url" content="${resolvedCanonical}" />\n`;
 
     // C. Structured JSON-LD Data Injection
     const injectSchema = (id, json) => {
@@ -198,7 +248,7 @@ for (const route of routes) {
         breadcrumbs.push({ name: 'Projects', url: '/projects' });
       } else if (paths[0] === 'project' && paths[1]) {
         breadcrumbs.push({ name: 'Projects', url: '/projects' });
-        breadcrumbs.push({ name: seoProps.title || data?.title || 'Project Details', url: url });
+        breadcrumbs.push({ name: resolvedTitle || data?.title || 'Project Details', url: url });
       } else if (paths[0] === 'contact') {
         breadcrumbs.push({ name: 'Contact', url: '/contact' });
       } else if (paths[0] === 'printing') {
