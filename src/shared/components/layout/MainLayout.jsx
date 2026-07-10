@@ -4,11 +4,14 @@ import { Header } from './Header';
 import { GlowBackground } from './GlowBackground';
 import { BottomNavigation } from './BottomNavigation';
 import { MobileDrawer } from './MobileDrawer';
+import { PageSettingsButton } from './PageSettingsButton';
+import { PageSettingsDrawer } from './PageSettingsDrawer';
 
 export const MainLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -47,6 +50,9 @@ export const MainLayout = ({ children }) => {
         <BottomNavigation onToggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} />
       )}
       <MobileDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
+      
+      <PageSettingsButton onClick={() => setIsSettingsOpen(true)} />
+      <PageSettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </>
   );
 };

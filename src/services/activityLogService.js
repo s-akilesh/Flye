@@ -194,6 +194,45 @@ export const activityLogService = {
     }
   },
 
+  seo: {
+    async created(route, entityType = null, entityId = null) {
+      await activityLogService.logActivity({
+        module: 'Page Settings',
+        action: 'SEO Created',
+        description: `Created SEO settings for route: "${route}"`,
+        status: ACTIVITY_STATUS.SUCCESS,
+        severity: ACTIVITY_SEVERITY.INFO,
+        entityType,
+        entityId,
+        metadata: { route }
+      });
+    },
+    async updated(route, changes = {}, entityType = null, entityId = null) {
+      await activityLogService.logActivity({
+        module: 'Page Settings',
+        action: 'SEO Updated',
+        description: `Updated SEO settings for route: "${route}"`,
+        status: ACTIVITY_STATUS.SUCCESS,
+        severity: ACTIVITY_SEVERITY.INFO,
+        entityType,
+        entityId,
+        metadata: { route, changes }
+      });
+    },
+    async statusChanged(route, enabled, entityType = null, entityId = null) {
+      await activityLogService.logActivity({
+        module: 'Page Settings',
+        action: enabled ? 'SEO Enabled' : 'SEO Disabled',
+        description: `${enabled ? 'Enabled' : 'Disabled'} SEO settings for route: "${route}"`,
+        status: ACTIVITY_STATUS.SUCCESS,
+        severity: ACTIVITY_SEVERITY.INFO,
+        entityType,
+        entityId,
+        metadata: { route, enabled }
+      });
+    }
+  },
+
   /* Retrieve Logs and Trigger Purge via RPC */
 
   async getLogs({ page = 1, limit = 50, module, status, severity, startDate, endDate, search }) {
