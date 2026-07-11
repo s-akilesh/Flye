@@ -24,7 +24,7 @@ export const ManageNotifications = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Confirmations
   const [notifToDelete, setNotifToDelete] = useState(null);
@@ -348,36 +348,67 @@ export const ManageNotifications = () => {
       </Card>
 
       {/* Pagination controls */}
-      {totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-            className="btn btn-secondary"
-            style={{ padding: '6px 12px', fontSize: '12px' }}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '24px', flexWrap: 'wrap', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
+            Rows per page:
+          </span>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            className="form-input"
+            style={{
+              padding: '4px 8px',
+              fontSize: '12px',
+              height: '28px',
+              width: '70px',
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '4px',
+              color: '#fff'
+            }}
           >
-            Prev
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
-              key={p}
-              onClick={() => setCurrentPage(p)}
-              className={`btn ${p === currentPage ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="btn btn-secondary"
               style={{ padding: '6px 12px', fontSize: '12px' }}
             >
-              {p}
+              Prev
             </button>
-          ))}
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-            className="btn btn-secondary"
-            style={{ padding: '6px 12px', fontSize: '12px' }}
-          >
-            Next
-          </button>
-        </div>
-      )}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => setCurrentPage(p)}
+                className={`btn ${p === currentPage ? 'btn-primary' : 'btn-secondary'}`}
+                style={{ padding: '6px 12px', fontSize: '12px' }}
+              >
+                {p}
+              </button>
+            ))}
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="btn btn-secondary"
+              style={{ padding: '6px 12px', fontSize: '12px' }}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Delete Confirmation Modal */}
       {notifToDelete && (

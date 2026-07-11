@@ -3,9 +3,12 @@ import { useSettings } from '../hooks/useSettings';
 import { SettingsLayout } from './SettingsLayout';
 import { SettingsSection } from './SettingsSection';
 import { Input } from '../../../shared/components/ui/Input';
+import { useAuth } from '../../auth/context/AuthContext.jsx';
+import { supabase } from '../../../shared/services/supabaseClient';
 
-export const PasswordSettings = ({ onBack }) => {
+export const PasswordForm = ({ onBack, hideBreadcrumbs = false, hideCancel = false }) => {
   const { settings, saveSettings } = useSettings();
+  const { user, isAdmin } = useAuth();
 
   const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' });
   const [pwError, setPwError] = useState('');
@@ -25,8 +28,8 @@ export const PasswordSettings = ({ onBack }) => {
     setPwSuccess('');
     setSaveStatus(null);
 
-    if (pwForm.current !== settings.adminPassword) {
-      setPwError('Current password is incorrect.');
+    if (!pwForm.current) {
+      setPwError('Please enter your current password.');
       return;
     }
     if (!pwForm.newPw || pwForm.newPw.length < 4) {
@@ -40,21 +43,37 @@ export const PasswordSettings = ({ onBack }) => {
 
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      const today = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      
-      await saveSettings({
-        ...settings,
-        adminPassword: pwForm.newPw,
-        lastPasswordChanged: today
+      // 1. Re-authenticate user to verify their current password
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: user?.email,
+        password: pwForm.current
       });
+
+      if (authError) {
+        setPwError('Current password is incorrect.');
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Update password in Supabase Authentication
+      const { error: updateError } = await supabase.auth.updateUser({ password: pwForm.newPw });
+      if (updateError) throw updateError;
+
+      // 3. Sync legacy settings password for administrators
+      if (isAdmin) {
+        const today = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        await saveSettings({
+          ...settings,
+          adminPassword: pwForm.newPw,
+          lastPasswordChanged: today
+        });
+      }
 
       setIsDirty(false);
       setPwForm({ current: '', newPw: '', confirm: '' });
       
       setPwSuccess('✅ Password updated successfully!');
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       setSaveStatus({
         message: 'Security password changed successfully',
         lastUpdated: `${now}`
@@ -70,13 +89,15 @@ export const PasswordSettings = ({ onBack }) => {
   return (
     <SettingsLayout
       title="Portal Password"
-      description="Update portal login credentials. Changing the password invalidates active sessions."
+      description="Update portal login credentials. Changing the password updates your authentication session."
       categoryName="Security"
       isDirty={isDirty}
       isLoading={isLoading}
       onSave={handlePasswordChange}
       onCancel={onBack}
       saveStatus={saveStatus}
+      hideBreadcrumbs={hideBreadcrumbs}
+      hideCancel={hideCancel}
     >
       <SettingsSection title="Change Password" description="Enter your current password and pick a strong new login key.">
         {pwError && (

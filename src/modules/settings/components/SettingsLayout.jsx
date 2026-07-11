@@ -11,6 +11,8 @@ export const SettingsLayout = ({
   onSave,
   onCancel,
   saveStatus = null, // { message, lastUpdated }
+  hideBreadcrumbs = false,
+  hideCancel = false,
   children
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -47,52 +49,56 @@ export const SettingsLayout = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       {/* Breadcrumb Navigation */}
-      <div 
-        style={{ 
-          fontSize: '11px', 
-          fontWeight: '700', 
-          textTransform: 'uppercase', 
-          letterSpacing: '1px', 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '6px',
-          marginBottom: 'var(--space-2)'
-        }}
-      >
-        <span 
-          onClick={() => handleNavigateClick(onCancel)}
-          style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
-          className="breadcrumb-link"
+      {!hideBreadcrumbs && (
+        <div 
+          style={{ 
+            fontSize: '11px', 
+            fontWeight: '700', 
+            textTransform: 'uppercase', 
+            letterSpacing: '1px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px',
+            marginBottom: 'var(--space-2)'
+          }}
         >
-          Settings
-        </span>
-        {categoryName && (
-          <>
-            <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-            <span 
-              onClick={() => handleNavigateClick(onCancel)}
-              style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
-              className="breadcrumb-link"
-            >
-              {categoryName}
-            </span>
-          </>
-        )}
-        <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-        <span style={{ color: 'var(--accent-violet)' }}>{title}</span>
-      </div>
+          <span 
+            onClick={() => handleNavigateClick(onCancel)}
+            style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
+            className="breadcrumb-link"
+          >
+            Settings
+          </span>
+          {categoryName && (
+            <>
+              <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+              <span 
+                onClick={() => handleNavigateClick(onCancel)}
+                style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
+                className="breadcrumb-link"
+              >
+                {categoryName}
+              </span>
+            </>
+          )}
+          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+          <span style={{ color: 'var(--accent-violet)' }}>{title}</span>
+        </div>
+      )}
 
       {/* Page Header */}
-      <div style={{ marginBottom: 'var(--space-3)' }}>
-        <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', margin: '0 0 4px 0' }}>
-          {title}
-        </h2>
-        {description && (
-          <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
-            {description}
-          </p>
-        )}
-      </div>
+      {!hideBreadcrumbs && (
+        <div style={{ marginBottom: 'var(--space-3)' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', margin: '0 0 4px 0' }}>
+            {title}
+          </h2>
+          {description && (
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
+              {description}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Save Status Banner */}
       {saveStatus && saveStatus.message && (
@@ -136,14 +142,16 @@ export const SettingsLayout = ({
           paddingBottom: 'var(--space-6)' 
         }}
       >
-        <Button 
-          variant="ghost" 
-          onClick={() => handleNavigateClick(onCancel)}
-          disabled={isLoading}
-          style={{ fontSize: '13px', padding: '10px 20px' }}
-        >
-          Cancel
-        </Button>
+        {!hideCancel && (
+          <Button 
+            variant="ghost" 
+            onClick={() => handleNavigateClick(onCancel)}
+            disabled={isLoading}
+            style={{ fontSize: '13px', padding: '10px 20px' }}
+          >
+            Cancel
+          </Button>
+        )}
         <Button 
           variant="primary" 
           onClick={onSave}

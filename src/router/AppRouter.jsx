@@ -27,6 +27,7 @@ const AdminLayout = React.lazy(() => import('../shared/components/layout/AdminLa
 const PrivacyPolicy = React.lazy(() => import('../modules/legal/pages/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
 const TermsConditions = React.lazy(() => import('../modules/legal/pages/TermsConditions').then(module => ({ default: module.TermsConditions })));
 const MyProjects = React.lazy(() => import('../modules/my-projects/pages/MyProjects').then(module => ({ default: module.MyProjects })));
+const ProfilePage = React.lazy(() => import('../modules/profile/pages/ProfilePage').then(module => ({ default: module.ProfilePage })));
 
 
 
@@ -68,11 +69,12 @@ export const AppRouter = () => {
                   <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
                   <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
                   <Route path={ROUTES.MY_PROJECTS} element={<MyProjects />} />
+                  <Route path={ROUTES.MY_PROFILE} element={<ProtectedRoute requireAdmin={false}><ProfilePage /></ProtectedRoute>} />
                   
                   {/* Redirect Learning Workspace & Student Auth to Home */}
                   <Route path="/learning/*" element={<Navigate to={ROUTES.HOME} replace />} />
                   <Route path="/dashboard" element={<Navigate to={ROUTES.HOME} replace />} />
-                  <Route path="/settings" element={<Navigate to={ROUTES.HOME} replace />} />
+                  <Route path="/settings" element={<Navigate to={ROUTES.MY_PROFILE} replace />} />
                   <Route path={ROUTES.STUDENT_AUTH} element={<React.Suspense fallback={<PageLoading />}><AuthGateway /></React.Suspense>} />
 
                   {/* Redirect Legacy Admin Access to Auth Gateway */}
@@ -87,6 +89,7 @@ export const AppRouter = () => {
                     <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ManageEnquiries />} />
                     <Route path={ROUTES.ADMIN_CONTACTS} element={<ManageContacts />} />
                     <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
+                    <Route path={ROUTES.ADMIN_PROFILE} element={<ProfilePage />} />
                     <Route path={ROUTES.ADMIN_ACTIVITY_LOGS} element={<ActivityLogs />} />
                     <Route path={ROUTES.ADMIN_NOTIFICATIONS} element={<ManageNotifications />} />
                     <Route path="/admin/components/*" element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />

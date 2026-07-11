@@ -235,7 +235,7 @@ export const activityLogService = {
 
   /* Retrieve Logs and Trigger Purge via RPC */
 
-  async getLogs({ page = 1, limit = 50, module, status, severity, startDate, endDate, search }) {
+  async getLogs({ page = 1, limit = 50, module, status, severity, startDate, endDate, search, userId }) {
     try {
       let query = supabase
         .from('activity_logs')
@@ -244,6 +244,7 @@ export const activityLogService = {
           profiles:user_id ( full_name )
         `, { count: 'exact' });
 
+      if (userId) query = query.eq('user_id', userId);
       if (module && module !== 'all') query = query.eq('module', module);
       if (status && status !== 'all') query = query.eq('status', status);
       if (severity && severity !== 'all') query = query.eq('severity', severity);
@@ -273,6 +274,7 @@ export const activityLogService = {
           .from('activity_logs')
           .select('*', { count: 'exact' });
 
+        if (userId) fallbackQuery = fallbackQuery.eq('user_id', userId);
         if (module && module !== 'all') fallbackQuery = fallbackQuery.eq('module', module);
         if (status && status !== 'all') fallbackQuery = fallbackQuery.eq('status', status);
         if (severity && severity !== 'all') fallbackQuery = fallbackQuery.eq('severity', severity);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
@@ -27,6 +27,13 @@ export const ManageProjects = () => {
   const [departmentFilters, setDepartmentFilters] = useState([]);
   const [statusFilters, setStatusFilters] = useState([]);
   const [sortField, setSortField] = useState('title');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, categoryFilters, difficultyFilter, departmentFilters, statusFilters, sortField]);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState(null);
 
@@ -477,6 +484,12 @@ export const ManageProjects = () => {
     return 0;
   });
 
+  const totalPages = Math.ceil(sortedList.length / itemsPerPage);
+  const paginatedProjects = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return sortedList.slice(startIndex, startIndex + itemsPerPage);
+  }, [sortedList, currentPage, itemsPerPage]);
+
   return (
     <motion.section
       id="manage-projects-portal"
@@ -837,7 +850,8 @@ export const ManageProjects = () => {
               <h3>Loading database records...</h3>
             </div>
           ) : sortedList.length > 0 ? (
-            <div style={{ overflowX: 'auto', overflowY: 'auto', padding: 'var(--space-4)', flex: 1, minHeight: 0 }}>
+            <>
+              <div style={{ overflowX: 'auto', overflowY: 'auto', padding: 'var(--space-4)', flex: 1, minHeight: 0 }}>
               <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -867,7 +881,7 @@ export const ManageProjects = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedList.map((proj) => {
+                  {paginatedProjects.map((proj) => {
                     const isSelected = selectedIds.includes(proj.id);
                     const mainPrice = proj.variants && proj.variants.length > 0
                       ? Math.min(...proj.variants.filter(v => v.enabled).map(v => v.price))
@@ -1019,7 +1033,64 @@ export const ManageProjects = () => {
                 </tbody>
               </table>
             </div>
-          ) : (
+
+            {/* Pagination Footer */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)', flexWrap: 'wrap', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
+                  Showing Page {currentPage} of {totalPages || 1} ({sortedList.length} projects found)
+                </span>
+                <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>|</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>Rows per page:</span>
+                  <select
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                    className="form-input"
+                    style={{
+                      padding: '4px 8px',
+                      fontSize: '12px',
+                      height: '28px',
+                      width: '70px',
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '4px',
+                      color: '#fff'
+                    }}
+                  >
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </div>
+              </div>
+              {totalPages > 1 && (
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <Button
+                    variant="secondary"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                    style={{ padding: '6px 14px', fontSize: '12px' }}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+                    style={{ padding: '6px 14px', fontSize: '12px' }}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
             <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
               <h3>No management records match your filters</h3>
               <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)' }}>

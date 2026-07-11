@@ -1,27 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSettings } from '../hooks/useSettings';
 import { SettingsLayout } from './SettingsLayout';
 import { SettingsSection } from './SettingsSection';
 import { Input } from '../../../shared/components/ui/Input';
-import { storageService } from '../../../shared/services/storageService';
+import { avatarService } from '../../../shared/services/avatarService';
 import { logger } from '../../../shared/utils/logger';
-
 import { useAuth } from '../../auth/context/AuthContext.jsx';
 import { userService } from '../../auth/services/userService';
 
-const extractPathFromUrl = (url, bucket) => {
-  if (!url) return null;
-  const marker = `/storage/v1/object/public/${bucket}/`;
-  const idx = url.indexOf(marker);
-  if (idx !== -1) {
-    return url.substring(idx + marker.length);
-  }
-  return null;
-};
-
-export const AdminProfile = ({ onBack }) => {
-  const { settings, saveSettings } = useSettings();
-  const { user, profile, refreshProfile } = useAuth();
+export const ProfileForm = ({ onBack, hideBreadcrumbs = false, hideCancel = false }) => {
+  const { user, profile, refreshProfile, isAdmin } = useAuth();
   const photoInputRef = useRef(null);
 
   const [form, setForm] = useState({
@@ -37,28 +24,28 @@ export const AdminProfile = ({ onBack }) => {
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
 
-  // Helper to construct initial form values from auth/profile/settings
+  // Helper to construct initial form values from auth/profile
   const getInitialValues = () => {
     return {
-      profilePhoto: profile?.profile_photo || settings.profilePhoto || '',
-      profileName: profile?.full_name || settings.profileName || '',
-      profileEmail: user?.email || settings.profileEmail || '',
-      profilePhone: profile?.phone || settings.profilePhone || '',
+      profilePhoto: profile?.profile_photo || '',
+      profileName: profile?.full_name || '',
+      profileEmail: user?.email || '',
+      profilePhone: profile?.phone || '',
       profileDesignation: profile?.role || '',
     };
   };
 
-  // Populate form fields once auth details or settings are loaded
+  // Populate form fields once auth details are loaded
   useEffect(() => {
     setForm(getInitialValues());
-  }, [profile, user, settings]);
+  }, [profile, user]);
 
-  // Handle dirty state comparison against initial profile/settings values
+  // Handle dirty state comparison against initial profile values
   useEffect(() => {
     const initial = getInitialValues();
     const changed = Object.keys(form).some(key => form[key] !== initial[key]);
     setIsDirty(changed);
-  }, [form, profile, user, settings]);
+  }, [form, profile, user]);
 
   const handleChange = (key, value) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -68,7 +55,6 @@ export const AdminProfile = ({ onBack }) => {
     setIsLoading(true);
     setSaveStatus(null);
     try {
-      // 1. Update the Supabase profiles database table
       if (user) {
         await userService.updateProfile({
           id: user.id,
@@ -80,10 +66,7 @@ export const AdminProfile = ({ onBack }) => {
         await refreshProfile();
       }
 
-      // 2. Also keep global website settings synchronized
-      await saveSettings(form);
       setIsDirty(false);
-
       const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       setSaveStatus({
         message: 'Profile Settings Saved Successfully',
@@ -101,27 +84,13 @@ export const AdminProfile = ({ onBack }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate Profile Photo: jpg, jpeg, png, webp, <= 5MB
-    const allowedExts = ['jpg', 'jpeg', 'png', 'webp'];
-    const fileExt = file.name.split('.').pop().toLowerCase();
-    if (!allowedExts.includes(fileExt)) {
-      alert(`Invalid profile photo type. Allowed: ${allowedExts.join(', ')}`);
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Profile photo size exceeds 5MB limit.');
-      return;
-    }
-
     setIsUploadingPhoto(true);
     try {
-      const oldPath = extractPathFromUrl(form.profilePhoto, 'profiles');
-      const targetName = `profile-photo-${Date.now()}.${fileExt}`;
-      const result = await storageService.replaceFile('profiles', 'admin', file, oldPath, targetName);
-      handleChange('profilePhoto', result.publicUrl);
+      const publicUrl = await avatarService.uploadAvatar(user.id, file, isAdmin, form.profilePhoto);
+      handleChange('profilePhoto', publicUrl);
     } catch (err) {
       logger.error('Profile photo upload failed:', err);
-      alert('Failed to upload profile photo: ' + (err.message || 'Unknown error'));
+      alert(err.message || 'Failed to upload profile photo.');
     } finally {
       setIsUploadingPhoto(false);
     }
@@ -130,15 +99,17 @@ export const AdminProfile = ({ onBack }) => {
   return (
     <SettingsLayout
       title="Profile Settings"
-      description="Update personal administrator accounts, contact details and professional designation."
+      description="Update personal account, contact details, and professional designation."
       categoryName="Administration"
       isDirty={isDirty}
       isLoading={isLoading}
       onSave={handleSave}
       onCancel={onBack}
       saveStatus={saveStatus}
+      hideBreadcrumbs={hideBreadcrumbs}
+      hideCancel={hideCancel}
     >
-      <SettingsSection title="Administrator Identity" description="Set up personal representation values.">
+      <SettingsSection title="User Identity" description="Set up personal representation values.">
         
         <div className="calc-row settings-field-row">
           <label className="form-label">Profile Photo</label>
@@ -192,7 +163,6 @@ export const AdminProfile = ({ onBack }) => {
           <Input
             type="email"
             className="form-input"
-            placeholder="e.g. admin@flyenlabs.com"
             value={form.profileEmail}
             readOnly={true}
             style={{ background: 'rgba(255, 255, 255, 0.03)', cursor: 'not-allowed', color: 'var(--text-muted)' }}

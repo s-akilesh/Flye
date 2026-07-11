@@ -162,6 +162,24 @@ export const notificationService = {
   },
 
   /**
+   * Marks all notifications as unread.
+   * @returns {Promise<void>}
+   */
+  async markAllAsUnread() {
+    try {
+      const { error } = await supabase
+        .from('notifications')
+        .update({ is_read: false });
+
+      if (error) throw error;
+      this.clearCache();
+    } catch (err) {
+      console.error('[notificationService] Failed to mark all as unread:', err);
+      throw err;
+    }
+  },
+
+  /**
    * Deletes a notification by id.
    * @param {string} id 
    * @returns {Promise<void>}

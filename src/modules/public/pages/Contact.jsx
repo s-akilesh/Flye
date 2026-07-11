@@ -642,8 +642,8 @@ export const Contact = () => {
               <polyline points="20,6 9,17 4,12" />
             </svg>
           </div>
-          <h4>MESSAGE ROUTED</h4>
-          <p>Your message has been dispatched successfully. We will contact you soon.</p>
+          <h4>MESSAGE SENT</h4>
+          <p>Your message has been successfully sent. We will contact you soon.</p>
           <Button variant="secondary" className="modal-btn" onClick={() => setIsSubmitted(false)}>
             Close
           </Button>

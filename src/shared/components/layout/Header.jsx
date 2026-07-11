@@ -137,7 +137,7 @@ export const Header = ({ onToggleDrawer }) => {
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
         {/* Notification Bell */}
-        {user && isAdmin && (
+        {user && isAdmin && viewMode === 'admin' && (
           <div style={{ position: 'relative' }}>
             <button
               type="button"
@@ -372,10 +372,10 @@ export const Header = ({ onToggleDrawer }) => {
                   <button
                     type="button"
                     onClick={() => {
-                      if (isAdmin) {
-                        navigate(`${ROUTES.ADMIN_SETTINGS}?page=profile`);
+                      if (isAdmin && viewMode === 'admin') {
+                        navigate(ROUTES.ADMIN_PROFILE);
                       } else {
-                        navigate(ROUTES.STUDENT_DASHBOARD);
+                        navigate(ROUTES.MY_PROFILE);
                       }
                       setShowProfileDropdown(false);
                     }}
@@ -398,7 +398,7 @@ export const Header = ({ onToggleDrawer }) => {
                     onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                   >
                     <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>person</span>
-                    <span>Profile</span>
+                    <span>My Profile</span>
                   </button>
 
 

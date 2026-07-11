@@ -418,7 +418,7 @@ export const ProjectListing = () => {
                   )}
                 </div>
 
-                <div>
+                <div style={{ display: 'none' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
                   <select
                     value={projectStatus}

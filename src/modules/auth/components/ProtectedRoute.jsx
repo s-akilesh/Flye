@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { ROUTES } from '../../../shared/constants/routes.js';
 
-export const ProtectedRoute = ({ children }) => {
+export const ProtectedRoute = ({ children, requireAdmin = true }) => {
   const { user, loading, profile, isAdmin, viewMode } = useAuth();
 
   if (loading) {
@@ -92,12 +92,14 @@ export const ProtectedRoute = ({ children }) => {
     );
   }
 
-  if (!isAdmin) {
-    return <Navigate to="/" replace />;
-  }
+  if (requireAdmin) {
+    if (!isAdmin) {
+      return <Navigate to="/" replace />;
+    }
 
-  if (viewMode !== 'admin') {
-    return <Navigate to="/" replace />;
+    if (viewMode !== 'admin') {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return children;

@@ -5,17 +5,18 @@ import { Button } from '../../../shared/components/ui/Button';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useSettings } from '../hooks/useSettings';
 import { SETTINGS_METADATA } from '../constants/settingsMetadata';
+import { useAuth } from '../../auth/context/AuthContext.jsx';
 
 // Dynamic lazy imports mapping for bundler-safe code splitting
 const COMPONENT_MAPPING = {
   WebsiteBranding: React.lazy(() => import('../components/WebsiteBranding').then(m => ({ default: m.WebsiteBranding }))),
   ContactInfo: React.lazy(() => import('../components/ContactInfo').then(m => ({ default: m.ContactInfo }))),
   FooterSettings: React.lazy(() => import('../components/FooterSettings').then(m => ({ default: m.FooterSettings }))),
-  PasswordSettings: React.lazy(() => import('../components/PasswordSettings').then(m => ({ default: m.PasswordSettings }))),
+  PasswordSettings: React.lazy(() => import('../components/PasswordForm').then(m => ({ default: m.PasswordForm }))),
   AccessStats: React.lazy(() => import('../components/AccessStats').then(m => ({ default: m.AccessStats }))),
   EmailRouting: React.lazy(() => import('../components/EmailRouting').then(m => ({ default: m.EmailRouting }))),
   SocialNetworks: React.lazy(() => import('../components/SocialNetworks').then(m => ({ default: m.SocialNetworks }))),
-  AdminProfile: React.lazy(() => import('../components/AdminProfile').then(m => ({ default: m.AdminProfile }))),
+  AdminProfile: React.lazy(() => import('../components/ProfileForm').then(m => ({ default: m.ProfileForm }))),
   SystemPrefs: React.lazy(() => import('../components/SystemPrefs').then(m => ({ default: m.SystemPrefs }))),
   LegalPagesSettings: React.lazy(() => import('../../legal/components/LegalPagesSettings').then(m => ({ default: m.LegalPagesSettings }))),
 };
@@ -24,6 +25,7 @@ export const AdminSettings = () => {
   const navigate = useNavigate();
   const { settings } = useSettings();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isAdmin } = useAuth();
 
   // Search States
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,18 +49,33 @@ export const AdminSettings = () => {
     for (const cat of SETTINGS_METADATA) {
       const found = cat.rows.find(r => r.id === activePage);
       if (found) {
+        if (!isAdmin && found.adminOnly !== false) return null;
         return { ...found, categoryTitle: cat.title };
       }
     }
     return null;
-  }, [activePage]);
+  }, [activePage, isAdmin]);
 
-  // Filter settings tree based on search query matching Title, Description, and Keywords
+  // Filter settings tree based on role and search query matching Title, Description, and Keywords
   const filteredCategories = useMemo(() => {
     const query = debouncedQuery.toLowerCase().trim();
-    if (!query) return SETTINGS_METADATA;
+    
+    const allowedMetadata = SETTINGS_METADATA.map(cat => {
+      const allowedRows = cat.rows.filter(row => {
+        if (!isAdmin && row.adminOnly !== false) {
+          return false;
+        }
+        return true;
+      });
+      return {
+        ...cat,
+        rows: allowedRows
+      };
+    }).filter(cat => cat.rows.length > 0);
 
-    return SETTINGS_METADATA.map(cat => {
+    if (!query) return allowedMetadata;
+
+    return allowedMetadata.map(cat => {
       const matchingRows = cat.rows.filter(row => {
         const titleMatch = row.title.toLowerCase().includes(query);
         const descMatch = row.description.toLowerCase().includes(query);
@@ -71,7 +88,7 @@ export const AdminSettings = () => {
         rows: matchingRows
       };
     }).filter(cat => cat.rows.length > 0);
-  }, [debouncedQuery]);
+  }, [debouncedQuery, isAdmin]);
 
   const handleBack = () => {
     setSearchParams({});

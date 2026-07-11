@@ -76,6 +76,12 @@ export const ManageEnquiries = () => {
   const [statusFilters, setStatusFilters] = useState([]);
   const [dateFilter, setDateFilter] = useState('all');
   const [sortField, setSortField] = useState('date-desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilters, dateFilter, sortField]);
 
   // Staging filters states
   const [stagedStatusFilters, setStagedStatusFilters] = useState([]);
@@ -546,6 +552,12 @@ export const ManageEnquiries = () => {
       return 0;
     });
   }, [filteredList, sortField]);
+
+  const totalPages = Math.ceil(sortedList.length / itemsPerPage);
+  const paginatedEnquiries = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return sortedList.slice(startIndex, startIndex + itemsPerPage);
+  }, [sortedList, currentPage, itemsPerPage]);
 
   // Drag & Drop Handlers
   const handleDragStart = (e, id) => {
@@ -1109,7 +1121,8 @@ export const ManageEnquiries = () => {
           ) : (
             /* TABLE VIEW */
             sortedList.length > 0 ? (
-              <div style={{ overflowX: 'auto', padding: '12px', flexGrow: 1 }}>
+              <>
+                <div style={{ overflowX: 'auto', padding: '12px', flexGrow: 1 }}>
                 <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.01)' }}>
@@ -1134,7 +1147,7 @@ export const ManageEnquiries = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedList.map((enq) => {
+                    {paginatedEnquiries.map((enq) => {
                       const isSelected = selectedIds.includes(enq.id);
                       const parsed = parseNotes(enq.notes);
 
@@ -1316,7 +1329,64 @@ export const ManageEnquiries = () => {
                   </tbody>
                 </table>
               </div>
-            ) : (
+
+              {/* Pagination Footer */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
+                    Showing Page {currentPage} of {totalPages || 1} ({sortedList.length} enquiries found)
+                  </span>
+                  <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>|</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>Rows per page:</span>
+                    <select
+                      value={itemsPerPage}
+                      onChange={(e) => {
+                        setItemsPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      className="form-input"
+                      style={{
+                        padding: '4px 8px',
+                        fontSize: '12px',
+                        height: '28px',
+                        width: '70px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: '4px',
+                        color: '#fff'
+                      }}
+                    >
+                      <option value="10">10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                  </div>
+                </div>
+                {totalPages > 1 && (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <Button
+                      variant="secondary"
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                      style={{ padding: '6px 14px', fontSize: '12px' }}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      disabled={currentPage >= totalPages}
+                      onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+                      style={{ padding: '6px 14px', fontSize: '12px' }}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
               <div style={{ textAlign: 'center', padding: 'var(--space-8)', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <h3 style={{ margin: 0 }}>No enquiries match your criteria</h3>
                 <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)', marginBottom: 0 }}>

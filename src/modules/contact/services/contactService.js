@@ -26,14 +26,12 @@ export const contactService = {
 
     const dbPayload = mapContactToDB(newContact);
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('contacts')
-      .insert(dbPayload)
-      .select()
-      .single();
+      .insert(dbPayload);
 
     if (error) throw error;
-    return mapContactToReact(data);
+    return newContact;
   },
 
   /**

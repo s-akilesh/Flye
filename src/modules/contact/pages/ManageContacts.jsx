@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useContacts } from '../hooks/useContacts';
 import { Card } from '../../../shared/components/ui/Card';
@@ -47,6 +47,14 @@ export const ManageContacts = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, categoryFilter, startDate, endDate]);
 
   // Selected contact for detail modal
   const [selectedContact, setSelectedContact] = useState(null);
@@ -117,6 +125,12 @@ export const ManageContacts = () => {
       return matchesSearch && matchesStatus && matchesCategory && matchesDate;
     });
   }, [contacts, search, statusFilter, categoryFilter, startDate, endDate]);
+
+  const totalPages = Math.ceil(filteredContacts.length / itemsPerPage);
+  const paginatedContacts = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredContacts.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredContacts, currentPage, itemsPerPage]);
 
   return (
     <motion.section
@@ -265,7 +279,8 @@ export const ManageContacts = () => {
             No contact submissions found matching the criteria.
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
+          <>
+            <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.01)' }}>
@@ -279,7 +294,7 @@ export const ManageContacts = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredContacts.map((contact) => {
+                {paginatedContacts.map((contact) => {
                   const statusColorsStyle = STATUS_COLORS[contact.status] || STATUS_COLORS.new;
                   const dateStr = contact.createdAt ? new Date(contact.createdAt).toLocaleDateString('en-IN', {
                     day: '2-digit',
@@ -330,7 +345,64 @@ export const ManageContacts = () => {
               </tbody>
             </table>
           </div>
-        )}
+
+          {/* Pagination Footer */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)', flexWrap: 'wrap', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
+                Showing Page {currentPage} of {totalPages || 1} ({filteredContacts.length} contacts found)
+              </span>
+              <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>|</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>Rows per page:</span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="form-input"
+                  style={{
+                    padding: '4px 8px',
+                    fontSize: '12px',
+                    height: '28px',
+                    width: '70px',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '4px',
+                    color: '#fff'
+                  }}
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+            </div>
+            {totalPages > 1 && (
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <Button
+                  variant="secondary"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                  style={{ padding: '6px 14px', fontSize: '12px' }}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="secondary"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+                  style={{ padding: '6px 14px', fontSize: '12px' }}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
       </Card>
     </div>
 

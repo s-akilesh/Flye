@@ -200,5 +200,41 @@ export const masterDataService = {
    */
   refresh(type) {
     delete cache[type];
+  },
+
+  /**
+   * Serializes array of values into sorted, unique comma-separated string
+   * @param {Array<string>} values 
+   * @returns {string}
+   */
+  serializeMultiSelect(values) {
+    if (!Array.isArray(values)) return '';
+    const uniqueSorted = Array.from(new Set(
+      values
+        .map(v => normalizeValue(v))
+        .filter(Boolean)
+    )).sort((a, b) => a.localeCompare(b));
+    return uniqueSorted.join(', ');
+  },
+
+  /**
+   * Parses comma-separated string into unique, sorted array of values
+   * @param {string|Array<string>} value 
+   * @returns {Array<string>}
+   */
+  parseMultiSelect(value) {
+    if (!value) return [];
+    if (Array.isArray(value)) {
+      return Array.from(new Set(
+        value
+          .map(v => normalizeValue(v))
+          .filter(Boolean)
+      )).sort((a, b) => a.localeCompare(b));
+    }
+    const values = String(value)
+      .split(',')
+      .map(v => normalizeValue(v))
+      .filter(Boolean);
+    return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
   }
 };

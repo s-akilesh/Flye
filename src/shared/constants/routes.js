@@ -27,5 +27,7 @@ export const ROUTES = {
   LEARNING_COMPONENT_BUILD: '/learning/components/:slug/build',
   STUDENT_AUTH: '/auth',
   STUDENT_DASHBOARD: '/dashboard',
-  STUDENT_SETTINGS: '/settings'
+  STUDENT_SETTINGS: '/settings',
+  MY_PROFILE: '/profile',
+  ADMIN_PROFILE: '/admin/profile'
 };
