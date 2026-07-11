@@ -8,6 +8,7 @@ import { useToast } from '../../../shared/context/ToastContext';
 import { Button } from '../../../shared/components/ui/Button';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
+import { Card } from '../../../shared/components/ui/Card';
 import { Footer } from '../../../shared/components/layout/Footer';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useSettings } from '../../settings/hooks/useSettings';
@@ -22,9 +23,6 @@ export const Home = () => {
   const { user } = useAuth();
 
   const seoProps = generateSEO(PageType.HOME);
-
-  // Local state for featured project tab selection
-  const [activeTab, setActiveTab] = useState('Popular');
 
   // Detailed project request form states
   const [orderedProject, setOrderedProject] = useState(null);
@@ -49,22 +47,11 @@ export const Home = () => {
     }
   };
 
-  // Filter 6 featured projects dynamically based on tabs
+  // Filter 6 featured projects dynamically based on featured flag
   const featuredProjects = useMemo(() => {
     if (!projects || projects.length === 0) return [];
-    
-    let list = [...projects];
-    if (activeTab === 'Popular') {
-      list.sort((a, b) => (b.badge === 'best-seller' ? 1 : 0) - (a.badge === 'best-seller' ? 1 : 0));
-    } else if (activeTab === 'Latest') {
-      list.sort((a, b) => b.id.localeCompare(a.id));
-    } else if (activeTab === 'Affordable') {
-      list.sort((a, b) => a.price - b.price);
-    } else if (activeTab === 'Trending') {
-      list.reverse();
-    }
-    return list.slice(0, 6);
-  }, [projects, activeTab]);
+    return projects.filter((p) => p.featured === true).slice(0, 6);
+  }, [projects]);
 
   const handleOpenFormModal = (status, proj = null) => {
     setProjectStatus(status);
@@ -333,31 +320,8 @@ export const Home = () => {
       <section style={{ padding: '80px var(--page-padding)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '40px', maxWidth: '1100px', margin: '0 auto 40px auto' }}>
           <div>
-            <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>Featured Engineering Projects</h2>
-            <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)', margin: 0 }}>Choose a certified project package to start immediately</p>
-          </div>
-
-          {/* Tabs Selector */}
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '4px' }}>
-            {['Popular', 'Latest', 'Affordable', 'Trending'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                style={{
-                  background: activeTab === tab ? 'var(--accent-violet)' : 'none',
-                  border: 'none',
-                  color: activeTab === tab ? '#fff' : 'var(--text-secondary)',
-                  padding: '6px 16px',
-                  borderRadius: '6px',
-                  fontSize: '12.5px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {tab}
-              </button>
-            ))}
+            <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>Projects</h2>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)', margin: 0 }}>Explore ready-made final-year project kits designed for engineering students.</p>
           </div>
         </div>
 
@@ -366,56 +330,115 @@ export const Home = () => {
           {featuredProjects.map((proj) => {
             const diff = proj.difficulty?.toLowerCase();
             return (
-              <div 
-                key={proj.id} 
-                className="card-glass hover-lift" 
+              <Card
+                key={proj.id}
+                id={`project-card-${proj.id}`}
+                className="project-card-premium"
+                onClick={(e) => {
+                  if (e.target.closest('.btn-card-order')) {
+                    handleOpenOrderModal(proj);
+                    return;
+                  }
+                  navigate(`/project/${proj.slug}`);
+                }}
                 style={{ 
-                  borderRadius: '12px', 
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  padding: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '14px',
-                  justifyContent: 'space-between'
+                  width: '100%', 
+                  boxSizing: 'border-box',
+                  cursor: 'pointer'
                 }}
               >
-                <div>
-                  {/* Card Visual / Graphic */}
-                  <div style={{ height: '140px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '8px' }}>
-                    <svg viewBox="0 0 48 48" style={{ width: '40px', height: '40px', stroke: 'var(--text-muted)', strokeWidth: 1.5, fill: 'none' }}>
-                      <rect x="10" y="10" width="28" height="28" rx="2" />
-                      <circle cx="24" cy="24" r="5" />
-                      <line x1="15" y1="24" x2="33" y2="24" />
-                    </svg>
-                  </div>
-
-                  <span style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--accent-violet)', fontWeight: 'bold', letterSpacing: '0.5px' }}>
-                    {proj.projectLevel || 'Engineering'} Project
-                  </span>
-                  <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#fff', margin: '4px 0 8px 0', lineClamp: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px' }}>
-                    {proj.title}
-                  </h3>
-                  <p style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', margin: 0, lineClamp: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
-                    {proj.description}
-                  </p>
-
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '12px' }}>
-                    <span className={`status-pill diff-${diff}`} style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px' }}>
-                      {proj.difficulty}
+                <div className="card-top-row">
+                  {proj.badge && (
+                    <span className={`project-badge-tag ${proj.badge}`}>
+                      {proj.badge === 'best-seller' ? 'Best Seller' : proj.badge === 'new' ? 'New Release' : proj.badge === 'student' ? 'Student Project' : proj.badge}
                     </span>
-                    <span className="status-pill" style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
-                      {proj.category}
-                    </span>
-                  </div>
+                  )}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '12px', marginTop: '8px' }}>
-                  <span style={{ fontSize: '16px', fontWeight: '950', color: '#fff' }}>₹{proj.price}</span>
-                  <Button type="button" variant="secondary" onClick={() => handleOpenOrderModal(proj)} style={{ padding: '6px 14px', fontSize: '12px' }}>
-                    Request Project
+                {/* Main Image Box */}
+                <div className="project-card-img" style={{ height: '140px', background: 'rgba(0, 0, 0, 0.25)', border: 'none', overflow: 'hidden', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
+                  {proj.images?.main ? (
+                    <img
+                      src={proj.images.main}
+                      alt={proj.title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block'
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'block';
+                      }}
+                    />
+                  ) : null}
+                  <svg
+                    viewBox="0 0 48 48"
+                    style={{ display: proj.images?.main ? 'none' : 'block', width: '40px', height: '40px', stroke: 'var(--text-dim)' }}
+                  >
+                    <rect x="10" y="10" width="28" height="28" rx="2" fill="none" />
+                    <path d="M15,24 L33,24" />
+                    <circle cx="24" cy="24" r="4" fill="none" />
+                  </svg>
+                </div>
+
+                {/* Title */}
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#ffffff', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
+                  {proj.title}
+                </h3>
+
+                {/* Description */}
+                <p className="card-desc" style={{ fontSize: '12.5px', color: 'var(--text-secondary, #9ca3af)', margin: '0 0 12px 0', lineClamp: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
+                  {proj.description}
+                </p>
+
+                {/* Specs */}
+                <div className="card-spec-row" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                  <span className={`status-pill diff-${diff}`} style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px' }}>
+                    {proj.difficulty}
+                  </span>
+                  <span className="status-pill" style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
+                    {proj.category}
+                  </span>
+                </div>
+
+                {/* Footer */}
+                <div className="project-card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '12px', marginTop: 'auto' }}>
+                  <span className="project-card-price" style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff' }}>₹{(Number(proj.price) || 0).toLocaleString('en-IN')}</span>
+                  <Button
+                    type="button"
+                    variant="none"
+                    className="btn-card-order"
+                    style={{
+                      paddingTop: '8px',
+                      paddingBottom: '8px',
+                      paddingLeft: '14px',
+                      paddingRight: '14px',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      fontSize: '12px',
+                      fontFamily: 'Inter, sans-serif',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.25s ease',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    REQUEST KIT
                   </Button>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>
