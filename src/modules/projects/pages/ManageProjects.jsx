@@ -669,7 +669,7 @@ export const ManageProjects = () => {
         </div>
 
         {/* Tabular Visual Grid Container Card */}
-        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', flex: 1, minHeight: 0, background: 'rgba(10, 10, 15, 0.25)' }}>
+        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', flex: 1, minHeight: 0, background: 'var(--sys-surface)' }}>
           {/* Toolbar: Search + Filter Icon + Sort Icon */}
           <AdminToolbar
             searchId="admin-search"
@@ -694,7 +694,7 @@ export const ManageProjects = () => {
             onReset={handleResetFilters}
             onApply={handleApplyFilters}
             className="admin-toolbar-wrapper"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', position: 'relative', zIndex: 100 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px', borderBottom: '1px solid var(--sys-divider)', position: 'relative', zIndex: 100 }}
             desktopActions={
               <>
 
@@ -851,10 +851,10 @@ export const ManageProjects = () => {
             </div>
           ) : sortedList.length > 0 ? (
             <>
-              <div style={{ overflowX: 'auto', overflowY: 'auto', padding: 'var(--space-4)', flex: 1, minHeight: 0 }}>
+              <div className="tbl-scroll-wrap" style={{ padding: 'var(--space-4)' }}>
               <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--sys-border)' }}>
                     <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
                       <input
                         type="checkbox"
@@ -863,19 +863,19 @@ export const ManageProjects = () => {
                         style={{ cursor: 'pointer' }}
                       />
                     </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px' }}>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px' }}>
                       Project Name
                     </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
                       Pricing
                     </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>
                       Status
                     </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
                       Updated At
                     </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px', textAlign: 'right' }}>
+                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px', textAlign: 'right' }}>
                       Actions
                     </th>
                   </tr>
@@ -891,8 +891,8 @@ export const ManageProjects = () => {
                       <tr 
                         key={proj.id} 
                         style={{ 
-                          borderBottom: '1px solid rgba(255,255,255,0.04)',
-                          background: isSelected ? 'rgba(139, 92, 246, 0.04)' : 'transparent',
+                          borderBottom: '1px solid var(--sys-divider)',
+                          background: isSelected ? 'var(--interaction-selected)' : 'transparent',
                           transition: 'background 0.2s ease'
                         }}
                         className="table-row-hover"
@@ -907,10 +907,10 @@ export const ManageProjects = () => {
                         </td>
                         <td className="tbl-td" style={{ minWidth: '220px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
-                            <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff', display: 'block' }} className="tbl-line-clamp-1">
+                            <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)', display: 'block' }} className="tbl-line-clamp-1">
                               {proj.title}
                             </span>
-                            <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block' }} className="tbl-line-clamp-1">
+                            <span style={{ fontSize: '11px', color: 'var(--txt-muted)', display: 'block' }} className="tbl-line-clamp-1">
                               {proj.technology || 'Arduino'}
                             </span>
                           </div>
@@ -921,7 +921,7 @@ export const ManageProjects = () => {
                             {proj.currency === 'INR' ? '₹' : '$'}{mainPrice}
                           </span>
                           {proj.variants && proj.variants.length > 1 && (
-                            <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)' }}>
+                            <span style={{ display: 'block', fontSize: '10px', color: 'var(--txt-muted)' }}>
                               {proj.variants.length} options
                             </span>
                           )}
@@ -932,7 +932,7 @@ export const ManageProjects = () => {
                               Active
                             </span>
                           ) : proj.status === 'draft' ? (
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'var(--interaction-hover)', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>
                               Draft
                             </span>
                           ) : proj.status === 'coming-soon' ? (
@@ -945,7 +945,7 @@ export const ManageProjects = () => {
                             </span>
                           )}
                         </td>
-                        <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '140px', color: 'var(--text-muted)' }}>
+                        <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '140px', color: 'var(--txt-muted)' }}>
                           {proj.lastUpdated}
                         </td>
                         <td className="tbl-td" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>
@@ -1219,16 +1219,16 @@ export const ManageProjects = () => {
               }}
             >
               <div>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Total Rows</span>
-                <strong style={{ fontSize: '20px', color: '#fff' }}>{importPreview.total}</strong>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Total Rows</span>
+                <strong style={{ fontSize: '20px', color: 'var(--txt-primary)' }}>{importPreview.total}</strong>
               </div>
               <div>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Valid Rows</span>
-                <strong style={{ fontSize: '20px', color: 'var(--accent-emerald)' }}>{importPreview.valid.length}</strong>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Valid Rows</span>
+                <strong style={{ fontSize: '20px', color: 'var(--status-success)' }}>{importPreview.valid.length}</strong>
               </div>
               <div>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Invalid Rows</span>
-                <strong style={{ fontSize: '20px', color: importPreview.invalid.length > 0 ? 'var(--accent-crimson, #ef4444)' : 'var(--text-muted)' }}>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Invalid Rows</span>
+                <strong style={{ fontSize: '20px', color: importPreview.invalid.length > 0 ? 'var(--status-error)' : 'var(--txt-muted)' }}>
                   {importPreview.invalid.length}
                 </strong>
               </div>
@@ -1241,8 +1241,8 @@ export const ManageProjects = () => {
                   textAlign: 'left', 
                   maxHeight: '180px', 
                   overflowY: 'auto', 
-                  background: 'rgba(239, 68, 68, 0.04)', 
-                  border: '1px solid rgba(239, 68, 68, 0.15)', 
+                  background: 'var(--interaction-hover)', 
+                  border: '1px solid var(--sys-border)', 
                   borderRadius: '6px', 
                   padding: 'var(--space-3)', 
                   marginBottom: 'var(--space-5)' 
@@ -1319,26 +1319,26 @@ export const ManageProjects = () => {
                 gap: '12px',
                 padding: '12px',
                 borderRadius: '8px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px dashed rgba(255, 255, 255, 0.1)',
+                background: 'var(--interaction-hover)',
+                border: '1px dashed var(--sys-border)',
                 cursor: 'pointer',
                 transition: 'background 0.2s, border-color 0.2s'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                e.currentTarget.style.borderColor = 'var(--accent-violet)';
+                e.currentTarget.style.background = 'var(--interaction-active)';
+                e.currentTarget.style.borderColor = 'var(--brand-primary)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'var(--interaction-hover)';
+                e.currentTarget.style.borderColor = 'var(--sys-border)';
               }}
             >
               <div style={{
                 width: '36px',
                 height: '36px',
                 borderRadius: '6px',
-                background: 'rgba(124, 58, 237, 0.1)',
-                color: 'var(--accent-violet)',
+                background: 'rgba(124, 58, 237, 0.15)',
+                color: 'var(--brand-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -1346,10 +1346,10 @@ export const ManageProjects = () => {
                 <span className="material-icons-outlined" style={{ fontSize: '20px' }}>description</span>
               </div>
               <div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff', display: 'block' }}>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)', display: 'block' }}>
                   Download the import template
                 </span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
                   Use this template file to format your project kit records correctly.
                 </span>
               </div>
@@ -1358,7 +1358,7 @@ export const ManageProjects = () => {
 
           {/* Section 2: Drop your file or select your file */}
           <div style={{ marginBottom: 'var(--space-5)' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', fontWeight: '600' }}>
+            <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '8px', fontWeight: '600' }}>
               Section 2: Upload Data File
             </span>
             <div
@@ -1380,32 +1380,32 @@ export const ManageProjects = () => {
                 justifyContent: 'center',
                 padding: '32px 16px',
                 borderRadius: '8px',
-                background: dragActive ? 'rgba(124, 58, 237, 0.05)' : 'rgba(0, 0, 0, 0.15)',
-                border: `2px dashed ${dragActive ? 'var(--accent-violet)' : 'rgba(255, 255, 255, 0.1)'}`,
+                background: dragActive ? 'var(--interaction-selected)' : 'var(--input-bg)',
+                border: `2px dashed ${dragActive ? 'var(--brand-primary)' : 'var(--sys-border)'}`,
                 cursor: 'pointer',
                 textAlign: 'center',
                 transition: 'background 0.2s, border-color 0.2s'
               }}
               onMouseEnter={(e) => {
                 if (!dragActive) {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.background = 'var(--interaction-hover)';
+                  e.currentTarget.style.borderColor = 'var(--brand-primary)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!dragActive) {
-                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.15)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.background = 'var(--input-bg)';
+                  e.currentTarget.style.borderColor = 'var(--sys-border)';
                 }
               }}
             >
-              <span className="material-icons-outlined" style={{ fontSize: '36px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+              <span className="material-icons-outlined" style={{ fontSize: '36px', color: 'var(--txt-muted)', marginBottom: '8px' }}>
                 cloud_upload
               </span>
-              <span style={{ fontSize: '13px', fontWeight: '500', color: '#fff', display: 'block', marginBottom: '4px' }}>
+              <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--txt-primary)', display: 'block', marginBottom: '4px' }}>
                 Drop your file or select your file
               </span>
-              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
                 Supports Excel (.xlsx, .xls) files up to 100 rows
               </span>
             </div>

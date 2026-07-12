@@ -61,10 +61,10 @@ export const LoginForm = ({ onForgotPassword }) => {
       {error && (
         <div style={{
           padding: '12px',
-          background: 'rgba(239, 68, 68, 0.08)',
-          border: '1px solid rgba(239, 68, 68, 0.2)',
+          background: 'var(--interaction-hover)',
+          border: '1px solid var(--status-danger)',
           borderRadius: '8px',
-          color: 'var(--accent-danger, #ef4444)',
+          color: 'var(--status-danger)',
           fontSize: '12px',
           lineHeight: '1.5'
         }}>
@@ -73,7 +73,7 @@ export const LoginForm = ({ onForgotPassword }) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-secondary, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email Address</label>
+        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email Address</label>
         <input
           type="email"
           className="form-input"
@@ -86,7 +86,7 @@ export const LoginForm = ({ onForgotPassword }) => {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-secondary, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: 0 }}>Password</label>
+        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: 0 }}>Password</label>
         <input
           type="password"
           className="form-input"
@@ -103,7 +103,7 @@ export const LoginForm = ({ onForgotPassword }) => {
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--accent-violet, #8b5cf6)',
+              color: 'var(--brand-primary)',
               fontSize: '11px',
               fontWeight: '600',
               cursor: 'pointer',
@@ -125,9 +125,9 @@ export const LoginForm = ({ onForgotPassword }) => {
           fontWeight: '700',
           fontSize: '13px',
           marginTop: '8px',
-          background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+          background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
           border: 'none',
-          boxShadow: '0 4px 16px rgba(139, 92, 246, 0.25)'
+          boxShadow: '0 4px 16px var(--interaction-focus)'
         }}
       >
         {isSubmitting ? 'Signing In...' : 'Sign In'}

@@ -173,8 +173,8 @@ export const ProjectListing = () => {
           paddingRight: 'var(--page-padding)',
           paddingTop: '16px',
           paddingBottom: '16px',
-          background: 'rgba(10, 10, 18, 0.92)',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          background: 'var(--sys-page-header-bg)',
+          borderBottom: '1px solid var(--sys-divider)',
           marginBottom: '0px'
         }}
       >
@@ -206,8 +206,8 @@ export const ProjectListing = () => {
           alignItems: 'center',
           gap: '12px',
           zIndex: 100,
-          background: 'rgba(10, 10, 18, 0.92)',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          background: 'var(--header-bg)',
+          borderBottom: '1px solid var(--sys-divider)',
           padding: '12px var(--page-padding)',
           width: 'auto',
           marginLeft: 'calc(-1 * var(--page-padding))',
@@ -320,15 +320,15 @@ export const ProjectListing = () => {
             {/* Fixed Header with Glass/Milk Background */}
             <div style={{
               padding: '24px 24px 16px 24px',
-              background: 'rgba(255, 255, 255, 0.015)',
+              background: 'var(--sys-surface-elevated)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              borderBottom: '1px solid var(--sys-divider)',
               zIndex: 10,
               flexShrink: 0
             }}>
-              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: '#fff' }}>PROJECT ENQUIRY</h4>
-              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'left', margin: '4px 0 0 0' }}>
+              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)' }}>PROJECT ENQUIRY</h4>
+              <p style={{ fontSize: '12.5px', color: 'var(--txt-muted)', textAlign: 'left', margin: '4px 0 0 0' }}>
                 Fill in your details below. Our engineering expert will coordinate with you.
               </p>
             </div>
@@ -344,7 +344,7 @@ export const ProjectListing = () => {
             }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', textAlign: 'left', width: '100%' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Name *</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Name *</label>
                   <Input
                     type="text"
                     placeholder="e.g. John Doe"
@@ -358,7 +358,7 @@ export const ProjectListing = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
                   <div className={`phone-input-container ${formErrors.contactNumber ? 'error-state' : ''}`}>
                     <select
                       className="phone-prefix-select"
@@ -371,8 +371,8 @@ export const ProjectListing = () => {
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
-                        color: 'var(--text-main, #f9fafb)',
+                        borderRight: '1px solid var(--sys-border)',
+                        color: 'var(--txt-primary)',
                         padding: '0 8px',
                         height: '100%',
                         fontSize: '13px',
@@ -380,12 +380,12 @@ export const ProjectListing = () => {
                         cursor: 'pointer'
                       }}
                     >
-                      <option value="+1" style={{ background: '#0d0c15', color: '#fff' }}>+1</option>
-                      <option value="+91" style={{ background: '#0d0c15', color: '#fff' }}>+91</option>
-                      <option value="+44" style={{ background: '#0d0c15', color: '#fff' }}>+44</option>
-                      <option value="+61" style={{ background: '#0d0c15', color: '#fff' }}>+61</option>
-                      <option value="+81" style={{ background: '#0d0c15', color: '#fff' }}>+81</option>
-                      <option value="+33" style={{ background: '#0d0c15', color: '#fff' }}>+33</option>
+                      <option value="+1" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+1</option>
+                      <option value="+91" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+91</option>
+                      <option value="+44" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+44</option>
+                      <option value="+61" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+61</option>
+                      <option value="+81" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+81</option>
+                      <option value="+33" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+33</option>
                     </select>
                     <input
                       type="tel"
@@ -404,7 +404,7 @@ export const ProjectListing = () => {
                         border: 'none',
                         boxShadow: 'none',
                         padding: '0 14px',
-                        color: 'var(--text-main, #f9fafb)',
+                        color: 'var(--txt-primary)',
                         fontSize: '13px',
                         outline: 'none'
                       }}
@@ -412,14 +412,14 @@ export const ProjectListing = () => {
                     />
                   </div>
                   {formErrors.contactNumber && (
-                    <span style={{ color: 'var(--accent-crimson, #ef4444)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    <span style={{ color: 'var(--status-error)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
                       Please enter a valid number
                     </span>
                   )}
                 </div>
 
                 <div style={{ display: 'none' }}>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
                   <select
                     value={projectStatus}
                     onChange={(e) => {
@@ -429,17 +429,17 @@ export const ProjectListing = () => {
                       }
                     }}
                     className="form-select"
-                    style={{ height: '38px', background: '#0a0a0f', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
+                    style={{ height: '38px', background: 'var(--input-bg)', color: 'var(--txt-primary)', border: '1px solid var(--input-border)', borderRadius: '6px', width: '100%' }}
                   >
-                    <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
-                    <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
-                    <option value="Need Only Support" style={{ background: '#09090d', color: '#fff' }}>Need Only Support</option>
-                    <option value="Choosed Flyen Project" style={{ background: '#09090d', color: '#fff' }}>Choosed Flyen Project</option>
+                    <option value="Not Started yet" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Not Started yet</option>
+                    <option value="Have Project idea" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Have Project idea</option>
+                    <option value="Need Only Support" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Need Only Support</option>
+                    <option value="Choosed Flyen Project" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Choosed Flyen Project</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
                   <Input
                     type="text"
                     placeholder="e.g. Smart Irrigation System"
@@ -451,7 +451,7 @@ export const ProjectListing = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
                   <Input
                     type="text"
                     placeholder="e.g. 5000"
@@ -462,7 +462,7 @@ export const ProjectListing = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
                   <Input
                     type="date"
                     value={submissionDate}
@@ -474,7 +474,7 @@ export const ProjectListing = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       type="button"
@@ -487,9 +487,9 @@ export const ProjectListing = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                        border: needDocument === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                        color: needDocument === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                        background: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        border: needDocument === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
+                        color: needDocument === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -505,9 +505,9 @@ export const ProjectListing = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                        border: needDocument === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                        color: needDocument === 'No' ? '#fff' : 'var(--text-secondary)'
+                        background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.15)' : 'var(--interaction-hover)',
+                        border: needDocument === 'No' ? '1px solid var(--status-error)' : '1px solid var(--sys-border)',
+                        color: needDocument === 'No' ? 'var(--status-error)' : 'var(--txt-secondary)'
                       }}
                     >
                       No
@@ -516,7 +516,7 @@ export const ProjectListing = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       type="button"
@@ -529,9 +529,9 @@ export const ProjectListing = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                        border: needPresentation === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                        color: needPresentation === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                        background: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        border: needPresentation === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
+                        color: needPresentation === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -547,9 +547,9 @@ export const ProjectListing = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                        border: needPresentation === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                        color: needPresentation === 'No' ? '#fff' : 'var(--text-secondary)'
+                        background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.15)' : 'var(--interaction-hover)',
+                        border: needPresentation === 'No' ? '1px solid var(--status-error)' : '1px solid var(--sys-border)',
+                        color: needPresentation === 'No' ? 'var(--status-error)' : 'var(--txt-secondary)'
                       }}
                     >
                       No
@@ -559,13 +559,13 @@ export const ProjectListing = () => {
               </div>
 
               <div style={{ width: '100%', marginTop: '4px', textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Describe your project or any remark (optional)</label>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Describe your project or any remark (optional)</label>
                 <textarea
                   value={projectRemarks}
                   onChange={(e) => setProjectRemarks(e.target.value)}
                   placeholder="Specify any custom requirements, hardware needs, or comments..."
                   className="form-textarea"
-                  style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-subtle)', borderRadius: '6px', color: '#fff', padding: '10px', fontSize: '12.5px' }}
+                  style={{ width: '100%', minHeight: '80px', background: 'var(--input-bg)', border: '1px solid var(--input-border)', borderRadius: '6px', color: 'var(--txt-primary)', padding: '10px', fontSize: '12.5px' }}
                 />
               </div>
             </div>
@@ -573,10 +573,10 @@ export const ProjectListing = () => {
             {/* Fixed Footer with Glass/Milk Background */}
             <div style={{
               padding: '16px 24px 20px 24px',
-              background: 'rgba(255, 255, 255, 0.015)',
+              background: 'var(--sys-surface-elevated)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+              borderTop: '1px solid var(--sys-divider)',
               display: 'flex',
               gap: '12px',
               width: '100%',
@@ -643,27 +643,27 @@ export const ProjectListing = () => {
           </>
         ) : (
           <div style={{ padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--status-success)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
               <span className="material-icons" style={{ fontSize: '32px' }}>check</span>
             </div>
             <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '800' }}>KIT REQUEST CONFIRMED</h4>
-            <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: 'var(--text-muted)' }}>
-              Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.
+            <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: 'var(--txt-muted)' }}>
+              Your request has been received. We'll reach out to <strong style={{ color: 'var(--brand-accent)' }}>{requestorName}</strong> ({contactNumber}) shortly.
             </p>
 
             {orderedProject && (
-              <div className="modal-receipt" id="receipt-meta" style={{ width: '100%', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '6px', marginBottom: '24px' }}>
+              <div className="modal-receipt" id="receipt-meta" style={{ width: '100%', background: 'var(--interaction-hover)', padding: '12px', borderRadius: '6px', marginBottom: '24px' }}>
                 <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>PROJECT KIT:</span>
-                  <span className="receipt-val" style={{ color: '#fff', fontWeight: 'bold' }}>{orderedProject.title}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>PROJECT KIT:</span>
+                  <span className="receipt-val" style={{ color: 'var(--txt-primary)', fontWeight: 'bold' }}>{orderedProject.title}</span>
                 </div>
                 <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>CONTACT:</span>
-                  <span className="receipt-val" style={{ color: '#fff', fontWeight: 'bold' }}>{contactNumber}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>CONTACT:</span>
+                  <span className="receipt-val" style={{ color: 'var(--txt-primary)', fontWeight: 'bold' }}>{contactNumber}</span>
                 </div>
-                <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px', fontSize: '12px' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>UNIT COST:</span>
-                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 'bold' }}>₹{projectBudget || orderedProject.price}</span>
+                <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed var(--sys-divider)', paddingTop: '8px', marginTop: '8px', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--txt-muted)' }}>UNIT COST:</span>
+                  <span className="receipt-val" style={{ color: 'var(--brand-primary)', fontWeight: 'bold' }}>₹{projectBudget || orderedProject.price}</span>
                 </div>
               </div>
             )}

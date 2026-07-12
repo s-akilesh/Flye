@@ -65,9 +65,9 @@ export const SocialNetworks = ({ onBack }) => {
             letterSpacing: '0.5px',
             padding: '2px 8px',
             borderRadius: '12px',
-            background: connected ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.03)',
-            border: `1px solid ${connected ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.06)'}`,
-            color: connected ? 'var(--accent-emerald)' : 'var(--text-muted)'
+            background: connected ? 'var(--interaction-selected)' : 'var(--interaction-hover)',
+            border: `1px solid ${connected ? 'var(--status-success)' : 'var(--sys-border)'}`,
+            color: connected ? 'var(--status-success)' : 'var(--txt-muted)'
           }}
         >
           {connected ? '✓ Connected' : 'Not Configured'}

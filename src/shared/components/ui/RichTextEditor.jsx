@@ -49,9 +49,9 @@ export const RichTextEditor = ({ value, onChange, placeholder }) => {
   };
 
   return (
-    <div className="rich-text-editor card-glass" style={{ padding: 0, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
+    <div className="rich-text-editor card-glass" style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--sys-border)' }}>
       {/* Toolbar */}
-      <div className="rte-toolbar" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '6px', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+      <div className="rte-toolbar" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '6px', borderBottom: '1px solid var(--sys-divider)', background: 'var(--interaction-hover)' }}>
         <button type="button" onClick={() => executeCommand('formatBlock', '<h3>')} title="Heading 3" className="rte-btn">H3</button>
         <button type="button" onClick={() => executeCommand('formatBlock', '<h4>')} title="Heading 4" className="rte-btn">H4</button>
         <div className="rte-divider" />
@@ -78,7 +78,7 @@ export const RichTextEditor = ({ value, onChange, placeholder }) => {
           minHeight: '220px',
           padding: 'var(--space-4)',
           outline: 'none',
-          color: 'var(--text-primary)',
+          color: 'var(--txt-primary)',
           fontSize: '14.5px',
           lineHeight: '1.6',
           overflowY: 'auto'

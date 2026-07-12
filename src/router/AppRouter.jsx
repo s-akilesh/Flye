@@ -35,6 +35,7 @@ const ProfilePage = React.lazy(() => import('../modules/profile/pages/ProfilePag
 import { AnalyticsProvider } from '../shared/analytics/index.js';
 import { ProtectedRoute } from '../modules/auth/components/ProtectedRoute.jsx';
 import { AuthProvider } from '../modules/auth/context/AuthContext.jsx';
+import { ThemeProvider } from '../shared/context/ThemeContext.jsx';
 import { MaintenancePage } from '../modules/public/pages/MaintenancePage';
 import { useSettings } from '../modules/settings/hooks/useSettings';
 
@@ -55,52 +56,54 @@ export const AppRouter = () => {
     <BrowserRouter>
       <AnalyticsProvider>
         <AuthProvider>
-          <MainLayout>
-            <MaintenanceGate>
-            <AnimatePresence mode="wait">
-              <React.Suspense fallback={<PageLoading />}>
-                <Routes>
-                  <Route path={ROUTES.HOME} element={<Home />} />
-                  <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
-                  <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
-                  <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
-                  <Route path={ROUTES.CONTACT} element={<Contact />} />
-                  <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
-                  <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
-                  <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
-                  <Route path={ROUTES.MY_PROJECTS} element={<MyProjects />} />
-                  <Route path={ROUTES.MY_PROFILE} element={<ProtectedRoute requireAdmin={false}><ProfilePage /></ProtectedRoute>} />
-                  
-                  {/* Redirect Learning Workspace & Student Auth to Home */}
-                  <Route path="/learning/*" element={<Navigate to={ROUTES.HOME} replace />} />
-                  <Route path="/dashboard" element={<Navigate to={ROUTES.HOME} replace />} />
-                  <Route path="/settings" element={<Navigate to={ROUTES.MY_PROFILE} replace />} />
-                  <Route path={ROUTES.STUDENT_AUTH} element={<React.Suspense fallback={<PageLoading />}><AuthGateway /></React.Suspense>} />
-
-                  {/* Redirect Legacy Admin Access to Auth Gateway */}
-                  <Route path={ROUTES.ADMIN_ACCESS} element={<Navigate to={ROUTES.STUDENT_AUTH} replace />} />
-
-                  {/* Protected Admin Console Routes wrapped in AdminLayout */}
-                  <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-                    <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
-                    <Route path={ROUTES.ADMIN_PROJECTS} element={<ManageProjects />} />
-                    <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<AddProject />} />
-                    <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<EditProject />} />
-                    <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ManageEnquiries />} />
-                    <Route path={ROUTES.ADMIN_CONTACTS} element={<ManageContacts />} />
-                    <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
-                    <Route path={ROUTES.ADMIN_PROFILE} element={<ProfilePage />} />
-                    <Route path={ROUTES.ADMIN_ACTIVITY_LOGS} element={<ActivityLogs />} />
-                    <Route path={ROUTES.ADMIN_NOTIFICATIONS} element={<ManageNotifications />} />
-                    <Route path="/admin/components/*" element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
-                  </Route>
-                  
-                  <Route path="*" element={<Home />} />
-                </Routes>
-              </React.Suspense>
-            </AnimatePresence>
-          </MaintenanceGate>
-        </MainLayout>
+          <ThemeProvider>
+            <MainLayout>
+              <MaintenanceGate>
+              <AnimatePresence mode="wait">
+                <React.Suspense fallback={<PageLoading />}>
+                  <Routes>
+                    <Route path={ROUTES.HOME} element={<Home />} />
+                    <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
+                    <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
+                    <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
+                    <Route path={ROUTES.CONTACT} element={<Contact />} />
+                    <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
+                    <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+                    <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
+                    <Route path={ROUTES.MY_PROJECTS} element={<MyProjects />} />
+                    <Route path={ROUTES.MY_PROFILE} element={<ProtectedRoute requireAdmin={false}><ProfilePage /></ProtectedRoute>} />
+                    
+                    {/* Redirect Learning Workspace & Student Auth to Home */}
+                    <Route path="/learning/*" element={<Navigate to={ROUTES.HOME} replace />} />
+                    <Route path="/dashboard" element={<Navigate to={ROUTES.HOME} replace />} />
+                    <Route path="/settings" element={<Navigate to={ROUTES.MY_PROFILE} replace />} />
+                    <Route path={ROUTES.STUDENT_AUTH} element={<React.Suspense fallback={<PageLoading />}><AuthGateway /></React.Suspense>} />
+  
+                    {/* Redirect Legacy Admin Access to Auth Gateway */}
+                    <Route path={ROUTES.ADMIN_ACCESS} element={<Navigate to={ROUTES.STUDENT_AUTH} replace />} />
+  
+                    {/* Protected Admin Console Routes wrapped in AdminLayout */}
+                    <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+                      <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+                      <Route path={ROUTES.ADMIN_PROJECTS} element={<ManageProjects />} />
+                      <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<AddProject />} />
+                      <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<EditProject />} />
+                      <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ManageEnquiries />} />
+                      <Route path={ROUTES.ADMIN_CONTACTS} element={<ManageContacts />} />
+                      <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
+                      <Route path={ROUTES.ADMIN_PROFILE} element={<ProfilePage />} />
+                      <Route path={ROUTES.ADMIN_ACTIVITY_LOGS} element={<ActivityLogs />} />
+                      <Route path={ROUTES.ADMIN_NOTIFICATIONS} element={<ManageNotifications />} />
+                      <Route path="/admin/components/*" element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
+                    </Route>
+                    
+                    <Route path="*" element={<Home />} />
+                  </Routes>
+                </React.Suspense>
+              </AnimatePresence>
+            </MaintenanceGate>
+          </MainLayout>
+        </ThemeProvider>
       </AuthProvider>
       </AnalyticsProvider>
     </BrowserRouter>

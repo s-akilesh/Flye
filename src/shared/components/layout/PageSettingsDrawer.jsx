@@ -190,7 +190,7 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0, 0, 0, 0.6)',
+          background: 'var(--sys-overlay)',
           backdropFilter: 'blur(4px)',
           zIndex: 9998,
           animation: 'fadeIn 0.2s ease-out'
@@ -208,18 +208,18 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
           maxWidth: '100%',
           height: '100vh',
           zIndex: 9999,
-          background: '#0B0B0C',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.5)',
+          background: 'var(--sidebar-bg)',
+          borderLeft: '1px solid var(--sys-border)',
+          boxShadow: 'var(--shadow-lg)',
           display: 'flex',
           flexDirection: 'column',
           animation: 'slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
       >
         {/* Header */}
-        <div style={{ padding: 'var(--space-4)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: 'var(--space-4)', borderBottom: '1px solid var(--sys-divider)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: '800', color: '#fff', margin: 0 }}>Page Settings</h2>
+            <h2 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>Page Settings</h2>
             <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', wordBreak: 'break-all' }}>
               Route: <span style={{ color: 'var(--accent-blue)', fontFamily: 'monospace' }}>{cleanRoute}</span>
             </div>
@@ -240,9 +240,9 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
         </div>
 
         {/* Info & Status row */}
-        <div style={{ padding: 'var(--space-3) var(--space-4)', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: 'var(--space-3) var(--space-4)', background: 'var(--interaction-hover)', borderBottom: '1px solid var(--sys-divider)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ fontSize: '12px', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label style={{ fontSize: '12px', color: 'var(--txt-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <input
                 type="checkbox"
                 checked={isEnabled}
@@ -254,23 +254,23 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
           
           {/* Save Status Indicators */}
           <div style={{ fontSize: '12px', fontWeight: '600' }}>
-            {saveStatus === 'saving' && <span style={{ color: 'var(--accent-blue)' }}>Saving...</span>}
-            {saveStatus === 'success' && <span style={{ color: '#10B981' }}>Saved Successfully</span>}
-            {saveStatus === 'failed' && <span style={{ color: '#EF4444' }}>Failed to Save</span>}
+            {saveStatus === 'saving' && <span style={{ color: 'var(--brand-primary)' }}>Saving...</span>}
+            {saveStatus === 'success' && <span style={{ color: 'var(--status-success)' }}>Saved Successfully</span>}
+            {saveStatus === 'failed' && <span style={{ color: 'var(--status-danger)' }}>Failed to Save</span>}
           </div>
         </div>
 
         {/* Extensible Tabs Header */}
-        <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--sys-divider)' }}>
           <button
             onClick={() => setActiveTab('seo')}
             style={{
               flex: 1,
               padding: '12px 0',
-              background: activeTab === 'seo' ? 'rgba(255,255,255,0.03)' : 'transparent',
+              background: activeTab === 'seo' ? 'var(--interaction-selected)' : 'transparent',
               border: 'none',
-              borderBottom: activeTab === 'seo' ? '2px solid var(--accent-blue)' : '2px solid transparent',
-              color: activeTab === 'seo' ? '#fff' : 'var(--text-muted)',
+              borderBottom: activeTab === 'seo' ? '2px solid var(--brand-primary)' : '2px solid transparent',
+              color: activeTab === 'seo' ? 'var(--txt-primary)' : 'var(--txt-muted)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: '700',
@@ -284,10 +284,10 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
             style={{
               flex: 1,
               padding: '12px 0',
-              background: activeTab === 'og' ? 'rgba(255,255,255,0.03)' : 'transparent',
+              background: activeTab === 'og' ? 'var(--interaction-selected)' : 'transparent',
               border: 'none',
-              borderBottom: activeTab === 'og' ? '2px solid var(--accent-blue)' : '2px solid transparent',
-              color: activeTab === 'og' ? '#fff' : 'var(--text-muted)',
+              borderBottom: activeTab === 'og' ? '2px solid var(--brand-primary)' : '2px solid transparent',
+              color: activeTab === 'og' ? 'var(--txt-primary)' : 'var(--txt-muted)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: '700',
@@ -306,8 +306,8 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
               {/* Page Title */}
               <div className="calc-row">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <label htmlFor="seo-title" style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Page Title *</label>
-                  <span style={{ fontSize: '11px', color: pageTitle.length > 60 ? '#EF4444' : 'var(--text-muted)' }}>
+                  <label htmlFor="seo-title" style={{ fontSize: '12px', fontWeight: '600', color: 'var(--txt-secondary)' }}>Page Title *</label>
+                  <span style={{ fontSize: '11px', color: pageTitle.length > 60 ? 'var(--status-danger)' : 'var(--txt-muted)' }}>
                     {pageTitle.length}/60
                   </span>
                 </div>
@@ -325,8 +325,8 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
               {/* Meta Description */}
               <div className="calc-row">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <label htmlFor="seo-desc" style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Meta Description *</label>
-                  <span style={{ fontSize: '11px', color: metaDescription.length > 160 ? '#EF4444' : 'var(--text-muted)' }}>
+                  <label htmlFor="seo-desc" style={{ fontSize: '12px', fontWeight: '600', color: 'var(--txt-secondary)' }}>Meta Description *</label>
+                  <span style={{ fontSize: '11px', color: metaDescription.length > 160 ? 'var(--status-danger)' : 'var(--txt-muted)' }}>
                     {metaDescription.length}/160
                   </span>
                 </div>
@@ -462,28 +462,28 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
           )}
 
           {/* Divider */}
-          <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', margin: '10px 0' }} />
+          <div style={{ height: '1px', background: 'var(--sys-divider)', margin: '10px 0' }} />
 
           {/* Google Search Mock Preview */}
           <div>
-            <h3 style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '8px' }}>Google Search Preview</h3>
+            <h3 style={{ fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '8px' }}>Google Search Preview</h3>
             <div
               className="card-glass"
               style={{
                 padding: '12px',
                 borderRadius: '6px',
-                background: '#1A1A1C',
-                border: '1px solid rgba(255, 255, 255, 0.04)',
+                background: 'var(--sys-bg)',
+                border: '1px solid var(--sys-border)',
                 fontFamily: 'arial, sans-serif'
               }}
             >
-              <div style={{ fontSize: '12px', color: '#DADCE0', marginBottom: '2px', wordBreak: 'break-all' }}>
+              <div style={{ fontSize: '12px', color: 'var(--txt-muted)', marginBottom: '2px', wordBreak: 'break-all' }}>
                 {canonicalUrl || `https://flyen.in${cleanRoute}`}
               </div>
-              <div style={{ fontSize: '18px', color: '#8AB4F8', fontWeight: '400', cursor: 'pointer', marginBottom: '4px', textDecoration: 'underline' }}>
+              <div style={{ fontSize: '18px', color: 'var(--brand-accent)', fontWeight: '400', cursor: 'pointer', marginBottom: '4px', textDecoration: 'underline' }}>
                 {pageTitle || 'Untitled Page'}
               </div>
-              <div style={{ fontSize: '13px', color: '#BDC1C6', lineHeight: '1.4' }}>
+              <div style={{ fontSize: '13px', color: 'var(--txt-secondary)', lineHeight: '1.4' }}>
                 {metaDescription || 'Add description to display google search snippet description...'}
               </div>
             </div>
@@ -491,16 +491,16 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
 
           {/* Validation/Health Checks */}
           <div style={{ marginTop: '5px' }}>
-            <h3 style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '8px' }}>SEO Health Validation</h3>
+            <h3 style={{ fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '8px' }}>SEO Health Validation</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {healthChecks.map((check, idx) => {
                 const color = 
-                  check.type === 'error' ? '#EF4444' : 
-                  check.type === 'warning' ? '#F59E0B' : '#10B981';
+                  check.type === 'error' ? 'var(--status-danger)' : 
+                  check.type === 'warning' ? 'var(--status-warning)' : 'var(--status-success)';
                 return (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: color }} />
-                    <span style={{ color: 'var(--text-secondary)' }}>{check.text}</span>
+                    <span style={{ color: 'var(--txt-secondary)' }}>{check.text}</span>
                   </div>
                 );
               })}
@@ -509,13 +509,13 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
 
           {/* Read-Only Page Info Footer */}
           {originalData && originalData.created_at && (
-            <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)', marginTop: '10px' }}>
-              <h4 style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>Page Audit Log</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                <div>Created: <span style={{ color: '#fff' }}>{new Date(originalData.created_at).toLocaleDateString('en-IN')}</span></div>
-                <div>Updated: <span style={{ color: '#fff' }}>{new Date(originalData.updated_at).toLocaleDateString('en-IN')}</span></div>
-                <div>Created By: <span style={{ color: '#fff' }}>{originalData.created_by || 'System'}</span></div>
-                <div>Updated By: <span style={{ color: '#fff' }}>{originalData.updated_by || 'System'}</span></div>
+            <div style={{ background: 'var(--interaction-hover)', padding: '10px', borderRadius: '6px', border: '1px solid var(--sys-border)', marginTop: '10px' }}>
+              <h4 style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>Page Audit Log</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', fontSize: '11px', color: 'var(--txt-secondary)' }}>
+                <div>Created: <span style={{ color: 'var(--txt-primary)' }}>{new Date(originalData.created_at).toLocaleDateString('en-IN')}</span></div>
+                <div>Updated: <span style={{ color: 'var(--txt-primary)' }}>{new Date(originalData.updated_at).toLocaleDateString('en-IN')}</span></div>
+                <div>Created By: <span style={{ color: 'var(--txt-primary)' }}>{originalData.created_by || 'System'}</span></div>
+                <div>Updated By: <span style={{ color: 'var(--txt-primary)' }}>{originalData.updated_by || 'System'}</span></div>
               </div>
             </div>
           )}
@@ -523,7 +523,7 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer Actions */}
-        <div style={{ padding: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '12px', background: '#0B0B0C' }}>
+        <div style={{ padding: 'var(--space-4)', borderTop: '1px solid var(--sys-divider)', display: 'flex', gap: '12px', background: 'var(--sys-surface)' }}>
           <button
             onClick={handleRequestClose}
             className="btn btn-secondary"
@@ -552,7 +552,7 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
             right: 0,
             bottom: 0,
             zIndex: 10000,
-            background: 'rgba(0,0,0,0.8)',
+            background: 'var(--sys-overlay)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -564,15 +564,15 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
             style={{
               width: '400px',
               maxWidth: '90%',
-              background: '#141416',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'var(--sys-surface)',
+              border: '1px solid var(--sys-border)',
               padding: '24px',
               borderRadius: '8px',
               textAlign: 'center',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.8)'
+              boxShadow: 'var(--shadow-lg)'
             }}
           >
-            <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#fff', marginBottom: '12px' }}>Unsaved Changes</h3>
+            <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)', marginBottom: '12px' }}>Unsaved Changes</h3>
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '24px', lineHeight: '1.5' }}>
               You have unsaved SEO edits. What would you like to do before closing?
             </p>
@@ -591,7 +591,7 @@ export const PageSettingsDrawer = ({ isOpen, onClose }) => {
               <button
                 onClick={handleDiscardAndClose}
                 className="btn btn-secondary"
-                style={{ width: '100%', padding: '10px', color: '#EF4444' }}
+                style={{ width: '100%', padding: '10px', color: 'var(--status-error)' }}
               >
                 Discard Changes
               </button>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Card } from '../../../shared/components/ui/Card';
 import { Button } from '../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
@@ -141,23 +142,30 @@ export const ManageNotifications = () => {
   const getPriorityBadgeColor = (priority) => {
     switch (priority.toUpperCase()) {
       case 'CRITICAL':
-        return { bg: 'rgba(239, 68, 68, 0.1)', text: '#EF4444' };
+        return { bg: 'rgba(239, 68, 68, 0.1)', text: 'var(--status-error)' };
       case 'HIGH':
-        return { bg: 'rgba(245, 158, 11, 0.1)', text: '#F59E0B' };
+        return { bg: 'rgba(245, 158, 11, 0.1)', text: 'var(--status-warning)' };
       case 'MEDIUM':
-        return { bg: 'rgba(59, 130, 246, 0.1)', text: '#3B82F6' };
+        return { bg: 'rgba(59, 130, 246, 0.1)', text: 'var(--brand-accent)' };
       default:
-        return { bg: 'rgba(156, 163, 175, 0.1)', text: '#9CA3AF' };
+        return { bg: 'rgba(156, 163, 175, 0.1)', text: 'var(--txt-muted)' };
     }
   };
 
   return (
-    <div style={{ padding: '40px 0', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <motion.section
+      id="manage-notifications-portal"
+      className="portal-section page-container"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 15 }}
+      transition={{ duration: 0.4 }}
+    >
       {/* Title Header */}
       <div className="portal-header">
         <div className="portal-title-area">
-          <h2>System Notifications</h2>
-          <p>Action items and alerts requiring administrator intervention</p>
+          <h2 style={{ color: 'var(--txt-primary)' }}>System Notifications</h2>
+          <p style={{ color: 'var(--txt-secondary)' }}>Action items and alerts requiring administrator intervention</p>
         </div>
         <div className="portal-header-meta" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {notifications.some(n => !n.is_read) && (
@@ -172,15 +180,16 @@ export const ManageNotifications = () => {
           <Button
             variant="secondary"
             onClick={() => setShowPurgeConfirm(true)}
-            style={{ fontSize: '12px', padding: '8px 16px', color: '#EF4444' }}
+            style={{ fontSize: '12px', padding: '8px 16px', color: 'var(--status-error)' }}
           >
             Clear Old (&gt;90 Days)
           </Button>
         </div>
       </div>
 
-      {/* Filter / Search panel */}
-      <Card style={{ padding: '20px', marginBottom: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', flex: 1, minHeight: 0 }}>
+        {/* Filter / Search panel */}
+        <Card style={{ padding: '20px', border: '1px solid var(--sys-border)', background: 'var(--sys-surface)' }}>
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
           {/* Search */}
           <div style={{ flex: 2, minWidth: '200px' }}>
@@ -202,11 +211,11 @@ export const ManageNotifications = () => {
               onChange={(e) => setPriorityFilter(e.target.value)}
               style={{ width: '100%', padding: '10px 14px' }}
             >
-              <option value="all">All Priorities</option>
-              <option value="LOW">Low</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="HIGH">High</option>
-              <option value="CRITICAL">Critical</option>
+              <option value="all" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>All Priorities</option>
+              <option value="LOW" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Low</option>
+              <option value="MEDIUM" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Medium</option>
+              <option value="HIGH" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>High</option>
+              <option value="CRITICAL" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Critical</option>
             </select>
           </div>
 
@@ -218,22 +227,22 @@ export const ManageNotifications = () => {
               onChange={(e) => setReadFilter(e.target.value)}
               style={{ width: '100%', padding: '10px 14px' }}
             >
-              <option value="all">All Statuses</option>
-              <option value="unread">Unread Only</option>
-              <option value="read">Read Only</option>
+              <option value="all" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>All Statuses</option>
+              <option value="unread" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Unread Only</option>
+              <option value="read" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Read Only</option>
             </select>
           </div>
         </div>
       </Card>
 
       {/* Main List */}
-      <Card style={{ overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <Card style={{ overflow: 'hidden', border: '1px solid var(--sys-border)', background: 'var(--sys-surface)' }}>
         {isLoading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--txt-muted)' }}>
             Loading alerts...
           </div>
         ) : pageItems.length === 0 ? (
-          <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>
+          <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--txt-muted)', fontSize: '14px' }}>
             🎉 Zero notifications match the criteria.
           </div>
         ) : (
@@ -245,12 +254,12 @@ export const ManageNotifications = () => {
                   key={item.id}
                   style={{
                     padding: '20px 24px',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                    borderBottom: '1px solid var(--sys-divider)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     gap: '24px',
-                    background: item.is_read ? 'transparent' : 'rgba(0, 112, 243, 0.015)',
+                    background: item.is_read ? 'transparent' : 'var(--interaction-selected)',
                     transition: 'background 0.2s',
                     flexWrap: 'wrap'
                   }}
@@ -264,7 +273,7 @@ export const ManageNotifications = () => {
                     {/* Context info */}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '6px' }}>
-                        <span style={{ fontSize: '14px', fontWeight: '800', color: item.is_read ? 'var(--text-secondary)' : '#fff' }}>
+                        <span style={{ fontSize: '14px', fontWeight: '800', color: item.is_read ? 'var(--txt-secondary)' : 'var(--txt-primary)' }}>
                           {item.title}
                         </span>
                         
@@ -285,20 +294,20 @@ export const ManageNotifications = () => {
 
                         {/* Unread Tag */}
                         {!item.is_read && (
-                          <span style={{ fontSize: '9px', fontWeight: '800', padding: '2px 8px', borderRadius: '4px', background: 'rgba(0,112,243,0.1)', color: 'var(--accent-blue)' }}>
+                          <span style={{ fontSize: '9px', fontWeight: '800', padding: '2px 8px', borderRadius: '4px', background: 'rgba(0,112,243,0.1)', color: 'var(--brand-accent)' }}>
                             UNREAD
                           </span>
                         )}
                       </div>
                       
-                      <p style={{ fontSize: '13px', color: item.is_read ? 'var(--text-muted)' : 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
+                      <p style={{ fontSize: '13px', color: item.is_read ? 'var(--txt-muted)' : 'var(--txt-secondary)', margin: 0, lineHeight: '1.5' }}>
                         {item.message}
                       </p>
                       
-                      <div style={{ display: 'flex', gap: '16px', fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px' }}>
-                        <span>Source: <span style={{ color: 'var(--text-secondary)' }}>{item.source}</span></span>
+                      <div style={{ display: 'flex', gap: '16px', fontSize: '11px', color: 'var(--txt-muted)', marginTop: '8px' }}>
+                        <span>Source: <span style={{ color: 'var(--txt-secondary)' }}>{item.source}</span></span>
                         <span>•</span>
-                        <span>Date: <span style={{ color: 'var(--text-secondary)' }}>{new Date(item.created_at).toLocaleString('en-IN')}</span></span>
+                        <span>Date: <span style={{ color: 'var(--txt-secondary)' }}>{new Date(item.created_at).toLocaleString('en-IN')}</span></span>
                         <span>•</span>
                         <span>{getRelativeTime(item.created_at)}</span>
                       </div>
@@ -330,7 +339,7 @@ export const ManageNotifications = () => {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#EF4444',
+                        color: 'var(--status-error)',
                         cursor: 'pointer',
                         fontSize: '13px',
                         padding: '8px'
@@ -350,7 +359,7 @@ export const ManageNotifications = () => {
       {/* Pagination controls */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
+          <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>
             Rows per page:
           </span>
           <select
@@ -365,10 +374,10 @@ export const ManageNotifications = () => {
               fontSize: '12px',
               height: '28px',
               width: '70px',
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: '4px',
-              color: '#fff'
+              color: 'var(--txt-primary)'
             }}
           >
             <option value="10">10</option>
@@ -408,6 +417,7 @@ export const ManageNotifications = () => {
             </button>
           </div>
         )}
+      </div>
       </div>
 
       {/* Delete Confirmation Modal */}
@@ -450,6 +460,6 @@ export const ManageNotifications = () => {
           cancelText="Cancel"
         />
       )}
-    </div>
+    </motion.section>
   );
 };

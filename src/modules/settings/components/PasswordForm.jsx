@@ -101,12 +101,12 @@ export const PasswordForm = ({ onBack, hideBreadcrumbs = false, hideCancel = fal
     >
       <SettingsSection title="Change Password" description="Enter your current password and pick a strong new login key.">
         {pwError && (
-          <div style={{ fontSize: '12px', color: 'var(--accent-red, #ef4444)', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', padding: '8px 12px', borderRadius: '6px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--status-danger)', background: 'var(--interaction-hover)', border: '1px solid var(--status-danger)', padding: '8px 12px', borderRadius: '6px' }}>
             ⚠️ {pwError}
           </div>
         )}
         {pwSuccess && (
-          <div style={{ fontSize: '12px', color: 'var(--accent-emerald)', background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.2)', padding: '8px 12px', borderRadius: '6px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--status-success)', background: 'var(--interaction-selected)', border: '1px solid var(--status-success)', padding: '8px 12px', borderRadius: '6px' }}>
             {pwSuccess}
           </div>
         )}

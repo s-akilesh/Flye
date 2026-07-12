@@ -27,26 +27,26 @@ export const PageSettingsButton = ({ onClick }) => {
         width: '52px',
         height: '52px',
         borderRadius: '50%',
-        background: 'linear-gradient(135deg, var(--accent-blue, #0070f3) 0%, #00d4ff 100%)',
+        background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
         border: 'none',
         outline: 'none',
-        boxShadow: '0 0 20px rgba(0, 212, 255, 0.4), 0 4px 10px rgba(0, 0, 0, 0.4)',
+        boxShadow: '0 0 20px var(--interaction-selected)',
         cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 999,
         transition: 'transform 0.3s ease, box-shadow 0.3s ease, filter 0.2s',
-        color: '#ffffff'
+        color: 'var(--txt-inverse)'
       }}
       title="Page Settings"
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'scale(1.1) rotate(45deg)';
-        e.currentTarget.style.boxShadow = '0 0 30px rgba(0, 212, 255, 0.6), 0 6px 15px rgba(0, 0, 0, 0.5)';
+        e.currentTarget.style.boxShadow = '0 0 30px var(--interaction-selected)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
-        e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.4), 0 4px 10px rgba(0, 0, 0, 0.4)';
+        e.currentTarget.style.boxShadow = '0 0 20px var(--interaction-selected)';
       }}
     >
       <svg

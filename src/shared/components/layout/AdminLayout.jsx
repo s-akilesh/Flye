@@ -96,9 +96,9 @@ export const AdminLayout = () => {
       <aside className={`admin-sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {/* Logo / Branding */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', paddingBottom: '16px', borderBottom: '1px solid var(--sys-divider)' }}>
             {!isCollapsed && (
-              <span style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--accent-violet)', letterSpacing: '1px' }}>
+              <span style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--brand-primary)', letterSpacing: '1px' }}>
                 Admin Panel
               </span>
             )}
@@ -106,7 +106,7 @@ export const AdminLayout = () => {
               type="button"
               className="sidebar-collapse-btn"
               onClick={() => setIsCollapsed(!isCollapsed)}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{ background: 'none', border: 'none', color: 'var(--sidebar-icon)', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
               <span className="material-icons" style={{ fontSize: '16px', transform: isCollapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }}>keyboard_double_arrow_left</span>
             </button>
@@ -130,9 +130,9 @@ export const AdminLayout = () => {
                         gap: isCollapsed ? '0' : '12px',
                         padding: '10px 12px',
                         borderRadius: '6px',
-                        color: isActive ? 'var(--accent-violet)' : 'var(--text-secondary)',
-                        background: isActive ? 'rgba(139, 92, 246, 0.08)' : 'transparent',
-                        border: isActive ? '1px solid rgba(139, 92, 246, 0.15)' : '1px solid transparent',
+                        color: isActive ? 'var(--brand-primary)' : 'var(--sidebar-text)',
+                        background: isActive ? 'var(--sidebar-active-item)' : 'transparent',
+                        border: isActive ? '1px solid var(--brand-primary)' : '1px solid transparent',
                         textDecoration: 'none',
                         fontSize: '13px',
                         fontWeight: isActive ? '700' : '500',

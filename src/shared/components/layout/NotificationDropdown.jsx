@@ -51,13 +51,13 @@ export const getNotificationIcon = (source) => {
 const getPriorityColor = (priority) => {
   switch (String(priority).toUpperCase()) {
     case 'CRITICAL':
-      return '#EF4444'; // Red
+      return 'var(--status-error)';
     case 'HIGH':
-      return '#F59E0B'; // Orange
+      return 'var(--status-warning)';
     case 'MEDIUM':
-      return '#3B82F6'; // Blue
+      return 'var(--brand-accent)';
     default:
-      return 'rgba(255,255,255,0.1)';
+      return 'var(--sys-border)';
   }
 };
 
@@ -187,7 +187,7 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.4)',
+          background: 'var(--sys-overlay)',
           backdropFilter: 'blur(4px)',
           zIndex: 10000,
           animation: 'fadeInOverlay 0.25s ease-out forwards'
@@ -206,12 +206,12 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
           bottom: 0,
           width: '100%',
           maxWidth: '440px',
-          background: '#0B0B0C',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
+          background: 'var(--sys-surface-elevated)',
+          borderLeft: '1px solid var(--sys-border)',
           zIndex: 10001,
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '-10px 0 40px -10px rgba(0, 0, 0, 0.7)',
+          boxShadow: 'var(--shadow-lg)',
           animation: 'slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards'
         }}
       >
@@ -224,7 +224,7 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
             alignItems: 'center'
           }}
         >
-          <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#fff', margin: 0, fontFamily: 'Inter' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0, fontFamily: 'Inter' }}>
             Notifications
           </h2>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -237,15 +237,15 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--text-muted, #9ca3af)',
+                color: 'var(--txt-muted)',
                 cursor: 'pointer',
                 padding: 0,
                 display: 'flex',
                 alignItems: 'center',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted, #9ca3af)'}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--txt-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--txt-muted)'}
               title="Expand Page"
             >
               <span className="material-icons-outlined" style={{ fontSize: '20px' }}>open_in_full</span>
@@ -257,15 +257,15 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--text-muted, #9ca3af)',
+                color: 'var(--txt-muted)',
                 cursor: 'pointer',
                 padding: 0,
                 display: 'flex',
                 alignItems: 'center',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted, #9ca3af)'}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--txt-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--txt-muted)'}
               title="Close Drawer"
             >
               <span className="material-icons-outlined" style={{ fontSize: '22px' }}>close</span>
@@ -277,7 +277,8 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
         <div
           style={{
             padding: '0 24px 16px 24px',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            padding: '0 24px 16px 24px',
+            borderBottom: '1px solid var(--sys-divider)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -289,13 +290,13 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
             <button
               onClick={() => setActiveTab('all')}
               style={{
-                background: activeTab === 'all' ? 'rgba(255,255,255,0.06)' : 'none',
+                background: activeTab === 'all' ? 'var(--interaction-selected)' : 'none',
                 border: 'none',
                 borderRadius: '20px',
                 padding: '6px 14px',
                 fontSize: '12.5px',
                 fontWeight: activeTab === 'all' ? '700' : '500',
-                color: activeTab === 'all' ? '#fff' : 'var(--text-muted, #9ca3af)',
+                color: activeTab === 'all' ? 'var(--txt-primary)' : 'var(--txt-muted)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -306,8 +307,8 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
               All
               <span
                 style={{
-                  background: activeTab === 'all' ? 'var(--accent-violet, #8b5cf6)' : 'rgba(255,255,255,0.08)',
-                  color: '#fff',
+                  background: activeTab === 'all' ? 'var(--brand-primary)' : 'var(--sys-border)',
+                  color: 'var(--txt-inverse)',
                   fontSize: '10px',
                   fontWeight: '700',
                   padding: '2px 6px',
@@ -323,13 +324,13 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
             <button
               onClick={() => setActiveTab('unread')}
               style={{
-                background: activeTab === 'unread' ? 'rgba(255,255,255,0.06)' : 'none',
+                background: activeTab === 'unread' ? 'var(--interaction-selected)' : 'none',
                 border: 'none',
                 borderRadius: '20px',
                 padding: '6px 14px',
                 fontSize: '12.5px',
                 fontWeight: activeTab === 'unread' ? '700' : '500',
-                color: activeTab === 'unread' ? '#fff' : 'var(--text-muted, #9ca3af)',
+                color: activeTab === 'unread' ? 'var(--txt-primary)' : 'var(--txt-muted)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -341,8 +342,8 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
               {todayUnreadCount > 0 && (
                 <span
                   style={{
-                    background: 'var(--accent-blue, #3b82f6)',
-                    color: '#fff',
+                    background: 'var(--brand-accent)',
+                    color: 'var(--txt-inverse)',
                     fontSize: '10px',
                     fontWeight: '700',
                     padding: '2px 6px',
@@ -359,13 +360,13 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
             <button
               onClick={() => setActiveTab('mentions')}
               style={{
-                background: activeTab === 'mentions' ? 'rgba(255,255,255,0.06)' : 'none',
+                background: activeTab === 'mentions' ? 'var(--interaction-selected)' : 'none',
                 border: 'none',
                 borderRadius: '20px',
                 padding: '6px 14px',
                 fontSize: '12.5px',
                 fontWeight: activeTab === 'mentions' ? '700' : '500',
-                color: activeTab === 'mentions' ? '#fff' : 'var(--text-muted, #9ca3af)',
+                color: activeTab === 'mentions' ? 'var(--txt-primary)' : 'var(--txt-muted)',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
@@ -382,15 +383,15 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
               style={{
                 background: 'none',
                 border: 'none',
-                color: showSettings ? '#fff' : 'var(--text-muted, #9ca3af)',
+                color: showSettings ? 'var(--txt-primary)' : 'var(--txt-muted)',
                 cursor: 'pointer',
                 padding: 0,
                 display: 'flex',
                 alignItems: 'center',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => { if(!showSettings) e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={(e) => { if(!showSettings) e.currentTarget.style.color = 'var(--text-muted, #9ca3af)'; }}
+              onMouseEnter={(e) => { if(!showSettings) e.currentTarget.style.color = 'var(--txt-primary)'; }}
+              onMouseLeave={(e) => { if(!showSettings) e.currentTarget.style.color = 'var(--txt-muted)'; }}
               title="Notification Settings"
             >
               <span className="material-icons-outlined" style={{ fontSize: '20px' }}>settings</span>
@@ -405,10 +406,10 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                   top: 'calc(100% + 8px)',
                   right: 0,
                   width: '160px',
-                  background: '#121214',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'var(--sys-surface)',
+                  border: '1px solid var(--sys-border)',
                   borderRadius: '6px',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                  boxShadow: 'var(--shadow-md)',
                   zIndex: 10005,
                   padding: '4px 0'
                 }}
@@ -421,12 +422,12 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                     background: 'none',
                     border: 'none',
                     textAlign: 'left',
-                    color: '#fff',
+                    color: 'var(--txt-primary)',
                     fontSize: '12px',
                     cursor: 'pointer',
                     transition: 'background 0.2s'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--interaction-hover)'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                 >
                   Mark all as read
@@ -439,12 +440,12 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                     background: 'none',
                     border: 'none',
                     textAlign: 'left',
-                    color: '#fff',
+                    color: 'var(--txt-primary)',
                     fontSize: '12px',
                     cursor: 'pointer',
                     transition: 'background 0.2s'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--interaction-hover)'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                 >
                   Mark all as unread
@@ -458,14 +459,14 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px 24px' }}>
           {displayList.length === 0 ? (
             <div style={{ padding: '60px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-              <span className="material-icons-outlined" style={{ fontSize: '48px', color: 'rgba(255,255,255,0.1)' }}>
+              <span className="material-icons-outlined" style={{ fontSize: '48px', color: 'var(--txt-muted)' }}>
                 notifications_off
               </span>
               <div>
-                <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#fff' }}>
+                <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: 'var(--txt-primary)' }}>
                   No notifications today
                 </h4>
-                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted, #9ca3af)' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--txt-muted)' }}>
                   There are no updates matching this tab.
                 </p>
               </div>
@@ -501,7 +502,7 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                       transition: 'background 0.2s',
                       position: 'relative'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--interaction-hover)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                   >
                     {/* Avatar Generation */}
@@ -512,8 +513,8 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                         width: '38px',
                         height: '38px',
                         borderRadius: '50%',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.08)',
+                        background: 'var(--interaction-hover)',
+                        border: '1px solid var(--sys-border)',
                         flexShrink: 0
                       }}
                     />
@@ -521,17 +522,17 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                     {/* Content wrapper */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
-                        <span style={{ fontSize: '13px', color: '#fff', fontWeight: '500', lineHeight: 1.4, wordBreak: 'break-word' }}>
-                          <strong style={{ color: '#fff', fontWeight: '700' }}>{notif.source || 'System'}</strong> {notif.title}
+                        <span style={{ fontSize: '13px', color: 'var(--txt-primary)', fontWeight: '500', lineHeight: 1.4, wordBreak: 'break-word' }}>
+                          <strong style={{ color: 'var(--txt-primary)', fontWeight: '700' }}>{notif.source || 'System'}</strong> {notif.title}
                         </span>
                       </div>
                       
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                        <span style={{ fontSize: '11.5px', color: 'var(--text-muted, #9ca3af)' }}>
+                        <span style={{ fontSize: '11.5px', color: 'var(--txt-muted)' }}>
                           {relativeTime}
                         </span>
-                        <span style={{ fontSize: '11.5px', color: 'var(--text-muted, #9ca3af)' }}>•</span>
-                        <span style={{ fontSize: '11.5px', color: 'var(--text-muted, #9ca3af)', textTransform: 'capitalize' }}>
+                        <span style={{ fontSize: '11.5px', color: 'var(--txt-muted)' }}>•</span>
+                        <span style={{ fontSize: '11.5px', color: 'var(--txt-muted)', textTransform: 'capitalize' }}>
                           {notif.type || 'Activity'}
                         </span>
                       </div>
@@ -544,12 +545,12 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                             padding: '12px',
                             borderRadius: '6px',
                             background: notif.priority?.toUpperCase() === 'CRITICAL' || notif.priority?.toUpperCase() === 'HIGH'
-                              ? 'rgba(139, 92, 246, 0.12)'  // Violet
-                              : 'rgba(16, 185, 129, 0.12)', // Emerald green
+                              ? 'var(--sidebar-active-item)'
+                              : 'rgba(16, 185, 129, 0.08)',
                             border: `1px solid ${
                               notif.priority?.toUpperCase() === 'CRITICAL' || notif.priority?.toUpperCase() === 'HIGH'
-                                ? 'rgba(139, 92, 246, 0.2)'
-                                : 'rgba(16, 185, 129, 0.2)'
+                                ? 'var(--brand-primary)'
+                                : 'var(--status-success)'
                             }`,
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -560,8 +561,8 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                           <span style={{
                             fontSize: '12.5px',
                             color: notif.priority?.toUpperCase() === 'CRITICAL' || notif.priority?.toUpperCase() === 'HIGH'
-                              ? '#d8b4fe'
-                              : '#a7f3d0',
+                              ? 'var(--brand-primary)'
+                              : 'var(--status-success)',
                             lineHeight: 1.4,
                             flex: 1
                           }}>
@@ -571,8 +572,8 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                             <button
                               onClick={(e) => handleActionClick(e, notif)}
                               style={{
-                                background: '#fff',
-                                color: '#000',
+                                background: 'var(--brand-primary)',
+                                color: 'var(--txt-inverse)',
                                 border: 'none',
                                 borderRadius: '4px',
                                 padding: '4px 10px',
@@ -595,8 +596,8 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                             marginTop: '10px',
                             padding: '10px 12px',
                             borderRadius: '6px',
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            background: 'var(--interaction-hover)',
+                            border: '1px solid var(--sys-border)',
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
@@ -604,14 +605,14 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                            <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--text-muted, #9ca3af)', flexShrink: 0 }}>
+                            <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--txt-muted)', flexShrink: 0 }}>
                               attachment
                             </span>
-                            <span style={{ fontSize: '12.5px', color: '#fff', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <span style={{ fontSize: '12.5px', color: 'var(--txt-primary)', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {notif.reference_id || 'document.pdf'}
                             </span>
                           </div>
-                          <span style={{ fontSize: '11.5px', color: 'var(--text-muted, #9ca3af)', flexShrink: 0 }}>
+                          <span style={{ fontSize: '11.5px', color: 'var(--txt-muted)', flexShrink: 0 }}>
                             2 MB
                           </span>
                         </div>
@@ -619,7 +620,7 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
 
                       {/* STANDARD MESSAGE (if not reply/file) */}
                       {!isReply && !isFile && notif.message && (
-                        <p style={{ margin: '8px 0 0 0', fontSize: '12.5px', color: 'var(--text-secondary, #d1d5db)', lineHeight: 1.4 }}>
+                        <p style={{ margin: '8px 0 0 0', fontSize: '12.5px', color: 'var(--txt-secondary)', lineHeight: 1.4 }}>
                           {notif.message}
                         </p>
                       )}
@@ -632,7 +633,7 @@ export const NotificationDropdown = ({ isOpen, onClose, notifications, onRefresh
                           width: '6px',
                           height: '6px',
                           borderRadius: '50%',
-                          background: 'var(--accent-blue, #3b82f6)',
+                          background: 'var(--brand-accent)',
                           alignSelf: 'center',
                           flexShrink: 0
                         }}

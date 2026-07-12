@@ -6,8 +6,8 @@ import { ROUTES } from '../../constants/routes';
 
 // Icons mapping helper
 const BottomNavIcon = ({ id, isActive }) => {
-  const activeColor = 'var(--accent-violet)';
-  const inactiveColor = 'var(--text-muted)';
+  const activeColor = 'var(--brand-primary)';
+  const inactiveColor = 'var(--txt-muted)';
   const strokeColor = isActive ? activeColor : inactiveColor;
 
   if (id === 'home') {
@@ -146,7 +146,7 @@ export const BottomNavigation = ({ onToggleDrawer, isDrawerOpen }) => {
                 gap: '4px',
                 flex: 1,
                 cursor: 'pointer',
-                color: isActive ? 'var(--accent-violet)' : 'var(--text-muted)',
+                color: isActive ? 'var(--brand-primary)' : 'var(--txt-muted)',
                 transition: 'all 0.2s ease'
               }}
             >

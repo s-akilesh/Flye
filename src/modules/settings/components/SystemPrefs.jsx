@@ -83,11 +83,11 @@ export const SystemPrefs = ({ onBack }) => {
               onChange={(e) => setForm({ maintenanceMode: e.target.checked })}
               style={{ width: '18px', height: '18px', cursor: 'pointer' }}
             />
-            <label htmlFor="maintenanceMode" style={{ fontSize: '13px', color: form.maintenanceMode ? 'var(--accent-crimson)' : 'var(--text-muted)', fontWeight: 'bold', cursor: 'pointer' }}>
+            <label htmlFor="maintenanceMode" style={{ fontSize: '13px', color: form.maintenanceMode ? 'var(--status-danger)' : 'var(--txt-muted)', fontWeight: 'bold', cursor: 'pointer' }}>
               {form.maintenanceMode ? 'Enabled (Site is locked)' : 'Disabled (Site is public)'}
             </label>
           </div>
-          <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '6px', display: 'block', lineHeight: '1.4' }}>
+          <span style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '6px', display: 'block', lineHeight: '1.4' }}>
             When enabled, all non-admin users will see the maintenance cover page.
           </span>
         </div>
@@ -102,9 +102,9 @@ export const SystemPrefs = ({ onBack }) => {
               onChange={(e) => setRetentionDays(e.target.value)}
               style={{
                 height: '38px',
-                background: 'rgba(15, 15, 25, 0.8)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#fff',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--sys-border)',
+                color: 'var(--txt-primary)',
                 borderRadius: '6px',
                 padding: '0 12px',
                 outline: 'none',
@@ -113,10 +113,10 @@ export const SystemPrefs = ({ onBack }) => {
                 width: '140px'
               }}
             >
-              <option value="30">30 Days</option>
-              <option value="90">90 Days</option>
-              <option value="180">180 Days</option>
-              <option value="365">365 Days</option>
+              <option value="30" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>30 Days</option>
+              <option value="90" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>90 Days</option>
+              <option value="180" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>180 Days</option>
+              <option value="365" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>365 Days</option>
             </select>
             <Button
               variant="secondary"
@@ -124,15 +124,15 @@ export const SystemPrefs = ({ onBack }) => {
               style={{
                 height: '38px',
                 fontSize: '13px',
-                borderColor: 'rgba(239, 68, 68, 0.3)',
-                color: 'var(--accent-crimson, #ef4444)',
-                background: 'rgba(239, 68, 68, 0.05)'
+                borderColor: 'var(--status-danger)',
+                color: 'var(--status-danger)',
+                background: 'var(--interaction-hover)'
               }}
             >
               Delete Old Logs
             </Button>
           </div>
-          <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '6px', display: 'block', lineHeight: '1.4' }}>
+          <span style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '6px', display: 'block', lineHeight: '1.4' }}>
             Permanently deletes all events older than the selected threshold. This action is irreversible.
           </span>
         </div>

@@ -86,14 +86,14 @@ export const AuthGateway = () => {
                 width: '56px',
                 height: '56px',
                 borderRadius: '50%',
-                background: 'rgba(139, 92, 246, 0.1)',
-                border: '1px solid rgba(139, 92, 246, 0.2)',
+                background: 'var(--interaction-selected)',
+                border: '1px solid var(--brand-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto',
-                color: 'var(--accent-violet, #8b5cf6)',
-                boxShadow: '0 0 24px rgba(139, 92, 246, 0.15)'
+                color: 'var(--brand-primary)',
+                boxShadow: '0 0 24px var(--interaction-selected)'
               }}>
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -102,9 +102,9 @@ export const AuthGateway = () => {
               </div>
 
               <div>
-                <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 8px 0', color: '#fff' }}>Verify your Email</h3>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary, #94a3b8)', lineHeight: '1.6', margin: 0 }}>
-                  We've sent a verification link to <strong style={{ color: '#fff' }}>{registeredEmail}</strong>. Please check your inbox and verify your account.
+                <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 8px 0', color: 'var(--txt-primary)' }}>Verify your Email</h3>
+                <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', lineHeight: '1.6', margin: 0 }}>
+                  We've sent a verification link to <strong style={{ color: 'var(--txt-primary)' }}>{registeredEmail}</strong>. Please check your inbox and verify your account.
                 </p>
               </div>
 
@@ -113,11 +113,11 @@ export const AuthGateway = () => {
                   onClick={handleResendVerification}
                   disabled={resendStatus === 'sending'}
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'var(--interaction-hover)',
+                    border: '1px solid var(--sys-border)',
                     padding: '10px 16px',
                     borderRadius: '8px',
-                    color: '#fff',
+                    color: 'var(--txt-primary)',
                     fontSize: '12px',
                     fontWeight: '600',
                     cursor: 'pointer',
@@ -132,7 +132,7 @@ export const AuthGateway = () => {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: 'var(--text-dim, #64748b)',
+                    color: 'var(--txt-muted)',
                     fontSize: '11px',
                     fontWeight: '600',
                     cursor: 'pointer',
@@ -193,28 +193,28 @@ export const AuthGateway = () => {
                     width: '32px',
                     height: '32px',
                     borderRadius: '8px',
-                    background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+                    background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 0 16px rgba(139, 92, 246, 0.4)'
+                    boxShadow: 'none'
                   }}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--txt-inverse)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
                     </svg>
                   </div>
                 )}
-                <span style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '2px', color: '#fff' }}>
+                <span style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '2px', color: 'var(--txt-primary)' }}>
                   {settings.websiteName || 'FLYEN'}
                 </span>
               </div>
 
               {/* Heading */}
               <div className="auth-welcome-header" style={{ marginBottom: '32px' }}>
-                <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>
+                <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>
                   {activeTab === 'login' ? 'Welcome back' : 'Create your account'}
                 </h2>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary, #94a3b8)', margin: 0 }}>
+                <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', margin: 0 }}>
                   {activeTab === 'login' ? 'Sign in to access your learning portal' : 'Get started with a free account'}
                 </p>
               </div>
@@ -222,8 +222,8 @@ export const AuthGateway = () => {
               {/* Sliding Tab Selectors */}
               <div style={{
                 display: 'flex',
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--sys-border)',
                 padding: '4px',
                 borderRadius: '8px',
                 marginBottom: '24px'
@@ -235,9 +235,9 @@ export const AuthGateway = () => {
                     flex: 1,
                     padding: '8px 12px',
                     borderRadius: '6px',
-                    background: activeTab === 'login' ? 'rgba(255, 255, 255, 0.05)' : 'none',
+                    background: activeTab === 'login' ? 'var(--interaction-selected)' : 'none',
                     border: 'none',
-                    color: activeTab === 'login' ? '#fff' : 'var(--text-dim, #64748b)',
+                    color: activeTab === 'login' ? 'var(--txt-primary)' : 'var(--txt-muted)',
                     fontSize: '12px',
                     fontWeight: '700',
                     cursor: 'pointer',
@@ -253,9 +253,9 @@ export const AuthGateway = () => {
                     flex: 1,
                     padding: '8px 12px',
                     borderRadius: '6px',
-                    background: activeTab === 'signup' ? 'rgba(255, 255, 255, 0.05)' : 'none',
+                    background: activeTab === 'signup' ? 'var(--interaction-selected)' : 'none',
                     border: 'none',
-                    color: activeTab === 'signup' ? '#fff' : 'var(--text-dim, #64748b)',
+                    color: activeTab === 'signup' ? 'var(--txt-primary)' : 'var(--txt-muted)',
                     fontSize: '12px',
                     fontWeight: '700',
                     cursor: 'pointer',
@@ -280,7 +280,7 @@ export const AuthGateway = () => {
                 textAlign: 'center',
                 marginTop: '32px',
                 paddingTop: '20px',
-                borderTop: '1px solid rgba(255, 255, 255, 0.04)'
+                borderTop: '1px solid var(--sys-divider)'
               }}>
                 <button
                   type="button"
@@ -288,15 +288,15 @@ export const AuthGateway = () => {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: 'var(--text-dim, #64748b)',
+                    color: 'var(--txt-muted)',
                     fontSize: '12px',
                     fontWeight: '600',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                     textDecoration: 'none'
                   }}
-                  onMouseEnter={(e) => e.target.style.color = '#fff'}
-                  onMouseLeave={(e) => e.target.style.color = 'var(--text-dim, #64748b)'}
+                  onMouseEnter={(e) => e.target.style.color = 'var(--txt-primary)'}
+                  onMouseLeave={(e) => e.target.style.color = 'var(--txt-muted)'}
                 >
                   Continue as Guest →
                 </button>

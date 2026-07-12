@@ -4,6 +4,7 @@ import { ROUTES } from '../../constants/routes.js';
 import { Button } from '../ui/Button';
 import { useSettings } from '../../../modules/settings/hooks/useSettings';
 import { useAuth } from '../../../modules/auth/context/AuthContext.jsx';
+import { useTheme } from '../../context/ThemeContext.jsx';
 import { Modal } from '../ui/Modal';
 import { supabase } from '../../services/supabaseClient.js';
 import { notificationService } from '../../services/notificationService.js';
@@ -14,6 +15,7 @@ export const Header = ({ onToggleDrawer }) => {
   const location = useLocation();
   const { settings } = useSettings();
   const { user, profile, isAdmin, logout, viewMode, setViewMode, loading } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAdminNotifications, setShowAdminNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -105,10 +107,10 @@ export const Header = ({ onToggleDrawer }) => {
             src={settings.websiteLogo} 
             alt={settings.companyName || 'Flyen'} 
             className="logo-img" 
-            style={{ height: '28px', width: 'auto', objectFit: 'contain', marginRight: '10px' }} 
+            style={{ height: '28px', width: 'auto', objectFit: 'contain', marginRight: '4px' }} 
           />
         ) : (
-          <svg className="logo-icon" viewBox="0 0 24 24" style={{ marginRight: '10px' }}>
+          <svg className="logo-icon" viewBox="0 0 24 24" style={{ marginRight: '4px' }}>
             <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
           </svg>
         )}
@@ -118,22 +120,22 @@ export const Header = ({ onToggleDrawer }) => {
       {/* Desktop Navigation Links */}
       {(!user || viewMode !== 'admin') && !location.pathname.startsWith('/admin') && (
         <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <Link to="/projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
-          <Link to="/printing" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
-          <Link to="/my-projects" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>My Enquiries</Link>
+          <Link to="/projects" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
+          <Link to="/printing" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
+          <Link to="/my-projects" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>My Enquiries</Link>
           <a
             href="/#about"
             onClick={(e) => {
               e.preventDefault();
               handleScrollToSection('about');
             }}
-            style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}
+            style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}
           >
             About
           </a>
-          <Link to="/contact" style={{ fontSize: '13px', color: 'var(--text-secondary, #9ca3af)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
+          <Link to="/contact" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
         </nav>
-      )}
+      ) }
       
       <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
         {/* Notification Bell */}
@@ -166,8 +168,8 @@ export const Header = ({ onToggleDrawer }) => {
                     position: 'absolute',
                     top: '2px',
                     right: '2px',
-                    background: '#EF4444',
-                    color: '#fff',
+                    background: 'var(--status-danger)',
+                    color: 'var(--txt-inverse)',
                     borderRadius: '50%',
                     width: '16px',
                     height: '16px',
@@ -176,7 +178,7 @@ export const Header = ({ onToggleDrawer }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 0 5px rgba(239, 68, 68, 0.5)'
+                    boxShadow: 'none'
                   }}
                 >
                   {unreadCount}
@@ -192,6 +194,32 @@ export const Header = ({ onToggleDrawer }) => {
             />
           </div>
         )}
+
+        {/* Theme Switcher Toggle */}
+        <button
+          type="button"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="btn-header header-theme-toggle"
+          style={{
+            padding: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
+            border: 'none',
+            color: 'var(--header-icon)',
+            cursor: 'pointer',
+            transition: 'color 0.2s',
+            marginRight: 'var(--space-1)'
+          }}
+          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {theme === 'dark' ? (
+            <span className="material-icons-outlined" style={{ fontSize: '20px' }}>light_mode</span>
+          ) : (
+            <span className="material-icons-outlined" style={{ fontSize: '20px' }}>dark_mode</span>
+          )}
+        </button>
 
         {/* Hamburger Trigger for Mobile */}
         <button
@@ -215,7 +243,7 @@ export const Header = ({ onToggleDrawer }) => {
                 alignItems: 'center',
                 gap: '8px',
                 padding: '4px 8px 4px 4px',
-                background: 'rgba(255, 255, 255, 0.04)',
+                background: 'var(--header-interaction-hover)',
                 border: 'none',
                 borderRadius: '8px',
                 cursor: 'pointer',
@@ -223,10 +251,10 @@ export const Header = ({ onToggleDrawer }) => {
                 outline: 'none'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.07)';
+                e.currentTarget.style.background = 'var(--header-interaction-active)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                e.currentTarget.style.background = 'var(--header-interaction-hover)';
               }}
             >
               {/* Avatar */}
@@ -239,7 +267,7 @@ export const Header = ({ onToggleDrawer }) => {
                     height: '32px',
                     borderRadius: '50%',
                     objectFit: 'cover',
-                    border: '2px solid rgba(139, 92, 246, 0.3)'
+                    border: '2px solid var(--brand-primary)'
                   }}
                 />
               ) : (
@@ -262,16 +290,16 @@ export const Header = ({ onToggleDrawer }) => {
 
               {/* Name + Role */}
               <div className="header-profile-text" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.2 }}>
-                <span style={{ fontSize: '12px', fontWeight: '600', color: '#fff', whiteSpace: 'nowrap', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--header-txt-primary)', whiteSpace: 'nowrap', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {profile?.full_name || user?.email?.split('@')[0] || 'User'}
                 </span>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+                <span style={{ fontSize: '10px', color: 'var(--header-txt-secondary)', textTransform: 'capitalize' }}>
                   {profile?.role || 'user'}
                 </span>
               </div>
 
               {/* Dropdown Icon */}
-              <span className="material-icons" style={{ fontSize: '16px', color: 'var(--text-muted)', transition: 'transform 0.2s', transform: showProfileDropdown ? 'rotate(180deg)' : 'none' }}>
+              <span className="material-icons" style={{ fontSize: '16px', color: 'var(--header-txt-secondary)', transition: 'transform 0.2s', transform: showProfileDropdown ? 'rotate(180deg)' : 'none' }}>
                 expand_more
               </span>
             </button>
@@ -290,9 +318,9 @@ export const Header = ({ onToggleDrawer }) => {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '2px',
-                  background: '#0b0a10',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                  background: 'var(--sys-surface)',
+                  border: '1px solid var(--sys-border)',
+                  boxShadow: 'var(--shadow-md)',
                   borderRadius: '8px'
                 }}
               >
@@ -313,7 +341,7 @@ export const Header = ({ onToggleDrawer }) => {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#fff',
+                        color: 'var(--txt-primary)',
                         padding: '10px 12px',
                         fontSize: '13px',
                         textAlign: 'left',
@@ -325,7 +353,7 @@ export const Header = ({ onToggleDrawer }) => {
                         gap: '10px',
                         transition: 'background 0.15s'
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'var(--interaction-hover)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                     >
                       <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>swap_horiz</span>
@@ -334,7 +362,7 @@ export const Header = ({ onToggleDrawer }) => {
                   )}
 
                   {isAdmin && (
-                    <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.06)', margin: '2px 8px' }} />
+                    <div style={{ height: '1px', background: 'var(--sys-divider)', margin: '2px 8px' }} />
                   )}
 
                    {/* My Enquiries */}
@@ -348,7 +376,7 @@ export const Header = ({ onToggleDrawer }) => {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#fff',
+                        color: 'var(--txt-primary)',
                         padding: '10px 12px',
                         fontSize: '13px',
                         textAlign: 'left',
@@ -360,7 +388,7 @@ export const Header = ({ onToggleDrawer }) => {
                         gap: '10px',
                         transition: 'background 0.15s'
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'var(--interaction-hover)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                     >
                       <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>folder</span>
@@ -382,7 +410,7 @@ export const Header = ({ onToggleDrawer }) => {
                     style={{
                       background: 'none',
                       border: 'none',
-                      color: '#fff',
+                      color: 'var(--txt-primary)',
                       padding: '10px 12px',
                       fontSize: '13px',
                       textAlign: 'left',
@@ -394,7 +422,7 @@ export const Header = ({ onToggleDrawer }) => {
                       gap: '10px',
                       transition: 'background 0.15s'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--interaction-hover)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                   >
                     <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>person</span>
@@ -403,7 +431,7 @@ export const Header = ({ onToggleDrawer }) => {
 
 
                   {/* Divider */}
-                  <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.06)', margin: '2px 8px' }} />
+                  <div style={{ height: '1px', background: 'var(--sys-divider)', margin: '2px 8px' }} />
 
                   {/* Logout Option */}
                   <button
@@ -415,7 +443,7 @@ export const Header = ({ onToggleDrawer }) => {
                     style={{
                       background: 'none',
                       border: 'none',
-                      color: 'var(--accent-crimson, #ef4444)',
+                      color: 'var(--status-error)',
                       padding: '10px 12px',
                       fontSize: '13px',
                       textAlign: 'left',
@@ -427,7 +455,7 @@ export const Header = ({ onToggleDrawer }) => {
                       gap: '10px',
                       transition: 'background 0.15s'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.06)'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                   >
                     <span className="material-icons-outlined" style={{ fontSize: '18px' }}>logout</span>
@@ -446,9 +474,9 @@ export const Header = ({ onToggleDrawer }) => {
             style={{
               padding: '6px 12px',
               fontSize: '12px',
-              background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+              background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
               border: 'none',
-              boxShadow: '0 2px 8px rgba(139, 92, 246, 0.2)',
+              boxShadow: '0 2px 8px var(--interaction-focus)',
               marginLeft: 'var(--space-2)'
             }}
           >
@@ -459,28 +487,28 @@ export const Header = ({ onToggleDrawer }) => {
 
       {/* Notifications Drawer Modal */}
       <Modal isOpen={showNotifications} onClose={() => setShowNotifications(false)} className="modal-content purple" style={{ maxWidth: '400px' }}>
-        <div className="modal-icon" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--accent-violet)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="modal-icon" style={{ background: 'var(--interaction-selected)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span className="material-icons-outlined" style={{ fontSize: '32px' }}>notifications</span>
         </div>
         <h4 style={{ textAlign: 'center', margin: '12px 0 6px 0', fontSize: '16px', fontWeight: '800' }}>NOTIFICATIONS</h4>
-        <p style={{ fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 16px 0' }}>Stay updated on your platform activities</p>
+        <p style={{ fontSize: '12px', color: 'var(--txt-muted)', textAlign: 'center', margin: '0 0 16px 0' }}>Stay updated on your platform activities</p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-          <div style={{ padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)' }}>
-            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--accent-violet)', textTransform: 'uppercase' }}>Learning Reminder</span>
-            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--text-primary)', lineHeight: '1.3' }}>You haven't finished the "Capacitor" module yet. Jump back in!</p>
+          <div style={{ padding: '10px', background: 'var(--sys-surface)', borderRadius: '6px', border: '1px solid var(--sys-border)' }}>
+            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--brand-primary)', textTransform: 'uppercase' }}>Learning Reminder</span>
+            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--txt-primary)', lineHeight: '1.3' }}>You haven't finished the "Capacitor" module yet. Jump back in!</p>
           </div>
-          <div style={{ padding: '10px', background: 'rgba(255,255,255,0.01)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.02)', opacity: 0.6 }}>
-            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Project Enquiries (Coming Soon)</span>
-            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>Track the status of your hardware kit requests here.</p>
+          <div style={{ padding: '10px', background: 'var(--interaction-disabled)', borderRadius: '6px', border: '1px solid var(--sys-divider)', opacity: 0.6 }}>
+            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>Project Enquiries (Coming Soon)</span>
+            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--txt-secondary)' }}>Track the status of your hardware kit requests here.</p>
           </div>
-          <div style={{ padding: '10px', background: 'rgba(255,255,255,0.01)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.02)', opacity: 0.6 }}>
-            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Order Updates (Coming Soon)</span>
-            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>Live updates for packaging and shipping coordinates.</p>
+          <div style={{ padding: '10px', background: 'var(--interaction-disabled)', borderRadius: '6px', border: '1px solid var(--sys-divider)', opacity: 0.6 }}>
+            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>Order Updates (Coming Soon)</span>
+            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--txt-secondary)' }}>Live updates for packaging and shipping coordinates.</p>
           </div>
-          <div style={{ padding: '10px', background: 'rgba(255,255,255,0.01)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.02)', opacity: 0.6 }}>
-            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Platform Announcements (Coming Soon)</span>
-            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>Receive alerts when Level 3 to 10 curricula go live.</p>
+          <div style={{ padding: '10px', background: 'var(--interaction-disabled)', borderRadius: '6px', border: '1px solid var(--sys-divider)', opacity: 0.6 }}>
+            <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>Platform Announcements (Coming Soon)</span>
+            <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: 'var(--txt-secondary)' }}>Receive alerts when Level 3 to 10 curricula go live.</p>
           </div>
         </div>
 
@@ -491,11 +519,11 @@ export const Header = ({ onToggleDrawer }) => {
 
       {/* Logout Confirmation Modal */}
       <Modal isOpen={showLogoutConfirm} onClose={() => setShowLogoutConfirm(false)} className="modal-content purple" style={{ maxWidth: '360px' }}>
-        <div className="modal-icon" style={{ background: 'rgba(239, 68, 68, 0.15)', color: 'var(--accent-crimson, #ef4444)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="modal-icon" style={{ background: 'var(--interaction-hover)', color: 'var(--status-danger)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span className="material-icons-outlined" style={{ fontSize: '32px' }}>logout</span>
         </div>
         <h4 style={{ textAlign: 'center', margin: '12px 0 6px 0', fontSize: '16px', fontWeight: '800' }}>CONFIRM LOGOUT</h4>
-        <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 20px 0' }}>
+        <p style={{ fontSize: '12.5px', color: 'var(--txt-muted)', textAlign: 'center', margin: '0 0 20px 0' }}>
           Are you sure you want to end your administration session?
         </p>
 
@@ -509,9 +537,9 @@ export const Header = ({ onToggleDrawer }) => {
             style={{ 
               padding: '8px 0', 
               flex: 1, 
-              background: 'var(--accent-crimson, #ef4444)', 
-              color: '#fff', 
-              border: '1px solid rgba(239, 68, 68, 0.2)' 
+              background: 'var(--status-danger)', 
+              color: 'var(--txt-inverse)', 
+              border: '1px solid var(--sys-border)' 
             }}
           >
             Logout

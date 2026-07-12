@@ -168,12 +168,12 @@ export const MyProjects = () => {
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 24px auto',
-            color: 'var(--accent-violet, #8b5cf6)'
+            color: 'var(--brand-primary)'
           }}>
             <span className="material-icons-outlined" style={{ fontSize: '32px' }}>lock</span>
           </div>
-          <h3 style={{ fontSize: '22px', color: '#fff', margin: '0 0 12px 0', fontWeight: '700' }}>Sign In Required</h3>
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', lineHeight: '1.6', margin: '0 0 32px 0' }}>
+          <h3 style={{ fontSize: '22px', color: 'var(--txt-primary)', margin: '0 0 12px 0', fontWeight: '700' }}>Sign In Required</h3>
+          <p style={{ fontSize: '14px', color: 'var(--txt-secondary)', lineHeight: '1.6', margin: '0 0 32px 0' }}>
             Please sign in to view your submitted project enquiries and track their progress.
           </p>
           <Button 
@@ -247,27 +247,27 @@ export const MyProjects = () => {
             padding: '48px 40px', 
             textAlign: 'center',
             borderRadius: '16px',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            background: 'rgba(10, 10, 15, 0.8)',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
+            border: '1px solid var(--sys-border)',
+            background: 'var(--sys-surface)',
+            boxShadow: '0 20px 40px var(--interaction-focus)'
           }}
         >
           <div style={{
             width: '64px',
             height: '64px',
             borderRadius: '50%',
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--interaction-hover)',
+            border: '1px solid var(--sys-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 24px auto',
-            color: 'var(--text-muted, #6b7280)'
+            color: 'var(--txt-muted)'
           }}>
             <span className="material-icons-outlined" style={{ fontSize: '32px' }}>folder_off</span>
           </div>
-          <h3 style={{ fontSize: '22px', color: '#fff', margin: '0 0 12px 0', fontWeight: '700' }}>No Projects Yet</h3>
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', lineHeight: '1.6', margin: '0 0 32px 0' }}>
+          <h3 style={{ fontSize: '22px', color: 'var(--txt-primary)', margin: '0 0 12px 0', fontWeight: '700' }}>No Projects Yet</h3>
+          <p style={{ fontSize: '14px', color: 'var(--txt-secondary)', lineHeight: '1.6', margin: '0 0 32px 0' }}>
             You haven't submitted any project enquiries yet. Explore our engineering project catalog.
           </p>
           <Button 
@@ -308,8 +308,8 @@ export const MyProjects = () => {
             paddingRight: 'var(--page-padding)',
             paddingTop: '16px',
             paddingBottom: '16px',
-            background: 'rgba(10, 10, 18, 0.92)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
+            background: 'var(--sys-page-header-bg)',
+            borderBottom: '1px solid var(--sys-border)',
             marginBottom: '32px'
           }}
         >
@@ -318,8 +318,8 @@ export const MyProjects = () => {
               <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
             </Button>
             <div className="portal-title-area">
-              <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 6px 0', letterSpacing: '0.5px' }}>My Enquiries</h2>
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', margin: 0 }}>Visual logs and tracker for your submitted custom fabrication leads</p>
+              <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 6px 0', letterSpacing: '0.5px' }}>My Enquiries</h2>
+              <p style={{ fontSize: '14px', color: 'var(--txt-secondary)', margin: 0 }}>Visual logs and tracker for your submitted custom fabrication leads</p>
             </div>
           </div>
         </div>
@@ -349,8 +349,8 @@ export const MyProjects = () => {
                   style={{
                     padding: '24px',
                     borderRadius: '12px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    background: 'rgba(10, 10, 15, 0.6)',
+                    border: '1px solid var(--sys-border)',
+                    background: 'var(--sys-surface)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -361,7 +361,7 @@ export const MyProjects = () => {
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)', fontFamily: 'monospace' }}>ID: {enq.id}</span>
+                      <span style={{ fontSize: '11px', color: 'var(--txt-muted)', fontFamily: 'monospace' }}>ID: {enq.id}</span>
                       <span 
                         style={{ 
                           fontSize: '11px', 
@@ -378,38 +378,38 @@ export const MyProjects = () => {
                       </span>
                     </div>
 
-                    <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#fff', margin: '0 0 16px 0', lineHeight: '1.4' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--txt-primary)', margin: '0 0 16px 0', lineHeight: '1.4' }}>
                       {enq.projectTitle || 'Custom Fabrication Enquiry'}
                     </h3>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 16px', marginBottom: '20px' }}>
                       <div>
-                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Category:</span>
-                        <span style={{ fontSize: '13px', color: 'var(--text-secondary, #d1d5db)', fontWeight: '600' }}>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Category:</span>
+                        <span style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '600' }}>
                           {relatedProject?.category || 'Custom Lead'}
                         </span>
                       </div>
                       <div>
-                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Budget:</span>
-                        <span style={{ fontSize: '13px', color: 'var(--text-secondary, #d1d5db)', fontWeight: '600' }}>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Budget:</span>
+                        <span style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '600' }}>
                           {enq.price ? `₹${enq.price}` : 'Not specified'}
                         </span>
                       </div>
                       <div>
-                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Submitted:</span>
-                        <span style={{ fontSize: '13px', color: 'var(--text-secondary, #d1d5db)' }}>{createdDate}</span>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Submitted:</span>
+                        <span style={{ fontSize: '13px', color: 'var(--txt-secondary)' }}>{createdDate}</span>
                       </div>
                       <div>
-                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '2px' }}>Expected Date:</span>
-                        <span style={{ fontSize: '13px', color: parsed.submissionDate !== '-' ? 'var(--text-secondary)' : 'var(--text-muted)' }}>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Expected Date:</span>
+                        <span style={{ fontSize: '13px', color: parsed.submissionDate !== '-' ? 'var(--txt-secondary)' : 'var(--txt-muted)' }}>
                           {parsed.submissionDate || '-'}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)' }}>Updated: {updatedDate}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid var(--sys-divider)' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Updated: {updatedDate}</span>
                     <Button 
                       type="button" 
                       variant="secondary" 

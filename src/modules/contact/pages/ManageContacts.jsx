@@ -19,10 +19,10 @@ const STATUS_LABELS = {
 };
 
 const STATUS_COLORS = {
-  new: { bg: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', border: 'rgba(245, 158, 11, 0.2)' },
-  in_progress: { bg: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', border: 'rgba(59, 130, 246, 0.2)' },
-  resolved: { bg: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: 'rgba(16, 185, 129, 0.2)' },
-  closed: { bg: 'rgba(107, 114, 128, 0.1)', color: '#9ca3af', border: 'rgba(107, 114, 128, 0.2)' }
+  new: { bg: 'var(--interaction-hover)', color: 'var(--status-warning)', border: 'var(--sys-border)' },
+  in_progress: { bg: 'var(--interaction-hover)', color: 'var(--brand-accent)', border: 'var(--sys-border)' },
+  resolved: { bg: 'var(--interaction-selected)', color: 'var(--status-success)', border: 'var(--sys-border)' },
+  closed: { bg: 'var(--interaction-hover)', color: 'var(--txt-muted)', border: 'var(--sys-border)' }
 };
 
 const CATEGORY_OPTIONS = [
@@ -47,6 +47,13 @@ export const ManageContacts = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+
+  // Staged Filter state (for drawer applying/resetting)
+  const [stagedStatusFilter, setStagedStatusFilter] = useState('all');
+  const [stagedCategoryFilter, setStagedCategoryFilter] = useState('all');
+  const [stagedStartDate, setStagedStartDate] = useState('');
+  const [stagedEndDate, setStagedEndDate] = useState('');
+  const [sortField, setSortField] = useState('date-desc');
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -126,11 +133,43 @@ export const ManageContacts = () => {
     });
   }, [contacts, search, statusFilter, categoryFilter, startDate, endDate]);
 
-  const totalPages = Math.ceil(filteredContacts.length / itemsPerPage);
+  const sortedContacts = useMemo(() => {
+    return [...filteredContacts].sort((a, b) => {
+      if (sortField === 'date-desc') {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      } else if (sortField === 'date-asc') {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      } else if (sortField === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+      return 0;
+    });
+  }, [filteredContacts, sortField]);
+
+  const totalPages = Math.ceil(sortedContacts.length / itemsPerPage);
   const paginatedContacts = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredContacts.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredContacts, currentPage, itemsPerPage]);
+    return sortedContacts.slice(startIndex, startIndex + itemsPerPage);
+  }, [sortedContacts, currentPage, itemsPerPage]);
+
+  const handleApplyFilters = () => {
+    setStatusFilter(stagedStatusFilter);
+    setCategoryFilter(stagedCategoryFilter);
+    setStartDate(stagedStartDate);
+    setEndDate(stagedEndDate);
+  };
+
+  const handleResetFilters = () => {
+    setStagedStatusFilter('all');
+    setStagedCategoryFilter('all');
+    setStagedStartDate('');
+    setStagedEndDate('');
+    setStatusFilter('all');
+    setCategoryFilter('all');
+    setStartDate('');
+    setEndDate('');
+    setSearch('');
+  };
 
   return (
     <motion.section
@@ -146,151 +185,120 @@ export const ManageContacts = () => {
           <h2>Manage Contacts</h2>
           <p>Audit, track, and resolve user submissions and collaboration queries</p>
         </div>
-      </div>
-
-      <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+      </div>      <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
         {/* Main Table/Grid */}
-        <Card style={{ background: 'rgba(10, 10, 15, 0.25)', border: '1px solid rgba(255,255,255,0.06)', padding: 0, overflow: 'hidden' }}>
+        <Card style={{ background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', padding: 0, overflow: 'hidden' }}>
         
-        {/* Toolbar / Filters Panel inside the Table Card */}
-        <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', alignItems: 'end' }}>
-            
-            {/* Search bar */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Search</label>
-              <Input
-                type="text"
-                placeholder="Search name, mobile, email..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="form-input"
-                style={{
-                  height: '38px',
-                  background: 'rgba(15, 15, 25, 0.8)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#fff',
-                  borderRadius: '6px',
-                  padding: '0 12px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
-                }}
-              />
-            </div>
-
-            {/* Status filter */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Status</label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                style={{
-                  height: '38px',
-                  background: 'rgba(15, 15, 25, 0.8)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#fff',
-                  borderRadius: '6px',
-                  padding: '0 12px',
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="all">All Statuses</option>
-                {STATUS_WORKFLOW.map(st => (
-                  <option key={st} value={st}>{STATUS_LABELS[st]}</option>
+        <AdminToolbar
+          searchId="contact-search"
+          searchLabel="Search Contacts"
+          searchPlaceholder="Search name, mobile, email..."
+          searchValue={search}
+          onSearchChange={(e) => setSearch(e.target.value)}
+          activeFilterCount={
+            (statusFilter !== 'all' ? 1 : 0) +
+            (categoryFilter !== 'all' ? 1 : 0) +
+            (startDate ? 1 : 0) +
+            (endDate ? 1 : 0)
+          }
+          sortValue={sortField}
+          onSortChange={(e) => setSortField(e.target.value)}
+          sortOptions={[
+            { value: 'date-desc', label: 'Newest First' },
+            { value: 'date-asc', label: 'Oldest First' },
+            { value: 'name', label: 'Name' },
+          ]}
+          onReset={handleResetFilters}
+          onApply={handleApplyFilters}
+          className="admin-toolbar-wrapper"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', borderBottom: '1px solid var(--sys-border)', position: 'relative', zIndex: 10 }}
+        >
+          {/* Filter Panel Content */}
+          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="calc-row">
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Status</label>
+              <div className="admin-chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                <button
+                  type="button"
+                  onClick={() => setStagedStatusFilter('all')}
+                  className={`admin-chip ${stagedStatusFilter === 'all' ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {STATUS_WORKFLOW.map(k => (
+                  <button
+                    key={k}
+                    type="button"
+                    onClick={() => setStagedStatusFilter(k)}
+                    className={`admin-chip ${stagedStatusFilter === k ? 'active' : ''}`}
+                  >
+                    {STATUS_LABELS[k]}
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
 
-            {/* Category filter */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Category</label>
+            <div className="calc-row">
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Category</label>
               <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                style={{
-                  height: '38px',
-                  background: 'rgba(15, 15, 25, 0.8)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#fff',
-                  borderRadius: '6px',
-                  padding: '0 12px',
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
+                className="form-input"
+                value={stagedCategoryFilter}
+                onChange={(e) => setStagedCategoryFilter(e.target.value)}
+                style={{ width: '100%', padding: '10px 14px' }}
               >
-                <option value="all">All Categories</option>
+                <option value="all" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>All Categories</option>
                 {CATEGORY_OPTIONS.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat} style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>{cat}</option>
                 ))}
               </select>
             </div>
 
-            {/* Date range picker */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>From Date</label>
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="form-input"
-                style={{
-                  height: '38px',
-                  background: 'rgba(15, 15, 25, 0.8)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#fff',
-                  borderRadius: '6px',
-                  padding: '0 12px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
-                }}
-              />
+            <div className="calc-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>From Date</label>
+                <Input
+                  type="date"
+                  value={stagedStartDate}
+                  onChange={(e) => setStagedStartDate(e.target.value)}
+                  className="form-input"
+                  style={{ width: '100%' }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>To Date</label>
+                <Input
+                  type="date"
+                  value={stagedEndDate}
+                  onChange={(e) => setStagedEndDate(e.target.value)}
+                  className="form-input"
+                  style={{ width: '100%' }}
+                />
+              </div>
             </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>To Date</label>
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="form-input"
-                style={{
-                  height: '38px',
-                  background: 'rgba(15, 15, 25, 0.8)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#fff',
-                  borderRadius: '6px',
-                  padding: '0 12px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
-                }}
-              />
-            </div>
-
           </div>
-        </div>
+        </AdminToolbar>
 
         {isLoading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-muted, #6b7280)' }}>
+          <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>
             Loading contact requests...
           </div>
         ) : filteredContacts.length === 0 ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-muted, #6b7280)' }}>
+          <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>
             No contact submissions found matching the criteria.
           </div>
         ) : (
           <>
-            <div style={{ overflowX: 'auto' }}>
+            <div className="tbl-scroll-wrap">
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.01)' }}>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted, #6b7280)', fontWeight: '700' }}>Name</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted, #6b7280)', fontWeight: '700' }}>Mobile Number</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted, #6b7280)', fontWeight: '700' }}>Email</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted, #6b7280)', fontWeight: '700' }}>Category</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted, #6b7280)', fontWeight: '700' }}>Subject</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted, #6b7280)', fontWeight: '700' }}>Status</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted, #6b7280)', fontWeight: '700' }}>Submitted Date</th>
+                <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)' }}>
+                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Name</th>
+                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Mobile Number</th>
+                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Email</th>
+                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Category</th>
+                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Subject</th>
+                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Status</th>
+                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Submitted Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -307,21 +315,21 @@ export const ManageContacts = () => {
                       key={contact.id} 
                       onClick={() => handleSelectContact(contact)}
                       style={{ 
-                        borderBottom: '1px solid rgba(255,255,255,0.04)', 
+                        borderBottom: '1px solid var(--sys-divider)', 
                         cursor: 'pointer',
                         transition: 'background 0.2s'
                       }}
                       className="admin-table-row"
                     >
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: '#fff', fontWeight: '600' }}>{contact.name}</td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--text-secondary, #d1d5db)' }}>{contact.mobileNumber}</td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--text-secondary, #d1d5db)' }}>{contact.email}</td>
+                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-primary)', fontWeight: '600' }}>{contact.name}</td>
+                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>{contact.mobileNumber}</td>
+                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>{contact.email}</td>
                       <td style={{ padding: '16px 20px', fontSize: '12px' }}>
-                        <span style={{ padding: '3px 8px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: '#d1d5db', fontSize: '11px' }}>
+                        <span style={{ padding: '3px 8px', borderRadius: '12px', background: 'var(--interaction-hover)', color: 'var(--txt-secondary)', fontSize: '11px' }}>
                           {contact.category}
                         </span>
                       </td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: '#fff', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-primary)', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {contact.subject}
                       </td>
                       <td style={{ padding: '16px 20px', fontSize: '13px' }}>
@@ -338,7 +346,7 @@ export const ManageContacts = () => {
                           {STATUS_LABELS[contact.status]}
                         </span>
                       </td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--text-muted, #6b7280)' }}>{dateStr}</td>
+                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-muted)' }}>{dateStr}</td>
                     </tr>
                   );
                 })}
@@ -347,14 +355,14 @@ export const ManageContacts = () => {
           </div>
 
           {/* Pagination Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)', flexWrap: 'wrap', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
+              <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>
                 Showing Page {currentPage} of {totalPages || 1} ({filteredContacts.length} contacts found)
               </span>
-              <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>|</span>
+              <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>|</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>Rows per page:</span>
+                <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>Rows per page:</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => {
@@ -367,16 +375,16 @@ export const ManageContacts = () => {
                     fontSize: '12px',
                     height: '28px',
                     width: '70px',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'var(--input-bg)',
+                    border: '1px solid var(--sys-border)',
                     borderRadius: '4px',
-                    color: '#fff'
+                    color: 'var(--txt-primary)'
                   }}
                 >
-                  <option value="10">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
+                  <option value="10" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>10</option>
+                  <option value="25" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>25</option>
+                  <option value="50" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>50</option>
+                  <option value="100" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>100</option>
                 </select>
               </div>
             </div>
@@ -417,32 +425,32 @@ export const ManageContacts = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '10px 0', textAlign: 'left' }}>
             
             {/* Meta Info */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '20px', textAlign: 'left' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px', borderBottom: '1px solid var(--sys-divider)', paddingBottom: '20px', textAlign: 'left' }}>
               <div style={{ textAlign: 'left' }}>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Name</span>
-                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600', textAlign: 'left' }}>{selectedContact.name}</span>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Name</span>
+                <span style={{ fontSize: '14px', color: 'var(--txt-primary)', fontWeight: '600', textAlign: 'left' }}>{selectedContact.name}</span>
               </div>
               <div style={{ textAlign: 'left' }}>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Mobile Number</span>
-                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600', textAlign: 'left' }}>{selectedContact.mobileNumber}</span>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Mobile Number</span>
+                <span style={{ fontSize: '14px', color: 'var(--txt-primary)', fontWeight: '600', textAlign: 'left' }}>{selectedContact.mobileNumber}</span>
               </div>
               <div style={{ textAlign: 'left' }}>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Email Address</span>
-                <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600', textAlign: 'left' }}>{selectedContact.email}</span>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Email Address</span>
+                <span style={{ fontSize: '14px', color: 'var(--txt-primary)', fontWeight: '600', textAlign: 'left' }}>{selectedContact.email}</span>
               </div>
               <div style={{ textAlign: 'left' }}>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Submitted Date</span>
-                <span style={{ fontSize: '14px', color: 'var(--text-secondary, #d1d5db)', textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Submitted Date</span>
+                <span style={{ fontSize: '14px', color: 'var(--txt-secondary)', textAlign: 'left' }}>
                   {selectedContact.createdAt ? new Date(selectedContact.createdAt).toLocaleString('en-IN') : '-'}
                 </span>
               </div>
               <div style={{ textAlign: 'left' }}>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Category</span>
-                <span style={{ fontSize: '13px', color: 'var(--accent-violet, #a78bfa)', fontWeight: '600', textAlign: 'left' }}>{selectedContact.category}</span>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Category</span>
+                <span style={{ fontSize: '13px', color: 'var(--brand-primary)', fontWeight: '600', textAlign: 'left' }}>{selectedContact.category}</span>
               </div>
               <div style={{ textAlign: 'left' }}>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Last Updated</span>
-                <span style={{ fontSize: '14px', color: 'var(--text-secondary, #d1d5db)', textAlign: 'left' }}>
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '4px', textAlign: 'left' }}>Last Updated</span>
+                <span style={{ fontSize: '14px', color: 'var(--txt-secondary)', textAlign: 'left' }}>
                   {selectedContact.updatedAt ? new Date(selectedContact.updatedAt).toLocaleString('en-IN') : '-'}
                 </span>
               </div>
@@ -450,20 +458,20 @@ export const ManageContacts = () => {
 
             {/* Subject */}
             <div style={{ width: '100%', textAlign: 'left' }}>
-              <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '6px', textAlign: 'left' }}>Subject / Title</span>
-              <h4 style={{ fontSize: '16px', fontWeight: '700', color: '#fff', margin: 0, textAlign: 'left', wordBreak: 'break-word' }}>{selectedContact.subject}</h4>
+              <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '6px', textAlign: 'left' }}>Subject / Title</span>
+              <h4 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)', margin: 0, textAlign: 'left', wordBreak: 'break-word' }}>{selectedContact.subject}</h4>
             </div>
 
             {/* Message Body */}
             <div>
-              <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase', marginBottom: '6px' }}>Message</span>
+              <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Message</span>
               <div style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(255,255,255,0.06)',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--sys-border)',
                 borderRadius: '8px',
                 padding: '16px',
                 fontSize: '13px',
-                color: 'var(--text-secondary, #d1d5db)',
+                color: 'var(--txt-secondary)',
                 lineHeight: '1.6',
                 whiteSpace: 'pre-wrap'
               }}>
@@ -471,20 +479,19 @@ export const ManageContacts = () => {
               </div>
             </div>
 
-            {/* RLS / Management fields */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '10px' }}>
               
               {/* Status workflow */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Status Workflow</span>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>Status Workflow</span>
                 <select
                   value={updatedStatus}
                   onChange={(e) => setUpdatedStatus(e.target.value)}
                   style={{
                     height: '38px',
-                    background: 'rgba(15, 15, 25, 0.8)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    color: '#fff',
+                    background: 'var(--input-bg)',
+                    border: '1px solid var(--sys-border)',
+                    color: 'var(--txt-primary)',
                     borderRadius: '6px',
                     padding: '0 12px',
                     outline: 'none',
@@ -492,29 +499,29 @@ export const ManageContacts = () => {
                   }}
                 >
                   {STATUS_WORKFLOW.map(st => (
-                    <option key={st} value={st}>{STATUS_LABELS[st]}</option>
+                    <option key={st} value={st} style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>{STATUS_LABELS[st]}</option>
                   ))}
                 </select>
               </div>
 
               {/* Assigned To - Future Ready */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Assigned To (Future Ready)</span>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>Assigned To (Future Ready)</span>
                 <select
                   disabled
                   value=""
                   style={{
                     height: '38px',
-                    background: 'rgba(15, 15, 25, 0.4)',
-                    border: '1px solid rgba(255,255,255,0.04)',
-                    color: 'var(--text-muted, #6b7280)',
+                    background: 'var(--interaction-disabled)',
+                    border: '1px solid var(--sys-border)',
+                    color: 'var(--txt-muted)',
                     borderRadius: '6px',
                     padding: '0 12px',
                     outline: 'none',
                     cursor: 'not-allowed'
                   }}
                 >
-                  <option value="">Unassigned</option>
+                  <option value="" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-muted)' }}>Unassigned</option>
                 </select>
               </div>
 
@@ -522,17 +529,17 @@ export const ManageContacts = () => {
 
             {/* Internal Notes */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)', textTransform: 'uppercase' }}>Internal Notes</span>
+              <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>Internal Notes</span>
               <textarea
                 value={internalNote}
                 onChange={(e) => setInternalNote(e.target.value)}
                 placeholder="Add private logging notes and tracking history here..."
                 style={{
                   minHeight: '80px',
-                  background: 'rgba(255,255,255,0.01)',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--sys-border)',
                   borderRadius: '6px',
-                  color: '#fff',
+                  color: 'var(--txt-primary)',
                   padding: '10px 14px',
                   fontSize: '13px',
                   resize: 'vertical',
@@ -544,7 +551,7 @@ export const ManageContacts = () => {
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '16px', borderTop: '1px solid var(--sys-divider)', paddingTop: '16px' }}>
               <Button 
                 variant="secondary" 
                 onClick={() => setSelectedContact(null)}
@@ -569,11 +576,11 @@ export const ManageContacts = () => {
       {/* Embedded Table Style Overrides */}
       <style>{`
         .admin-table-row:hover {
-          background: rgba(255, 255, 255, 0.02) !important;
+          background: var(--interaction-hover) !important;
         }
         .focus-glow-violet:focus {
-          border-color: #8b5cf6 !important;
-          box-shadow: 0 0 8px rgba(139, 92, 246, 0.15) !important;
+          border-color: var(--brand-primary) !important;
+          box-shadow: 0 0 8px var(--interaction-focus) !important;
         }
       `}</style>
 

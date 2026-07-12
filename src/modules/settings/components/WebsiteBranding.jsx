@@ -168,7 +168,7 @@ export const WebsiteBranding = ({ onBack }) => {
                   style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} 
                 />
               ) : (
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>No Logo</span>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>No Logo</span>
               )}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -188,7 +188,7 @@ export const WebsiteBranding = ({ onBack }) => {
               >
                 {isUploadingLogo ? 'Uploading...' : 'Upload Logo'}
               </button>
-              <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Max size 5MB. SVG, PNG, JPG, or WEBP.</span>
+              <span style={{ fontSize: '10px', color: 'var(--txt-muted)' }}>Max size 5MB. SVG, PNG, JPG, or WEBP.</span>
             </div>
           </div>
         </div>
@@ -204,7 +204,7 @@ export const WebsiteBranding = ({ onBack }) => {
                   style={{ maxHeight: '24px', maxWidth: '24px', objectFit: 'contain' }} 
                 />
               ) : (
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>No Icon</span>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>No Icon</span>
               )}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -224,7 +224,7 @@ export const WebsiteBranding = ({ onBack }) => {
               >
                 {isUploadingFavicon ? 'Uploading...' : 'Upload Favicon'}
               </button>
-              <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Max size 1MB. ICO, PNG, or SVG only.</span>
+              <span style={{ fontSize: '10px', color: 'var(--txt-muted)' }}>Max size 1MB. ICO, PNG, or SVG only.</span>
             </div>
           </div>
         </div>

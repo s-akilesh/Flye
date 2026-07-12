@@ -518,7 +518,7 @@ export const EditProject = () => {
             style={{
               background: 'none',
               border: 'none',
-              color: '#fff',
+              color: 'var(--txt-primary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -529,7 +529,7 @@ export const EditProject = () => {
           >
             <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
           </button>
-          <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
+          <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
             Edit Kit
           </span>
         </div>
@@ -629,12 +629,12 @@ export const EditProject = () => {
               <div
                 onClick={() => document.getElementById('edit-thumb-upload-input').click()}
                 style={{
-                  border: thumbnailPreview ? '2px solid var(--accent-blue)' : '2px dashed rgba(255,255,255,0.12)',
+                  border: thumbnailPreview ? '2px solid var(--brand-primary)' : '2px dashed var(--sys-border)',
                   borderRadius: '8px',
                   padding: thumbnailPreview ? '0' : '24px 16px',
                   cursor: 'pointer',
                   textAlign: 'center',
-                  background: thumbnailPreview ? 'transparent' : 'rgba(255,255,255,0.02)',
+                  background: thumbnailPreview ? 'transparent' : 'var(--interaction-hover)',
                   overflow: 'hidden',
                   minHeight: thumbnailPreview ? '160px' : 'auto',
                   position: 'relative',
@@ -650,8 +650,8 @@ export const EditProject = () => {
                 ) : (
                   <>
                     <div style={{ fontSize: '28px', marginBottom: '8px' }}>🖼️</div>
-                    <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>Click to upload a new thumbnail</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Any image format · Max 5MB</div>
+                    <div style={{ fontSize: '13px', color: 'var(--txt-muted)', marginBottom: '4px' }}>Click to upload a new thumbnail</div>
+                    <div style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Any image format · Max 5MB</div>
                   </>
                 )}
                 {thumbnailPreview && (
@@ -659,14 +659,14 @@ export const EditProject = () => {
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); document.getElementById('edit-thumb-upload-input').click(); }}
-                      style={{ background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', borderRadius: '4px', padding: '4px 8px', fontSize: '11px', cursor: 'pointer' }}
+                      style={{ background: 'rgba(0, 0, 0, 0.65)', border: 'none', color: '#fff', borderRadius: '4px', padding: '4px 8px', fontSize: '11px', cursor: 'pointer' }}
                     >
                       Change
                     </button>
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); setThumbnailPreview(''); setThumbnailFile(null); }}
-                      style={{ background: 'rgba(239,68,68,0.7)', border: 'none', color: '#fff', borderRadius: '4px', padding: '4px 8px', fontSize: '11px', cursor: 'pointer' }}
+                      style={{ background: 'var(--status-error)', border: 'none', color: '#fff', borderRadius: '4px', padding: '4px 8px', fontSize: '11px', cursor: 'pointer' }}
                     >
                       Remove
                     </button>
@@ -770,7 +770,7 @@ export const EditProject = () => {
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '13px', fontWeight: '800', color: '#fff' }}>Available Kits Configuration</span>
+                <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--txt-primary)' }}>Available Kits Configuration</span>
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -788,8 +788,8 @@ export const EditProject = () => {
                     className="card-glass" 
                     style={{ 
                       padding: '16px', 
-                      border: '1px solid rgba(255, 255, 255, 0.05)', 
-                      background: kit.enabled ? 'rgba(255,255,255,0.01)' : 'rgba(255,255,255,0.002)',
+                      border: '1px solid var(--sys-border)', 
+                      background: kit.enabled ? 'var(--sys-surface)' : 'var(--sys-surface-elevated)',
                       opacity: kit.enabled ? 1 : 0.6,
                       borderRadius: '8px'
                     }}
@@ -815,7 +815,7 @@ export const EditProject = () => {
                         <button
                           type="button"
                           className="btn"
-                          style={{ padding: '4px 8px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-red)', fontSize: '11px', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                          style={{ padding: '4px 8px', background: 'var(--interaction-hover)', color: 'var(--status-error)', fontSize: '11px', border: '1px solid var(--sys-border)' }}
                           onClick={() => handleDeleteKit(kitIdx)}
                         >
                           Delete
@@ -828,7 +828,7 @@ export const EditProject = () => {
                       <div className="grid-12" style={{ gap: '12px' }}>
                         {/* Price */}
                         <div style={{ gridColumn: 'span 12' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Price (₹) *</label>
+                          <label style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Price (₹) *</label>
                           <input 
                             type="number" 
                             value={kit.price} 
@@ -839,7 +839,7 @@ export const EditProject = () => {
 
                         {/* Interactive Features List Manager */}
                         <div style={{ gridColumn: 'span 12' }} className="calc-row">
-                          <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Kit Included Deliverables (Features)</label>
+                          <label style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Kit Included Deliverables (Features)</label>
                           
                           {/* List of current features */}
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
@@ -856,9 +856,9 @@ export const EditProject = () => {
                                     fontSize: '11px', 
                                     padding: '4px 8px', 
                                     borderRadius: '4px',
-                                    background: isExcluded ? 'rgba(239, 68, 68, 0.08)' : 'rgba(52, 211, 153, 0.08)',
-                                    border: `1px solid ${isExcluded ? 'rgba(239, 68, 68, 0.15)' : 'rgba(52, 211, 153, 0.15)'}`,
-                                    color: isExcluded ? 'var(--accent-red)' : 'var(--accent-emerald)'
+                                    background: isExcluded ? 'rgba(239, 68, 68, 0.12)' : 'rgba(52, 211, 153, 0.12)',
+                                    border: `1px solid ${isExcluded ? 'var(--status-error)' : 'var(--status-success)'}`,
+                                    color: isExcluded ? 'var(--status-error)' : 'var(--status-success)'
                                   }}
                                 >
                                   {isExcluded ? '✗' : '✓'} {cleanFeat}
@@ -986,12 +986,12 @@ export const EditProject = () => {
               {resourcesList.map((res, idx) => {
                 const isUpload = res.source !== 'url';
                 return (
-                  <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '4px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', position: 'relative' }}>
+                  <div key={idx} style={{ background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', borderRadius: '4px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', position: 'relative' }}>
                     <Button
                       type="button"
                       variant="ghost"
                       onClick={() => handleRemoveResource(idx)}
-                      style={{ position: 'absolute', top: '4px', right: '4px', padding: '2px 6px', color: 'var(--accent-crimson, #ef4444)', fontSize: '12px' }}
+                      style={{ position: 'absolute', top: '4px', right: '4px', padding: '2px 6px', color: 'var(--status-error)', fontSize: '12px' }}
                     >
                       ✕
                     </Button>
@@ -1038,7 +1038,7 @@ export const EditProject = () => {
                           onChange={(e) => handleFileChange(idx, e.target.files[0])}
                         />
                         {res.size && (
-                          <div style={{ fontSize: '10px', color: 'var(--accent-emerald)', marginTop: '4px' }}>
+                          <div style={{ fontSize: '10px', color: 'var(--status-success)', marginTop: '4px' }}>
                             Parsed: {res.type?.toUpperCase()} &bull; {res.size}
                           </div>
                         )}
@@ -1055,7 +1055,7 @@ export const EditProject = () => {
                           style={{ padding: '4px 8px', fontSize: '11px', height: '28px' }}
                         />
                         {res.url && res.size && (
-                          <div style={{ fontSize: '10px', color: 'var(--accent-emerald)', marginTop: '4px' }}>
+                          <div style={{ fontSize: '10px', color: 'var(--status-success)', marginTop: '4px' }}>
                             Parsed: {res.type?.toUpperCase()} &bull; {res.size}
                           </div>
                         )}
@@ -1083,9 +1083,9 @@ export const EditProject = () => {
                                 borderRadius: '6px',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s',
-                                background: isSelected ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                                border: `1px solid ${isSelected ? 'var(--accent-violet)' : 'rgba(255,255,255,0.06)'}`,
-                                color: isSelected ? '#fff' : 'var(--text-secondary)',
+                                background: isSelected ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                                border: `1px solid ${isSelected ? 'var(--brand-primary)' : 'var(--sys-border)'}`,
+                                color: isSelected ? 'var(--txt-primary)' : 'var(--txt-secondary)',
                                 textAlign: 'center'
                               }}
                             >

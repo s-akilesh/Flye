@@ -200,9 +200,9 @@ export const LearningHub = () => {
               <span>REPLY PORT:</span>
               <span className="receipt-val">{consultReceipt.email}</span>
             </div>
-            <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
+            <div className="receipt-row" style={{ borderTop: '1px dashed var(--sys-border)', paddingTop: '8px', marginTop: '8px' }}>
               <span>STATUS:</span>
-              <span className="receipt-val" style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>
+              <span className="receipt-val" style={{ color: 'var(--status-success)', fontWeight: 600 }}>
                 LINK STABLE
               </span>
             </div>

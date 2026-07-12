@@ -110,9 +110,9 @@ export const AdminSettings = () => {
             width: '8px', 
             height: '8px', 
             borderRadius: '50%', 
-            background: 'var(--accent-orange, #f97316)', 
+            background: 'var(--status-warning)', 
             display: 'inline-block',
-            boxShadow: '0 0 8px var(--accent-orange, #f97316)',
+            boxShadow: '0 0 8px var(--status-warning)',
             marginLeft: '8px'
           }} 
           title="Needs Attention"
@@ -125,9 +125,9 @@ export const AdminSettings = () => {
           width: '8px', 
           height: '8px', 
           borderRadius: '50%', 
-          background: 'var(--accent-emerald, #10b981)', 
+          background: 'var(--status-success)', 
           display: 'inline-block',
-          boxShadow: '0 0 8px var(--accent-emerald, #10b981)',
+          boxShadow: '0 0 8px var(--status-success)',
           marginLeft: '8px'
         }} 
         title="Configured"
@@ -148,7 +148,7 @@ export const AdminSettings = () => {
     >
       {/* Mobile Sticky Sub-Header */}
       <header className="mobile-learning-header">
-        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
+        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)', textTransform: 'uppercase' }}>
           {ActiveFormComponent ? activeRow.title : 'Platform Settings'}
         </span>
       </header>
@@ -156,7 +156,7 @@ export const AdminSettings = () => {
       {ActiveFormComponent ? (
         /* Render Selected Form Screen dynamically */
         <div className="portal-content">
-          <Suspense fallback={<div style={{ padding: 'var(--space-5)', color: 'var(--text-muted)', fontSize: '13px' }}>Loading settings page...</div>}>
+          <Suspense fallback={<div style={{ padding: 'var(--space-5)', color: 'var(--txt-muted)', fontSize: '13px' }}>Loading settings page...</div>}>
             <ActiveFormComponent onBack={handleBack} />
           </Suspense>
         </div>
@@ -165,8 +165,8 @@ export const AdminSettings = () => {
         <>
           <div className="portal-header" style={{ marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="portal-title-area">
-              <h2 style={{ fontSize: '24px', fontWeight: '800', margin: 0 }}>Platform Settings</h2>
-              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: '800', margin: 0, color: 'var(--txt-primary)' }}>Platform Settings</h2>
+              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--txt-secondary)' }}>
                 Manage credentials, routing rules, configurations and website details.
               </p>
             </div>
@@ -185,21 +185,21 @@ export const AdminSettings = () => {
                     width: '100%',
                     padding: '12px 16px 12px 40px',
                     fontSize: '13px',
-                    color: 'var(--text-primary)',
-                    background: 'rgba(0, 0, 0, 0.3)',
-                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--txt-primary)',
+                    background: 'var(--input-bg)',
+                    border: '1px solid var(--sys-border)',
                     borderRadius: '8px',
                     outline: 'none',
                     transition: 'all 0.2s ease',
                   }}
                 />
-                <span className="material-icons-outlined" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)', fontSize: '18px' }}>
+                <span className="material-icons-outlined" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--txt-muted)', fontSize: '18px' }}>
                   search
                 </span>
                 {searchQuery && (
                   <button
                     onClick={() => { setSearchQuery(''); setDebouncedQuery(''); }}
-                    style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '12px' }}
+                    style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--txt-muted)', cursor: 'pointer', fontSize: '12px' }}
                   >
                     ✕
                   </button>
@@ -215,8 +215,8 @@ export const AdminSettings = () => {
                     
                     {/* Category Title Heading */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 4px', marginBottom: '4px' }}>
-                      <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet, #8b5cf6)' }}>{cat.icon}</span>
-                      <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#fff', letterSpacing: '0.5px', margin: 0 }}>
+                      <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--brand-primary)' }}>{cat.icon}</span>
+                      <h3 style={{ fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)', letterSpacing: '0.5px', margin: 0 }}>
                         {cat.title}
                       </h3>
                     </div>
@@ -233,20 +233,20 @@ export const AdminSettings = () => {
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             padding: '16px 20px',
-                            background: 'rgba(255, 255, 255, 0.01)',
-                            border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))',
+                            background: 'var(--sys-surface)',
+                            border: '1px solid var(--sys-border)',
                             borderRadius: '8px',
                             cursor: 'pointer',
                             transition: 'all 0.2s ease',
                           }}
                         >
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'left' }}>
-                            <h4 style={{ fontSize: '13px', fontWeight: '700', color: '#fff', margin: 0 }}>{row.title}</h4>
-                            <p style={{ fontSize: '12px', color: 'var(--text-secondary, #9ca3af)', margin: 0, lineHeight: '1.4' }}>{row.description}</p>
+                            <h4 style={{ fontSize: '13px', fontWeight: '700', color: 'var(--txt-primary)', margin: 0 }}>{row.title}</h4>
+                            <p style={{ fontSize: '12px', color: 'var(--txt-secondary)', margin: 0, lineHeight: '1.4' }}>{row.description}</p>
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                             {renderStatusTag(row.status(settings))}
-                            <span style={{ color: 'var(--text-dim, #6b7280)', fontSize: '14px', transition: 'transform 0.2s ease' }} className="card-arrow-icon">→</span>
+                            <span style={{ color: 'var(--txt-muted)', fontSize: '14px', transition: 'transform 0.2s ease' }} className="card-arrow-icon">→</span>
                           </div>
                         </div>
                       ))}
@@ -259,14 +259,14 @@ export const AdminSettings = () => {
               /* suggestions-driven empty state */
               <div className="settings-empty-state">
                 <div style={{ fontSize: '28px', marginBottom: 'var(--space-3)' }}>🔍</div>
-                <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--txt-primary)', margin: '0 0 6px 0' }}>
                   No settings found
                 </h3>
-                <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '0 0 var(--space-4) 0' }}>
+                <p style={{ fontSize: '12px', color: 'var(--txt-muted)', margin: '0 0 var(--space-4) 0' }}>
                   We couldn't find any results matching "{debouncedQuery}"
                 </p>
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 'var(--space-3)', width: '100%', maxWidth: '320px', margin: '0 auto' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <div style={{ borderTop: '1px solid var(--sys-divider)', paddingTop: 'var(--space-3)', width: '100%', maxWidth: '320px', margin: '0 auto' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Try searching for:
                   </span>
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '8px' }}>
@@ -277,9 +277,9 @@ export const AdminSettings = () => {
                         onClick={() => setSearchQuery(sug)}
                         style={{
                           fontSize: '11px',
-                          color: 'var(--text-secondary)',
-                          background: 'rgba(255,255,255,0.03)',
-                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--txt-secondary)',
+                          background: 'var(--interaction-hover)',
+                          border: '1px solid var(--sys-border)',
                           borderRadius: '6px',
                           padding: '4px 10px',
                           cursor: 'pointer',
@@ -298,13 +298,13 @@ export const AdminSettings = () => {
       )}
       <style>{`
         .settings-clickable-card:hover {
-          background: rgba(255, 255, 255, 0.02) !important;
-          border-color: rgba(255, 255, 255, 0.12) !important;
+          background: var(--interaction-hover) !important;
+          border-color: var(--brand-primary) !important;
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         .settings-clickable-card:hover .card-arrow-icon {
-          color: #fff !important;
+          color: var(--txt-primary) !important;
           transform: translateX(2px);
         }
       `}</style>

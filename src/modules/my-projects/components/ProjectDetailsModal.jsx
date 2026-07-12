@@ -117,14 +117,14 @@ export const ProjectDetailsModal = ({ isOpen, onClose, enquiry, projectInfo }) =
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="modal-content purple" style={{ maxWidth: '800px', width: '90%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid var(--sys-divider)', paddingBottom: '16px' }}>
         <div style={{ textAlign: 'left' }}>
-          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent-violet)' }}>Project Tracking ID: {enquiry.id}</span>
-          <h3 style={{ margin: '4px 0 0 0', fontSize: '20px', fontWeight: '700', color: '#fff' }}>{enquiry.projectTitle || 'Custom Project Development'}</h3>
+          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--brand-primary)' }}>Project Tracking ID: {enquiry.id}</span>
+          <h3 style={{ margin: '4px 0 0 0', fontSize: '20px', fontWeight: '700', color: 'var(--txt-primary)' }}>{enquiry.projectTitle || 'Custom Project Development'}</h3>
         </div>
         <button 
           onClick={onClose} 
-          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          style={{ background: 'none', border: 'none', color: 'var(--txt-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
         >
           <span className="material-icons">close</span>
         </button>
@@ -133,49 +133,49 @@ export const ProjectDetailsModal = ({ isOpen, onClose, enquiry, projectInfo }) =
       <div style={{ maxHeight: '70vh', overflowY: 'auto', paddingRight: '4px', textAlign: 'left' }}>
         {/* Progress Timeline */}
         <div style={{ marginBottom: '32px' }}>
-          <h4 style={{ fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-muted)', marginBottom: '16px' }}>Production Roadmap</h4>
+          <h4 style={{ fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--txt-muted)', marginBottom: '16px' }}>Production Roadmap</h4>
           <ProjectProgressTracker status={enquiry.status} />
         </div>
 
         <div className="modal-details-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
           {/* Left Column: Metadata */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)', borderRadius: '8px', padding: '16px' }}>
-              <h5 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Enquiry Details</h5>
+            <div style={{ background: 'var(--sys-surface-elevated)', border: '1px solid var(--sys-border)', borderRadius: '8px', padding: '16px' }}>
+              <h5 style={{ fontSize: '12px', color: 'var(--txt-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Enquiry Details</h5>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Status:</span>
-                  <span style={{ color: 'var(--accent-violet)', fontWeight: 600, textTransform: 'capitalize' }}>{enquiry.status}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>Status:</span>
+                  <span style={{ color: 'var(--brand-primary)', fontWeight: 600, textTransform: 'capitalize' }}>{enquiry.status}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Budget Estimate:</span>
-                  <span style={{ color: '#fff', fontWeight: 600 }}>₹{enquiry.price || parsed.budget || 'TBD'}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>Budget Estimate:</span>
+                  <span style={{ color: 'var(--txt-primary)', fontWeight: 600 }}>₹{enquiry.price || parsed.budget || 'TBD'}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Submission Date:</span>
-                  <span style={{ color: '#fff' }}>{formattedDate}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>Submission Date:</span>
+                  <span style={{ color: 'var(--txt-primary)' }}>{formattedDate}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Expected Date:</span>
-                  <span style={{ color: 'var(--accent-blue)', fontWeight: 500 }}>{parsed.submissionDate}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>Expected Date:</span>
+                  <span style={{ color: 'var(--brand-accent)', fontWeight: 500 }}>{parsed.submissionDate}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Last Updated:</span>
-                  <span style={{ color: '#fff' }}>{formattedUpdated}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>Last Updated:</span>
+                  <span style={{ color: 'var(--txt-primary)' }}>{formattedUpdated}</span>
                 </div>
               </div>
             </div>
 
-            <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)', borderRadius: '8px', padding: '16px' }}>
-              <h5 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Academic Support</h5>
+            <div style={{ background: 'var(--sys-surface-elevated)', border: '1px solid var(--sys-border)', borderRadius: '8px', padding: '16px' }}>
+              <h5 style={{ fontSize: '12px', color: 'var(--txt-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Academic Support</h5>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Documentation Needed:</span>
-                  <span style={{ color: '#fff' }}>{parsed.needDocument}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>Documentation Needed:</span>
+                  <span style={{ color: 'var(--txt-primary)' }}>{parsed.needDocument}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Presentation Support:</span>
-                  <span style={{ color: '#fff' }}>{parsed.needPresentation}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>Presentation Support:</span>
+                  <span style={{ color: 'var(--txt-primary)' }}>{parsed.needPresentation}</span>
                 </div>
               </div>
             </div>
@@ -183,21 +183,21 @@ export const ProjectDetailsModal = ({ isOpen, onClose, enquiry, projectInfo }) =
 
           {/* Right Column: Project Context */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)', borderRadius: '8px', padding: '16px', flex: 1 }}>
-              <h5 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Specifications & Info</h5>
+            <div style={{ background: 'var(--sys-surface-elevated)', border: '1px solid var(--sys-border)', borderRadius: '8px', padding: '16px', flex: 1 }}>
+              <h5 style={{ fontSize: '12px', color: 'var(--txt-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Specifications & Info</h5>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px' }}>
                 <div>
-                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '11px', textTransform: 'uppercase' }}>Department</span>
-                  <span style={{ color: '#fff', fontWeight: 500 }}>{projectInfo?.category || 'Electronics & Communications'}</span>
+                  <span style={{ color: 'var(--txt-muted)', display: 'block', fontSize: '11px', textTransform: 'uppercase' }}>Department</span>
+                  <span style={{ color: 'var(--txt-primary)', fontWeight: 500 }}>{projectInfo?.category || 'Electronics & Communications'}</span>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '11px', textTransform: 'uppercase' }}>Core Technology</span>
-                  <span style={{ color: '#fff', fontWeight: 500 }}>{projectInfo?.technology || 'Microcontrollers / Embedded Systems'}</span>
+                  <span style={{ color: 'var(--txt-muted)', display: 'block', fontSize: '11px', textTransform: 'uppercase' }}>Core Technology</span>
+                  <span style={{ color: 'var(--txt-primary)', fontWeight: 500 }}>{projectInfo?.technology || 'Microcontrollers / Embedded Systems'}</span>
                 </div>
                 {enquiry.message && (
                   <div>
-                    <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '11px', textTransform: 'uppercase' }}>Custom Description</span>
-                    <p style={{ color: 'rgba(255,255,255,0.7)', margin: '4px 0 0 0', lineHeight: '1.4' }}>{enquiry.message}</p>
+                    <span style={{ color: 'var(--txt-muted)', display: 'block', fontSize: '11px', textTransform: 'uppercase' }}>Custom Description</span>
+                    <p style={{ color: 'var(--txt-secondary)', margin: '4px 0 0 0', lineHeight: '1.4' }}>{enquiry.message}</p>
                   </div>
                 )}
               </div>
@@ -207,12 +207,12 @@ export const ProjectDetailsModal = ({ isOpen, onClose, enquiry, projectInfo }) =
 
         {/* Shipping & Delivery */}
         {(parsed.deliveryPartner !== '-' || parsed.awbNumber !== '-') && (
-          <div style={{ background: 'rgba(59, 130, 246, 0.06)', border: '1px solid rgba(59, 130, 246, 0.15)', borderRadius: '8px', padding: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span className="material-icons-outlined" style={{ color: 'var(--accent-blue)', fontSize: '24px' }}>local_shipping</span>
+          <div style={{ background: 'var(--interaction-selected)', border: '1px solid var(--sys-border)', borderRadius: '8px', padding: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span className="material-icons-outlined" style={{ color: 'var(--brand-accent)', fontSize: '24px' }}>local_shipping</span>
             <div>
-              <h5 style={{ fontSize: '13px', color: '#fff', margin: '0 0 4px 0', fontWeight: '600' }}>Shipping Information</h5>
-              <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                Courier: <strong>{parsed.deliveryPartner}</strong> &bull; Tracking (AWB): <strong style={{ color: 'var(--accent-blue)' }}>{parsed.awbNumber}</strong>
+              <h5 style={{ fontSize: '13px', color: 'var(--txt-primary)', margin: '0 0 4px 0', fontWeight: '600' }}>Shipping Information</h5>
+              <span style={{ fontSize: '13px', color: 'var(--txt-secondary)' }}>
+                Courier: <strong>{parsed.deliveryPartner}</strong> &bull; Tracking (AWB): <strong style={{ color: 'var(--brand-accent)' }}>{parsed.awbNumber}</strong>
               </span>
             </div>
           </div>
@@ -220,31 +220,31 @@ export const ProjectDetailsModal = ({ isOpen, onClose, enquiry, projectInfo }) =
 
         {/* Remarks */}
         {parsed.remarks && parsed.remarks !== 'None' && (
-          <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
-            <h5 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 8px 0' }}>Engineer Remarks</h5>
-            <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)', margin: 0, lineHeight: 1.5 }}>
+          <div style={{ background: 'var(--sys-surface-elevated)', border: '1px solid var(--sys-border)', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
+            <h5 style={{ fontSize: '12px', color: 'var(--txt-muted)', textTransform: 'uppercase', margin: '0 0 8px 0' }}>Engineer Remarks</h5>
+            <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', margin: 0, lineHeight: 1.5 }}>
               {parsed.remarks}
             </p>
           </div>
         )}
 
         {/* Secure Attachments */}
-        <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)', borderRadius: '8px', padding: '16px' }}>
-          <h5 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Project Deliverables & Documents</h5>
+        <div style={{ background: 'var(--sys-surface-elevated)', border: '1px solid var(--sys-border)', borderRadius: '8px', padding: '16px' }}>
+          <h5 style={{ fontSize: '12px', color: 'var(--txt-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Project Deliverables & Documents</h5>
           {parsed.attachments.length === 0 ? (
-            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No downloadable documents uploaded yet.</span>
+            <span style={{ fontSize: '13px', color: 'var(--txt-muted)' }}>No downloadable documents uploaded yet.</span>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {parsed.attachments.map((att, index) => {
                 const downloadUrl = signedUrls[att.url] || att.url;
                 return (
-                  <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                  <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--sys-surface)', padding: '10px 12px', borderRadius: '6px', border: '1px solid var(--sys-border)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span className="material-icons-outlined" style={{ color: 'var(--accent-violet)', fontSize: '20px' }}>description</span>
-                      <span style={{ fontSize: '13px', fontWeight: '500', color: '#fff' }}>{att.name}</span>
+                      <span className="material-icons-outlined" style={{ color: 'var(--brand-primary)', fontSize: '20px' }}>description</span>
+                      <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--txt-primary)' }}>{att.name}</span>
                     </div>
                     {loadingUrls ? (
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Securing link...</span>
+                      <span style={{ fontSize: '12px', color: 'var(--txt-muted)' }}>Securing link...</span>
                     ) : (
                       <a 
                         href={downloadUrl} 
@@ -266,7 +266,7 @@ export const ProjectDetailsModal = ({ isOpen, onClose, enquiry, projectInfo }) =
         </div>
       </div>
 
-      <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px' }}>
+      <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--sys-divider)', paddingTop: '16px' }}>
         <Button variant="secondary" onClick={onClose} style={{ padding: '8px 24px' }}>
           Close
         </Button>

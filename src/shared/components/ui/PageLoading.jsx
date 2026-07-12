@@ -20,10 +20,10 @@ export const PageLoading = ({ message = 'LOADING PORTAL...' }) => {
           inset: 0,
           borderRadius: '50%',
           border: '2px solid transparent',
-          borderTopColor: 'var(--accent-violet, #8b5cf6)',
-          borderBottomColor: 'var(--accent-blue, #3b82f6)',
+          borderTopColor: 'var(--brand-primary)',
+          borderBottomColor: 'var(--brand-accent)',
           animation: 'spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite',
-          boxShadow: '0 0 15px rgba(139, 92, 246, 0.25)'
+          boxShadow: '0 0 15px var(--interaction-selected)'
         }} />
         
         {/* Inner Counter-Rotating Ring */}
@@ -32,8 +32,8 @@ export const PageLoading = ({ message = 'LOADING PORTAL...' }) => {
           inset: '6px',
           borderRadius: '50%',
           border: '2px solid transparent',
-          borderLeftColor: 'var(--accent-blue, #3b82f6)',
-          borderRightColor: 'var(--accent-emerald, #10b981)',
+          borderLeftColor: 'var(--brand-accent)',
+          borderRightColor: 'var(--status-success)',
           animation: 'spin-reverse 1s linear infinite',
           opacity: 0.8
         }} />
@@ -41,7 +41,7 @@ export const PageLoading = ({ message = 'LOADING PORTAL...' }) => {
 
       <p 
         style={{ 
-          color: 'var(--text-muted, #94a3b8)', 
+          color: 'var(--txt-muted)', 
           fontSize: '12px', 
           fontWeight: '600',
           letterSpacing: '1.5px',

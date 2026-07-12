@@ -118,9 +118,9 @@ export const ProjectProgressTracker = ({ status }) => {
                       ? 'none'
                       : '1px solid rgba(255, 255, 255, 0.1)',
                   boxShadow: isCurrent 
-                    ? '0 0 15px rgba(139, 92, 246, 0.4)' 
+                    ? '0 0 15px var(--interaction-focus)' 
                     : 'none',
-                  color: isDone || isCurrent ? '#fff' : 'rgba(255,255,255,0.4)',
+                  color: isDone || isCurrent ? 'var(--txt-primary)' : 'var(--txt-muted)',
                   fontSize: '14px',
                   transition: 'all 0.3s ease'
                 }}
@@ -139,10 +139,10 @@ export const ProjectProgressTracker = ({ status }) => {
                   fontSize: '11px', 
                   fontWeight: isCurrent ? '600' : '500', 
                   color: isCurrent 
-                    ? '#fff' 
+                    ? 'var(--txt-primary)' 
                     : isDone 
-                      ? 'rgba(255, 255, 255, 0.8)' 
-                      : 'rgba(255, 255, 255, 0.4)',
+                      ? 'var(--txt-secondary)' 
+                      : 'var(--txt-muted)',
                   textAlign: 'center',
                   whiteSpace: 'nowrap'
                 }}
@@ -179,14 +179,14 @@ export const ProjectProgressTracker = ({ status }) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   background: isDone 
-                    ? 'var(--accent-violet, #8b5cf6)' 
+                    ? 'var(--brand-primary)' 
                     : isCurrent 
-                      ? '#0b0a10' 
-                      : 'rgba(255, 255, 255, 0.04)',
+                      ? 'var(--sys-bg)' 
+                      : 'var(--input-bg)',
                   border: isCurrent 
-                    ? '2px solid var(--accent-violet, #8b5cf6)' 
-                    : '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#fff',
+                    ? '2px solid var(--brand-primary)' 
+                    : '1px solid var(--sys-border)',
+                  color: 'var(--txt-primary)',
                   fontSize: '12px'
                 }}
               >
@@ -196,7 +196,7 @@ export const ProjectProgressTracker = ({ status }) => {
                   <span>{idx + 1}</span>
                 )}
               </div>
-              <span style={{ fontSize: '13px', fontWeight: isCurrent ? '600' : '500', color: isCurrent ? '#fff' : 'rgba(255,255,255,0.8)' }}>
+              <span style={{ fontSize: '13px', fontWeight: isCurrent ? '600' : '500', color: isCurrent ? 'var(--txt-primary)' : 'var(--txt-secondary)' }}>
                 {step.label}
               </span>
             </div>

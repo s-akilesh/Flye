@@ -109,7 +109,7 @@ export const MasterDataMultiSelect = ({
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           maxWidth: '90%',
-          color: selectedValues.length > 0 ? '#fff' : 'var(--text-muted)',
+          color: selectedValues.length > 0 ? 'var(--txt-primary)' : 'var(--txt-muted)',
           fontSize: '13px'
         }}>
           {selectedValues.length > 0 ? selectedValues.join(', ') : placeholder}
@@ -119,7 +119,7 @@ export const MasterDataMultiSelect = ({
           transition: 'transform 0.2s',
           display: 'inline-block',
           fontSize: '10px',
-          color: 'var(--text-muted)'
+          color: 'var(--txt-muted)'
         }}>
           ▼
         </span>
@@ -137,9 +137,9 @@ export const MasterDataMultiSelect = ({
             maxHeight: '260px',
             overflowY: 'auto',
             padding: '8px 0',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            background: '#141416',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+            border: '1px solid var(--sys-border)',
+            background: 'var(--sys-surface-elevated)',
+            boxShadow: 'var(--shadow-md)'
           }}
         >
           {options.map((item) => {
@@ -157,22 +157,22 @@ export const MasterDataMultiSelect = ({
                   userSelect: 'none',
                   margin: 0
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--interaction-hover)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                 onClick={() => handleToggle(item.value)}
               >
-                <span style={{ fontSize: '13px', color: isSelected ? '#fff' : 'var(--text-secondary)' }}>
+                <span style={{ fontSize: '13px', color: isSelected ? 'var(--txt-primary)' : 'var(--txt-secondary)' }}>
                   {cleanLabel(item.value)}
                 </span>
                 {isSelected && (
-                  <span className="material-icons" style={{ fontSize: '16px', color: 'var(--accent-violet)' }}>check</span>
+                  <span className="material-icons" style={{ fontSize: '16px', color: 'var(--brand-primary)' }}>check</span>
                 )}
               </div>
             );
           })}
 
           {options.length === 0 && !showAddNew && (
-            <div style={{ padding: '8px 12px', fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center' }}>
+            <div style={{ padding: '8px 12px', fontSize: '12px', color: 'var(--txt-muted)', textAlign: 'center' }}>
               No options found
             </div>
           )}
@@ -183,7 +183,7 @@ export const MasterDataMultiSelect = ({
                 <div 
                   style={{ 
                     padding: '8px 12px', 
-                    borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                    borderTop: '1px solid var(--sys-divider)',
                     display: 'flex',
                     justifyContent: 'center'
                   }}
@@ -212,7 +212,7 @@ export const MasterDataMultiSelect = ({
                 <div 
                   style={{ 
                     padding: '8px 12px', 
-                    borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                    borderTop: '1px solid var(--sys-divider)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '8px'
@@ -226,7 +226,7 @@ export const MasterDataMultiSelect = ({
                     value={newValueName}
                     onChange={(e) => setNewValueName(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    style={{ height: '30px', fontSize: '12px', width: '100%', padding: '0 8px', background: '#1d1d22', color: '#fff', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '4px' }}
+                    style={{ height: '30px', fontSize: '12px', width: '100%', padding: '0 8px', background: 'var(--input-bg)', color: 'var(--txt-primary)', border: '1px solid var(--input-border)', borderRadius: '4px' }}
                   />
                   <div style={{ display: 'flex', gap: '6px' }}>
                     <button

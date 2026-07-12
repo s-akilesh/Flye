@@ -441,14 +441,14 @@ export const AdminDashboard = () => {
       <div style={{ position: 'relative', width: '100%' }}>
         <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', overflow: 'visible' }}>
           {/* Horizontal Gridlines */}
-          <line x1={paddingLeft} y1={paddingTop} x2={width - paddingRight} y2={paddingTop} stroke="rgba(255,255,255,0.03)" />
-          <line x1={paddingLeft} y1={paddingTop + plotHeight / 2} x2={width - paddingRight} y2={paddingTop + plotHeight / 2} stroke="rgba(255,255,255,0.03)" />
-          <line x1={paddingLeft} y1={height - paddingBottom} x2={width - paddingRight} y2={height - paddingBottom} stroke="rgba(255,255,255,0.08)" />
+          <line x1={paddingLeft} y1={paddingTop} x2={width - paddingRight} y2={paddingTop} stroke="var(--sys-divider)" />
+          <line x1={paddingLeft} y1={paddingTop + plotHeight / 2} x2={width - paddingRight} y2={paddingTop + plotHeight / 2} stroke="var(--sys-divider)" />
+          <line x1={paddingLeft} y1={height - paddingBottom} x2={width - paddingRight} y2={height - paddingBottom} stroke="var(--sys-border)" />
 
           {/* Y Axis labels */}
-          <text x={paddingLeft - 8} y={paddingTop + 3} fill="var(--text-muted)" fontSize="8.5" textAnchor="end">{maxVal}</text>
-          <text x={paddingLeft - 8} y={paddingTop + plotHeight / 2 + 3} fill="var(--text-muted)" fontSize="8.5" textAnchor="end">{Math.round(maxVal / 2)}</text>
-          <text x={paddingLeft - 8} y={height - paddingBottom + 3} fill="var(--text-muted)" fontSize="8.5" textAnchor="end">0</text>
+          <text x={paddingLeft - 8} y={paddingTop + 3} fill="var(--txt-muted)" fontSize="8.5" textAnchor="end">{maxVal}</text>
+          <text x={paddingLeft - 8} y={paddingTop + plotHeight / 2 + 3} fill="var(--txt-muted)" fontSize="8.5" textAnchor="end">{Math.round(maxVal / 2)}</text>
+          <text x={paddingLeft - 8} y={height - paddingBottom + 3} fill="var(--txt-muted)" fontSize="8.5" textAnchor="end">0</text>
 
           {/* Draw bars */}
           {data.map((d, idx) => {
@@ -469,7 +469,7 @@ export const AdminDashboard = () => {
               <g key={idx}>
                 {/* X Axis Label */}
                 {idx % 2 === 0 && (
-                  <text x={xCenter} y={height - 8} fill="var(--text-muted)" fontSize="8" textAnchor="middle">
+                  <text x={xCenter} y={height - 8} fill="var(--txt-muted)" fontSize="8" textAnchor="middle">
                     {d.label}
                   </text>
                 )}
@@ -520,19 +520,19 @@ export const AdminDashboard = () => {
               left: `${((paddingLeft + hoveredBarIndex * colWidth + colWidth/2) / width) * 100}%`,
               top: '10px',
               transform: 'translateX(-50%)',
-              background: 'rgba(18, 18, 30, 0.95)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'var(--sys-surface)',
+              border: '1px solid var(--sys-border)',
               borderRadius: '4px',
               padding: '6px 10px',
               fontSize: '11px',
-              color: '#fff',
+              color: 'var(--txt-primary)',
               pointerEvents: 'none',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+              boxShadow: 'var(--shadow-md)',
               zIndex: 10,
               minWidth: '110px'
             }}
           >
-            <div style={{ fontWeight: '700', marginBottom: '3px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '2px', fontSize: '10px', color: 'var(--text-muted)' }}>
+            <div style={{ fontWeight: '700', marginBottom: '3px', borderBottom: '1px solid var(--sys-divider)', paddingBottom: '2px', fontSize: '10px', color: 'var(--txt-muted)' }}>
               {data[hoveredBarIndex].label}
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px' }}>
@@ -556,7 +556,7 @@ export const AdminDashboard = () => {
 
     if (total === 0) {
       return (
-        <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', padding: 'var(--space-6) 0' }}>
+        <div style={{ textAlign: 'center', color: 'var(--txt-muted)', fontSize: '13px', padding: 'var(--space-6) 0' }}>
           No lead logs registered
         </div>
       );
@@ -631,10 +631,10 @@ export const AdminDashboard = () => {
             justifyContent: 'center',
             lineHeight: '1.2'
           }}>
-            <span style={{ fontSize: '18px', fontWeight: '800', color: '#fff', letterSpacing: '0.5px' }}>
+            <span style={{ fontSize: '18px', fontWeight: '800', color: 'var(--txt-primary)', letterSpacing: '0.5px' }}>
               {hoveredDonutSlice ? dist[hoveredDonutSlice] : total}
             </span>
-            <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>
+            <span style={{ fontSize: '9px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>
               {hoveredDonutSlice ? statusLabels[hoveredDonutSlice] : 'Total Leads'}
             </span>
           </div>
@@ -653,11 +653,11 @@ export const AdminDashboard = () => {
                   alignItems: 'center', 
                   justifyContent: 'space-between',
                   fontSize: '12px', 
-                  color: isHovered ? '#fff' : 'var(--text-secondary)',
+                  color: isHovered ? 'var(--txt-primary)' : 'var(--txt-secondary)',
                   cursor: 'pointer',
                   padding: '3px 6px',
                   borderRadius: '4px',
-                  background: isHovered ? 'rgba(255,255,255,0.03)' : 'transparent',
+                  background: isHovered ? 'var(--interaction-hover)' : 'transparent',
                   transition: 'all 0.15s ease'
                 }}
                 onMouseEnter={() => setHoveredDonutSlice(status)}
@@ -667,7 +667,7 @@ export const AdminDashboard = () => {
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: statusColors[status] || '#ccc' }} />
                   <span>{statusLabels[status]}</span>
                 </div>
-                <span style={{ fontWeight: '700', color: '#fff' }}>{count.toLocaleString()}</span>
+                <span style={{ fontWeight: '700', color: 'var(--txt-primary)' }}>{count.toLocaleString()}</span>
               </div>
             );
           })}
@@ -680,8 +680,8 @@ export const AdminDashboard = () => {
     return (
       <div className="portal-section page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
         <div className="card-glass" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
-          <div className="loading-spinner" style={{ border: '4px solid rgba(255,255,255,0.1)', borderTop: '4px solid var(--accent-violet)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4) auto' }} />
-          <h3>Loading dashboard analytics...</h3>
+          <div className="loading-spinner" style={{ border: '4px solid var(--sys-border)', borderTop: '4px solid var(--brand-primary)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4) auto' }} />
+          <h3 style={{ color: 'var(--txt-primary)' }}>Loading dashboard analytics...</h3>
           <style>{`
             @keyframes spin {
               0% { transform: rotate(0deg); }
@@ -714,15 +714,15 @@ export const AdminDashboard = () => {
     >
       {/* Mobile Sticky Sub-Header */}
       <header className="mobile-learning-header">
-        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
+        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)', textTransform: 'uppercase' }}>
           Flyen Operations Control
         </span>
       </header>
 
       <div className="portal-header" style={{ marginBottom: '16px', paddingBottom: '16px' }}>
         <div className="portal-title-area">
-          <h2 style={{ margin: 0 }}>Dashboard</h2>
-          <p style={{ margin: '4px 0 0 0' }}>Daily metrics, lead priority queues, and pending fulfillment tracking</p>
+          <h2 style={{ margin: 0, color: 'var(--txt-primary)' }}>Dashboard</h2>
+          <p style={{ margin: '4px 0 0 0', color: 'var(--txt-secondary)' }}>Daily metrics, lead priority queues, and pending fulfillment tracking</p>
         </div>
       </div>
 
@@ -733,16 +733,16 @@ export const AdminDashboard = () => {
           {/* Left Grid: 2x2 KPIs */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {/* KPI 1 */}
-            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--sys-border)' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <span className="material-icons" style={{ color: '#f59e0b', fontSize: '16px', background: 'rgba(245,158,11,0.06)', padding: '5px', borderRadius: '6px' }}>mail_outline</span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>New Enquiries</span>
+                  <span style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>New Enquiries</span>
                 </div>
-                <h3 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', margin: '4px 0' }}>
+                <h3 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--txt-primary)', margin: '4px 0' }}>
                   {dashboardData.newCount}
                 </h3>
-                <span style={{ fontSize: '10.5px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
+                <span style={{ fontSize: '10.5px', color: 'var(--status-success)', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
                   <span className="material-icons" style={{ fontSize: '12px' }}>arrow_upward</span>
                   {dashboardData.newToday > 0 ? `+${dashboardData.newToday} today` : '0 today'}
                 </span>
@@ -753,16 +753,16 @@ export const AdminDashboard = () => {
             </Card>
 
             {/* KPI 2 */}
-            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--sys-border)' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <span className="material-icons" style={{ color: 'var(--accent-blue)', fontSize: '16px', background: 'rgba(59,130,246,0.06)', padding: '5px', borderRadius: '6px' }}>phone_callback</span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Follow-ups</span>
+                  <span style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Follow-ups</span>
                 </div>
-                <h3 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', margin: '4px 0' }}>
+                <h3 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--txt-primary)', margin: '4px 0' }}>
                   {dashboardData.pendingFollowUp}
                 </h3>
-                <span style={{ fontSize: '10.5px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
+                <span style={{ fontSize: '10.5px', color: 'var(--status-success)', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
                   <span className="material-icons" style={{ fontSize: '12px' }}>arrow_upward</span>
                   {dashboardData.followUpToday > 0 ? `+${dashboardData.followUpToday} today` : '0 today'}
                 </span>
@@ -773,16 +773,16 @@ export const AdminDashboard = () => {
             </Card>
 
             {/* KPI 3 */}
-            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--sys-border)' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <span className="material-icons" style={{ color: 'var(--accent-violet)', fontSize: '16px', background: 'rgba(139,92,246,0.06)', padding: '5px', borderRadius: '6px' }}>local_shipping</span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Deliveries</span>
+                  <span style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Deliveries</span>
                 </div>
-                <h3 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', margin: '4px 0' }}>
+                <h3 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--txt-primary)', margin: '4px 0' }}>
                   {dashboardData.pendingDelivery}
                 </h3>
-                <span style={{ fontSize: '10.5px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
+                <span style={{ fontSize: '10.5px', color: 'var(--status-success)', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
                   <span className="material-icons" style={{ fontSize: '12px' }}>arrow_upward</span>
                   {dashboardData.deliveryToday > 0 ? `+${dashboardData.deliveryToday} today` : '0 today'}
                 </span>
@@ -793,16 +793,16 @@ export const AdminDashboard = () => {
             </Card>
 
             {/* KPI 4 */}
-            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--sys-border)' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <span className="material-icons" style={{ color: '#ef4444', fontSize: '16px', background: 'rgba(239,68,68,0.06)', padding: '5px', borderRadius: '6px' }}>alarm</span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Deadlines</span>
+                  <span style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Deadlines</span>
                 </div>
-                <h3 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', margin: '4px 0' }}>
+                <h3 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--txt-primary)', margin: '4px 0' }}>
                   {dashboardData.upcomingDeadlines}
                 </h3>
-                <span style={{ fontSize: '10.5px', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
+                <span style={{ fontSize: '10.5px', color: 'var(--status-error)', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: '600' }}>
                   <span className="material-icons" style={{ fontSize: '12px' }}>arrow_downward</span>
                   {dashboardData.upcomingToday > 0 ? `+${dashboardData.upcomingToday} today` : '0 today'}
                 </span>
@@ -814,15 +814,15 @@ export const AdminDashboard = () => {
           </div>
 
           {/* Right Card: Product/Enquiry Activity Donut Chart */}
-          <Card className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.04)' }}>
+          <Card className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid var(--sys-border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span className="material-icons" style={{ color: 'var(--accent-violet)', fontSize: '16px' }}>donut_large</span>
-                <span style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Product Activity</span>
+                <span style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Product Activity</span>
               </div>
               <div style={{ display: 'flex', gap: '4px' }}>
                 {['1W', '1M', '3W', 'YTD', 'Total'].map((tab) => (
-                  <button key={tab} type="button" style={{ border: 'none', background: tab === 'Total' ? 'rgba(255,255,255,0.08)' : 'transparent', color: tab === 'Total' ? '#fff' : 'var(--text-muted)', fontSize: '9px', fontWeight: '700', padding: '3px 6px', borderRadius: '4px', cursor: 'pointer' }}>
+                  <button key={tab} type="button" style={{ border: 'none', background: tab === 'Total' ? 'var(--interaction-active)' : 'transparent', color: tab === 'Total' ? 'var(--txt-primary)' : 'var(--txt-muted)', fontSize: '9px', fontWeight: '700', padding: '3px 6px', borderRadius: '4px', cursor: 'pointer' }}>
                     {tab}
                   </button>
                 ))}
@@ -838,7 +838,7 @@ export const AdminDashboard = () => {
         {/* SECTION 2 — Today's Priorities */}
         <div>
           <Card className="card-glass" style={{ padding: 'var(--space-4)' }}>
-            <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--accent-violet)' }}>checklist</span>
               Fulfillment Priorities & Immediate Tasks
             </h3>
@@ -847,8 +847,8 @@ export const AdminDashboard = () => {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px', background: 'rgba(245,158,11,0.04)', border: '1px solid rgba(245,158,11,0.12)', borderRadius: '6px' }}>
                   <span className="material-icons" style={{ color: '#f59e0b', fontSize: '20px', marginTop: '2px' }}>call</span>
                   <div>
-                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: '#fff' }}>Contact New Leads</h5>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)' }}>You have {dashboardData.newCount} fresh leads waiting for initial follow-up.</p>
+                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: 'var(--txt-primary)' }}>Contact New Leads</h5>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--txt-muted)' }}>You have {dashboardData.newCount} fresh leads waiting for initial follow-up.</p>
                     <button onClick={() => scrollToEnquiries('new')} style={{ border: 'none', background: 'none', color: '#f59e0b', fontSize: '11px', fontWeight: '600', padding: 0, marginTop: '4px', cursor: 'pointer' }}>Start Calling &rarr;</button>
                   </div>
                 </div>
@@ -858,8 +858,8 @@ export const AdminDashboard = () => {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px', background: 'rgba(59,130,246,0.04)', border: '1px solid rgba(59,130,246,0.12)', borderRadius: '6px' }}>
                   <span className="material-icons" style={{ color: 'var(--accent-blue)', fontSize: '20px', marginTop: '2px' }}>description</span>
                   <div>
-                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: '#fff' }}>Send Pending Quotations</h5>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)' }}>{dashboardData.pendingFollowUp} enquiries are in Contacted/Quoted stage.</p>
+                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: 'var(--txt-primary)' }}>Send Pending Quotations</h5>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--txt-muted)' }}>{dashboardData.pendingFollowUp} enquiries are in Contacted/Quoted stage.</p>
                     <button onClick={() => scrollToEnquiries('quoted')} style={{ border: 'none', background: 'none', color: 'var(--accent-blue)', fontSize: '11px', fontWeight: '600', padding: 0, marginTop: '4px', cursor: 'pointer' }}>Draft Quotations &rarr;</button>
                   </div>
                 </div>
@@ -869,8 +869,8 @@ export const AdminDashboard = () => {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px', background: 'rgba(139,92,246,0.04)', border: '1px solid rgba(139,92,246,0.12)', borderRadius: '6px' }}>
                   <span className="material-icons" style={{ color: 'var(--accent-violet)', fontSize: '20px', marginTop: '2px' }}>local_shipping</span>
                   <div>
-                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: '#fff' }}>Dispatch Pending Kits</h5>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)' }}>{dashboardData.pendingDelivery} confirmed student projects need assembly or delivery.</p>
+                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: 'var(--txt-primary)' }}>Dispatch Pending Kits</h5>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--txt-muted)' }}>{dashboardData.pendingDelivery} confirmed student projects need assembly or delivery.</p>
                     <button onClick={() => scrollToEnquiries('confirmed')} style={{ border: 'none', background: 'none', color: 'var(--accent-violet)', fontSize: '11px', fontWeight: '600', padding: 0, marginTop: '4px', cursor: 'pointer' }}>Fulfill Orders &rarr;</button>
                   </div>
                 </div>
@@ -880,8 +880,8 @@ export const AdminDashboard = () => {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px', background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.12)', borderRadius: '6px' }}>
                   <span className="material-icons" style={{ color: '#ef4444', fontSize: '20px', marginTop: '2px' }}>fact_check</span>
                   <div>
-                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: '#fff' }}>Prepare Project Deliverables</h5>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)' }}>Deadlines approaching this week. Verify student kits and documents.</p>
+                    <h5 style={{ margin: '0 0 2px 0', fontSize: '12.5px', fontWeight: '600', color: 'var(--txt-primary)' }}>Prepare Project Deliverables</h5>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--txt-muted)' }}>Deadlines approaching this week. Verify student kits and documents.</p>
                     <button onClick={() => {
                       const el = document.getElementById('upcoming-submissions-section');
                       el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -892,8 +892,8 @@ export const AdminDashboard = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.15)', borderRadius: '6px', width: '100%', gridColumn: 'span 2' }}>
                   <span className="material-icons" style={{ color: 'var(--accent-emerald)', fontSize: '22px' }}>check_circle</span>
                   <div>
-                    <h5 style={{ margin: '0 0 2px 0', fontSize: '13px', fontWeight: '600', color: '#fff' }}>Fulfillment Queue Stable</h5>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)' }}>No urgent student deadlines or pending call-backs today. Excellent work!</p>
+                    <h5 style={{ margin: '0 0 2px 0', fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>Fulfillment Queue Stable</h5>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--txt-muted)' }}>No urgent student deadlines or pending call-backs today. Excellent work!</p>
                   </div>
                 </div>
               )}
@@ -926,10 +926,10 @@ export const AdminDashboard = () => {
                     type="button"
                     onClick={() => setPipelineFilter(isSelected ? null : statusKey)}
                     style={{
-                      background: isSelected ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.01)',
+                      background: isSelected ? 'var(--interaction-selected)' : 'var(--interaction-hover)',
                       border: isSelected 
                         ? `1.5px solid ${statusColors[statusKey]}` 
-                        : '1px solid rgba(255, 255, 255, 0.05)',
+                        : '1px solid var(--sys-border)',
                       borderRadius: '8px',
                       padding: '10px 8px',
                       cursor: 'pointer',
@@ -939,22 +939,22 @@ export const AdminDashboard = () => {
                     }}
                     onMouseEnter={(e) => {
                       if (!isSelected) {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.background = 'var(--interaction-hover)';
+                        e.currentTarget.style.borderColor = 'var(--sys-border)';
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isSelected) {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.01)';
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.background = 'var(--interaction-hover)';
+                        e.currentTarget.style.borderColor = 'var(--sys-border)';
                       }
                     }}
                   >
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
                       <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: statusColors[statusKey] }} />
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600' }}>{labelText}</span>
+                      <span style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '600' }}>{labelText}</span>
                     </div>
-                    <div style={{ fontSize: '20px', fontWeight: '700', color: isSelected ? '#fff' : 'var(--text-secondary)' }}>
+                    <div style={{ fontSize: '20px', fontWeight: '700', color: isSelected ? 'var(--txt-primary)' : 'var(--txt-secondary)' }}>
                       {count}
                     </div>
                   </button>
@@ -967,18 +967,18 @@ export const AdminDashboard = () => {
         {/* ROW 2: Customers Activity Bar chart & Customers Active project list */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-4)' }}>
           {/* Customers Activity */}
-          <Card className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', border: '1px solid rgba(255,255,255,0.04)' }}>
+          <Card className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', border: '1px solid var(--sys-border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span className="material-icons" style={{ color: '#4f46e5', fontSize: '16px' }}>bar_chart</span>
-                <span style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Customers Activity</span>
+                <span style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Customers Activity</span>
               </div>
               {/* Chart Legend */}
               <div style={{ display: 'flex', gap: '12px', fontSize: '9px', fontWeight: '700' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--txt-muted)' }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '1.5px', background: '#4f46e5' }} /> Paid Leads
                 </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--txt-muted)' }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '1.5px', background: '#0284c7' }} /> Checkout Leads
                 </span>
               </div>
@@ -990,11 +990,11 @@ export const AdminDashboard = () => {
           </Card>
 
           {/* Popular Projects requests */}
-          <Card className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', border: '1px solid rgba(255,255,255,0.04)' }}>
+          <Card className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', border: '1px solid var(--sys-border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span className="material-icons" style={{ color: 'var(--accent-emerald)', fontSize: '16px' }}>trending_up</span>
-                <span style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Customers Active Projects</span>
+                <span style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Customers Active Projects</span>
               </div>
               <Button variant="ghost" style={{ padding: '2px 8px', fontSize: '10px', height: '24px' }} onClick={() => navigate(ROUTES.ADMIN_PROJECTS)}>
                 View All
@@ -1002,7 +1002,7 @@ export const AdminDashboard = () => {
             </div>
 
             {dashboardData.popularProjectsList.length === 0 ? (
-              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', margin: 'var(--space-4) 0', textAlign: 'center', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No projects registered.</p>
+              <p style={{ fontSize: '12.5px', color: 'var(--txt-muted)', margin: 'var(--space-4) 0', textAlign: 'center', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No projects registered.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flexGrow: 1, justifyContent: 'center' }}>
                 {dashboardData.popularProjectsList.map((proj, idx) => {
@@ -1010,13 +1010,13 @@ export const AdminDashboard = () => {
                   return (
                     <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-                        <span style={{ fontWeight: '600', color: '#fff' }}>{proj.name}</span>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>
-                          <strong style={{ color: '#fff' }}>{proj.count}</strong> ({proj.percentage}%)
+                        <span style={{ fontWeight: '600', color: 'var(--txt-primary)' }}>{proj.name}</span>
+                        <span style={{ color: 'var(--txt-muted)', fontSize: '11px' }}>
+                          <strong style={{ color: 'var(--txt-primary)' }}>{proj.count}</strong> ({proj.percentage}%)
                         </span>
                       </div>
                       {/* Horizontal progress bar matching Customers Active */}
-                      <div style={{ width: '100%', height: '7px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ width: '100%', height: '7px', background: 'var(--interaction-hover)', borderRadius: '4px', overflow: 'hidden' }}>
                         <div 
                           style={{ 
                             width: `${proj.percentage}%`, 
@@ -1050,21 +1050,21 @@ export const AdminDashboard = () => {
 
           {filteredEnquiries.length === 0 ? (
             <Card className="card-glass" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>No records match the current filter.</p>
+              <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: 0 }}>No records match the current filter.</p>
             </Card>
           ) : (
-            <Card className="card-glass" style={{ padding: '0', overflowX: 'auto', background: 'rgba(10, 10, 15, 0.25)' }}>
+            <Card className="card-glass" style={{ padding: '0', overflowX: 'auto', background: 'var(--sys-surface)', border: '1px solid var(--sys-border)' }}>
               <table className="tbl-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.01)' }}>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Student</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Project Kit</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Lead Status</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Priority</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Budget</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Submission</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</th>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>Actions</th>
+                  <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--interaction-hover)' }}>
+                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Student</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Project Kit</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Lead Status</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Priority</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Budget</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Submission</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</th>
+                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1082,18 +1082,18 @@ export const AdminDashboard = () => {
                     const priorityBadgeColors = {
                       High: { text: '#ef4444', bg: 'rgba(239, 68, 68, 0.08)', border: 'rgba(239, 68, 68, 0.2)' },
                       Medium: { text: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.2)' },
-                      Low: { text: 'var(--text-muted)', bg: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.05)' }
+                      Low: { text: 'var(--txt-muted)', bg: 'var(--interaction-hover)', border: 'var(--sys-border)' }
                     };
 
                     const pBadge = priorityBadgeColors[enq.priority];
 
                     return (
-                      <tr key={enq.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '13px', transition: 'background 0.2s' }}>
-                        <td style={{ padding: '12px 14px', color: '#fff', fontWeight: '600' }}>
+                      <tr key={enq.id} style={{ borderBottom: '1px solid var(--sys-divider)', fontSize: '13px', transition: 'background 0.2s' }}>
+                        <td style={{ padding: '12px 14px', color: 'var(--txt-primary)', fontWeight: '600' }}>
                           <div>{enq.customerName}</div>
-                          <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '2px', fontWeight: 'normal' }}>{enq.mobileNumber}</div>
+                          <div style={{ fontSize: '10.5px', color: 'var(--txt-muted)', marginTop: '2px', fontWeight: 'normal' }}>{enq.mobileNumber}</div>
                         </td>
-                        <td style={{ padding: '12px 10px', color: 'var(--text-secondary)' }}>{enq.projectTitle}</td>
+                        <td style={{ padding: '12px 10px', color: 'var(--txt-secondary)' }}>{enq.projectTitle}</td>
                         <td style={{ padding: '12px 10px' }}>
                           <select
                             value={enq.status || 'new'}
@@ -1101,7 +1101,7 @@ export const AdminDashboard = () => {
                             onChange={(e) => handleStatusChange(enq.id, e.target.value)}
                             style={{
                               padding: '4px 20px 4px 8px',
-                              background: '#12121e',
+                              background: 'var(--input-bg)',
                               borderRadius: '6px',
                               fontSize: '11.5px',
                               fontWeight: '600',
@@ -1117,7 +1117,7 @@ export const AdminDashboard = () => {
                             }}
                           >
                             {Object.entries(statusLabels).map(([k, label]) => (
-                              <option key={k} value={k} style={{ color: '#fff', background: '#12121e' }}>{label}</option>
+                              <option key={k} value={k} style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>{label}</option>
                             ))}
                           </select>
                         </td>
@@ -1136,13 +1136,13 @@ export const AdminDashboard = () => {
                             {enq.priority}
                           </span>
                         </td>
-                        <td style={{ padding: '12px 10px', color: '#fff', fontWeight: '500' }}>
+                        <td style={{ padding: '12px 10px', color: 'var(--txt-primary)', fontWeight: '500' }}>
                           {enq.parsedNotes?.budget && enq.parsedNotes?.budget !== '-' ? enq.parsedNotes.budget : `₹${enq.price || '0'}`}
                         </td>
-                        <td style={{ padding: '12px 10px', color: 'var(--text-muted)' }}>
+                        <td style={{ padding: '12px 10px', color: 'var(--txt-muted)' }}>
                           {formatDate(enq.parsedNotes?.submissionDate)}
                         </td>
-                        <td style={{ padding: '12px 10px', color: 'var(--text-muted)' }}>
+                        <td style={{ padding: '12px 10px', color: 'var(--txt-muted)' }}>
                           {formatDate(enq.createdAt || enq.created_at)}
                         </td>
                         <td style={{ padding: '12px 14px', textAlign: 'right' }}>
@@ -1157,9 +1157,9 @@ export const AdminDashboard = () => {
                                 width: '28px',
                                 height: '28px',
                                 borderRadius: '6px',
-                                background: 'rgba(255,255,255,0.03)',
-                                border: '1px solid rgba(255,255,255,0.08)',
-                                color: 'var(--text-secondary)',
+                                background: 'var(--interaction-hover)',
+                                border: '1px solid var(--sys-border)',
+                                color: 'var(--txt-secondary)',
                                 textDecoration: 'none'
                               }}
                               title="Call Student"
@@ -1215,17 +1215,17 @@ export const AdminDashboard = () => {
 
           {dashboardData.upcomingSubmissionsList.length === 0 ? (
             <Card className="card-glass" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>No upcoming student submissions scheduled.</p>
+              <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: 0 }}>No upcoming student submissions scheduled.</p>
             </Card>
           ) : (
-            <Card className="card-glass" style={{ padding: 0, background: 'rgba(10, 10, 15, 0.25)' }}>
+            <Card className="card-glass" style={{ padding: 0, background: 'var(--sys-surface)', border: '1px solid var(--sys-border)' }}>
               <table className="tbl-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.01)' }}>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Student</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Project Name</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Time Remaining</th>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Checklist Status</th>
+                  <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--interaction-hover)' }}>
+                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Student</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Project Name</th>
+                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Time Remaining</th>
+                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Checklist Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1237,13 +1237,13 @@ export const AdminDashboard = () => {
                       'Docs & PPT Pending': { color: '#ef4444', bg: 'rgba(239, 68, 68, 0.08)' }
                     };
 
-                    const sColor = submissionStatusColors[sub.status] || { color: 'white', bg: 'rgba(255,255,255,0.02)' };
+                    const sColor = submissionStatusColors[sub.status] || { color: 'var(--txt-primary)', bg: 'var(--interaction-hover)' };
 
                     return (
-                      <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '13px' }}>
-                        <td style={{ padding: '12px 14px', color: '#fff', fontWeight: '600' }}>{sub.studentName}</td>
-                        <td style={{ padding: '12px 10px', color: 'var(--text-secondary)' }}>{sub.projectName}</td>
-                        <td style={{ padding: '12px 10px', fontWeight: '700', color: sub.daysLeft <= 2 ? '#ef4444' : '#fff' }}>
+                      <tr key={idx} style={{ borderBottom: '1px solid var(--sys-divider)', fontSize: '13px' }}>
+                        <td style={{ padding: '12px 14px', color: 'var(--txt-primary)', fontWeight: '600' }}>{sub.studentName}</td>
+                        <td style={{ padding: '12px 10px', color: 'var(--txt-secondary)' }}>{sub.projectName}</td>
+                        <td style={{ padding: '12px 10px', fontWeight: '700', color: sub.daysLeft <= 2 ? 'var(--status-error)' : 'var(--txt-primary)' }}>
                           {sub.daysLeft === 0 ? '🗓 Today' : sub.daysLeft === 1 ? '🗓 Tomorrow' : `${sub.daysLeft} Days Left`}
                         </td>
                         <td style={{ padding: '12px 14px' }}>
@@ -1274,55 +1274,55 @@ export const AdminDashboard = () => {
       {/* READ-ONLY Lead Details View Modal */}
       <Modal isOpen={selectedEnquiryDetails !== null} onClose={() => setSelectedEnquiryDetails(null)} className="modal-content purple" style={{ maxWidth: '580px' }}>
         <h4>ENQUIRY FILE DETAILS</h4>
-        <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '16px' }}>Detailed visual file checklist for lead record</p>
+        <p style={{ color: 'var(--txt-muted)', fontSize: '12px', marginBottom: '16px' }}>Detailed visual file checklist for lead record</p>
 
         {selectedEnquiryDetails && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: 'left' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', background: 'var(--interaction-hover)', padding: '12px', borderRadius: '8px', border: '1px solid var(--sys-border)' }}>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Student Name</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{selectedEnquiryDetails.customerName}</span>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Student Name</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{selectedEnquiryDetails.customerName}</span>
               </div>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Mobile Number</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{selectedEnquiryDetails.mobileNumber}</span>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Mobile Number</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{selectedEnquiryDetails.mobileNumber}</span>
               </div>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Enquired Project</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--accent-violet)' }}>{selectedEnquiryDetails.projectTitle}</span>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Enquired Project</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--brand-primary)' }}>{selectedEnquiryDetails.projectTitle}</span>
               </div>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Base Price</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>₹{selectedEnquiryDetails.price || '0'}</span>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Base Price</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>₹{selectedEnquiryDetails.price || '0'}</span>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', background: 'rgba(255,255,255,0.01)', padding: '12px', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', background: 'var(--interaction-hover)', padding: '12px', border: '1px solid var(--sys-border)', borderRadius: '8px' }}>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Project Status</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{selectedEnquiryDetails.parsedNotes?.projectStatus}</span>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Project Status</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{selectedEnquiryDetails.parsedNotes?.projectStatus}</span>
               </div>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Submission Date</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{formatDate(selectedEnquiryDetails.parsedNotes?.submissionDate)}</span>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Submission Date</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{formatDate(selectedEnquiryDetails.parsedNotes?.submissionDate)}</span>
               </div>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Need Document</span>
-                <span style={{ fontSize: '13.5px', fontWeight: '700', color: String(selectedEnquiryDetails.parsedNotes?.needDocument).toLowerCase() === 'yes' ? '#ef4444' : 'var(--accent-emerald)' }}>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Need Document</span>
+                <span style={{ fontSize: '13.5px', fontWeight: '700', color: String(selectedEnquiryDetails.parsedNotes?.needDocument).toLowerCase() === 'yes' ? 'var(--status-error)' : 'var(--status-success)' }}>
                   {selectedEnquiryDetails.parsedNotes?.needDocument}
                 </span>
               </div>
               <div>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Need PPT Support</span>
-                <span style={{ fontSize: '13.5px', fontWeight: '700', color: String(selectedEnquiryDetails.parsedNotes?.needPresentation).toLowerCase() === 'yes' ? '#ef4444' : 'var(--accent-emerald)' }}>
+                <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Need PPT Support</span>
+                <span style={{ fontSize: '13.5px', fontWeight: '700', color: String(selectedEnquiryDetails.parsedNotes?.needPresentation).toLowerCase() === 'yes' ? 'var(--status-error)' : 'var(--status-success)' }}>
                   {selectedEnquiryDetails.parsedNotes?.needPresentation}
                 </span>
               </div>
             </div>
 
-            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px' }}>
-              <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Remarks & Notes</span>
-              <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.4', whiteSpace: 'pre-wrap' }}>
+            <div style={{ background: 'var(--interaction-hover)', padding: '12px', borderRadius: '8px', border: '1px solid var(--sys-border)' }}>
+              <span style={{ fontSize: '10px', color: 'var(--txt-muted)', display: 'block', textTransform: 'uppercase' }}>Remarks & Notes</span>
+              <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', color: 'var(--txt-secondary)', lineHeight: '1.4', whiteSpace: 'pre-wrap' }}>
                 {selectedEnquiryDetails.parsedNotes?.remarks || 'No internal remarks logged.'}
               </p>
             </div>
@@ -1338,9 +1338,9 @@ export const AdminDashboard = () => {
                   gap: '6px',
                   padding: '8px 0',
                   borderRadius: '6px',
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#fff',
+                  background: 'var(--interaction-hover)',
+                  border: '1px solid var(--sys-border)',
+                  color: 'var(--txt-primary)',
                   textDecoration: 'none',
                   fontSize: '12.5px',
                   fontWeight: '600'

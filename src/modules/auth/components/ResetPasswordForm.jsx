@@ -20,7 +20,7 @@ export const ResetPasswordForm = ({ onSuccess }) => {
   };
 
   const strengthScore = getPasswordStrength(password);
-  const strengthColors = ['#64748b', '#ef4444', '#f97316', '#22c55e', '#a855f7'];
+  const strengthColors = ['var(--txt-muted)', 'var(--status-danger)', 'var(--status-warning)', 'var(--status-success)', 'var(--brand-accent)'];
   const strengthLabels = ['Empty', 'Weak', 'Fair', 'Strong', 'Excellent'];
 
   const handleSubmit = async (e) => {
@@ -62,8 +62,8 @@ export const ResetPasswordForm = ({ onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
-        <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>Choose New Password</h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary, #94a3b8)', margin: 0 }}>
+        <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>Choose New Password</h3>
+        <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', margin: 0 }}>
           Create a secure password to protect your account.
         </p>
       </div>
@@ -71,10 +71,10 @@ export const ResetPasswordForm = ({ onSuccess }) => {
       {error && (
         <div style={{
           padding: '12px',
-          background: 'rgba(239, 68, 68, 0.08)',
-          border: '1px solid rgba(239, 68, 68, 0.2)',
+          background: 'var(--interaction-hover)',
+          border: '1px solid var(--status-danger)',
           borderRadius: '8px',
-          color: 'var(--accent-danger, #ef4444)',
+          color: 'var(--status-danger)',
           fontSize: '12px',
           lineHeight: '1.5'
         }}>
@@ -83,7 +83,7 @@ export const ResetPasswordForm = ({ onSuccess }) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-secondary, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>New Password</label>
+        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>New Password</label>
         <input
           type="password"
           className="form-input"
@@ -95,11 +95,11 @@ export const ResetPasswordForm = ({ onSuccess }) => {
         />
         {password && (
           <div style={{ marginTop: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-muted, #94a3b8)', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--txt-muted)', marginBottom: '4px' }}>
               <span>Password Strength</span>
               <span style={{ color: strengthColors[strengthScore], fontWeight: '700' }}>{strengthLabels[strengthScore]}</span>
             </div>
-            <div style={{ height: '3px', background: 'rgba(255,255,255,0.05)', borderRadius: '1.5px', overflow: 'hidden' }}>
+            <div style={{ height: '3px', background: 'var(--sys-border)', borderRadius: '1.5px', overflow: 'hidden' }}>
               <div style={{
                 width: `${(strengthScore / 4) * 100}%`,
                 height: '100%',
@@ -112,7 +112,7 @@ export const ResetPasswordForm = ({ onSuccess }) => {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-secondary, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Confirm Password</label>
+        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Confirm Password</label>
         <input
           type="password"
           className="form-input"
@@ -134,9 +134,9 @@ export const ResetPasswordForm = ({ onSuccess }) => {
           fontWeight: '700',
           fontSize: '13px',
           marginTop: '8px',
-          background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+          background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
           border: 'none',
-          boxShadow: '0 4px 16px rgba(139, 92, 246, 0.25)'
+          boxShadow: '0 4px 16px var(--interaction-focus)'
         }}
       >
         {isSubmitting ? 'Updating Password...' : 'Reset Password'}

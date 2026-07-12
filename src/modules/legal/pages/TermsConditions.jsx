@@ -34,7 +34,7 @@ export const TermsConditions = () => {
           maxWidth: '800px',
           margin: '0 auto',
           padding: 'var(--space-8) var(--page-padding)',
-          color: 'var(--text-primary, #fff)',
+          color: 'var(--txt-primary)',
           textAlign: 'left',
           minHeight: '60vh'
         }}
@@ -48,7 +48,7 @@ export const TermsConditions = () => {
             {/* Header / Versioning details */}
             <div 
               style={{ 
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)', 
+                borderBottom: '1px solid var(--sys-divider)', 
                 paddingBottom: '16px', 
                 marginBottom: '32px' 
               }}

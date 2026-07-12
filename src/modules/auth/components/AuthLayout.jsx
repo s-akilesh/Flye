@@ -9,15 +9,15 @@ export const AuthLayout = ({ children }) => {
     <div style={{
       display: 'flex',
       minHeight: '100vh',
-      background: 'var(--bg-primary, #0a0a0c)',
-      color: 'var(--text-primary, #f3f4f6)',
+      background: 'var(--sys-bg)',
+      color: 'var(--txt-primary)',
       fontFamily: 'Inter, sans-serif'
     }}>
       {/* Left Pane - Brand Showcase (Hidden on Mobile/Tablet) */}
       <div className="auth-showcase-pane" style={{
         flex: '0 0 45%',
-        background: 'radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15), transparent), radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.12), transparent), var(--bg-secondary, #111115)',
-        borderRight: '1px solid var(--border-color, rgba(255, 255, 255, 0.05))',
+        background: 'radial-gradient(circle at 80% 20%, var(--interaction-selected), transparent), radial-gradient(circle at 20% 80%, var(--interaction-hover), transparent), var(--sys-surface-elevated)',
+        borderRight: '1px solid var(--sys-border)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -29,9 +29,10 @@ export const AuthLayout = ({ children }) => {
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(var(--sys-divider) 1px, transparent 1px), linear-gradient(90deg, var(--sys-divider) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          opacity: 0.25
         }} />
 
         {/* Top: Branding Logo & Name */}
@@ -47,18 +48,18 @@ export const AuthLayout = ({ children }) => {
               width: '32px',
               height: '32px',
               borderRadius: '8px',
-              background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+              background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: '0 0 16px rgba(139, 92, 246, 0.4)'
             }}>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--txt-inverse)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
               </svg>
             </div>
           )}
-          <span style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '2px', color: '#fff' }}>
+          <span style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '2px', color: 'var(--txt-primary)' }}>
             {settings.websiteName || 'FLYEN'}
           </span>
         </div>
@@ -73,13 +74,13 @@ export const AuthLayout = ({ children }) => {
               fontSize: '36px',
               fontWeight: '800',
               lineHeight: '1.2',
-              color: '#fff',
+              color: 'var(--txt-primary)',
               marginBottom: '24px',
               letterSpacing: '-1px'
             }}
           >
             Start your journey in <span style={{
-              background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+              background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               textShadow: '0 0 32px rgba(139, 92, 246, 0.2)'
@@ -92,7 +93,7 @@ export const AuthLayout = ({ children }) => {
             style={{
               fontSize: '15px',
               lineHeight: '1.6',
-              color: 'var(--text-secondary, #94a3b8)'
+              color: 'var(--txt-secondary)'
             }}
           >
             Access interactive component layers, progressive electrical engineering fundamentals, and step-by-step DIY hardware projects.
@@ -100,7 +101,7 @@ export const AuthLayout = ({ children }) => {
         </div>
 
         {/* Bottom: Footer Info */}
-        <div style={{ zIndex: 2, fontSize: '11px', color: 'var(--text-dim, #64748b)', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ zIndex: 2, fontSize: '11px', color: 'var(--txt-muted)', display: 'flex', justifyContent: 'space-between' }}>
           <span>© {new Date().getFullYear()} Flyen Labs.</span>
           <span>Version 1.1.0</span>
         </div>

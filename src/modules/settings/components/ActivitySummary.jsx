@@ -56,9 +56,9 @@ export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = 
   };
 
   const getStatusColor = (status) => {
-    if (status === 'SUCCESS') return 'var(--accent-emerald, #10b981)';
-    if (status === 'FAILED') return 'var(--accent-red, #ef4444)';
-    return 'var(--text-muted)';
+    if (status === 'SUCCESS') return 'var(--status-success)';
+    if (status === 'FAILED') return 'var(--status-danger)';
+    return 'var(--txt-muted)';
   };
 
   const totalPages = Math.ceil(totalLogs / limit);
@@ -78,38 +78,38 @@ export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = 
       <SettingsSection title="Recent Portal History" description="A complete chronological log of actions taken by your account.">
         
         {/* Logs Table */}
-        <div style={{ overflowX: 'auto', background: 'rgba(0,0,0,0.1)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+        <div style={{ overflowX: 'auto', background: 'var(--input-bg)', border: '1px solid var(--sys-border)', borderRadius: '8px' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.01)' }}>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--text-muted)' }}>Action</th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--text-muted)' }}>Details</th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--text-muted)' }}>Timestamp</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', color: 'var(--text-muted)' }}>Status</th>
+              <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--txt-muted)' }}>Action</th>
+                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--txt-muted)' }}>Details</th>
+                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--txt-muted)' }}>Timestamp</th>
+                <th style={{ padding: '12px 16px', textAlign: 'center', color: 'var(--txt-muted)' }}>Status</th>
               </tr>
             </thead>
             <tbody>
               {logs.map((log) => (
-                <tr key={log.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.2s' }}>
-                  <td style={{ padding: '12px 16px', color: '#fff', fontWeight: '700' }}>
-                    <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--accent-violet)' }}>
+                <tr key={log.id} style={{ borderBottom: '1px solid var(--sys-divider)', transition: 'background 0.2s' }}>
+                  <td style={{ padding: '12px 16px', color: 'var(--txt-primary)', fontWeight: '700' }}>
+                    <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--brand-primary)' }}>
                       [{log.module}]
                     </span>
                     <br />
                     {log.action}
                   </td>
-                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{log.description}</td>
-                  <td style={{ padding: '12px 16px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{formatDate(log.created_at)}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--txt-secondary)' }}>{log.description}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{formatDate(log.created_at)}</td>
                   <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                     <span 
                       style={{ 
                         fontSize: '10px', 
                         fontWeight: '700', 
                         color: getStatusColor(log.status), 
-                        background: `${getStatusColor(log.status)}15`,
+                        background: log.status === 'SUCCESS' ? 'rgba(16, 185, 129, 0.15)' : log.status === 'FAILED' ? 'rgba(239, 68, 68, 0.15)' : 'var(--interaction-hover)',
                         padding: '4px 8px',
                         borderRadius: '4px',
-                        border: `1px solid ${getStatusColor(log.status)}25`
+                        border: `1px solid ${log.status === 'SUCCESS' ? 'var(--status-success)' : log.status === 'FAILED' ? 'var(--status-danger)' : 'var(--sys-border)'}`
                       }}
                     >
                       {log.status}
@@ -119,7 +119,7 @@ export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = 
               ))}
               {logs.length === 0 && !isLoading && (
                 <tr>
-                  <td colSpan="4" style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  <td colSpan="4" style={{ padding: '24px', textAlign: 'center', color: 'var(--txt-muted)' }}>
                     No recent activities recorded for this account.
                   </td>
                 </tr>
@@ -154,14 +154,14 @@ export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = 
           >
             {/* Limit Selector */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Rows per page:</span>
+              <span style={{ fontSize: '12px', color: 'var(--txt-muted)' }}>Rows per page:</span>
               <select
                 value={limit}
                 onChange={(e) => { setLimit(Number(e.target.value)); setPage(1); }}
                 style={{
-                  background: '#18181b',
-                  color: '#fff',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'var(--input-bg)',
+                  color: 'var(--txt-primary)',
+                  border: '1px solid var(--sys-border)',
                   borderRadius: '4px',
                   padding: '4px 8px',
                   fontSize: '12px',
@@ -169,7 +169,7 @@ export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = 
                 }}
               >
                 {[10, 20, 50].map(val => (
-                  <option key={val} value={val}>{val}</option>
+                  <option key={val} value={val} style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>{val}</option>
                 ))}
               </select>
             </div>
@@ -184,7 +184,7 @@ export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = 
               >
                 Prev
               </Button>
-              <span style={{ fontSize: '12px', color: '#fff' }}>
+              <span style={{ fontSize: '12px', color: 'var(--txt-primary)' }}>
                 Page {page} of {totalPages || 1}
               </span>
               <Button

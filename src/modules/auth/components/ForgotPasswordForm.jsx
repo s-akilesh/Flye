@@ -43,14 +43,14 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          background: 'rgba(34, 197, 94, 0.1)',
-          border: '1px solid rgba(34, 197, 94, 0.2)',
+          background: 'var(--interaction-selected)',
+          border: '1px solid var(--status-success)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto',
-          color: 'var(--accent-success, #22c55e)',
-          boxShadow: '0 0 24px rgba(34, 197, 94, 0.15)'
+          color: 'var(--status-success)',
+          boxShadow: '0 0 24px var(--interaction-selected)'
         }}>
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
@@ -58,9 +58,9 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
         </div>
 
         <div>
-          <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 8px 0', color: '#fff' }}>Check your email</h3>
-          <p style={{ fontSize: '13px', color: 'var(--text-secondary, #94a3b8)', lineHeight: '1.6', margin: 0 }}>
-            We've sent a password reset link to <strong style={{ color: '#fff' }}>{email}</strong>.
+          <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 8px 0', color: 'var(--txt-primary)' }}>Check your email</h3>
+          <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', lineHeight: '1.6', margin: 0 }}>
+            We've sent a password reset link to <strong style={{ color: 'var(--txt-primary)' }}>{email}</strong>.
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
             marginTop: '12px',
             background: 'none',
             border: 'none',
-            color: 'var(--accent-violet, #8b5cf6)',
+            color: 'var(--brand-primary)',
             fontSize: '12px',
             fontWeight: '700',
             cursor: 'pointer',
@@ -87,8 +87,8 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
-        <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>Reset Password</h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary, #94a3b8)', margin: 0 }}>
+        <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>Reset Password</h3>
+        <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', margin: 0 }}>
           Enter your email address and we'll send you a link to reset your password.
         </p>
       </div>
@@ -96,10 +96,10 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
       {error && (
         <div style={{
           padding: '12px',
-          background: 'rgba(239, 68, 68, 0.08)',
-          border: '1px solid rgba(239, 68, 68, 0.2)',
+          background: 'var(--interaction-hover)',
+          border: '1px solid var(--status-danger)',
           borderRadius: '8px',
-          color: 'var(--accent-danger, #ef4444)',
+          color: 'var(--status-danger)',
           fontSize: '12px',
           lineHeight: '1.5'
         }}>
@@ -108,7 +108,7 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-secondary, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email Address</label>
+        <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email Address</label>
         <input
           type="email"
           className="form-input"
@@ -130,9 +130,9 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
             padding: '12px',
             fontWeight: '700',
             fontSize: '13px',
-            background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+            background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
             border: 'none',
-            boxShadow: '0 4px 16px rgba(139, 92, 246, 0.25)'
+            boxShadow: '0 4px 16px var(--interaction-focus)'
           }}
         >
           {isSubmitting ? 'Sending Link...' : 'Send Reset Link'}
@@ -145,7 +145,7 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
           style={{
             background: 'none',
             border: 'none',
-            color: 'var(--text-dim, #64748b)',
+            color: 'var(--txt-muted)',
             fontSize: '11px',
             fontWeight: '600',
             cursor: 'pointer',

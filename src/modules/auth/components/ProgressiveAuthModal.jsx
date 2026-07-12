@@ -15,22 +15,22 @@ export const ProgressiveAuthModal = ({ isOpen, onClose, onContinueAsGuest, actio
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="modal-content purple" style={{ maxWidth: '400px' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'center', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'center', color: 'var(--txt-primary)', fontFamily: 'Inter, sans-serif' }}>
         
         {/* Animated Icon */}
         <div style={{
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          background: 'rgba(139, 92, 246, 0.1)',
-          border: '1px solid rgba(139, 92, 246, 0.2)',
+          background: 'var(--interaction-selected)',
+          border: '1px solid var(--brand-primary)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto',
-          color: 'var(--accent-violet, #8b5cf6)',
+          color: 'var(--brand-primary)',
           fontSize: '22px',
-          boxShadow: '0 0 24px rgba(139, 92, 246, 0.15)'
+          boxShadow: '0 0 24px var(--interaction-selected)'
         }}>
           🔖
         </div>
@@ -40,7 +40,7 @@ export const ProgressiveAuthModal = ({ isOpen, onClose, onContinueAsGuest, actio
           <h3 style={{ fontSize: '18px', fontWeight: '800', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>
             Create a free account to save your progress
           </h3>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary, #94a3b8)', lineHeight: '1.6', margin: 0 }}>
+          <p style={{ fontSize: '12px', color: 'var(--txt-secondary)', lineHeight: '1.6', margin: 0 }}>
             Sign up to permanently {actionName}, track your learning streaks, and earn verified certificates.
           </p>
         </div>
@@ -56,9 +56,9 @@ export const ProgressiveAuthModal = ({ isOpen, onClose, onContinueAsGuest, actio
               padding: '12px',
               fontWeight: '700',
               fontSize: '13px',
-              background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+              background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
               border: 'none',
-              boxShadow: '0 4px 16px rgba(139, 92, 246, 0.25)'
+              boxShadow: '0 4px 16px var(--interaction-focus)'
             }}
           >
             Create Free Account
@@ -74,18 +74,18 @@ export const ProgressiveAuthModal = ({ isOpen, onClose, onContinueAsGuest, actio
             }}
             style={{
               width: '100%',
-              background: 'rgba(255, 255, 255, 0.02)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'var(--interaction-hover)',
+              border: '1px solid var(--sys-border)',
               padding: '10px 16px',
               borderRadius: '8px',
-              color: 'var(--text-secondary, #94a3b8)',
+              color: 'var(--txt-secondary)',
               fontSize: '12px',
               fontWeight: '600',
               cursor: 'pointer',
               transition: 'all 0.2s'
             }}
-            onMouseEnter={(e) => e.target.style.color = '#fff'}
-            onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary, #94a3b8)'}
+            onMouseEnter={(e) => e.target.style.color = 'var(--txt-primary)'}
+            onMouseLeave={(e) => e.target.style.color = 'var(--txt-secondary)'}
           >
             Continue as Guest (Without Saving)
           </button>

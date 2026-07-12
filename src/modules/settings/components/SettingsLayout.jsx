@@ -64,36 +64,36 @@ export const SettingsLayout = ({
         >
           <span 
             onClick={() => handleNavigateClick(onCancel)}
-            style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
+            style={{ color: 'var(--txt-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
             className="breadcrumb-link"
           >
             Settings
           </span>
           {categoryName && (
             <>
-              <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
+              <span style={{ color: 'var(--sys-border)' }}>&gt;</span>
               <span 
                 onClick={() => handleNavigateClick(onCancel)}
-                style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
+                style={{ color: 'var(--txt-muted)', cursor: 'pointer', transition: 'color 0.2s ease' }}
                 className="breadcrumb-link"
               >
                 {categoryName}
               </span>
             </>
           )}
-          <span style={{ color: 'rgba(255,255,255,0.15)' }}>&gt;</span>
-          <span style={{ color: 'var(--accent-violet)' }}>{title}</span>
+          <span style={{ color: 'var(--sys-border)' }}>&gt;</span>
+          <span style={{ color: 'var(--brand-primary)' }}>{title}</span>
         </div>
       )}
 
       {/* Page Header */}
       {!hideBreadcrumbs && (
         <div style={{ marginBottom: 'var(--space-3)' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', margin: '0 0 4px 0' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 4px 0' }}>
             {title}
           </h2>
           {description && (
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
+            <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: 0 }}>
               {description}
             </p>
           )}
@@ -106,10 +106,10 @@ export const SettingsLayout = ({
           className="settings-status-banner"
           style={{
             padding: 'var(--space-3) var(--space-4)',
-            background: 'rgba(16, 185, 129, 0.08)',
-            border: '1px solid rgba(16, 185, 129, 0.2)',
+            background: 'var(--interaction-selected)',
+            border: '1px solid var(--status-success)',
             borderRadius: '8px',
-            color: 'var(--accent-emerald)',
+            color: 'var(--status-success)',
             fontSize: '13px',
             fontWeight: '600',
             display: 'flex',
@@ -120,7 +120,7 @@ export const SettingsLayout = ({
         >
           <span>{saveStatus.message}</span>
           {saveStatus.lastUpdated && (
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '500' }}>
+            <span style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '500' }}>
               Last Updated: {saveStatus.lastUpdated}
             </span>
           )}

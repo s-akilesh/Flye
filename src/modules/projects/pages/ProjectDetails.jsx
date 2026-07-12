@@ -329,10 +329,10 @@ export const ProjectDetails = () => {
           position: 'sticky',
           top: '73px',
           zIndex: 90,
-          background: 'rgba(10, 10, 18, 0.92)',
+          background: 'var(--sys-page-header-bg)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          borderBottom: '1px solid var(--sys-divider)',
           marginBottom: 'var(--space-6)'
         }}
       >
@@ -401,8 +401,8 @@ export const ProjectDetails = () => {
                       key={kit.id}
                       className="card-glass kit-pricing-card"
                       style={{
-                        border: '1px solid rgba(255, 255, 255, 0.06)',
-                        background: 'rgba(255, 255, 255, 0.005)',
+                        border: '1px solid var(--sys-border)',
+                        background: 'var(--sys-surface)',
                         padding: '20px',
                         display: 'flex',
                         flexDirection: 'column',
@@ -416,22 +416,22 @@ export const ProjectDetails = () => {
                       <div>
                         {/* Title */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <h4 style={{ fontSize: '15px', fontWeight: '800', color: '#fff', margin: 0 }}>
+                          <h4 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>
                             {kit.name}
                           </h4>
                         </div>
 
                         {/* Description */}
-                        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
+                        <p style={{ fontSize: '12px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
                           {kit.description}
                         </p>
 
                         {/* Price */}
                         <div style={{ margin: '12px 0' }}>
-                          <span style={{ fontSize: '24px', fontWeight: '900', color: '#fff' }}>
+                          <span style={{ fontSize: '24px', fontWeight: '900', color: 'var(--txt-primary)' }}>
                             ₹{(Number(kit.price) || 0).toLocaleString('en-IN')}
                           </span>
-                          <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '4px' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--txt-muted)', marginLeft: '4px' }}>
                             {currency}
                           </span>
                         </div>
@@ -557,7 +557,7 @@ export const ProjectDetails = () => {
                     );
                   })
                 ) : (
-                  <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No downloadable files currently catalogued for this kit.</p>
+                  <p style={{ fontSize: '13px', color: 'var(--txt-muted)' }}>No downloadable files currently catalogued for this kit.</p>
                 )}
               </div>
             </div>
@@ -568,12 +568,12 @@ export const ProjectDetails = () => {
                 <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Technical Diagrams & Files</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                   {project.images?.schematic && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'rgba(255,255,255,0.01)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'var(--interaction-hover)', borderRadius: '6px', border: '1px solid var(--sys-border)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ fontSize: '18px' }}>📐</span>
                         <div>
-                          <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>Schematic Diagram</div>
-                          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Vector schematic drawing file</div>
+                          <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>Schematic Diagram</div>
+                          <div style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Vector schematic drawing file</div>
                         </div>
                       </div>
                       <a 
@@ -590,12 +590,12 @@ export const ProjectDetails = () => {
                     </div>
                   )}
                   {project.images?.circuit && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'rgba(255,255,255,0.01)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'var(--interaction-hover)', borderRadius: '6px', border: '1px solid var(--sys-border)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ fontSize: '18px' }}>🔌</span>
                         <div>
-                          <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>Circuit Diagram</div>
-                          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Wiring and connections drawing file</div>
+                          <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>Circuit Diagram</div>
+                          <div style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Wiring and connections drawing file</div>
                         </div>
                       </div>
                       <a 
@@ -619,20 +619,20 @@ export const ProjectDetails = () => {
             {project.videoUrl && !project.videoUrl.includes('placeholder') && (
               <div className="detail-section card-glass">
                 <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Video Tutorial</h3>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-4)', background: 'rgba(255,255,255,0.01)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-4)', background: 'var(--interaction-hover)', borderRadius: '8px', border: '1px solid var(--sys-border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ fontSize: '24px' }}>🎥</span>
                     <div>
                       <div 
                         title={`${title} Video Tutorial Guide`}
-                        style={{ fontSize: '14px', fontWeight: '600', color: '#fff' }}
+                        style={{ fontSize: '14px', fontWeight: '600', color: 'var(--txt-primary)' }}
                       >
                         {(() => {
                           const vTitle = `${title} Video Tutorial Guide`;
                           return vTitle.length > 35 ? vTitle.substring(0, 32) + '...' : vTitle;
                         })()}
                       </div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Step-by-step build and debugging guide</div>
+                      <div style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Step-by-step build and debugging guide</div>
                     </div>
                   </div>
                   <a 
@@ -729,12 +729,10 @@ export const ProjectDetails = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-chip whatsapp width-100 justify-center"
-                style={{ marginTop: 'var(--space-2)' }}
+                style={{ marginTop: 'var(--space-2)', gap: '6px' }}
               >
-                <svg viewBox="0 0 24 24" style={{ fill: 'currentColor', width: '14px', height: '14px' }}>
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                WhatsApp
+                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>chat</span>
+                Contact Us
               </a>
             </div>
           </div>
@@ -838,15 +836,15 @@ export const ProjectDetails = () => {
             {/* Fixed Header with Glass/Milk Background */}
             <div style={{
               padding: '24px 24px 16px 24px',
-              background: 'rgba(255, 255, 255, 0.015)',
+              background: 'var(--sys-surface-elevated)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              borderBottom: '1px solid var(--sys-divider)',
               zIndex: 10,
               flexShrink: 0
             }}>
-              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: '#fff' }}>PROJECT ENQUIRY</h4>
-              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'left', margin: '4px 0 0 0' }}>
+              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)' }}>PROJECT ENQUIRY</h4>
+              <p style={{ fontSize: '12.5px', color: 'var(--txt-muted)', textAlign: 'left', margin: '4px 0 0 0' }}>
                 Fill in your details below. Our engineering expert will coordinate with you.
               </p>
             </div>
@@ -862,7 +860,7 @@ export const ProjectDetails = () => {
             }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', textAlign: 'left', width: '100%' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Name *</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Name *</label>
                   <Input
                     type="text"
                     placeholder="e.g. John Doe"
@@ -876,7 +874,7 @@ export const ProjectDetails = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Contact Number *</label>
                   <div className={`phone-input-container ${formErrors.contactNumber ? 'error-state' : ''}`}>
                     <select
                       className="phone-prefix-select"
@@ -889,8 +887,8 @@ export const ProjectDetails = () => {
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
-                        color: 'var(--text-main, #f9fafb)',
+                        borderRight: '1px solid var(--sys-border)',
+                        color: 'var(--txt-primary)',
                         padding: '0 8px',
                         height: '100%',
                         fontSize: '13px',
@@ -898,12 +896,12 @@ export const ProjectDetails = () => {
                         cursor: 'pointer'
                       }}
                     >
-                      <option value="+1" style={{ background: '#0d0c15', color: '#fff' }}>+1</option>
-                      <option value="+91" style={{ background: '#0d0c15', color: '#fff' }}>+91</option>
-                      <option value="+44" style={{ background: '#0d0c15', color: '#fff' }}>+44</option>
-                      <option value="+61" style={{ background: '#0d0c15', color: '#fff' }}>+61</option>
-                      <option value="+81" style={{ background: '#0d0c15', color: '#fff' }}>+81</option>
-                      <option value="+33" style={{ background: '#0d0c15', color: '#fff' }}>+33</option>
+                      <option value="+1" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+1</option>
+                      <option value="+91" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+91</option>
+                      <option value="+44" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+44</option>
+                      <option value="+61" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+61</option>
+                      <option value="+81" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+81</option>
+                      <option value="+33" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>+33</option>
                     </select>
                     <input
                       type="tel"
@@ -922,7 +920,7 @@ export const ProjectDetails = () => {
                         border: 'none',
                         boxShadow: 'none',
                         padding: '0 14px',
-                        color: 'var(--text-main, #f9fafb)',
+                        color: 'var(--txt-primary)',
                         fontSize: '13px',
                         outline: 'none'
                       }}
@@ -930,14 +928,14 @@ export const ProjectDetails = () => {
                     />
                   </div>
                   {formErrors.contactNumber && (
-                    <span style={{ color: 'var(--accent-crimson, #ef4444)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    <span style={{ color: 'var(--status-error)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
                       Please enter a valid number
                     </span>
                   )}
                 </div>
 
                 <div style={{ display: 'none' }}>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Your Project Status</label>
                   <select
                     value={projectStatus}
                     onChange={(e) => {
@@ -947,17 +945,17 @@ export const ProjectDetails = () => {
                       }
                     }}
                     className="form-select"
-                    style={{ height: '38px', background: '#0a0a0f', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
+                    style={{ height: '38px', background: 'var(--input-bg)', color: 'var(--txt-primary)', border: '1px solid var(--input-border)', borderRadius: '6px', width: '100%' }}
                   >
-                    <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
-                    <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
-                    <option value="Need Only Support" style={{ background: '#09090d', color: '#fff' }}>Need Only Support</option>
-                    <option value="Choosed Flyen Project" style={{ background: '#09090d', color: '#fff' }}>Choosed Flyen Project</option>
+                    <option value="Not Started yet" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Not Started yet</option>
+                    <option value="Have Project idea" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Have Project idea</option>
+                    <option value="Need Only Support" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Need Only Support</option>
+                    <option value="Choosed Flyen Project" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Choosed Flyen Project</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
                   <Input
                     type="text"
                     placeholder="e.g. Smart Irrigation System"
@@ -969,7 +967,7 @@ export const ProjectDetails = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
                   <Input
                     type="text"
                     placeholder="e.g. 5000"
@@ -980,7 +978,7 @@ export const ProjectDetails = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
                   <Input
                     type="date"
                     value={submissionDate}
@@ -992,7 +990,7 @@ export const ProjectDetails = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       type="button"
@@ -1005,9 +1003,9 @@ export const ProjectDetails = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                        border: needDocument === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                        color: needDocument === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                        background: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        border: needDocument === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
+                        color: needDocument === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -1023,9 +1021,9 @@ export const ProjectDetails = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                        border: needDocument === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                        color: needDocument === 'No' ? '#fff' : 'var(--text-secondary)'
+                        background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.15)' : 'var(--interaction-hover)',
+                        border: needDocument === 'No' ? '1px solid var(--status-error)' : '1px solid var(--sys-border)',
+                        color: needDocument === 'No' ? 'var(--status-error)' : 'var(--txt-secondary)'
                       }}
                     >
                       No
@@ -1034,7 +1032,7 @@ export const ProjectDetails = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
+                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       type="button"
@@ -1047,9 +1045,9 @@ export const ProjectDetails = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                        border: needPresentation === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                        color: needPresentation === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                        background: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        border: needPresentation === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
+                        color: needPresentation === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -1065,9 +1063,9 @@ export const ProjectDetails = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                        border: needPresentation === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                        color: needPresentation === 'No' ? '#fff' : 'var(--text-secondary)'
+                        background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.15)' : 'var(--interaction-hover)',
+                        border: needPresentation === 'No' ? '1px solid var(--status-error)' : '1px solid var(--sys-border)',
+                        color: needPresentation === 'No' ? 'var(--status-error)' : 'var(--txt-secondary)'
                       }}
                     >
                       No
@@ -1077,13 +1075,13 @@ export const ProjectDetails = () => {
               </div>
 
               <div style={{ width: '100%', marginTop: '4px', textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Describe your project or any remark (optional)</label>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Describe your project or any remark (optional)</label>
                 <textarea
                   value={projectRemarks}
                   onChange={(e) => setProjectRemarks(e.target.value)}
                   placeholder="Specify any custom requirements, hardware needs, or comments..."
                   className="form-textarea"
-                  style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-subtle)', borderRadius: '6px', color: '#fff', padding: '10px', fontSize: '12.5px' }}
+                  style={{ width: '100%', minHeight: '80px', background: 'var(--input-bg)', border: '1px solid var(--input-border)', borderRadius: '6px', color: 'var(--txt-primary)', padding: '10px', fontSize: '12.5px' }}
                 />
               </div>
             </div>
@@ -1091,10 +1089,10 @@ export const ProjectDetails = () => {
             {/* Fixed Footer with Glass/Milk Background */}
             <div style={{
               padding: '16px 24px 20px 24px',
-              background: 'rgba(255, 255, 255, 0.015)',
+              background: 'var(--sys-surface-elevated)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+              borderTop: '1px solid var(--sys-divider)',
               display: 'flex',
               gap: '12px',
               width: '100%',
@@ -1163,27 +1161,27 @@ export const ProjectDetails = () => {
           </>
         ) : (
           <div style={{ padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+            <div className="modal-icon" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--status-success)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
               <span className="material-icons" style={{ fontSize: '32px' }}>check</span>
             </div>
             <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '800' }}>KIT REQUEST CONFIRMED</h4>
-            <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: 'var(--text-muted)' }}>
-              Your request has been received. We'll reach out to <strong style={{ color: 'var(--accent-blue)' }}>{requestorName}</strong> ({contactNumber}) shortly.
+            <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: 'var(--txt-muted)' }}>
+              Your request has been received. We'll reach out to <strong style={{ color: 'var(--brand-accent)' }}>{requestorName}</strong> ({contactNumber}) shortly.
             </p>
 
             {targetOrderProject && (
-              <div className="modal-receipt" id="receipt-meta" style={{ width: '100%', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '6px', marginBottom: '24px' }}>
+              <div className="modal-receipt" id="receipt-meta" style={{ width: '100%', background: 'var(--interaction-hover)', padding: '12px', borderRadius: '6px', marginBottom: '24px' }}>
                 <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>PROJECT KIT:</span>
-                  <span className="receipt-val" style={{ color: '#fff', fontWeight: 'bold' }}>{targetOrderProject.title} {selectedVariant ? `(${selectedVariant.name})` : ''}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>PROJECT KIT:</span>
+                  <span className="receipt-val" style={{ color: 'var(--txt-primary)', fontWeight: 'bold' }}>{targetOrderProject.title} {selectedVariant ? `(${selectedVariant.name})` : ''}</span>
                 </div>
                 <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>CONTACT:</span>
-                  <span className="receipt-val" style={{ color: '#fff', fontWeight: 'bold' }}>{contactNumber}</span>
+                  <span style={{ color: 'var(--txt-muted)' }}>CONTACT:</span>
+                  <span className="receipt-val" style={{ color: 'var(--txt-primary)', fontWeight: 'bold' }}>{contactNumber}</span>
                 </div>
-                <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px', fontSize: '12px' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>UNIT COST:</span>
-                  <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 'bold' }}>₹{projectBudget || (selectedVariant ? selectedVariant.price : targetOrderProject.price)}</span>
+                <div className="receipt-row" style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed var(--sys-divider)', paddingTop: '8px', marginTop: '8px', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--txt-muted)' }}>UNIT COST:</span>
+                  <span className="receipt-val" style={{ color: 'var(--brand-primary)', fontWeight: 'bold' }}>₹{projectBudget || (selectedVariant ? selectedVariant.price : targetOrderProject.price)}</span>
                 </div>
               </div>
             )}

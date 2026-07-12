@@ -122,7 +122,7 @@ export const ProfileForm = ({ onBack, hideBreadcrumbs = false, hideCancel = fals
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
               ) : (
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Avatar</span>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Avatar</span>
               )}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -142,7 +142,7 @@ export const ProfileForm = ({ onBack, hideBreadcrumbs = false, hideCancel = fals
               >
                 {isUploadingPhoto ? 'Uploading...' : 'Upload Photo'}
               </button>
-              <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Max size 5MB. Square ratio PNG, JPG, or WEBP.</span>
+              <span style={{ fontSize: '10px', color: 'var(--txt-muted)' }}>Max size 5MB. Square ratio PNG, JPG, or WEBP.</span>
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@ export const ProfileForm = ({ onBack, hideBreadcrumbs = false, hideCancel = fals
             className="form-input"
             value={form.profileEmail}
             readOnly={true}
-            style={{ background: 'rgba(255, 255, 255, 0.03)', cursor: 'not-allowed', color: 'var(--text-muted)' }}
+            style={{ background: 'var(--interaction-disabled)', cursor: 'not-allowed', color: 'var(--txt-muted)' }}
           />
         </div>
 
@@ -187,7 +187,7 @@ export const ProfileForm = ({ onBack, hideBreadcrumbs = false, hideCancel = fals
             className="form-input"
             value={form.profileDesignation}
             readOnly={true}
-            style={{ background: 'rgba(255, 255, 255, 0.03)', cursor: 'not-allowed', color: 'var(--text-muted)', textTransform: 'capitalize' }}
+            style={{ background: 'var(--interaction-disabled)', cursor: 'not-allowed', color: 'var(--txt-muted)', textTransform: 'capitalize' }}
           />
         </div>
 

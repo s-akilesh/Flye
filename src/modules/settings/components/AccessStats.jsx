@@ -35,29 +35,29 @@ export const AccessStats = ({ onBack }) => {
       <SettingsSection title="System Access Logs" description="Read-only log card metrics reflecting portal logins.">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 'var(--space-4)' }}>
           
-          <div style={{ gridColumn: 'span 4', padding: '12px 16px', background: 'rgba(255,255,255,0.015)', border: '1px solid var(--border-subtle)', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <span style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div style={{ gridColumn: 'span 4', padding: '12px 16px', background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <span style={{ fontSize: '10px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Last Password Changed
             </span>
-            <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>
+            <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--txt-primary)' }}>
               {settings.lastPasswordChanged || 'Never'}
             </span>
           </div>
 
-          <div style={{ gridColumn: 'span 4', padding: '12px 16px', background: 'rgba(255,255,255,0.015)', border: '1px solid var(--border-subtle)', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <span style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div style={{ gridColumn: 'span 4', padding: '12px 16px', background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <span style={{ fontSize: '10px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Last Login Timestamp
             </span>
-            <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>
+            <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--txt-primary)' }}>
               {settings.lastLogin || 'Just now'}
             </span>
           </div>
 
-          <div style={{ gridColumn: 'span 4', padding: '12px 16px', background: 'rgba(255,255,255,0.015)', border: '1px solid var(--border-subtle)', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <span style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div style={{ gridColumn: 'span 4', padding: '12px 16px', background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <span style={{ fontSize: '10px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Active User Session
             </span>
-            <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--accent-blue)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--brand-accent)' }}>
               {activeSessionDetails}
             </span>
           </div>

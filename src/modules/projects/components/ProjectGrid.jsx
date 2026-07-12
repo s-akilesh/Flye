@@ -44,8 +44,8 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
               style={{ 
                 padding: '16px', 
                 borderRadius: '16px', 
-                background: '#0d0c15', 
-                border: '1px solid rgba(255, 255, 255, 0.05)',
+                background: 'var(--sys-surface)', 
+                border: '1px solid var(--sys-border)',
                 position: 'relative',
                 width: '320px',
                 boxSizing: 'border-box'
@@ -53,7 +53,7 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
             >
 
               {/* Main Image Box */}
-              <div className="project-card-img" style={{ height: '140px', background: 'rgba(255,255,255,0.01)', border: 'none', overflow: 'hidden', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="project-card-img" style={{ height: '140px', background: 'var(--interaction-hover)', border: 'none', overflow: 'hidden', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {proj.images?.main ? (
                   <img
                     src={proj.images.main}
@@ -72,7 +72,7 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
                 ) : null}
                 <svg
                   viewBox="0 0 48 48"
-                  style={{ display: proj.images?.main ? 'none' : 'block', width: '40px', height: '40px', stroke: 'var(--text-dim)' }}
+                  style={{ display: proj.images?.main ? 'none' : 'block', width: '40px', height: '40px', stroke: 'var(--txt-muted)' }}
                 >
                   <rect x="10" y="10" width="28" height="28" rx="2" fill="none" />
                   <path d="M15,24 L33,24" />
@@ -81,18 +81,18 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
               </div>
 
             {/* Title */}
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#ffffff', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--txt-primary)', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
               {proj.title}
             </h3>
 
             {/* Category / Subtitle */}
-            <div style={{ fontSize: '10px', fontWeight: '700', color: '#ff8a00', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
+            <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--status-warning)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
               {categoryLabel}
             </div>
 
             {/* Price */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px' }}>
-              <span style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff' }}>₹{displayPrice}</span>
+              <span style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)' }}>₹{displayPrice}</span>
             </div>
 
             {/* CTA Request Button */}
@@ -105,10 +105,10 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
                   width: '100%',
                   paddingTop: '8px',
                   paddingBottom: '8px',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'var(--interaction-hover)',
+                  border: '1px solid var(--sys-border)',
                   borderRadius: '8px',
-                  color: '#ffffff',
+                  color: 'var(--txt-primary)',
                   fontSize: '14px',
                   fontFamily: 'Inter, sans-serif',
                   fontWeight: '600',

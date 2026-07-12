@@ -190,7 +190,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'rgba(0,0,0,0.6)',
+              background: 'var(--sys-overlay)',
               backdropFilter: 'blur(4px)',
               zIndex: 9998
             }}
@@ -210,9 +210,9 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               width: '80%',
               maxWidth: '360px',
               height: '100%',
-              background: 'rgba(10, 10, 15, 0.95)',
-              borderLeft: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '-10px 0 30px rgba(0,0,0,0.5)',
+              background: 'var(--sidebar-bg)',
+              borderLeft: '1px solid var(--sys-border)',
+              boxShadow: 'var(--shadow-lg)',
               display: 'flex',
               flexDirection: 'column',
               zIndex: 9999,
@@ -229,7 +229,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
 
               {/* Drawer Header Status block */}
               {user && (
-                <div className="drawer-user-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="drawer-user-card" style={{ background: 'var(--interaction-hover)', padding: '16px', borderRadius: '10px', border: '1px solid var(--sys-border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                     {profile?.profile_photo || profile?.avatar_url ? (
                       <img 
@@ -246,21 +246,21 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                       width: '40px', 
                       height: '40px', 
                       borderRadius: '50%', 
-                      background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-violet))', 
+                      background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))', 
                       display: profile?.profile_photo || profile?.avatar_url ? 'none' : 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       fontWeight: '800', 
-                      color: '#fff', 
+                      color: 'var(--txt-inverse)', 
                       fontSize: '14px' 
                     }}>
                       {getInitials(profile?.full_name || user?.email)}
                     </div>
                     <div>
-                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: '#fff' }}>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)' }}>
                         {profile?.full_name || user?.email || 'Student'}
                       </h4>
-                      <span style={{ fontSize: '11px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--brand-primary)', fontWeight: 'bold' }}>
                         {profile?.role === 'admin' ? 'Flyen Staff' : 'Student'}
                       </span>
                     </div>
@@ -285,9 +285,9 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                         marginTop: '8px',
                         padding: '8px 12px',
                         borderRadius: '6px',
-                        background: 'rgba(139, 92, 246, 0.12)',
-                        border: '1px solid rgba(139, 92, 246, 0.25)',
-                        color: 'var(--accent-violet)',
+                        background: 'var(--sidebar-active-item)',
+                        border: '1px solid var(--brand-primary)',
+                        color: 'var(--brand-primary)',
                         fontSize: '12px',
                         fontWeight: '700',
                         cursor: 'pointer',
@@ -544,7 +544,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
             </div>
 
             {/* Quick Actions Footer */}
-            <div style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: '1px solid var(--sys-divider)', background: 'var(--sys-surface)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {QUICK_ACTIONS.map((act) => {
                   if (act.requiresAdmin && !user) return null;
@@ -580,7 +580,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                   type="button" 
                   variant="ghost" 
                   onClick={handleLogout} 
-                  style={{ width: '100%', padding: '6px 0', fontSize: '11px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-crimson)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                  style={{ width: '100%', padding: '6px 0', fontSize: '11px', background: 'var(--interaction-hover)', color: 'var(--status-danger)', border: '1px solid var(--status-danger)' }}
                 >
                   Logout (Admin)
                 </Button>
@@ -593,9 +593,9 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                     width: '100%', 
                     padding: '8px 0', 
                     fontSize: '12px', 
-                    background: 'linear-gradient(135deg, var(--accent-blue, #3b82f6), var(--accent-violet, #8b5cf6))',
+                    background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
                     border: 'none',
-                    boxShadow: '0 2px 8px rgba(139, 92, 246, 0.2)'
+                    boxShadow: '0 2px 8px var(--interaction-focus)'
                   }}
                 >
                   Sign In

@@ -109,11 +109,11 @@ export const NotificationPreferences = ({ onBack, hideBreadcrumbs = false, hideC
                 alignItems: 'center', 
                 justifyContent: 'space-between',
                 paddingBottom: '16px',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+                borderBottom: '1px solid var(--sys-divider)'
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '80%' }}>
-                <span style={{ fontSize: '13px', fontWeight: '700', color: '#fff' }}>{ch.label}</span>
+                <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--txt-primary)' }}>{ch.label}</span>
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{ch.description}</span>
               </div>
               <div>
@@ -132,10 +132,10 @@ export const NotificationPreferences = ({ onBack, hideBreadcrumbs = false, hideC
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      backgroundColor: prefs[ch.id] ? 'var(--accent-violet, #8b5cf6)' : 'rgba(255, 255, 255, 0.08)',
+                      backgroundColor: prefs[ch.id] ? 'var(--brand-primary)' : 'var(--input-border)',
                       transition: '.3s',
                       borderRadius: '34px',
-                      boxShadow: prefs[ch.id] ? '0 0 10px rgba(139, 92, 246, 0.3)' : 'none'
+                      boxShadow: prefs[ch.id] ? '0 0 10px var(--interaction-focus)' : 'none'
                     }}
                   >
                     <span 
@@ -146,8 +146,7 @@ export const NotificationPreferences = ({ onBack, hideBreadcrumbs = false, hideC
                         width: '16px',
                         left: '3px',
                         bottom: '3px',
-                        backgroundColor: '#white',
-                        background: '#fff',
+                        backgroundColor: 'var(--txt-inverse)',
                         transition: '.3s',
                         borderRadius: '50%',
                         transform: prefs[ch.id] ? 'translateX(18px)' : 'translateX(0)'

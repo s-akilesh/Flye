@@ -64,7 +64,7 @@ export const AdminToolbar = ({
             right: '12px',
             top: '50%',
             transform: 'translateY(-50%)',
-            color: 'var(--text-muted, #9ca3af)',
+            color: 'var(--txt-muted)',
             pointerEvents: 'none',
             display: 'flex',
             alignItems: 'center',
@@ -176,10 +176,10 @@ export const AdminToolbar = ({
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: sortValue === opt.value ? 'rgba(139, 92, 246, 0.12)' : 'none',
+                      background: sortValue === opt.value ? 'var(--interaction-selected)' : 'none',
                       border: 'none',
                       borderRadius: '8px',
-                      color: sortValue === opt.value ? 'var(--accent-violet)' : 'var(--text-primary)',
+                      color: sortValue === opt.value ? 'var(--brand-primary)' : 'var(--txt-primary)',
                       textAlign: 'left',
                       fontSize: '13px',
                       fontWeight: sortValue === opt.value ? '600' : '400',
@@ -194,7 +194,7 @@ export const AdminToolbar = ({
                   >
                     <span>{opt.label}</span>
                     {sortValue === opt.value && (
-                      <span className="material-icons" style={{ fontSize: '16px', color: 'var(--accent-violet)' }}>check</span>
+                      <span className="material-icons" style={{ fontSize: '16px', color: 'var(--brand-primary)' }}>check</span>
                     )}
                   </button>
                 ))}

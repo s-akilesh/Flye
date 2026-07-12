@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../../projects/hooks/useProjects';
@@ -23,6 +23,14 @@ export const Home = () => {
   const { user } = useAuth();
 
   const seoProps = generateSEO(PageType.HOME);
+
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.5;
+    }
+  }, []);
 
   // Detailed project request form states
   const [orderedProject, setOrderedProject] = useState(null);
@@ -152,104 +160,148 @@ export const Home = () => {
       <section 
         className="hero-section" 
         style={{ 
+          position: 'relative',
+          overflow: 'hidden',
           textAlign: 'center', 
           padding: '120px var(--page-padding) 60px var(--page-padding)', 
-          background: 'radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.15), transparent 50%)',
+          background: 'var(--sys-bg)',
           display: 'flex', 
           flexDirection: 'column', 
           alignItems: 'center', 
           justifyContent: 'center',
           gap: '24px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          borderBottom: '1px solid var(--sys-border)',
           width: '100%',
           minHeight: '100vh',
           boxSizing: 'border-box'
         }}
       >
-        <div style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '2px' }}>
-          {settings.companyTagline || 'Build • Print • Learn'}
-        </div>
-        <h1 style={{ fontSize: '48px', fontWeight: '900', color: '#fff', margin: '0 max(20px, 4%)', lineHeight: '1.35', maxWidth: '800px' }}>
-          Complete Your Engineering Project with Confidence
-        </h1>
-        <p style={{ fontSize: '16px', color: 'var(--text-secondary, #9ca3af)', maxWidth: '600px', margin: '0 auto 8px auto', lineHeight: '1.6' }}>
-          Affordable Engineering Projects with complete guidance from project selection to final presentation.
-        </p>
+        {/* Ambient Video Background */}
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 0,
+            opacity: 0.14,
+            pointerEvents: 'none',
+            transform: 'translate3d(0, 0, 0)',
+            willChange: 'transform',
+            backfaceVisibility: 'hidden'
+          }}
+        >
+          <source src="/hero-bg.mp4" type="video/mp4" />
+        </video>
 
-        {/* Hero CTAs */}
-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '16px', marginBottom: '48px' }}>
-          <Button variant="primary" onClick={() => handleScrollToSection('how-can-we-help')} style={{ padding: '12px 28px', fontSize: '14px', fontWeight: 'bold' }}>
-            Request / Find My project
-          </Button>
-          <Button variant="secondary" onClick={() => navigate(ROUTES.PROJECTS)} style={{ padding: '12px 28px', fontSize: '14px', fontWeight: 'bold' }}>
-            Browse Projects
-          </Button>
-        </div>
+        {/* Ambient Radial Overlay for contrast */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.15), transparent 60%)',
+            zIndex: 0,
+            pointerEvents: 'none'
+          }}
+        />
 
-        {/* Redesigned 5 Options/Value Propositions Grid (Super Attractive & check icon only) */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', width: '100%', maxWidth: '1100px', marginTop: '16px' }}>
-          {[
-            { 
-              label: 'Affordable Project Kits', 
-              desc: 'High-quality hardware components at prices students can actually afford.', 
-              color: 'var(--accent-emerald, #10b981)',
-              bg: 'rgba(16, 185, 129, 0.05)',
-              border: 'rgba(16, 185, 129, 0.15)'
-            },
-            { 
-              label: 'Documentation Included', 
-              desc: 'Complete, structured project report files ready for your college submission.', 
-              color: 'var(--accent-emerald, #10b981)',
-              bg: 'rgba(16, 185, 129, 0.05)',
-              border: 'rgba(16, 185, 129, 0.15)'
-            },
-            { 
-              label: 'Technical Guidance', 
-              desc: 'Step-by-step block diagrams, circuit schematics, and complete code explanations.', 
-              color: 'var(--accent-emerald, #10b981)',
-              bg: 'rgba(16, 185, 129, 0.05)',
-              border: 'rgba(16, 185, 129, 0.15)'
-            },
-            { 
-              label: 'Continuous Support', 
-              desc: 'Dedicated technical debug support and help until your final submission day.', 
-              color: 'var(--accent-emerald, #10b981)',
-              bg: 'rgba(16, 185, 129, 0.05)',
-              border: 'rgba(16, 185, 129, 0.15)'
-            }
-          ].map((vp, idx) => (
-            <div 
-              key={idx} 
-              className="card-glass hover-lift" 
-              style={{ 
-                padding: '24px 16px', 
-                borderRadius: '12px', 
-                border: `1px solid ${vp.border}`, 
-                background: vp.bg,
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center',
-                gap: '12px',
-                textAlign: 'center',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-                boxSizing: 'border-box'
-              }}
-            >
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span className="material-icons" style={{ fontSize: '20px', color: vp.color }}>check</span>
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', gap: '24px' }}>
+          <div style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '2px' }}>
+            {settings.companyTagline || 'Build • Print • Learn'}
+          </div>
+          <h1 style={{ fontSize: '48px', fontWeight: '900', color: 'var(--txt-primary)', margin: '0 max(20px, 4%)', lineHeight: '1.35', maxWidth: '800px' }}>
+            Complete Your Engineering Project with Confidence
+          </h1>
+          <p style={{ fontSize: '16px', color: 'var(--txt-secondary)', maxWidth: '600px', margin: '0 auto 8px auto', lineHeight: '1.6' }}>
+            Affordable Engineering Projects with complete guidance from project selection to final presentation.
+          </p>
+
+          {/* Hero CTAs */}
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '16px', marginBottom: '48px' }}>
+            <Button variant="primary" onClick={() => handleScrollToSection('how-can-we-help')} style={{ padding: '12px 28px', fontSize: '14px', fontWeight: 'bold' }}>
+              Request / Find My project
+            </Button>
+            <Button variant="secondary" onClick={() => navigate(ROUTES.PROJECTS)} style={{ padding: '12px 28px', fontSize: '14px', fontWeight: 'bold' }}>
+              Browse Projects
+            </Button>
+          </div>
+
+          {/* Redesigned 5 Options/Value Propositions Grid (Super Attractive & check icon only) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', width: '100%', maxWidth: '1100px', marginTop: '16px' }}>
+            {[
+              { 
+                label: 'Affordable Project Kits', 
+                desc: 'High-quality hardware components at prices students can actually afford.', 
+                color: 'var(--status-success)',
+                bg: 'var(--sys-surface)',
+                border: 'var(--sys-border)'
+              },
+              { 
+                label: 'Documentation Included', 
+                desc: 'Complete, structured project report files ready for your college submission.', 
+                color: 'var(--status-success)',
+                bg: 'var(--sys-surface)',
+                border: 'var(--sys-border)'
+              },
+              { 
+                label: 'Technical Guidance', 
+                desc: 'Step-by-step block diagrams, circuit schematics, and complete code explanations.', 
+                color: 'var(--status-success)',
+                bg: 'var(--sys-surface)',
+                border: 'var(--sys-border)'
+              },
+              { 
+                label: 'Continuous Support', 
+                desc: 'Dedicated technical debug support and help until your final submission day.', 
+                color: 'var(--status-success)',
+                bg: 'var(--sys-surface)',
+                border: 'var(--sys-border)'
+              }
+            ].map((vp, idx) => (
+              <div 
+                key={idx} 
+                className="card-glass hover-lift" 
+                style={{ 
+                  padding: '24px 16px', 
+                  borderRadius: '12px', 
+                  border: `1px solid ${vp.border}`, 
+                  background: vp.bg,
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center',
+                  gap: '12px',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 20px var(--interaction-focus)',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span className="material-icons" style={{ fontSize: '20px', color: vp.color }}>check</span>
+                </div>
+                <h3 style={{ fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>{vp.label}</h3>
+                <p style={{ fontSize: '11.5px', color: 'var(--txt-secondary)', margin: 0, lineHeight: '1.4' }}>{vp.desc}</p>
               </div>
-              <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#fff', margin: 0 }}>{vp.label}</h3>
-              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary, #9ca3af)', margin: 0, lineHeight: '1.4' }}>{vp.desc}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* 2. SECTION 2: HOW CAN WE HELP YOU? (FULL WIDTH BACKGROUND) */}
-      <section id="how-can-we-help" style={{ padding: '110px var(--page-padding)', background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.05) 0%, transparent 100%)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
+      <section id="how-can-we-help" style={{ padding: '110px var(--page-padding)', background: 'linear-gradient(180deg, var(--interaction-selected) 0%, transparent 100%)', borderBottom: '1px solid var(--sys-border)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>How Can We Help You?</h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)' }}>Select the customer journey that fits your current academic needs</p>
+          <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0' }}>How Can We Help You?</h2>
+          <p style={{ fontSize: '14px', color: 'var(--txt-muted)' }}>Select the customer journey that fits your current academic needs</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
@@ -289,16 +341,16 @@ export const Home = () => {
               onClick={card.action}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <span className="material-icons" style={{ fontSize: '32px', color: 'var(--accent-violet)' }}>{card.icon}</span>
-                <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#fff', margin: 0 }}>{card.title}</h3>
-                <p style={{ fontSize: '13.5px', color: 'var(--text-secondary, #9ca3af)', margin: 0, lineHeight: '1.5' }}>{card.desc}</p>
+                <span className="material-icons" style={{ fontSize: '32px', color: 'var(--brand-primary)' }}>{card.icon}</span>
+                <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>{card.title}</h3>
+                <p style={{ fontSize: '13.5px', color: 'var(--txt-secondary)', margin: 0, lineHeight: '1.5' }}>{card.desc}</p>
               </div>
               <button 
                 type="button"
                 style={{ 
                   background: 'none', 
                   border: 'none', 
-                  color: 'var(--accent-violet)', 
+                  color: 'var(--brand-primary)', 
                   fontWeight: 'bold', 
                   fontSize: '13px', 
                   textAlign: 'left', 
@@ -317,11 +369,11 @@ export const Home = () => {
       </section>
 
       {/* 3. SECTION 3: FEATURED ENGINEERING PROJECTS (FULL WIDTH SECTION) */}
-      <section style={{ padding: '80px var(--page-padding)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
+      <section style={{ padding: '80px var(--page-padding)', borderBottom: '1px solid var(--sys-border)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '40px', maxWidth: '1100px', margin: '0 auto 40px auto' }}>
           <div>
-            <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>Projects</h2>
-            <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)', margin: 0 }}>Explore ready-made final-year project kits designed for engineering students.</p>
+            <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0' }}>Projects</h2>
+            <p style={{ fontSize: '14px', color: 'var(--txt-muted)', margin: 0 }}>Explore ready-made final-year project kits designed for engineering students.</p>
           </div>
         </div>
 
@@ -384,12 +436,12 @@ export const Home = () => {
                 </div>
 
                 {/* Title */}
-                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#ffffff', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--txt-primary)', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
                   {proj.title}
                 </h3>
 
                 {/* Description */}
-                <p className="card-desc" style={{ fontSize: '12.5px', color: 'var(--text-secondary, #9ca3af)', margin: '0 0 12px 0', lineClamp: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
+                <p className="card-desc" style={{ fontSize: '12.5px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineClamp: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
                   {proj.description}
                 </p>
 
@@ -398,14 +450,14 @@ export const Home = () => {
                   <span className={`status-pill diff-${diff}`} style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px' }}>
                     {proj.difficulty}
                   </span>
-                  <span className="status-pill" style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
+                  <span className="status-pill" style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'var(--interaction-hover)', color: 'var(--txt-muted)' }}>
                     {proj.category}
                   </span>
                 </div>
 
                 {/* Footer */}
-                <div className="project-card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '12px', marginTop: 'auto' }}>
-                  <span className="project-card-price" style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff' }}>₹{(Number(proj.price) || 0).toLocaleString('en-IN')}</span>
+                <div className="project-card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--sys-divider)', paddingTop: '12px', marginTop: 'auto' }}>
+                  <span className="project-card-price" style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)' }}>₹{(Number(proj.price) || 0).toLocaleString('en-IN')}</span>
                   <Button
                     type="button"
                     variant="none"
@@ -415,10 +467,10 @@ export const Home = () => {
                       paddingBottom: '8px',
                       paddingLeft: '14px',
                       paddingRight: '14px',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      background: 'var(--interaction-hover)',
+                      border: '1px solid var(--sys-border)',
                       borderRadius: '8px',
-                      color: '#ffffff',
+                      color: 'var(--txt-primary)',
                       fontSize: '12px',
                       fontFamily: 'Inter, sans-serif',
                       fontWeight: '600',
@@ -445,17 +497,17 @@ export const Home = () => {
       </section>
 
       {/* 4. SECTION 4: WHY STUDENTS CHOOSE FLYEN (FULL WIDTH BACKGROUND) */}
-      <section id="about" style={{ padding: '110px var(--page-padding)', background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, transparent 100%)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
+      <section id="about" style={{ padding: '110px var(--page-padding)', background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, transparent 100%)', borderBottom: '1px solid var(--sys-border)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>Why Students Choose Flyen</h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)' }}>Flyen supports you step-by-step, unlike traditional sellers</p>
+          <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0' }}>Why Students Choose Flyen</h2>
+          <p style={{ fontSize: '14px', color: 'var(--txt-muted)' }}>Flyen supports you step-by-step, unlike traditional sellers</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', maxWidth: '960px', margin: '0 auto' }}>
           
           {/* Col 1: Traditional Project Centers (Check icon in green) */}
-          <div className="card-glass" style={{ padding: '32px 24px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div className="card-glass" style={{ padding: '32px 24px', borderRadius: '12px', border: '1px solid var(--sys-border)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Traditional Project Centers
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -464,8 +516,8 @@ export const Home = () => {
                 'Provide a quick, one-time overview of the kit',
                 'Extremely limited debug support or documentation'
               ].map((text, idx) => (
-                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: 'var(--text-secondary, #9ca3af)' }}>
-                  <span className="material-icons" style={{ fontSize: '16px', color: 'var(--accent-emerald, #10b981)', marginTop: '2px' }}>check</span>
+                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: 'var(--txt-secondary)' }}>
+                  <span className="material-icons" style={{ fontSize: '16px', color: 'var(--status-success)', marginTop: '2px' }}>check</span>
                   <span>{text}</span>
                 </li>
               ))}
@@ -473,8 +525,8 @@ export const Home = () => {
           </div>
 
           {/* Col 2: Flyen Accents (Check icon in green) */}
-          <div className="card-glass" style={{ padding: '32px 24px', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.3)', display: 'flex', flexDirection: 'column', gap: '20px', background: 'rgba(16, 185, 129, 0.02)', boxShadow: '0 0 30px rgba(16, 185, 129, 0.05)' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--accent-emerald, #10b981)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div className="card-glass" style={{ padding: '32px 24px', borderRadius: '12px', border: '1px solid var(--sys-border)', display: 'flex', flexDirection: 'column', gap: '20px', background: 'var(--sys-surface-elevated)', boxShadow: '0 0 30px var(--interaction-focus)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--status-success)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Flyen Platform
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -486,8 +538,8 @@ export const Home = () => {
                 'Expert presentation slides preparation & guidance',
                 'Continuous support until your final project submission'
               ].map((text, idx) => (
-                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: '#fff' }}>
-                  <span className="material-icons" style={{ fontSize: '16px', color: 'var(--accent-emerald, #10b981)', marginTop: '2px' }}>check</span>
+                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: 'var(--txt-primary)' }}>
+                  <span className="material-icons" style={{ fontSize: '16px', color: 'var(--status-success)', marginTop: '2px' }}>check</span>
                   <span>{text}</span>
                 </li>
               ))}
@@ -498,10 +550,10 @@ export const Home = () => {
       </section>
 
       {/* 5. SECTION 5: YOUR PROJECT JOURNEY (FULL WIDTH) */}
-      <section id="how-it-works" style={{ padding: '80px var(--page-padding)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', width: '100%', boxSizing: 'border-box' }}>
+      <section id="how-it-works" style={{ padding: '80px var(--page-padding)', borderBottom: '1px solid var(--sys-border)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: '0 0 8px 0' }}>Your Project Journey</h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted, #6b7280)' }}>Six simple steps to execute your project successfully</p>
+          <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0' }}>Your Project Journey</h2>
+          <p style={{ fontSize: '14px', color: 'var(--txt-muted)' }}>Six simple steps to execute your project successfully</p>
         </div>
 
         <div style={{ position: 'relative', width: '100%', maxWidth: '1100px', margin: '0 auto', padding: '20px 0' }}>
@@ -511,7 +563,7 @@ export const Home = () => {
             <svg width="100%" height="100%" viewBox="0 0 1100 240" fill="none" preserveAspectRatio="none">
               <path 
                 d="M 91.6,120 C 183.3,120 183.3,46 275,46 C 366.6,46 366.6,120 458.3,120 C 550,120 550,46 641.6,46 C 733.3,46 733.3,120 825,120 C 916.6,120 916.6,46 1008.3,46" 
-                stroke="rgba(139, 92, 246, 0.35)" 
+                stroke="var(--brand-accent)" 
                 strokeWidth="2.5" 
                 strokeDasharray="6,6" 
                 fill="none" 
@@ -582,7 +634,7 @@ export const Home = () => {
       </section>
 
       {/* 6. SECTION 6: CONTACT CTA (FULL WIDTH BACKGROUND) */}
-      <section style={{ padding: '80px var(--page-padding)', background: 'rgba(255, 255, 255, 0.01)', width: '100%', boxSizing: 'border-box' }}>
+      <section style={{ padding: '80px var(--page-padding)', background: 'var(--sys-bg)', width: '100%', boxSizing: 'border-box' }}>
         <div 
           className="card-glass" 
           style={{ 
@@ -590,17 +642,17 @@ export const Home = () => {
             margin: '0 auto', 
             padding: '48px 32px', 
             borderRadius: '16px', 
-            border: '1px solid rgba(139, 92, 246, 0.25)', 
+            border: '1px solid var(--sys-border)', 
             textAlign: 'center', 
-            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(5,5,10,0.4) 100%)',
+            background: 'var(--sys-surface)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: '16px'
           }}
         >
-          <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#fff', margin: 0 }}>Still Confused About Your Project?</h2>
-          <p style={{ fontSize: '14.5px', color: 'var(--text-secondary, #9ca3af)', maxWidth: '600px', lineHeight: '1.6', margin: 0 }}>
+          <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>Still Confused About Your Project?</h2>
+          <p style={{ fontSize: '14.5px', color: 'var(--txt-secondary)', maxWidth: '600px', lineHeight: '1.6', margin: 0 }}>
             Talk to our engineering experts. We'll help you choose the right project based on your department, budget, and submission date.
           </p>
           <Button variant="primary" onClick={() => navigate('/contact')} style={{ padding: '12px 32px', fontSize: '14px', fontWeight: 'bold', marginTop: '8px' }}>
@@ -619,14 +671,14 @@ export const Home = () => {
             {/* Fixed Header with Glass/Milk Background */}
             <div style={{
               padding: '24px 24px 16px 24px',
-              background: 'rgba(255, 255, 255, 0.015)',
+              background: 'var(--sys-surface)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              borderBottom: '1px solid var(--sys-divider)',
               zIndex: 10,
               flexShrink: 0
             }}>
-              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: '#fff' }}>PROJECT ENQUIRY</h4>
+              <h4 style={{ textAlign: 'left', margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)' }}>PROJECT ENQUIRY</h4>
               <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', textAlign: 'left', margin: '4px 0 0 0' }}>
                 Fill in your details below. Our engineering expert will coordinate with you.
               </p>
@@ -670,8 +722,8 @@ export const Home = () => {
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
-                        color: 'var(--text-main, #f9fafb)',
+                        borderRight: '1px solid var(--sys-divider)',
+                        color: 'var(--txt-primary)',
                         padding: '0 8px',
                         height: '100%',
                         fontSize: '13px',
@@ -679,12 +731,12 @@ export const Home = () => {
                         cursor: 'pointer'
                       }}
                     >
-                      <option value="+1" style={{ background: '#0d0c15', color: '#fff' }}>+1</option>
-                      <option value="+91" style={{ background: '#0d0c15', color: '#fff' }}>+91</option>
-                      <option value="+44" style={{ background: '#0d0c15', color: '#fff' }}>+44</option>
-                      <option value="+61" style={{ background: '#0d0c15', color: '#fff' }}>+61</option>
-                      <option value="+81" style={{ background: '#0d0c15', color: '#fff' }}>+81</option>
-                      <option value="+33" style={{ background: '#0d0c15', color: '#fff' }}>+33</option>
+                      <option value="+1" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>+1</option>
+                      <option value="+91" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>+91</option>
+                      <option value="+44" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>+44</option>
+                      <option value="+61" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>+61</option>
+                      <option value="+81" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>+81</option>
+                      <option value="+33" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>+33</option>
                     </select>
                     <input
                       type="tel"
@@ -703,7 +755,7 @@ export const Home = () => {
                         border: 'none',
                         boxShadow: 'none',
                         padding: '0 14px',
-                        color: 'var(--text-main, #f9fafb)',
+                        color: 'var(--txt-primary)',
                         fontSize: '13px',
                         outline: 'none'
                       }}
@@ -711,7 +763,7 @@ export const Home = () => {
                     />
                   </div>
                   {formErrors.contactNumber && (
-                    <span style={{ color: 'var(--accent-crimson, #ef4444)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    <span style={{ color: 'var(--status-danger)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
                       Please enter a valid number
                     </span>
                   )}
@@ -728,12 +780,12 @@ export const Home = () => {
                       }
                     }}
                     className="form-select"
-                    style={{ height: '38px', background: '#0a0a0f', color: '#fff', border: '1px solid var(--border-subtle)', borderRadius: '6px', width: '100%' }}
+                    style={{ height: '38px', background: 'var(--input-bg)', color: 'var(--txt-primary)', border: '1px solid var(--sys-border)', borderRadius: '6px', width: '100%' }}
                   >
-                    <option value="Not Started yet" style={{ background: '#09090d', color: '#fff' }}>Not Started yet</option>
-                    <option value="Have Project idea" style={{ background: '#09090d', color: '#fff' }}>Have Project idea</option>
-                    <option value="Need Only Support" style={{ background: '#09090d', color: '#fff' }}>Need Only Support</option>
-                    <option value="Choosed Flyen Project" style={{ background: '#09090d', color: '#fff' }}>Choosed Flyen Project</option>
+                    <option value="Not Started yet" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>Not Started yet</option>
+                    <option value="Have Project idea" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>Have Project idea</option>
+                    <option value="Need Only Support" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>Need Only Support</option>
+                    <option value="Choosed Flyen Project" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>Choosed Flyen Project</option>
                   </select>
                 </div>
 
@@ -786,9 +838,9 @@ export const Home = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                        border: needDocument === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                        color: needDocument === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                        background: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--input-bg)',
+                        border: needDocument === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
+                        color: needDocument === 'Yes' ? 'var(--txt-inverse)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -804,9 +856,9 @@ export const Home = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                        border: needDocument === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                        color: needDocument === 'No' ? '#fff' : 'var(--text-secondary)'
+                        background: needDocument === 'No' ? 'var(--interaction-hover)' : 'var(--input-bg)',
+                        border: needDocument === 'No' ? '1px solid var(--status-danger)' : '1px solid var(--sys-border)',
+                        color: needDocument === 'No' ? 'var(--status-danger)' : 'var(--txt-secondary)'
                       }}
                     >
                       No
@@ -828,9 +880,9 @@ export const Home = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'Yes' ? 'var(--accent-violet)' : 'rgba(255,255,255,0.02)',
-                        border: needPresentation === 'Yes' ? '1px solid var(--accent-violet)' : '1px solid rgba(255,255,255,0.08)',
-                        color: needPresentation === 'Yes' ? '#fff' : 'var(--text-secondary)'
+                        background: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--input-bg)',
+                        border: needPresentation === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
+                        color: needPresentation === 'Yes' ? 'var(--txt-inverse)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -846,9 +898,9 @@ export const Home = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'No' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.02)',
-                        border: needPresentation === 'No' ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.08)',
-                        color: needPresentation === 'No' ? '#fff' : 'var(--text-secondary)'
+                        background: needPresentation === 'No' ? 'var(--interaction-hover)' : 'var(--input-bg)',
+                        border: needPresentation === 'No' ? '1px solid var(--status-danger)' : '1px solid var(--sys-border)',
+                        color: needPresentation === 'No' ? 'var(--status-danger)' : 'var(--txt-secondary)'
                       }}
                     >
                       No
@@ -864,7 +916,7 @@ export const Home = () => {
                   onChange={(e) => setProjectRemarks(e.target.value)}
                   placeholder="Specify any custom requirements, hardware needs, or comments..."
                   className="form-textarea"
-                  style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-subtle)', borderRadius: '6px', color: '#fff', padding: '10px', fontSize: '12.5px' }}
+                  style={{ width: '100%', minHeight: '80px', background: 'var(--input-bg)', border: '1px solid var(--sys-border)', borderRadius: '6px', color: 'var(--txt-primary)', padding: '10px', fontSize: '12.5px' }}
                 />
               </div>
             </div>
@@ -872,10 +924,10 @@ export const Home = () => {
             {/* Fixed Footer with Glass/Milk Background */}
             <div style={{
               padding: '16px 24px 20px 24px',
-              background: 'rgba(255, 255, 255, 0.015)',
+              background: 'var(--sys-surface)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+              borderTop: '1px solid var(--sys-divider)',
               display: 'flex',
               gap: '12px',
               width: '100%',

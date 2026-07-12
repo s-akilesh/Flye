@@ -614,9 +614,9 @@ export const ManageEnquiries = () => {
     const priority = parsed.priority || 'Medium';
 
     const priorityColors = {
-      High: { text: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
-      Medium: { text: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
-      Low: { text: 'var(--text-muted)', bg: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.05)' }
+      High: { text: 'var(--status-error)', bg: 'rgba(239, 68, 68, 0.15)', border: 'var(--status-error)' },
+      Medium: { text: 'var(--status-warning)', bg: 'rgba(245, 158, 11, 0.15)', border: 'var(--status-warning)' },
+      Low: { text: 'var(--txt-muted)', bg: 'var(--interaction-hover)', border: 'var(--sys-border)' }
     };
     const pStyle = priorityColors[priority];
 
@@ -629,8 +629,8 @@ export const ManageEnquiries = () => {
         onDragStart={(e) => handleDragStart(e, enq.id)}
         onDragEnd={handleDragEnd}
         style={{
-          background: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
+          background: 'var(--sys-surface)',
+          border: '1px solid var(--sys-border)',
           borderRadius: '8px',
           padding: '10px',
           display: 'flex',
@@ -641,11 +641,11 @@ export const ManageEnquiries = () => {
           transition: 'transform 0.15s, opacity 0.15s',
           outline: 'none'
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; }}
+        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--brand-primary)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--sys-border)'; }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
-          <h5 style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: '#fff', lineHeight: '1.3' }}>
+          <h5 style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: 'var(--txt-primary)', lineHeight: '1.3' }}>
             {enq.customerName}
           </h5>
           <span style={{
@@ -672,8 +672,8 @@ export const ManageEnquiries = () => {
           )}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '6px', marginTop: '2px' }}>
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{enq.mobileNumber}</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--sys-divider)', paddingTop: '6px', marginTop: '2px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>{enq.mobileNumber}</span>
           <div style={{ display: 'flex', gap: '4px' }}>
             <a
               href={`tel:${enq.mobileNumber}`}
@@ -684,9 +684,9 @@ export const ManageEnquiries = () => {
                 width: '24px',
                 height: '24px',
                 borderRadius: '4px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'var(--text-secondary)'
+                background: 'var(--interaction-hover)',
+                border: '1px solid var(--sys-border)',
+                color: 'var(--txt-secondary)'
               }}
               title="Call Student"
             >
@@ -703,9 +703,9 @@ export const ManageEnquiries = () => {
                 width: '24px',
                 height: '24px',
                 borderRadius: '4px',
-                background: 'rgba(16,185,129,0.05)',
-                border: '1px solid rgba(16,185,129,0.15)',
-                color: 'var(--accent-emerald)'
+                background: 'rgba(16, 185, 129, 0.15)',
+                border: '1px solid var(--status-success)',
+                color: 'var(--status-success)'
               }}
               title="WhatsApp Message"
             >
@@ -720,9 +720,9 @@ export const ManageEnquiries = () => {
                 width: '24px',
                 height: '24px',
                 borderRadius: '4px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#fff',
+                background: 'var(--interaction-hover)',
+                border: '1px solid var(--sys-border)',
+                color: 'var(--txt-primary)',
                 cursor: 'pointer'
               }}
               title="View Details"
@@ -738,9 +738,9 @@ export const ManageEnquiries = () => {
                 width: '24px',
                 height: '24px',
                 borderRadius: '4px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#fff',
+                background: 'var(--interaction-hover)',
+                border: '1px solid var(--sys-border)',
+                color: 'var(--txt-primary)',
                 cursor: 'pointer'
               }}
               title="Edit Enquiry"
@@ -764,7 +764,7 @@ export const ManageEnquiries = () => {
     >
       {/* Mobile Sticky Sub-Header */}
       <header className="mobile-learning-header">
-        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: '#fff', textTransform: 'uppercase' }}>
+        <span className="mobile-learning-title" style={{ fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)', textTransform: 'uppercase' }}>
           Manage Enquiries
         </span>
         <div style={{ display: 'flex', gap: '6px' }}>
@@ -795,9 +795,9 @@ export const ManageEnquiries = () => {
               justifyContent: 'center',
               gap: '4px',
               borderRadius: '6px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#fff'
+              background: 'var(--interaction-hover)',
+              border: '1px solid var(--sys-border)',
+              color: 'var(--txt-primary)'
             }}
           >
             <span className="material-icons-outlined" style={{ fontSize: '16px' }}>upload</span>
@@ -827,33 +827,33 @@ export const ManageEnquiries = () => {
         {/* KPI Cards */}
         <div className="admin-kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
           <Card style={{ padding: '12px' }}>
-            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Leads</span>
-            <h3 style={{ fontSize: '22px', fontWeight: '800', color: '#fff', margin: '4px 0 0 0' }}>{kpis.total}</h3>
+            <span style={{ fontSize: '10.5px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Leads</span>
+            <h3 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--txt-primary)', margin: '4px 0 0 0' }}>{kpis.total}</h3>
           </Card>
           <Card style={{ padding: '12px' }}>
-            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>New</span>
+            <span style={{ fontSize: '10.5px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>New</span>
             <h3 style={{ fontSize: '22px', fontWeight: '800', color: statusColors.new, margin: '4px 0 0 0' }}>{kpis.new}</h3>
           </Card>
           <Card style={{ padding: '12px' }}>
-            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contacted</span>
+            <span style={{ fontSize: '10.5px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contacted</span>
             <h3 style={{ fontSize: '22px', fontWeight: '800', color: statusColors.contacted, margin: '4px 0 0 0' }}>{kpis.contacted}</h3>
           </Card>
           <Card style={{ padding: '12px' }}>
-            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Quoted</span>
+            <span style={{ fontSize: '10.5px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Quoted</span>
             <h3 style={{ fontSize: '22px', fontWeight: '800', color: statusColors.quoted, margin: '4px 0 0 0' }}>{kpis.quoted}</h3>
           </Card>
           <Card style={{ padding: '12px' }}>
-            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Confirmed</span>
+            <span style={{ fontSize: '10.5px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Confirmed</span>
             <h3 style={{ fontSize: '22px', fontWeight: '800', color: statusColors.confirmed, margin: '4px 0 0 0' }}>{kpis.confirmed}</h3>
           </Card>
           <Card style={{ padding: '12px' }}>
-            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Completed</span>
+            <span style={{ fontSize: '10.5px', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Completed</span>
             <h3 style={{ fontSize: '22px', fontWeight: '800', color: statusColors.completed, margin: '4px 0 0 0' }}>{kpis.completed}</h3>
           </Card>
         </div>
 
         {/* Tabular Visual Grid Container Card */}
-        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', minHeight: 'calc(100vh - 280px)', marginBottom: '20px', background: 'rgba(10, 10, 15, 0.25)' }}>
+        <div className="card-glass" style={{ display: 'flex', flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden', minHeight: 'calc(100vh - 280px)', marginBottom: '20px', background: 'var(--sys-surface)' }}>
           {/* Toolbar: Search + Filter Icon + Sort Icon */}
           <AdminToolbar
             searchId="enquiry-search"
@@ -876,14 +876,14 @@ export const ManageEnquiries = () => {
             onReset={handleResetFilters}
             onApply={handleApplyFilters}
             className="admin-toolbar-wrapper"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', position: 'relative', zIndex: 10 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', borderBottom: '1px solid var(--sys-border)', position: 'relative', zIndex: 10 }}
             desktopActions={
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 {/* Switcher Toggle */}
                 <div style={{
                   display: 'inline-flex',
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--sys-border)',
                   borderRadius: '8px',
                   padding: '3px',
                   gap: '2px',
@@ -898,8 +898,8 @@ export const ManageEnquiries = () => {
                       borderRadius: '6px',
                       cursor: 'pointer',
                       border: 'none',
-                      background: viewMode === 'kanban' ? 'var(--accent-violet)' : 'transparent',
-                      color: viewMode === 'kanban' ? '#fff' : 'var(--text-muted)',
+                      background: viewMode === 'kanban' ? 'var(--brand-primary)' : 'transparent',
+                      color: viewMode === 'kanban' ? 'var(--txt-primary)' : 'var(--txt-muted)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -919,8 +919,8 @@ export const ManageEnquiries = () => {
                       borderRadius: '6px',
                       cursor: 'pointer',
                       border: 'none',
-                      background: viewMode === 'table' ? 'var(--accent-violet)' : 'transparent',
-                      color: viewMode === 'table' ? '#fff' : 'var(--text-muted)',
+                      background: viewMode === 'table' ? 'var(--brand-primary)' : 'transparent',
+                      color: viewMode === 'table' ? 'var(--txt-primary)' : 'var(--txt-muted)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -994,9 +994,9 @@ export const ManageEnquiries = () => {
 
           {/* Bulk Actions Banner */}
           {selectedIds.length > 0 && viewMode === 'table' && (
-            <div style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--accent-violet)', background: 'rgba(124, 58, 237, 0.05)' }}>
-              <span style={{ fontSize: '12px', color: '#fff', fontWeight: '500' }}>
-                Selected <strong style={{ color: 'var(--accent-violet)' }}>{selectedIds.length}</strong> enquiry/enquiries
+            <div style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--brand-primary)', background: 'var(--interaction-selected)' }}>
+              <span style={{ fontSize: '12px', color: 'var(--txt-primary)', fontWeight: '500' }}>
+                Selected <strong style={{ color: 'var(--brand-primary)' }}>{selectedIds.length}</strong> enquiry/enquiries
               </span>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 <select
@@ -1018,7 +1018,7 @@ export const ManageEnquiries = () => {
                   type="button"
                   variant="ghost"
                   onClick={() => handleBulkAction('delete')}
-                  style={{ padding: '0 10px', fontSize: '12px', height: '30px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                  style={{ padding: '0 10px', fontSize: '12px', height: '30px', background: 'var(--interaction-hover)', color: 'var(--status-error)', border: '1px solid var(--sys-border)' }}
                   disabled={isProcessing}
                 >
                   Delete Selected
@@ -1030,7 +1030,7 @@ export const ManageEnquiries = () => {
           {/* Render Views */}
           {isLoading ? (
             <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-              <div className="loading-spinner" style={{ border: '4px solid rgba(255,255,255,0.1)', borderTop: '4px solid var(--accent-violet)', borderRadius: '50%', width: '32px', height: '32px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4) auto' }} />
+              <div className="loading-spinner" style={{ border: '4px solid var(--sys-border)', borderTop: '4px solid var(--brand-primary)', borderRadius: '50%', width: '32px', height: '32px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4) auto' }} />
               <h3>Loading records...</h3>
             </div>
           ) : viewMode === 'kanban' ? (
@@ -1062,10 +1062,10 @@ export const ManageEnquiries = () => {
                       scrollSnapAlign: 'start',
                       display: 'flex',
                       flexDirection: 'column',
-                      background: isOver ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.01)',
+                      background: isOver ? 'var(--interaction-selected)' : 'var(--sys-surface-elevated)',
                       border: isOver 
                         ? `1.5px dashed ${statusColors[statusKey]}` 
-                        : '1.5px solid rgba(255,255,255,0.04)',
+                        : '1.5px solid var(--sys-border)',
                       borderRadius: '10px',
                       padding: '12px 10px',
                       transition: 'background 0.2s, border 0.2s',
@@ -1074,20 +1074,20 @@ export const ManageEnquiries = () => {
                     }}
                   >
                     {/* Column Header */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px', borderBottom: '1px solid var(--sys-divider)', marginBottom: '10px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span className="material-icons-outlined" style={{ fontSize: '16px', color: statusColors[statusKey] }}>
                           {statusIcons[statusKey]}
                         </span>
-                        <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#fff' }}>
+                        <span style={{ fontSize: '12.5px', fontWeight: '700', color: 'var(--txt-primary)' }}>
                           {statusLabels[statusKey]}
                         </span>
                       </div>
                       <span style={{
                         fontSize: '11px',
                         fontWeight: '700',
-                        color: 'var(--text-muted)',
-                        background: 'rgba(255,255,255,0.04)',
+                        color: 'var(--txt-muted)',
+                        background: 'var(--interaction-hover)',
                         padding: '2px 6px',
                         borderRadius: '10px'
                       }}>
@@ -1122,10 +1122,10 @@ export const ManageEnquiries = () => {
             /* TABLE VIEW */
             sortedList.length > 0 ? (
               <>
-                <div style={{ overflowX: 'auto', padding: '12px', flexGrow: 1 }}>
+                <div className="tbl-scroll-wrap" style={{ padding: '12px' }}>
                 <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.01)' }}>
+                    <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)' }}>
                       <th style={{ padding: '10px 8px', width: '36px', minWidth: '36px' }}>
                         <input
                           type="checkbox"
@@ -1134,16 +1134,16 @@ export const ManageEnquiries = () => {
                           style={{ cursor: 'pointer' }}
                         />
                       </th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '150px' }}>Project Title</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>Customer Name</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>Mobile</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Project Status</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '90px' }}>Priority</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>Budget</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>Submission</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '140px' }}>Lead Status</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Submitted Date</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '170px', textAlign: 'right' }}>Actions</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '150px' }}>Project Title</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>Customer Name</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>Mobile</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Project Status</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '90px' }}>Priority</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>Budget</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>Submission</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '140px' }}>Lead Status</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Submitted Date</th>
+                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '170px', textAlign: 'right' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1155,9 +1155,9 @@ export const ManageEnquiries = () => {
                       const priority = parsed.priority || 'Medium';
 
                       const priorityBadgeColors = {
-                        High: { text: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
-                        Medium: { text: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
-                        Low: { text: 'var(--text-muted)', bg: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.05)' }
+                        High: { text: 'var(--status-error)', bg: 'rgba(239, 68, 68, 0.15)', border: 'var(--status-error)' },
+                        Medium: { text: 'var(--status-warning)', bg: 'rgba(245, 158, 11, 0.15)', border: 'var(--status-warning)' },
+                        Low: { text: 'var(--txt-muted)', bg: 'var(--interaction-hover)', border: 'var(--sys-border)' }
                       };
                       const pBadge = priorityBadgeColors[priority];
 
@@ -1165,8 +1165,8 @@ export const ManageEnquiries = () => {
                         <tr 
                           key={enq.id} 
                           style={{ 
-                            borderBottom: '1px solid rgba(255,255,255,0.04)',
-                            background: isSelected ? 'rgba(139, 92, 246, 0.04)' : 'transparent',
+                            borderBottom: '1px solid var(--sys-divider)',
+                            background: isSelected ? 'var(--interaction-selected)' : 'transparent',
                             transition: 'background 0.2s ease'
                           }}
                           className="table-row-hover"
@@ -1179,16 +1179,16 @@ export const ManageEnquiries = () => {
                               style={{ cursor: 'pointer' }}
                             />
                           </td>
-                          <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '600', color: 'var(--accent-blue)' }}>
+                          <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '600', color: 'var(--brand-accent)' }}>
                             {enq.projectTitle || 'General Consultation'}
                           </td>
-                          <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px', color: '#fff' }}>
+                          <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px', color: 'var(--txt-primary)' }}>
                             {enq.customerName}
                           </td>
-                          <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '130px', color: 'var(--text-muted)' }}>
+                          <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '130px', color: 'var(--txt-muted)' }}>
                             {enq.mobileNumber}
                           </td>
-                          <td className="tbl-td" style={{ minWidth: '130px', maxWidth: '150px', color: 'var(--text-secondary)' }}>
+                          <td className="tbl-td" style={{ minWidth: '130px', maxWidth: '150px', color: 'var(--txt-secondary)' }}>
                             {parsed.projectStatus}
                           </td>
                           <td className="tbl-td" style={{ minWidth: '90px', maxWidth: '110px' }}>
@@ -1206,10 +1206,10 @@ export const ManageEnquiries = () => {
                               {priority}
                             </span>
                           </td>
-                          <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '120px', color: 'var(--accent-violet)', fontWeight: '600' }}>
+                          <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '120px', color: 'var(--brand-primary)', fontWeight: '600' }}>
                             {parsed.budget !== '-' ? parsed.budget : `₹${enq.price || '0'}`}
                           </td>
-                          <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '130px', color: 'var(--text-muted)' }}>
+                          <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '130px', color: 'var(--txt-muted)' }}>
                             {parsed.submissionDate}
                           </td>
                           <td className="tbl-td" style={{ minWidth: '140px', maxWidth: '160px' }}>
@@ -1219,7 +1219,7 @@ export const ManageEnquiries = () => {
                                 padding: '4px 20px 4px 8px',
                                 height: 'auto',
                                 fontSize: '11.5px',
-                                background: '#12121e',
+                                background: 'var(--input-bg)',
                                 borderColor: statusColors[enq.status || 'new'],
                                 color: statusColors[enq.status || 'new'],
                                 fontWeight: '600',
@@ -1237,11 +1237,11 @@ export const ManageEnquiries = () => {
                               disabled={isProcessing}
                             >
                               {statusKeys.map(k => (
-                                <option key={k} value={k} style={{ background: '#12121e', color: '#fff' }}>{statusLabels[k]}</option>
+                                <option key={k} value={k} style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>{statusLabels[k]}</option>
                               ))}
                             </select>
                           </td>
-                          <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--text-muted)' }}>
+                          <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--txt-muted)' }}>
                             {formatDate(enq.createdAt)}
                           </td>
                           <td className="tbl-td" style={{ minWidth: '160px', maxWidth: '180px', textAlign: 'right' }}>
@@ -1290,8 +1290,8 @@ export const ManageEnquiries = () => {
                                        display: 'flex',
                                        flexDirection: 'column',
                                        gap: '2px',
-                                       background: 'rgba(18, 18, 30, 0.98)',
-                                       border: '1px solid rgba(255, 255, 255, 0.08)'
+                                       background: 'var(--sys-surface-elevated)',
+                                       border: '1px solid var(--sys-border)'
                                      }}
                                      onClick={(e) => e.stopPropagation()}
                                    >
@@ -1303,7 +1303,7 @@ export const ManageEnquiries = () => {
                                          setActiveMenuId(null);
                                        }}
                                      >
-                                       <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--accent-blue)' }}>local_shipping</span>
+                                       <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--brand-accent)' }}>local_shipping</span>
                                        <span>Shipped</span>
                                      </button>
                                      <button
@@ -1313,9 +1313,9 @@ export const ManageEnquiries = () => {
                                          setEnquiryToDelete(enq);
                                          setActiveMenuId(null);
                                        }}
-                                       style={{ color: '#ef4444' }}
+                                       style={{ color: 'var(--status-error)' }}
                                      >
-                                       <span className="material-icons-outlined" style={{ fontSize: '16px', color: '#ef4444' }}>delete</span>
+                                       <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--status-error)' }}>delete</span>
                                        <span>Delete</span>
                                      </button>
                                    </div>
@@ -1331,14 +1331,14 @@ export const ManageEnquiries = () => {
               </div>
 
               {/* Pagination Footer */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)', flexWrap: 'wrap', gap: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)', flexWrap: 'wrap', gap: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
+                  <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>
                     Showing Page {currentPage} of {totalPages || 1} ({sortedList.length} enquiries found)
                   </span>
-                  <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>|</span>
+                  <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>|</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>Rows per page:</span>
+                    <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>Rows per page:</span>
                     <select
                       value={itemsPerPage}
                       onChange={(e) => {
@@ -1351,16 +1351,16 @@ export const ManageEnquiries = () => {
                         fontSize: '12px',
                         height: '28px',
                         width: '70px',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        background: 'var(--input-bg)',
+                        border: '1px solid var(--sys-border)',
                         borderRadius: '4px',
-                        color: '#fff'
+                        color: 'var(--txt-primary)'
                       }}
                     >
-                      <option value="10">10</option>
-                      <option value="25">25</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
+                      <option value="10" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>10</option>
+                      <option value="25" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>25</option>
+                      <option value="50" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>50</option>
+                      <option value="100" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>100</option>
                     </select>
                   </div>
                 </div>
@@ -1389,7 +1389,7 @@ export const ManageEnquiries = () => {
           ) : (
               <div style={{ textAlign: 'center', padding: 'var(--space-8)', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <h3 style={{ margin: 0 }}>No enquiries match your criteria</h3>
-                <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)', marginBottom: 0 }}>
+                <p style={{ marginTop: 'var(--space-2)', color: 'var(--txt-muted)', marginBottom: 0 }}>
                   Try adjusting your search query, status, or date range filters.
                 </p>
               </div>
@@ -1401,7 +1401,7 @@ export const ManageEnquiries = () => {
       {/* Enquiry Details - READ ONLY VIEW Modal */}
       <Modal isOpen={activeEnquiry !== null} onClose={() => setActiveEnquiry(null)} className="modal-content purple" style={{ maxWidth: '600px' }}>
         <h4>ENQUIRY LEAD DETAILS</h4>
-        <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: 'var(--space-4)' }}>
+        <p style={{ color: 'var(--txt-muted)', fontSize: '12px', marginBottom: 'var(--space-4)' }}>
           Detailed metadata overview (Read Only)
         </p>
 
@@ -1409,39 +1409,39 @@ export const ManageEnquiries = () => {
           <div style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             <div className="card-glass" style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Project Title:</span>
-                <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: '#fff' }}>{activeEnquiry.projectTitle}</span>
+                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Project Title:</span>
+                <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{activeEnquiry.projectTitle}</span>
               </div>
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Project Price:</span>
-                <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>{activeEnquiry.price ? `₹${activeEnquiry.price}` : '-'}</span>
+                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Project Price:</span>
+                <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{activeEnquiry.price ? `₹${activeEnquiry.price}` : '-'}</span>
               </div>
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Customer Name:</span>
-                <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#fff' }}>{activeEnquiry.customerName}</span>
+                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Customer Name:</span>
+                <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--txt-primary)' }}>{activeEnquiry.customerName}</span>
               </div>
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Mobile Number:</span>
-                <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--accent-blue)' }}>{activeEnquiry.mobileNumber}</span>
+                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Mobile Number:</span>
+                <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--brand-accent)' }}>{activeEnquiry.mobileNumber}</span>
               </div>
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Status:</span>
-                <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: statusColors[activeEnquiry.status] || 'white' }}>
+                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Status:</span>
+                <span style={{ gridColumn: 'span 8', fontSize: '13px', fontWeight: '600', color: statusColors[activeEnquiry.status] || 'var(--txt-primary)' }}>
                   {statusLabels[activeEnquiry.status] || activeEnquiry.status}
                 </span>
               </div>
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Created Date:</span>
-                <span style={{ gridColumn: 'span 8', fontSize: '12px', color: 'var(--text-muted)' }}>{formatDate(activeEnquiry.createdAt)}</span>
+                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Created Date:</span>
+                <span style={{ gridColumn: 'span 8', fontSize: '12px', color: 'var(--txt-muted)' }}>{formatDate(activeEnquiry.createdAt)}</span>
               </div>
               <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Updated Date:</span>
-                <span style={{ gridColumn: 'span 8', fontSize: '12px', color: 'var(--text-muted)' }}>{formatDate(activeEnquiry.updatedAt)}</span>
+                <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Updated Date:</span>
+                <span style={{ gridColumn: 'span 8', fontSize: '12px', color: 'var(--txt-muted)' }}>{formatDate(activeEnquiry.updatedAt)}</span>
               </div>
               {activeEnquiry.notes && !activeEnquiry.notes.includes('Project Status:') ? (
-                <div className="grid-12" style={{ gap: 'var(--space-2)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 'var(--space-3)' }}>
-                  <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Internal Notes:</span>
-                  <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#fff', whiteSpace: 'pre-wrap' }}>
+                <div className="grid-12" style={{ gap: 'var(--space-2)', borderTop: '1px solid var(--sys-divider)', paddingTop: 'var(--space-3)' }}>
+                  <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Internal Notes:</span>
+                  <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--txt-primary)', whiteSpace: 'pre-wrap' }}>
                     {activeEnquiry.notes}
                   </span>
                 </div>
@@ -1450,42 +1450,42 @@ export const ManageEnquiries = () => {
                   const pNotes = parseNotes(activeEnquiry.notes);
                   return (
                     <>
-                      <div className="grid-12" style={{ gap: 'var(--space-2)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 'var(--space-3)' }}>
-                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Project Status:</span>
-                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#fff' }}>{pNotes.projectStatus}</span>
+                      <div className="grid-12" style={{ gap: 'var(--space-2)', borderTop: '1px solid var(--sys-divider)', paddingTop: 'var(--space-3)' }}>
+                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Project Status:</span>
+                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--txt-primary)' }}>{pNotes.projectStatus}</span>
                       </div>
                       <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Budget:</span>
-                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--accent-violet)', fontWeight: 'bold' }}>{pNotes.budget}</span>
+                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Budget:</span>
+                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--brand-primary)', fontWeight: 'bold' }}>{pNotes.budget}</span>
                       </div>
                       <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Submission Date:</span>
-                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#fff' }}>{pNotes.submissionDate}</span>
+                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Submission Date:</span>
+                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--txt-primary)' }}>{pNotes.submissionDate}</span>
                       </div>
                       <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Document Needed:</span>
-                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#fff' }}>{pNotes.needDocument}</span>
+                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Document Needed:</span>
+                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--txt-primary)' }}>{pNotes.needDocument}</span>
                       </div>
                       <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Presentation Support:</span>
-                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#fff' }}>{pNotes.needPresentation}</span>
+                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Presentation Support:</span>
+                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--txt-primary)' }}>{pNotes.needPresentation}</span>
                       </div>
                       {pNotes.deliveryPartner && pNotes.deliveryPartner !== '-' && (
                         <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                          <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Delivery Partner:</span>
-                          <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--accent-blue)', fontWeight: '600' }}>{pNotes.deliveryPartner}</span>
+                          <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Delivery Partner:</span>
+                          <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--brand-accent)', fontWeight: '600' }}>{pNotes.deliveryPartner}</span>
                         </div>
                       )}
                       {pNotes.awbNumber && pNotes.awbNumber !== '-' && (
                         <div className="grid-12" style={{ gap: 'var(--space-2)' }}>
-                          <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>AWB / Tracking ID:</span>
-                          <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#10b981', fontWeight: '800' }}>{pNotes.awbNumber}</span>
+                          <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>AWB / Tracking ID:</span>
+                          <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--status-success)', fontWeight: '800' }}>{pNotes.awbNumber}</span>
                         </div>
                       )}
-                      <div className="grid-12" style={{ gap: 'var(--space-2)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 'var(--space-3)' }}>
-                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--text-muted)' }}>Remarks:</span>
-                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: '#fff', whiteSpace: 'pre-wrap' }}>
-                          {pNotes.remarks || <em style={{ color: 'var(--text-muted)' }}>None</em>}
+                      <div className="grid-12" style={{ gap: 'var(--space-2)', borderTop: '1px solid var(--sys-divider)', paddingTop: 'var(--space-3)' }}>
+                        <span style={{ gridColumn: 'span 4', fontSize: '12px', color: 'var(--txt-muted)' }}>Remarks:</span>
+                        <span style={{ gridColumn: 'span 8', fontSize: '13px', color: 'var(--txt-primary)', whiteSpace: 'pre-wrap' }}>
+                          {pNotes.remarks || <em style={{ color: 'var(--txt-muted)' }}>None</em>}
                         </span>
                       </div>
                     </>
@@ -1505,9 +1505,9 @@ export const ManageEnquiries = () => {
                   gap: '6px',
                   padding: '8px 0',
                   borderRadius: '6px',
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#fff',
+                  background: 'var(--interaction-hover)',
+                  border: '1px solid var(--sys-border)',
+                  color: 'var(--txt-primary)',
                   textDecoration: 'none',
                   fontSize: '12.5px',
                   fontWeight: '600'
@@ -1527,7 +1527,7 @@ export const ManageEnquiries = () => {
       {/* Enquiry Details - EDIT VIEW Modal */}
       <Modal isOpen={enquiryToEdit !== null} onClose={() => setEnquiryToEdit(null)} className="modal-content purple" style={{ maxWidth: '600px' }}>
         <h4>EDIT ENQUIRY</h4>
-        <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '16px' }}>
+        <p style={{ color: 'var(--txt-muted)', fontSize: '12px', marginBottom: '16px' }}>
           Update customer details, status, or notes
         </p>
 
@@ -1612,12 +1612,12 @@ export const ManageEnquiries = () => {
                   onChange={(e) => setEditStatus(e.target.value)}
                   disabled={isProcessing}
                   style={{
-                    color: statusColors[editStatus] || 'white',
-                    borderColor: statusColors[editStatus] || 'var(--border-subtle)'
+                    color: statusColors[editStatus] || 'var(--txt-primary)',
+                    borderColor: statusColors[editStatus] || 'var(--sys-border)'
                   }}
                 >
                   {statusKeys.map(k => (
-                    <option key={k} value={k} style={{ background: '#12121e', color: '#fff' }}>{statusLabels[k]}</option>
+                    <option key={k} value={k} style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>{statusLabels[k]}</option>
                   ))}
                 </select>
               </div>
@@ -1828,7 +1828,7 @@ export const ManageEnquiries = () => {
       {/* NEW LEAD / ADD ENQUIRY MODAL */}
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} className="modal-content purple" style={{ maxWidth: '600px' }}>
         <h4>ADD NEW LEAD ENQUIRY</h4>
-        <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '16px' }}>Create customer lead file directly in active database</p>
+        <p style={{ color: 'var(--txt-muted)', fontSize: '12px', marginBottom: '16px' }}>Create customer lead file directly in active database</p>
 
         <form onSubmit={handleAddEnquirySubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: 'left' }}>
           
@@ -2000,13 +2000,13 @@ export const ManageEnquiries = () => {
         style={{ maxWidth: '480px' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-          <span className="material-icons-outlined" style={{ color: 'var(--accent-blue)', fontSize: '24px' }}>local_shipping</span>
+          <span className="material-icons-outlined" style={{ color: 'var(--brand-accent)', fontSize: '24px' }}>local_shipping</span>
           <h4 style={{ margin: 0, fontSize: '18px', fontWeight: '800', letterSpacing: '-0.5px' }}>SHIPMENT DETAILS</h4>
         </div>
 
         <form onSubmit={handleSaveShipping} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
           <div className="calc-row">
-            <label htmlFor="ship-partner" style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', marginBottom: '4px', display: 'block', textAlign: 'left' }}>
+            <label htmlFor="ship-partner" style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '600', textTransform: 'uppercase', marginBottom: '4px', display: 'block', textAlign: 'left' }}>
               Delivery Partner Name
             </label>
             <input
@@ -2022,7 +2022,7 @@ export const ManageEnquiries = () => {
           </div>
 
           <div className="calc-row">
-            <label htmlFor="ship-awb" style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', marginBottom: '4px', display: 'block', textAlign: 'left' }}>
+            <label htmlFor="ship-awb" style={{ fontSize: '11px', color: 'var(--txt-muted)', fontWeight: '600', textTransform: 'uppercase', marginBottom: '4px', display: 'block', textAlign: 'left' }}>
               AWB / Tracking Number
             </label>
             <input

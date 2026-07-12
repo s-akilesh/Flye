@@ -15,6 +15,7 @@ import { ProjectProvider } from './modules/projects/context/ProjectContext';
 import { AuthProvider } from './modules/auth/context/AuthContext';
 import { ToastProvider } from './shared/context/ToastContext';
 import { EnquiryProvider } from './modules/enquiries/context/EnquiryContext';
+import { ThemeProvider } from './shared/context/ThemeContext.jsx';
 import { MainLayout } from './shared/components/layout/MainLayout';
 
 export function render(url, ssrData = {}) {
@@ -25,16 +26,18 @@ export function render(url, ssrData = {}) {
           <ToastProvider>
             <EnquiryProvider>
               <ProjectProvider initialProjects={ssrData.projects}>
-                <MainLayout>
-                  <Routes>
-                    <Route path={ROUTES.HOME} element={<Home />} />
-                    <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
-                    <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
-                    <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
-                    <Route path={ROUTES.CONTACT} element={<Contact />} />
-                    <Route path="*" element={<Home />} />
-                  </Routes>
-                </MainLayout>
+                <ThemeProvider>
+                  <MainLayout>
+                    <Routes>
+                      <Route path={ROUTES.HOME} element={<Home />} />
+                      <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
+                      <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
+                      <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
+                      <Route path={ROUTES.CONTACT} element={<Contact />} />
+                      <Route path="*" element={<Home />} />
+                    </Routes>
+                  </MainLayout>
+                </ThemeProvider>
               </ProjectProvider>
             </EnquiryProvider>
           </ToastProvider>
