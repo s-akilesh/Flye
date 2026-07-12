@@ -15,6 +15,7 @@ import { useAuth } from '../../auth/context/AuthContext';
 import { ProgressiveAuthModal } from '../../auth/components/ProgressiveAuthModal';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 import { eventTracker } from '../../../shared/analytics/index.js';
+import { Skeleton } from '../../../shared/components/ui/Skeleton';
 
 // Custom SVG Icons
 const DIYIcon = () => (
@@ -239,8 +240,20 @@ export const ProjectDetails = () => {
 
   if (isLoading) {
     return (
-      <div className="portal-section" style={{ textAlign: 'center', paddingTop: '160px' }}>
-        <h2 style={{ color: 'var(--text-primary)' }}>Loading project specifications...</h2>
+      <div className="portal-content" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)', paddingTop: '120px' }}>
+        <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ flex: '1.2', minWidth: '300px' }}>
+            <Skeleton style={{ height: '320px', borderRadius: '12px', marginBottom: '24px' }} />
+            <Skeleton variant="text" className="title" />
+            <Skeleton variant="text" />
+            <Skeleton variant="text" />
+            <Skeleton variant="text" style={{ width: '80%' }} />
+          </div>
+          <div style={{ flex: '0.8', minWidth: '250px' }}>
+            <Skeleton style={{ height: '200px', borderRadius: '12px', marginBottom: '24px' }} />
+            <Skeleton style={{ height: '240px', borderRadius: '12px' }} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -356,6 +369,8 @@ export const ProjectDetails = () => {
                 <img
                   src={project.images.main}
                   alt={title}
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%',
                     aspectRatio: '16/9',

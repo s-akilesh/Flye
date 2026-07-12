@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes.js';
 import { Button } from '../ui/Button';
+import { lazyRoutes } from '../../../router/AppRouter';
 import { useSettings } from '../../../modules/settings/hooks/useSettings';
 import { useAuth } from '../../../modules/auth/context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
@@ -120,11 +121,12 @@ export const Header = ({ onToggleDrawer }) => {
       {/* Desktop Navigation Links */}
       {(!user || viewMode !== 'admin') && !location.pathname.startsWith('/admin') && (
         <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <Link to="/projects" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
-          <Link to="/printing" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
-          <Link to="/my-projects" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>My Enquiries</Link>
+          <Link to="/projects" onMouseEnter={() => lazyRoutes.ProjectListing()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
+          <Link to="/printing" onMouseEnter={() => lazyRoutes.PrintingCatalog()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
+          <Link to="/my-projects" onMouseEnter={() => lazyRoutes.MyProjects()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>My Enquiries</Link>
           <a
             href="/#about"
+            onMouseEnter={() => lazyRoutes.Home()}
             onClick={(e) => {
               e.preventDefault();
               handleScrollToSection('about');
@@ -133,7 +135,7 @@ export const Header = ({ onToggleDrawer }) => {
           >
             About
           </a>
-          <Link to="/contact" style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
+          <Link to="/contact" onMouseEnter={() => lazyRoutes.Contact()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
         </nav>
       ) }
       

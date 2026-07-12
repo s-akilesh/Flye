@@ -1,4 +1,3 @@
-import emailjs from '@emailjs/browser';
 import { notificationService } from '../../../shared/services/notificationService.js';
 
 /**
@@ -43,6 +42,7 @@ export const sendAdminNotification = async (data) => {
   };
 
   try {
+    const emailjs = (await import('@emailjs/browser')).default;
     await emailjs.send(serviceId, templateId, templateParams, publicKey);
     return true;
   } catch (error) {
@@ -94,6 +94,7 @@ export const sendUserConfirmation = async (data) => {
   };
 
   try {
+    const emailjs = (await import('@emailjs/browser')).default;
     await emailjs.send(serviceId, templateId, templateParams, publicKey);
     return true;
   } catch (error) {

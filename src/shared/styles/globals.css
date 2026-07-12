@@ -5093,3 +5093,67 @@ body.in-admin-panel table thead th {
   border-bottom: 1px solid var(--sys-border) !important;
 }
 
+/* --- PREMIUM SKELETON LOADING EFFECTS --- */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--sys-divider) 25%,
+    var(--sys-border) 37%,
+    var(--sys-divider) 63%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite linear;
+  border-radius: 6px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  height: 12px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-text.title {
+  height: 20px;
+  width: 60%;
+  margin-bottom: 16px;
+}
+
+.skeleton-text.subtitle {
+  height: 14px;
+  width: 40%;
+  margin-bottom: 12px;
+}
+
+.skeleton-card {
+  padding: var(--space-4);
+  background: var(--sys-surface);
+  border: 1px solid var(--sys-border);
+  border-radius: 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-sizing: border-box;
+}
+
+.skeleton-table-cell {
+  height: 16px;
+  border-radius: 4px;
+}
+

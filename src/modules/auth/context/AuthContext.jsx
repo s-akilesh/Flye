@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { authService } from '../services/authService';
 import { userService } from '../services/userService';
 import { enquiryService } from '../../enquiries/services/enquiryService';
@@ -19,12 +19,12 @@ export const AuthProvider = ({ children }) => {
     return 'user';
   });
 
-  const setViewMode = (mode) => {
+  const setViewMode = useCallback((mode) => {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.setItem('flyen_view_mode', mode);
     }
     setViewModeState(mode);
-  };
+  }, []);
 
   /**
    * Helper to load profile data based on the authenticated user.
@@ -64,11 +64,11 @@ export const AuthProvider = ({ children }) => {
   /**
    * Public method to manually trigger profile re-fetch.
    */
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (user) {
       await loadProfile(user);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     // 1. Get initial session on mount
@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }) => {
   /**
    * Authenticates user and loads their profile.
    */
-  const login = async (email, password) => {
+  const login = useCallback(async (email, password) => {
     try {
       const data = await authService.signIn(email, password);
       setSession(data.session);
@@ -130,12 +130,9 @@ export const AuthProvider = ({ children }) => {
       logger.error('[AuthContext] Login failed:', err);
       throw err;
     }
-  };
+  }, []);
 
-  /**
-   * Logs out the user and clears all active session states.
-   */
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await authService.signOut();
       setSession(null);
@@ -145,30 +142,30 @@ export const AuthProvider = ({ children }) => {
       logger.error('[AuthContext] Logout failed:', err);
       throw err;
     }
-  };
+  }, []);
 
   // Derived helper booleans
   const isAuthenticated = !!user;
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
   const isUser = profile?.role === 'user';
 
+  const contextValue = useMemo(() => ({
+    user,
+    profile,
+    session,
+    loading,
+    login,
+    logout,
+    refreshProfile,
+    viewMode,
+    setViewMode,
+    isAuthenticated,
+    isAdmin,
+    isUser
+  }), [user, profile, session, loading, login, logout, refreshProfile, viewMode, setViewMode, isAuthenticated, isAdmin, isUser]);
+
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        profile,
-        session,
-        loading, 
-        login, 
-        logout, 
-        refreshProfile,
-        viewMode, 
-        setViewMode,
-        isAuthenticated,
-        isAdmin,
-        isUser
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

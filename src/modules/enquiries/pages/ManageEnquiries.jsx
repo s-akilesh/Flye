@@ -5,6 +5,7 @@ import { useEnquiries } from '../hooks/useEnquiries';
 import { useProjects } from '../../projects/hooks/useProjects';
 import { Card } from '../../../shared/components/ui/Card';
 import { Button } from '../../../shared/components/ui/Button';
+import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
@@ -1029,9 +1030,18 @@ export const ManageEnquiries = () => {
 
           {/* Render Views */}
           {isLoading ? (
-            <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-              <div className="loading-spinner" style={{ border: '4px solid var(--sys-border)', borderTop: '4px solid var(--brand-primary)', borderRadius: '50%', width: '32px', height: '32px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4) auto' }} />
-              <h3>Loading records...</h3>
+            <div style={{ padding: 'var(--space-6)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                  <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                    <Skeleton style={{ width: '20px', height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ flex: 2, height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ width: '100px', height: '16px', borderRadius: '4px' }} />
+                  </div>
+                ))}
+              </div>
             </div>
           ) : viewMode === 'kanban' ? (
             /* KANBAN BOARD VIEW */

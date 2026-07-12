@@ -21,10 +21,11 @@ import { useToast } from '../../../shared/context/ToastContext';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 import { eventTracker } from '../../../shared/analytics/index.js';
 import { useEffect } from 'react';
+import { Skeleton } from '../../../shared/components/ui/Skeleton';
 
 export const ProjectListing = () => {
   const navigate = useNavigate();
-  const { projects } = useProjects();
+  const { projects, isLoading } = useProjects();
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
   const { user } = useAuth();
@@ -291,7 +292,13 @@ export const ProjectListing = () => {
 
       <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', marginTop: '16px' }}>
         <div className="marketplace-main" style={{ width: '100%', paddingTop: '12px' }}>
-          {filteredList.length > 0 ? (
+          {isLoading ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} variant="card" style={{ height: '360px' }} />
+              ))}
+            </div>
+          ) : filteredList.length > 0 ? (
             <ProjectGrid projects={filteredList} onRequestOrder={handleOpenOrderModal} />
           ) : (
             <div className="marketplace-empty-state active" id="marketplace-empty-state">

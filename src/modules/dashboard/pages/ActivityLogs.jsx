@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../../../shared/components/ui/Card';
 import { Button } from '../../../shared/components/ui/Button';
+import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { Input } from '../../../shared/components/ui/Input';
@@ -440,8 +441,18 @@ export const ActivityLogs = () => {
 
           {/* Table Container */}
           {isLoading ? (
-            <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>
-              Loading activity logs...
+            <div style={{ padding: 'var(--space-6)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                    <Skeleton style={{ width: '20px', height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ flex: 2, height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
+                    <Skeleton style={{ width: '100px', height: '16px', borderRadius: '4px' }} />
+                  </div>
+                ))}
+              </div>
             </div>
           ) : logs.length === 0 ? (
             <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { settingsService } from '../services/settingsService';
 import { logger } from '../../../shared/utils/logger';
 
@@ -147,12 +147,12 @@ export const SettingsProvider = ({ children, initialSettings }) => {
   }, [settings.websiteFavicon, settings.companyName]);
 
   // In-memory state updater for form edits (no immediate database write)
-  const updateSettings = (patch) => {
+  const updateSettings = useCallback((patch) => {
     setSettings((prev) => ({ ...prev, ...patch }));
-  };
+  }, []);
 
   // Persists changes to the Supabase settings table
-  const saveSettings = async (data) => {
+  const saveSettings = useCallback(async (data) => {
     try {
       setError(null);
       const merged = { ...settings, ...data };
@@ -165,10 +165,10 @@ export const SettingsProvider = ({ children, initialSettings }) => {
       logger.error('Failed to save settings to Supabase:', err);
       throw err;
     }
-  };
+  }, [settings]);
 
   // Resets settings to default values in both context and database
-  const resetDefaults = async () => {
+  const resetDefaults = useCallback(async () => {
     try {
       setError(null);
       const dbPayload = mapContextToDb(DEFAULT_SETTINGS);
@@ -180,7 +180,16 @@ export const SettingsProvider = ({ children, initialSettings }) => {
       logger.error('Failed to reset settings in Supabase:', err);
       throw err;
     }
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    settings,
+    loading,
+    error,
+    updateSettings,
+    saveSettings,
+    resetDefaults
+  }), [settings, loading, error, updateSettings, saveSettings, resetDefaults]);
 
   if (loading) {
     return (
@@ -199,16 +208,7 @@ export const SettingsProvider = ({ children, initialSettings }) => {
   }
 
   return (
-    <SettingsContext.Provider 
-      value={{ 
-        settings, 
-        loading, 
-        error, 
-        updateSettings, 
-        saveSettings, 
-        resetDefaults 
-      }}
-    >
+    <SettingsContext.Provider value={contextValue}>
       {children}
     </SettingsContext.Provider>
   );

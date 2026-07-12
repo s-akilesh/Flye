@@ -58,6 +58,8 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
                   <img
                     src={proj.images.main}
                     alt={proj.title}
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       width: '100%',
                       height: '100%',

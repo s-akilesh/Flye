@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export const useFilters = () => {
   const [activeCategories, setActiveCategories] = useState(['all']);
@@ -6,7 +6,7 @@ export const useFilters = () => {
   const [activeFeatures, setActiveFeatures] = useState([]);
   const [activeProjectLevels, setActiveProjectLevels] = useState([]);
 
-  const toggleCategory = (category) => {
+  const toggleCategory = useCallback((category) => {
     if (category === 'all') {
       setActiveCategories(['all']);
     } else {
@@ -20,36 +20,36 @@ export const useFilters = () => {
         }
       });
     }
-  };
+  }, []);
 
-  const toggleDifficulty = (difficulty) => {
+  const toggleDifficulty = useCallback((difficulty) => {
     setActiveDifficulties((prev) =>
       prev.includes(difficulty)
         ? prev.filter((d) => d !== difficulty)
         : [...prev, difficulty]
     );
-  };
+  }, []);
 
-  const toggleFeature = (feature) => {
+  const toggleFeature = useCallback((feature) => {
     setActiveFeatures((prev) =>
       prev.includes(feature)
         ? prev.filter((f) => f !== feature)
         : [...prev, feature]
     );
-  };
+  }, []);
 
-  const toggleProjectLevel = (level) => {
+  const toggleProjectLevel = useCallback((level) => {
     setActiveProjectLevels((prev) =>
       prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]
     );
-  };
+  }, []);
 
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setActiveCategories(['all']);
     setActiveDifficulties([]);
     setActiveFeatures([]);
     setActiveProjectLevels([]);
-  };
+  }, []);
 
   return {
     activeCategories,

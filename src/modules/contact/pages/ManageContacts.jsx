@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useContacts } from '../hooks/useContacts';
 import { Card } from '../../../shared/components/ui/Card';
 import { Button } from '../../../shared/components/ui/Button';
+import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
@@ -279,8 +280,18 @@ export const ManageContacts = () => {
         </AdminToolbar>
 
         {isLoading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>
-            Loading contact requests...
+          <div style={{ padding: 'var(--space-6)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                  <Skeleton style={{ width: '20px', height: '16px', borderRadius: '4px' }} />
+                  <Skeleton style={{ flex: 2, height: '16px', borderRadius: '4px' }} />
+                  <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
+                  <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
+                  <Skeleton style={{ width: '100px', height: '16px', borderRadius: '4px' }} />
+                </div>
+              ))}
+            </div>
           </div>
         ) : filteredContacts.length === 0 ? (
           <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>

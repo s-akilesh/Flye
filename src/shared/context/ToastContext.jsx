@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
 const ToastContext = createContext();
 
@@ -18,8 +18,10 @@ export const ToastProvider = ({ children }) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const contextValue = useMemo(() => ({ showToast, toasts }), [showToast, toasts]);
+
   return (
-    <ToastContext.Provider value={{ showToast, toasts }}>
+    <ToastContext.Provider value={contextValue}>
       {children}
       {/* Toast Overlay Container */}
       <div 

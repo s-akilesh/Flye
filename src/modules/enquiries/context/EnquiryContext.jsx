@@ -1,15 +1,17 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { enquiryService } from '../services/enquiryService.js';
 import { eventTracker } from '../../../shared/analytics/index.js';
+import { useAuth } from '../../auth/context/AuthContext.jsx';
 
 export const EnquiryContext = createContext();
 
 export const EnquiryProvider = ({ children }) => {
+  const { isAuthenticated, isAdmin } = useAuth();
   const [enquiries, setEnquiries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const loadEnquiries = async () => {
+  const loadEnquiries = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await enquiryService.getAll();
@@ -19,14 +21,19 @@ export const EnquiryProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Load enquiries on mount
-  useEffect(() => {
-    loadEnquiries();
   }, []);
 
-  const addEnquiry = async (enquiryData) => {
+  // Load enquiries only when user is authenticated and is admin
+  useEffect(() => {
+    if (isAuthenticated && isAdmin) {
+      loadEnquiries();
+    } else {
+      setEnquiries([]);
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, isAdmin, loadEnquiries]);
+
+  const addEnquiry = useCallback(async (enquiryData) => {
     setIsProcessing(true);
     try {
       const reactEnquiry = enquiryData.userId
@@ -48,9 +55,9 @@ export const EnquiryProvider = ({ children }) => {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, []);
 
-  const updateEnquiry = async (id, fields) => {
+  const updateEnquiry = useCallback(async (id, fields) => {
     setIsProcessing(true);
     try {
       const reactEnquiry = await enquiryService.update(id, fields);
@@ -62,9 +69,9 @@ export const EnquiryProvider = ({ children }) => {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, []);
 
-  const deleteEnquiry = async (id) => {
+  const deleteEnquiry = useCallback(async (id) => {
     setIsProcessing(true);
     try {
       await enquiryService.delete(id);
@@ -75,20 +82,20 @@ export const EnquiryProvider = ({ children }) => {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    enquiries,
+    isLoading,
+    isProcessing,
+    addEnquiry,
+    updateEnquiry,
+    deleteEnquiry,
+    refreshEnquiries: loadEnquiries
+  }), [enquiries, isLoading, isProcessing, addEnquiry, updateEnquiry, deleteEnquiry, loadEnquiries]);
 
   return (
-    <EnquiryContext.Provider
-      value={{
-        enquiries,
-        isLoading,
-        isProcessing,
-        addEnquiry,
-        updateEnquiry,
-        deleteEnquiry,
-        refreshEnquiries: loadEnquiries
-      }}
-    >
+    <EnquiryContext.Provider value={contextValue}>
       {children}
     </EnquiryContext.Provider>
   );

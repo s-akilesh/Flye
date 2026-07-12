@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card } from '../../../shared/components/ui/Card';
 import { Button } from '../../../shared/components/ui/Button';
+import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useProjects } from '../../projects/hooks/useProjects';
@@ -678,17 +679,48 @@ export const AdminDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="portal-section page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-        <div className="card-glass" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
-          <div className="loading-spinner" style={{ border: '4px solid var(--sys-border)', borderTop: '4px solid var(--brand-primary)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4) auto' }} />
-          <h3 style={{ color: 'var(--txt-primary)' }}>Loading dashboard analytics...</h3>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
+      <div className="portal-section page-container" style={{ paddingTop: '20px' }}>
+        {/* Header Skeleton */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <div>
+            <Skeleton variant="text" className="title" style={{ width: '200px' }} />
+            <Skeleton variant="text" style={{ width: '300px' }} />
+          </div>
+          <Skeleton style={{ width: '120px', height: '36px' }} />
         </div>
+
+        {/* KPI Grid Skeleton */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: '8px', border: '1px solid var(--sys-border)' }}>
+              <Skeleton style={{ width: '80px', height: '14px' }} />
+              <Skeleton style={{ width: '120px', height: '28px' }} />
+              <Skeleton style={{ width: '100px', height: '12px' }} />
+            </Card>
+          ))}
+        </div>
+
+        {/* Charts Grid Skeleton */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '24px' }}>
+          <Card style={{ padding: 'var(--space-4)', height: '240px', border: '1px solid var(--sys-border)' }}>
+            <Skeleton variant="text" className="title" style={{ width: '150px' }} />
+            <Skeleton style={{ height: '160px', width: '100%' }} />
+          </Card>
+          <Card style={{ padding: 'var(--space-4)', height: '240px', border: '1px solid var(--sys-border)' }}>
+            <Skeleton variant="text" className="title" style={{ width: '150px' }} />
+            <Skeleton style={{ height: '160px', width: '100%' }} />
+          </Card>
+        </div>
+
+        {/* Table Skeleton */}
+        <Card style={{ padding: 'var(--space-4)', border: '1px solid var(--sys-border)' }}>
+          <Skeleton variant="text" className="title" style={{ width: '180px' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} style={{ height: '36px', width: '100%' }} />
+            ))}
+          </div>
+        </Card>
       </div>
     );
   }
