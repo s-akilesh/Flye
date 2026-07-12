@@ -16,6 +16,8 @@ import { ProgressiveAuthModal } from '../../auth/components/ProgressiveAuthModal
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 import { eventTracker } from '../../../shared/analytics/index.js';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
+import { sanitizeHtml } from '../../../shared/utils/security.js';
+
 
 // Custom SVG Icons
 const DIYIcon = () => (
@@ -503,7 +505,7 @@ export const ProjectDetails = () => {
             {fullDescription && (
               <div className="detail-section card-glass rich-text-content">
                 <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-3)' }}>Detailed Project Blueprint</h3>
-                <div dangerouslySetInnerHTML={{ __html: fullDescription }} />
+                <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(fullDescription) }} />
               </div>
             )}
 

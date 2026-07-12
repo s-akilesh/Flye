@@ -4,41 +4,8 @@ import { SettingsLayout } from '../../settings/components/SettingsLayout';
 import { SettingsSection } from '../../settings/components/SettingsSection';
 import { Input } from '../../../shared/components/ui/Input';
 import { RichTextEditor } from '../../../shared/components/ui/RichTextEditor';
+import { sanitizeHtml } from '../../../shared/utils/security.js';
 
-// Native browser-based HTML Sanitizer for XSS prevention
-const sanitizeHtml = (html) => {
-  if (typeof window === 'undefined') return html;
-  try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    
-    // 1. Remove script tags
-    const scripts = doc.querySelectorAll('script');
-    scripts.forEach(s => s.remove());
-    
-    // 2. Clean event handlers and javascript: URIs
-    const allElements = doc.querySelectorAll('*');
-    allElements.forEach(el => {
-      const attrs = Array.from(el.attributes);
-      attrs.forEach(attr => {
-        if (attr.name.startsWith('on')) {
-          el.removeAttribute(attr.name);
-        }
-        if (attr.name === 'href' || attr.name === 'src') {
-          const val = attr.value.trim().toLowerCase();
-          if (val.startsWith('javascript:')) {
-            el.setAttribute(attr.name, '#');
-          }
-        }
-      });
-    });
-    
-    return doc.body.innerHTML;
-  } catch (err) {
-    console.error('[XSS Sanitizer] Failed to sanitize HTML:', err);
-    return html;
-  }
-};
 
 export const LegalPagesSettings = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState('privacy_policy'); // 'privacy_policy' | 'terms_conditions'

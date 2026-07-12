@@ -1,3 +1,5 @@
+import { sanitizeHtml, sanitizePrototype } from './security.js';
+
 // 1. Export Projects to Excel
 export const exportProjectsToExcel = async (projects) => {
   const XLSX = await import('xlsx');
@@ -206,7 +208,8 @@ export const generateSlugHelper = (title) => {
 
 // 4. Parse Excel Data Rows to Schema Payloads
 export const parseImportedProjects = (jsonData) => {
-  return jsonData.map((row, index) => {
+  const sanitizedData = sanitizePrototype(jsonData);
+  return sanitizedData.map((row, index) => {
     const getVal = (keys) => {
       for (const k of keys) {
         if (row[k] !== undefined) return row[k];
@@ -216,7 +219,8 @@ export const parseImportedProjects = (jsonData) => {
 
     const title = getVal(["Title", "title", "Project Name", "name"]);
     const description = getVal(["Description", "description", "Short Description", "summary"]);
-    const fullDescription = getVal(["Full Description", "fullDescription", "full_description", "details"]);
+    const rawFullDesc = getVal(["Full Description", "fullDescription", "full_description", "details"]);
+    const fullDescription = rawFullDesc !== undefined ? sanitizeHtml(String(rawFullDesc)) : undefined;
     const price = getVal(["Price", "price", "cost"]);
     const currency = getVal(["Currency", "currency"]) || 'INR';
     const projectLevel = getVal(["Level", "level", "projectLevel", "project_level"]) || 'Engineering';

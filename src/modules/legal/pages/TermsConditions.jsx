@@ -4,6 +4,8 @@ import { SEO } from '../../../shared/seo/SEO.jsx';
 import { PageType } from '../../../shared/seo/constants/pageTypes.js';
 import { generateSEO } from '../../../shared/seo/generateSEO.js';
 import { trackEvent } from '../../../shared/analytics/analytics.js';
+import { sanitizeHtml } from '../../../shared/utils/security.js';
+
 
 export const TermsConditions = () => {
   const { pageData, isLoading, fetchPage } = useLegalPage();
@@ -73,7 +75,7 @@ export const TermsConditions = () => {
             {/* Content body */}
             <div 
               className="rich-text-content"
-              dangerouslySetInnerHTML={{ __html: pageData.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(pageData.content) }}
               style={{
                 lineHeight: '1.7',
                 fontSize: '14.5px',
