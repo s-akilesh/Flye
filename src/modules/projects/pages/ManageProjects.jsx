@@ -862,7 +862,7 @@ export const ManageProjects = () => {
             </div>
           ) : sortedList.length > 0 ? (
             <>
-              <div className="tbl-scroll-wrap" style={{ padding: 'var(--space-4)' }}>
+              <div className="tbl-scroll-wrap" style={{ padding: '0 var(--space-4) var(--space-4) var(--space-4)' }}>
               <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--sys-border)' }}>

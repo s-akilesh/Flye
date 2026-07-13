@@ -207,7 +207,7 @@ export const ProjectListing = () => {
           alignItems: 'center',
           gap: '12px',
           zIndex: 100,
-          background: 'var(--header-bg)',
+          background: 'var(--sys-surface)',
           borderBottom: '1px solid var(--sys-divider)',
           padding: '12px var(--page-padding)',
           width: 'auto',
@@ -218,7 +218,7 @@ export const ProjectListing = () => {
           top: '80px'
         }}
         searchId="search-kits"
-        searchPlaceholder="Ask AI or search by title/keywords..."
+        searchPlaceholder="Search Projects.."
         searchValue={searchQuery}
         onSearchChange={(e) => setSearchQuery(e.target.value)}
         showSearchIcon={true}

@@ -763,7 +763,7 @@ export const AdminDashboard = () => {
         {/* ROW 1: today's metrics & donut chart side-by-side */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-4)' }}>
           {/* Left Grid: 2x2 KPIs */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div className="dashboard-kpi-grid">
             {/* KPI 1 */}
             <Card style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--sys-border)' }}>
               <div>

@@ -293,7 +293,6 @@ export const ProjectDetails = () => {
   const specifications = project.specifications || {};
   const components = project.components || [];
   const resources = project.resources || [];
-  const reviews = project.reviews || [];
 
   return (
     <>
@@ -411,7 +410,7 @@ export const ProjectDetails = () => {
             <div id="choose-kit-section" className="detail-section card-glass" style={{ padding: '24px' }}>
 
               {/* Cards Container Grid */}
-              <div className="kits-cards-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'center' }}>
+              <div className="kits-cards-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
                 {projectKits.map((kit) => {
                   return (
                     <div
@@ -420,32 +419,34 @@ export const ProjectDetails = () => {
                       style={{
                         border: '1px solid var(--sys-border)',
                         background: 'var(--sys-surface)',
-                        padding: '20px',
+                        padding: '24px',
                         display: 'flex',
-                        flexDirection: 'column',
+                        flexDirection: 'row',
                         justifyContent: 'space-between',
-                        minHeight: '400px',
-                        width: '340px',
-                        maxWidth: '100%',
-                        boxSizing: 'border-box'
+                        alignItems: 'center',
+                        gap: '24px',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        flexWrap: 'wrap'
                       }}
                     >
-                      <div>
+                      {/* Left Part: Title, Description, Price, Features */}
+                      <div style={{ flex: '1', minWidth: '280px' }}>
                         {/* Title */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <h4 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>
+                          <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>
                             {kit.name}
                           </h4>
                         </div>
 
                         {/* Description */}
-                        <p style={{ fontSize: '12px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
                           {kit.description}
                         </p>
 
                         {/* Price */}
-                        <div style={{ margin: '12px 0' }}>
-                          <span style={{ fontSize: '24px', fontWeight: '900', color: 'var(--txt-primary)' }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', margin: '12px 0' }}>
+                          <span style={{ fontSize: '26px', fontWeight: '900', color: 'var(--txt-primary)' }}>
                             ₹{(Number(kit.price) || 0).toLocaleString('en-IN')}
                           </span>
                           <span style={{ fontSize: '11px', color: 'var(--txt-muted)', marginLeft: '4px' }}>
@@ -454,7 +455,7 @@ export const ProjectDetails = () => {
                         </div>
 
                         {/* Included Features list */}
-                        <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0 0 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0 0 0', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '12px 24px' }}>
                           {Array.isArray(kit.features) && kit.features.map((feat, featIdx) => {
                             const isExcluded = feat.startsWith('!') || feat.startsWith('-');
                             const cleanFeat = isExcluded ? feat.substring(1) : feat;
@@ -463,8 +464,8 @@ export const ProjectDetails = () => {
                                 key={featIdx} 
                                 style={{ 
                                   display: 'flex', 
-                                  alignItems: 'flex-start', 
-                                  gap: '8px', 
+                                  alignItems: 'center', 
+                                  gap: '6px', 
                                   fontSize: '12px',
                                   color: isExcluded ? 'var(--text-muted)' : 'var(--text-primary)'
                                 }}
@@ -481,16 +482,15 @@ export const ProjectDetails = () => {
                         </ul>
                       </div>
 
-                      {/* CTA Buttons */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '20px' }}>
+                      {/* Right Part: Buy Now Button */}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', minWidth: '150px' }}>
                         <Button
                           type="button"
                           variant="secondary"
-                          className="width-100"
                           onClick={() => openOrderModalForVariant(kit)}
-                          style={{ padding: '8px 16px', fontSize: '12px' }}
+                          style={{ padding: '10px 24px', fontSize: '13px', fontWeight: '700', borderRadius: '8px' }}
                         >
-                          Request This Kit
+                          Buy Now
                         </Button>
                       </div>
                     </div>
@@ -504,7 +504,7 @@ export const ProjectDetails = () => {
             {/* Full Description */}
             {fullDescription && (
               <div className="detail-section card-glass rich-text-content">
-                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-3)' }}>Detailed Project Blueprint</h3>
+                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-3)' }}>Project Overview</h3>
                 <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(fullDescription) }} />
               </div>
             )}
@@ -524,16 +524,14 @@ export const ProjectDetails = () => {
             )}
 
             {/* Downloadable resources */}
-            <div className="detail-section card-glass">
-              <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Downloadable Project Resources</h3>
-              <div className="resources-download-list">
-                {resources.length > 0 ? (
-                  resources.map((r, idx) => {
+            {resources.length > 0 && (
+              <div className="card-glass" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-8)' }}>
+                <div className="resources-download-list">
+                  {resources.map((r, idx) => {
                     if (!r) return null;
                     const size = r.size || 'Link';
                     const type = r.type || 'url';
                     const name = r.name || 'Resource File';
-                    const status = r.status || 'available';
                     return (
                       <div key={idx} className="resource-row-node">
                         {r.url ? (
@@ -554,7 +552,7 @@ export const ProjectDetails = () => {
                                 </span>
                               </div>
                             </div>
-                            <span className={`resource-badge ${status}`}>{status.toUpperCase()}</span>
+                            <span className="resource-badge available" style={{ cursor: 'pointer' }}>DOWNLOAD</span>
                           </a>
                         ) : (
                           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
@@ -567,17 +565,15 @@ export const ProjectDetails = () => {
                                 </span>
                               </div>
                             </div>
-                            <span className={`resource-badge ${status}`}>{status.toUpperCase()}</span>
+                            <span className="resource-badge locked">COMING SOON</span>
                           </div>
                         )}
                       </div>
                     );
-                  })
-                ) : (
-                  <p style={{ fontSize: '13px', color: 'var(--txt-muted)' }}>No downloadable files currently catalogued for this kit.</p>
-                )}
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Technical Diagrams & Schematic Files */}
             {(project.images?.schematic || project.images?.circuit) && (
@@ -667,34 +663,6 @@ export const ProjectDetails = () => {
 
 
 
-            {/* Customer reviews */}
-            <div className="detail-section card-glass">
-              <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Customer Reviews & Feedback</h3>
-              <div className="reviews-container">
-                {reviews.length > 0 ? (
-                  reviews.map((rev, idx) => {
-                    if (!rev) return null;
-                    const rating = typeof rev.rating === 'number' && !isNaN(rev.rating) ? rev.rating : 5;
-                    const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-                    return (
-                      <div key={idx} className="review-card-node">
-                        <div className="review-header">
-                          <span className="review-stars">{stars}</span>
-                          <span className="reviewer-name">{rev.name || 'Anonymous'}</span>
-                        </div>
-                        <p className="review-text">"{rev.comment || 'No feedback provided.'}"</p>
-                        <span className="reviewer-meta">
-                          {rev.institution || 'Independent Builder'} &bull; Verified Builder
-                        </span>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No reviews logged for this kit yet. Be the first to build and review!</p>
-                )}
-              </div>
-            </div>
-
 
           </div>
 
@@ -745,8 +713,8 @@ export const ProjectDetails = () => {
                 href={`https://wa.me/${settings.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-chip whatsapp width-100 justify-center"
-                style={{ marginTop: 'var(--space-2)', gap: '6px' }}
+                className="btn btn-secondary width-100"
+                style={{ marginTop: '8px', gap: '8px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
               >
                 <span className="material-icons-outlined" style={{ fontSize: '16px' }}>chat</span>
                 Contact Us

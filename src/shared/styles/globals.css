@@ -2158,51 +2158,6 @@ header {
   line-height: 1.5;
   max-width: 480px;
 }
-
-.reviews-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.review-card-node {
-  padding: var(--space-4);
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-}
-
-.review-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--space-2);
-}
-
-.review-stars {
-  color: var(--accent-amber);
-  font-size: 12px;
-}
-
-.reviewer-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.review-text {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: var(--space-2);
-  font-style: italic;
-}
-
-.reviewer-meta {
-  font-size: 11px;
-  color: var(--text-dim);
-  display: block;
-}
-
 .sticky-detail-panel {
   position: sticky;
   top: 110px;
@@ -2382,7 +2337,6 @@ header {
     display: flex;
   }
 
-  /* Mobile Toolbar Adjustments */
   .marketplace-toolbar {
     position: fixed !important;
     top: 52px !important;
@@ -2394,9 +2348,9 @@ header {
     border-radius: 0px !important;
     border-left: none !important;
     border-right: none !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-    background: rgba(10, 10, 15, 0.92) !important;
+    border-top: 1px solid var(--sys-border) !important;
+    border-bottom: 1px solid var(--sys-border) !important;
+    background: var(--sys-surface) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
     padding: 12px 16px !important;
@@ -3013,6 +2967,18 @@ header {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.dashboard-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .dashboard-kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ============================================================
@@ -4365,6 +4331,18 @@ html[data-theme='light'] body.in-admin-panel header .header-profile-text span:la
   color: #64748b !important;
 }
 
+/* Light theme project card overrides */
+html[data-theme='light'] .project-card-premium {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme='light'] .project-card-premium:hover {
+  transform: scale(1.02) !important;
+  background: var(--interaction-hover) !important;
+  border-color: var(--border-active) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
 /* Ensure header transitions are smooth globally */
 header {
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
@@ -4584,6 +4562,7 @@ header {
     padding-top: 60px !important;
     padding-left: 12px !important;
     padding-right: 12px !important;
+    padding-bottom: 90px !important;
   }
   #detail-portal .portal-header {
     display: none !important;

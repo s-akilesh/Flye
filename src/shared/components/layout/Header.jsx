@@ -228,7 +228,7 @@ export const Header = ({ onToggleDrawer }) => {
           type="button"
           onClick={onToggleDrawer}
           className="btn-header mobile-drawer-hamburger"
-          style={{ padding: '8px', display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}
+          style={{ padding: '8px', display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer' }}
           title="Open Menu"
         >
           <span className="material-icons" style={{ fontSize: '20px' }}>menu</span>
@@ -269,7 +269,7 @@ export const Header = ({ onToggleDrawer }) => {
                     height: '32px',
                     borderRadius: '50%',
                     objectFit: 'cover',
-                    border: '2px solid var(--brand-primary)'
+                    border: '2px solid color-mix(in srgb, var(--brand-primary) 10%, transparent)'
                   }}
                 />
               ) : (
@@ -460,8 +460,8 @@ export const Header = ({ onToggleDrawer }) => {
                     onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                   >
-                    <span className="material-icons-outlined" style={{ fontSize: '18px' }}>logout</span>
-                    <span>Logout</span>
+                    <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--status-error)' }}>logout</span>
+                    <span style={{ color: 'var(--status-error)' }}>Logout</span>
                   </button>
                 </div>
             )}
@@ -539,9 +539,9 @@ export const Header = ({ onToggleDrawer }) => {
             style={{ 
               padding: '8px 0', 
               flex: 1, 
-              background: 'var(--status-danger)', 
-              color: 'var(--txt-inverse)', 
-              border: '1px solid var(--sys-border)' 
+              background: '#ef4444', 
+              color: '#ffffff', 
+              border: '1px solid #ef4444' 
             }}
           >
             Logout

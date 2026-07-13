@@ -188,56 +188,54 @@ export const ManageNotifications = () => {
       </div>
 
       <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', flex: 1, minHeight: 0 }}>
-        {/* Filter / Search panel */}
-        <Card style={{ padding: '20px', border: '1px solid var(--sys-border)', background: 'var(--sys-surface)' }}>
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          {/* Search */}
-          <div style={{ flex: 2, minWidth: '200px' }}>
-            <input
-              type="text"
-              placeholder="Search notifications..."
-              className="form-input"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ width: '100%', padding: '10px 14px' }}
-            />
+        {/* Main List */}
+        <Card style={{ overflow: 'hidden', border: '1px solid var(--sys-border)', background: 'var(--sys-surface)', display: 'flex', flexDirection: 'column' }}>
+          {/* Filter / Search panel inside the card */}
+          <div style={{ padding: '20px', borderBottom: '1px solid var(--sys-divider)', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+            {/* Search */}
+            <div style={{ flex: 2, minWidth: '200px' }}>
+              <input
+                type="text"
+                placeholder="Search notifications..."
+                className="form-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={{ width: '100%', padding: '10px 14px' }}
+              />
+            </div>
+
+            {/* Priority */}
+            <div style={{ flex: 1, minWidth: '150px' }}>
+              <select
+                className="form-input"
+                value={priorityFilter}
+                onChange={(e) => setPriorityFilter(e.target.value)}
+                style={{ width: '100%', padding: '10px 14px' }}
+              >
+                <option value="all" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>All Priorities</option>
+                <option value="LOW" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Low</option>
+                <option value="MEDIUM" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Medium</option>
+                <option value="HIGH" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>High</option>
+                <option value="CRITICAL" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Critical</option>
+              </select>
+            </div>
+
+            {/* Read / Unread Status */}
+            <div style={{ flex: 1, minWidth: '150px' }}>
+              <select
+                className="form-input"
+                value={readFilter}
+                onChange={(e) => setReadFilter(e.target.value)}
+                style={{ width: '100%', padding: '10px 14px' }}
+              >
+                <option value="all" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>All Statuses</option>
+                <option value="unread" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Unread Only</option>
+                <option value="read" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Read Only</option>
+              </select>
+            </div>
           </div>
 
-          {/* Priority */}
-          <div style={{ flex: 1, minWidth: '150px' }}>
-            <select
-              className="form-input"
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              style={{ width: '100%', padding: '10px 14px' }}
-            >
-              <option value="all" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>All Priorities</option>
-              <option value="LOW" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Low</option>
-              <option value="MEDIUM" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Medium</option>
-              <option value="HIGH" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>High</option>
-              <option value="CRITICAL" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Critical</option>
-            </select>
-          </div>
-
-          {/* Read / Unread Status */}
-          <div style={{ flex: 1, minWidth: '150px' }}>
-            <select
-              className="form-input"
-              value={readFilter}
-              onChange={(e) => setReadFilter(e.target.value)}
-              style={{ width: '100%', padding: '10px 14px' }}
-            >
-              <option value="all" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>All Statuses</option>
-              <option value="unread" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Unread Only</option>
-              <option value="read" style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>Read Only</option>
-            </select>
-          </div>
-        </div>
-      </Card>
-
-      {/* Main List */}
-      <Card style={{ overflow: 'hidden', border: '1px solid var(--sys-border)', background: 'var(--sys-surface)' }}>
-        {isLoading ? (
+          {isLoading ? (
           <div style={{ padding: '40px', textAlign: 'center', color: 'var(--txt-muted)' }}>
             Loading alerts...
           </div>
@@ -335,18 +333,21 @@ export const ManageNotifications = () => {
                       </button>
                     )}
                     <button
+                      type="button"
                       onClick={() => setNotifToDelete(item)}
                       style={{
                         background: 'none',
                         border: 'none',
                         color: 'var(--status-error)',
                         cursor: 'pointer',
-                        fontSize: '13px',
-                        padding: '8px'
+                        padding: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
                       title="Delete notification"
                     >
-                      🗑️
+                      <span className="material-icons-outlined" style={{ fontSize: '18px' }}>delete</span>
                     </button>
                   </div>
                 </div>

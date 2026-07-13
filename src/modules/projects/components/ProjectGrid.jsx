@@ -93,8 +93,12 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
             </div>
 
             {/* Price */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px' }}>
-              <span style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)' }}>₹{displayPrice}</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px', height: '24px' }}>
+              {proj.price && Number(proj.price) > 0 ? (
+                <span style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)' }}>₹{displayPrice}</span>
+              ) : (
+                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--brand-accent)' }}>Contact Us for Pricing</span>
+              )}
             </div>
 
             {/* CTA Request Button */}
