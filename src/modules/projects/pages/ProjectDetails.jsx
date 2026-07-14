@@ -361,9 +361,69 @@ export const ProjectDetails = () => {
       </div>
 
       <div className="portal-content id-detail-portal-content" style={{ maxWidth: '100%', width: '100%', paddingLeft: 'var(--page-padding)', paddingRight: 'var(--page-padding)' }}>
-        <div className="detail-page-layout">
-          {/* Left Column */}
-          <div className="detail-left-column">
+        <style>{`
+          @media (min-width: 992px) {
+            #detail-portal {
+              height: calc(100vh - 73px) !important;
+              overflow: hidden !important;
+              display: flex !important;
+              flex-direction: column !important;
+            }
+            #detail-portal .portal-header {
+              flex-shrink: 0 !important;
+              position: sticky !important;
+              top: 0px !important;
+              margin-bottom: var(--space-6) !important;
+            }
+            #detail-portal .id-detail-portal-content {
+              flex: 1 !important;
+              overflow: hidden !important;
+              display: flex !important;
+              flex-direction: column !important;
+              min-height: 0 !important;
+            }
+            .detail-page-layout-custom {
+              display: grid !important;
+              grid-template-columns: 4fr 6fr !important;
+              gap: 32px !important;
+              flex: 1 !important;
+              height: 100% !important;
+              overflow: hidden !important;
+              min-height: 0 !important;
+            }
+            .detail-column-left-custom {
+              display: flex !important;
+              flex-direction: column !important;
+              gap: 24px !important;
+              height: 100% !important;
+              overflow-y: auto !important;
+            }
+            .detail-column-right-custom {
+              display: flex !important;
+              flex-direction: column !important;
+              gap: 24px !important;
+              height: 100% !important;
+              overflow-y: auto !important;
+              padding-right: 8px !important;
+            }
+          }
+          @media (max-width: 991px) {
+            .detail-page-layout-custom {
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: 24px;
+            }
+            .detail-column-left-custom,
+            .detail-column-right-custom {
+              display: flex;
+              flex-direction: column;
+              gap: 24px;
+            }
+          }
+        `}</style>
+        <div className="detail-page-layout-custom">
+          {/* Left Column: Image and Details Card (40% width) */}
+          <div className="detail-column-left-custom">
             {/* Project Thumbnail Image */}
             <div className="detail-gallery-card card-glass" style={{ padding: 0, overflow: 'hidden', borderRadius: '12px' }}>
               {project.images?.main ? (
@@ -405,105 +465,137 @@ export const ProjectDetails = () => {
               </div>
             </div>
 
-
-            {/* Choose Your Kit Section */}
-            <div id="choose-kit-section" className="detail-section card-glass" style={{ padding: '24px' }}>
-
-              {/* Cards Container Grid */}
-              <div className="kits-cards-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
-                {projectKits.map((kit) => {
-                  return (
-                    <div
-                      key={kit.id}
-                      className="card-glass kit-pricing-card"
-                      style={{
-                        border: '1px solid var(--sys-border)',
-                        background: 'var(--sys-surface)',
-                        padding: '24px',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: '24px',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        flexWrap: 'wrap'
-                      }}
-                    >
-                      {/* Left Part: Title, Description, Price, Features */}
-                      <div style={{ flex: '1', minWidth: '280px' }}>
-                        {/* Title */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>
-                            {kit.name}
-                          </h4>
-                        </div>
-
-                        {/* Description */}
-                        <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
-                          {kit.description}
-                        </p>
-
-                        {/* Price */}
-                        <div style={{ display: 'flex', alignItems: 'baseline', margin: '12px 0' }}>
-                          <span style={{ fontSize: '26px', fontWeight: '900', color: 'var(--txt-primary)' }}>
-                            ₹{(Number(kit.price) || 0).toLocaleString('en-IN')}
-                          </span>
-                          <span style={{ fontSize: '11px', color: 'var(--txt-muted)', marginLeft: '4px' }}>
-                            {currency}
-                          </span>
-                        </div>
-
-                        {/* Included Features list */}
-                        <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0 0 0', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '12px 24px' }}>
-                          {Array.isArray(kit.features) && kit.features.map((feat, featIdx) => {
-                            const isExcluded = feat.startsWith('!') || feat.startsWith('-');
-                            const cleanFeat = isExcluded ? feat.substring(1) : feat;
-                            return (
-                              <li 
-                                key={featIdx} 
-                                style={{ 
-                                  display: 'flex', 
-                                  alignItems: 'center', 
-                                  gap: '6px', 
-                                  fontSize: '12px',
-                                  color: isExcluded ? 'var(--text-muted)' : 'var(--text-primary)'
-                                }}
-                              >
-                                <span style={{ color: isExcluded ? 'var(--accent-red)' : 'var(--accent-emerald)', fontWeight: 'bold' }}>
-                                  {isExcluded ? '✗' : '✓'}
-                                </span>
-                                <span style={{ textDecoration: isExcluded ? 'line-through' : 'none' }}>
-                                  {cleanFeat}
-                                </span>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-
-                      {/* Right Part: Buy Now Button */}
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', minWidth: '150px' }}>
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          onClick={() => openOrderModalForVariant(kit)}
-                          style={{ padding: '10px 24px', fontSize: '13px', fontWeight: '700', borderRadius: '8px' }}
-                        >
-                          Buy Now
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
+            {/* Project Info Card */}
+            <div className="detail-section card-glass" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Badge badgeType={badge} />
+              </div>
+              
+              <div>
+                <h2 style={{ fontSize: '20px', fontWeight: '800', margin: 0, color: 'var(--txt-primary)' }}>{title}</h2>
+                <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', lineHeight: '1.6', marginTop: '12px', marginBottom: 0 }}>{description}</p>
               </div>
 
+              <div className="detail-meta-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid var(--sys-divider)', paddingTop: '16px' }}>
+                <div className="detail-meta-item" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span className="lbl" style={{ color: 'var(--txt-muted)', fontSize: '12px' }}>Primary Controller:</span>
+                  <span className="val" style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{specifications.controller || technology}</span>
+                </div>
+                <div className="detail-meta-item" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span className="lbl" style={{ color: 'var(--txt-muted)', fontSize: '12px' }}>Category:</span>
+                  <span className="val" style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)' }}>{category.toUpperCase()}</span>
+                </div>
+              </div>
+
+              <a
+                href={`https://wa.me/${settings.whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-secondary width-100"
+                style={{ marginTop: '8px', gap: '8px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '40px', fontWeight: '600' }}
+              >
+                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>chat</span>
+                Contact Us
+              </a>
             </div>
+          </div>
 
+          {/* Right Column: Pricing, overview, and resources stacked (60% width) */}
+          <div className="detail-column-right-custom">
+            {/* Choose Your Kit Section */}
+            {projectKits.length > 0 && (
+              <div id="choose-kit-section" style={{ width: '100%' }}>
+                {/* Cards Container Grid */}
+                <div className="kits-cards-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
+                  {projectKits.map((kit) => {
+                    return (
+                      <div
+                        key={kit.id}
+                        className="card-glass kit-pricing-card"
+                        style={{
+                          border: '1px solid var(--sys-border)',
+                          background: 'var(--sys-surface)',
+                          padding: '24px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '16px',
+                          width: '100%',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        {/* Upper Part: Title, Description, Price */}
+                        <div>
+                          {/* Title */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                            <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)', margin: 0 }}>
+                              {kit.name}
+                            </h4>
+                          </div>
 
-            {/* Full Description */}
+                          {/* Description */}
+                          <p style={{ fontSize: '13px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
+                            {kit.description}
+                          </p>
+
+                          {/* Price */}
+                          <div style={{ display: 'flex', alignItems: 'baseline', margin: '12px 0' }}>
+                            <span style={{ fontSize: '26px', fontWeight: '900', color: 'var(--txt-primary)' }}>
+                              ₹{(Number(kit.price) || 0).toLocaleString('en-IN')}
+                            </span>
+                            <span style={{ fontSize: '11px', color: 'var(--txt-muted)', marginLeft: '4px' }}>
+                              {currency}
+                            </span>
+                          </div>
+
+                          {/* Included Features list */}
+                          <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0 0 0', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '12px 24px' }}>
+                            {Array.isArray(kit.features) && kit.features.map((feat, featIdx) => {
+                              const isExcluded = feat.startsWith('!') || feat.startsWith('-');
+                              const cleanFeat = isExcluded ? feat.substring(1) : feat;
+                              return (
+                                <li 
+                                  key={featIdx} 
+                                  style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '6px', 
+                                    fontSize: '12px',
+                                    color: isExcluded ? 'var(--text-muted)' : 'var(--text-primary)'
+                                  }}
+                                >
+                                  <span style={{ color: isExcluded ? 'var(--accent-red)' : 'var(--accent-emerald)', fontWeight: 'bold' }}>
+                                    {isExcluded ? '✗' : '✓'}
+                                  </span>
+                                  <span style={{ textDecoration: isExcluded ? 'line-through' : 'none' }}>
+                                    {cleanFeat}
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+
+                        {/* Lower Part: Buy Now Button */}
+                        <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                          <Button
+                            type="button"
+                            variant="primary"
+                            onClick={() => openOrderModalForVariant(kit)}
+                            style={{ width: '100%', padding: '10px 24px', fontSize: '13px', fontWeight: '700', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          >
+                            Buy Now
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Full Description / Overview */}
             {fullDescription && (
-              <div className="detail-section card-glass rich-text-content">
+              <div className="detail-section card-glass rich-text-content" style={{ padding: '24px' }}>
                 <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-3)' }}>Project Overview</h3>
                 <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(fullDescription) }} />
               </div>
@@ -511,7 +603,7 @@ export const ProjectDetails = () => {
 
             {/* Component Chips List */}
             {components.length > 0 && (
-              <div className="detail-section card-glass">
+              <div className="detail-section card-glass" style={{ padding: '24px' }}>
                 <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Hardware System Components Included</h3>
                 <div className="components-chips-list">
                   {components.map((c, idx) => (
@@ -523,9 +615,43 @@ export const ProjectDetails = () => {
               </div>
             )}
 
+            {/* Video Tutorial Card */}
+            {project.videoUrl && !project.videoUrl.includes('placeholder') && (
+              <div className="detail-section card-glass" style={{ padding: '24px' }}>
+                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Video Tutorial</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-4)', background: 'var(--interaction-hover)', borderRadius: '8px', border: '1px solid var(--sys-border)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ fontSize: '24px' }}>🎥</span>
+                    <div>
+                      <div 
+                        title={`${title} Video Tutorial Guide`}
+                        style={{ fontSize: '14px', fontWeight: '600', color: 'var(--txt-primary)' }}
+                      >
+                        {(() => {
+                          const vTitle = `${title} Video Tutorial Guide`;
+                          return vTitle.length > 35 ? vTitle.substring(0, 32) + '...' : vTitle;
+                        })()}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Step-by-step build and debugging guide</div>
+                    </div>
+                  </div>
+                  <a 
+                    href={project.videoUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="btn btn-primary btn-submit-calc"
+                    style={{ padding: '8px 20px', fontSize: '12px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+                  >
+                    Watch Tutorial
+                  </a>
+                </div>
+              </div>
+            )}
+
             {/* Downloadable resources */}
             {resources.length > 0 && (
-              <div className="card-glass" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-8)' }}>
+              <div className="card-glass" style={{ padding: 'var(--space-4)' }}>
+                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)', fontSize: '16px', fontWeight: '800' }}>Project Resources</h3>
                 <div className="resources-download-list">
                   {resources.map((r, idx) => {
                     if (!r) return null;
@@ -577,7 +703,7 @@ export const ProjectDetails = () => {
 
             {/* Technical Diagrams & Schematic Files */}
             {(project.images?.schematic || project.images?.circuit) && (
-              <div className="detail-section card-glass">
+              <div className="detail-section card-glass" style={{ padding: '24px' }}>
                 <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Technical Diagrams & Files</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                   {project.images?.schematic && (
@@ -627,99 +753,6 @@ export const ProjectDetails = () => {
                 </div>
               </div>
             )}
-
-            {/* Video Tutorial Card */}
-            {project.videoUrl && !project.videoUrl.includes('placeholder') && (
-              <div className="detail-section card-glass">
-                <h3 style={{ color: 'var(--accent-blue)', marginBottom: 'var(--space-4)' }}>Video Tutorial</h3>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-4)', background: 'var(--interaction-hover)', borderRadius: '8px', border: '1px solid var(--sys-border)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span style={{ fontSize: '24px' }}>🎥</span>
-                    <div>
-                      <div 
-                        title={`${title} Video Tutorial Guide`}
-                        style={{ fontSize: '14px', fontWeight: '600', color: 'var(--txt-primary)' }}
-                      >
-                        {(() => {
-                          const vTitle = `${title} Video Tutorial Guide`;
-                          return vTitle.length > 35 ? vTitle.substring(0, 32) + '...' : vTitle;
-                        })()}
-                      </div>
-                      <div style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>Step-by-step build and debugging guide</div>
-                    </div>
-                  </div>
-                  <a 
-                    href={project.videoUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn btn-primary btn-submit-calc"
-                    style={{ padding: '8px 20px', fontSize: '12px', textDecoration: 'none', whiteSpace: 'nowrap' }}
-                  >
-                    Watch Tutorial
-                  </a>
-                </div>
-              </div>
-            )}
-
-
-
-
-          </div>
-
-          {/* Right Column Sticky Panel */}
-          <div className="detail-right-column">
-            <div className="sticky-detail-panel card-glass">
-              <Badge badgeType={badge} />
-              <h2>{title}</h2>
-              <p className="detail-hero-desc">{description}</p>
-
-              <div className="detail-meta-list">
-                <div className="detail-meta-item">
-                  <span className="lbl">Difficulty:</span>
-                  <span className={`val diff-${difficulty}`}>{difficulty.toUpperCase()}</span>
-                </div>
-                <div className="detail-meta-item">
-                  <span className="lbl">Build Time:</span>
-                  <span className="val">{buildTime}</span>
-                </div>
-                <div className="detail-meta-item">
-                  <span className="lbl">Primary Controller:</span>
-                  <span className="val">{specifications.controller || technology}</span>
-                </div>
-                <div className="detail-meta-item">
-                  <span className="lbl">Project Level:</span>
-                  <span className="val" style={{ color: 'var(--accent-amber)' }}>{projectLevel}</span>
-                </div>
-                <div className="detail-meta-item">
-                  <span className="lbl">Category:</span>
-                  <span className="val">{category.toUpperCase()}</span>
-                </div>
-              </div>
-
-              <Button
-                type="button"
-                variant="primary"
-                className="width-100 btn-submit-calc"
-                id="btn-detail-order-sticky"
-                onClick={() => {
-                  document.getElementById('choose-kit-section')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                style={{ marginTop: 'var(--space-3)' }}
-              >
-                Choose Your Kit
-              </Button>
-
-              <a
-                href={`https://wa.me/${settings.whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-secondary width-100"
-                style={{ marginTop: '8px', gap: '8px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>chat</span>
-                Contact Us
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -936,6 +969,7 @@ export const ProjectDetails = () => {
                     <option value="Have Project idea" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Have Project idea</option>
                     <option value="Need Only Support" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Need Only Support</option>
                     <option value="Choosed Flyen Project" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Choosed Flyen Project</option>
+                    <option value="3d Printing" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>3d Printing</option>
                   </select>
                 </div>
 
@@ -951,7 +985,7 @@ export const ProjectDetails = () => {
                   />
                 </div>
 
-                <div>
+                <div style={{ display: projectStatus === '3d Printing' ? 'none' : 'block' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
                   <Input
                     type="text"
@@ -974,7 +1008,7 @@ export const ProjectDetails = () => {
                   />
                 </div>
 
-                <div>
+                <div style={{ display: projectStatus === '3d Printing' ? 'none' : 'block' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Document?</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
@@ -988,9 +1022,9 @@ export const ProjectDetails = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        background: needDocument === 'Yes' ? 'rgba(139, 92, 246, 0.15)' : 'var(--interaction-hover)',
                         border: needDocument === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
-                        color: needDocument === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
+                        color: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -1016,7 +1050,7 @@ export const ProjectDetails = () => {
                   </div>
                 </div>
 
-                <div>
+                <div style={{ display: projectStatus === '3d Printing' ? 'none' : 'block' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Need Presentation Support?</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
@@ -1030,9 +1064,9 @@ export const ProjectDetails = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        background: needPresentation === 'Yes' ? 'rgba(139, 92, 246, 0.15)' : 'var(--interaction-hover)',
                         border: needPresentation === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
-                        color: needPresentation === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
+                        color: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -1089,7 +1123,7 @@ export const ProjectDetails = () => {
               </Button>
               <Button
                 variant="primary"
-                className="modal-btn btn-submit-calc"
+                className="btn-submit-calc"
                 style={{ flex: 1, height: '42px' }}
                 disabled={isProcessing}
                 onClick={async () => {

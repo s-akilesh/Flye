@@ -442,6 +442,7 @@ export const ProjectListing = () => {
                     <option value="Have Project idea" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Have Project idea</option>
                     <option value="Need Only Support" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Need Only Support</option>
                     <option value="Choosed Flyen Project" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Choosed Flyen Project</option>
+                    <option value="3d Printing" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>3d Printing</option>
                   </select>
                 </div>
 
@@ -494,9 +495,9 @@ export const ProjectListing = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        background: needDocument === 'Yes' ? 'rgba(139, 92, 246, 0.15)' : 'var(--interaction-hover)',
                         border: needDocument === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
-                        color: needDocument === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
+                        color: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -536,9 +537,9 @@ export const ProjectListing = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--interaction-hover)',
+                        background: needPresentation === 'Yes' ? 'rgba(139, 92, 246, 0.15)' : 'var(--interaction-hover)',
                         border: needPresentation === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
-                        color: needPresentation === 'Yes' ? 'var(--txt-primary)' : 'var(--txt-secondary)'
+                        color: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -595,7 +596,7 @@ export const ProjectListing = () => {
               </Button>
               <Button
                 variant="primary"
-                className="modal-btn btn-submit-calc"
+                className="btn-submit-calc"
                 style={{ flex: 1, height: '42px' }}
                 disabled={isProcessing}
                 onClick={async () => {

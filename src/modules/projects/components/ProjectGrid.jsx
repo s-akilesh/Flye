@@ -34,6 +34,7 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
         {projects.map((proj) => {
           const categoryLabel = CATEGORY_LABELS[proj.category] || proj.category || 'General';
           const displayPrice = (Number(proj.price) || 0).toLocaleString('en-IN');
+          const diff = proj.difficulty?.toLowerCase() || 'medium';
 
           return (
             <Card
@@ -47,13 +48,23 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
                 background: 'var(--sys-surface)', 
                 border: '1px solid var(--sys-border)',
                 position: 'relative',
-                width: '320px',
-                boxSizing: 'border-box'
+                width: '100%',
+                boxSizing: 'border-box',
+                display: 'flex',
+                flexDirection: 'column'
               }}
             >
+              {/* Badge overlay on image */}
+              {proj.badge && (
+                <div style={{ position: 'absolute', top: '24px', left: '24px', zIndex: 10 }}>
+                  <span className={`project-badge-tag ${proj.badge}`}>
+                    {proj.badge === 'best-seller' ? 'Best Seller' : proj.badge === 'new' ? 'New Release' : proj.badge === 'student' ? 'Student Project' : proj.badge}
+                  </span>
+                </div>
+              )}
 
               {/* Main Image Box */}
-              <div className="project-card-img" style={{ height: '140px', background: 'var(--interaction-hover)', border: 'none', overflow: 'hidden', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="project-card-img" style={{ height: '140px', background: 'var(--interaction-hover)', border: 'none', overflow: 'hidden', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
                 {proj.images?.main ? (
                   <img
                     src={proj.images.main}
@@ -82,61 +93,71 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
                 </svg>
               </div>
 
-            {/* Title */}
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--txt-primary)', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
-              {proj.title}
-            </h3>
+              {/* Title */}
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--txt-primary)', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
+                {proj.title}
+              </h3>
 
-            {/* Category / Subtitle */}
-            <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--status-warning)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
-              {categoryLabel}
-            </div>
+              {/* Description */}
+              <p className="card-desc" style={{ fontSize: '12.5px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
+                {proj.description || 'No description provided.'}
+              </p>
 
-            {/* Price */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px', height: '24px' }}>
-              {proj.price && Number(proj.price) > 0 ? (
-                <span style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)' }}>₹{displayPrice}</span>
-              ) : (
-                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--brand-accent)' }}>Contact Us for Pricing</span>
-              )}
-            </div>
+              {/* Specs Row */}
+              <div className="card-spec-row" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                <span className={`status-pill diff-${diff}`} style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px' }}>
+                  {proj.difficulty || 'Medium'}
+                </span>
+                <span className="status-pill" style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'var(--interaction-hover)', color: 'var(--txt-muted)' }}>
+                  {categoryLabel}
+                </span>
+              </div>
 
-            {/* CTA Request Button */}
-            <div style={{ marginTop: 'auto' }}>
-              <Button
-                type="button"
-                variant="none"
-                className="btn-card-order"
-                style={{
-                  width: '100%',
-                  paddingTop: '8px',
-                  paddingBottom: '8px',
-                  background: 'var(--interaction-hover)',
-                  border: '1px solid var(--sys-border)',
-                  borderRadius: '8px',
-                  color: 'var(--txt-primary)',
-                  fontSize: '14px',
-                  fontFamily: 'Inter, sans-serif',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  transition: 'all 0.25s ease',
-                  cursor: 'pointer'
-                }}
-              >
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                REQUEST KIT
-              </Button>
-            </div>
-          </Card>
-        );
-      })}
+              {/* Price */}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px', height: '24px' }}>
+                {proj.price && Number(proj.price) > 0 ? (
+                  <span style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)' }}>₹{displayPrice}</span>
+                ) : (
+                  <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--brand-accent)' }}>Contact Us for Pricing</span>
+                )}
+              </div>
+
+              {/* CTA Request Button */}
+              <div style={{ marginTop: 'auto' }}>
+                <Button
+                  type="button"
+                  variant="none"
+                  className="btn-card-order"
+                  style={{
+                    width: '100%',
+                    paddingTop: '8px',
+                    paddingBottom: '8px',
+                    background: 'var(--interaction-hover)',
+                    border: '1px solid var(--sys-border)',
+                    borderRadius: '8px',
+                    color: 'var(--txt-primary)',
+                    fontSize: '14px',
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'all 0.25s ease',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                  REQUEST KIT
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
     </div>
     </>
   );

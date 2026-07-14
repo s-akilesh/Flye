@@ -9,6 +9,7 @@ import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
+import { Table } from '../../../shared/components/ui/Table';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast } from '../../../shared/context/ToastContext';
 import { ROUTES } from '../../../shared/constants/routes';
@@ -1130,273 +1131,219 @@ export const ManageEnquiries = () => {
             </div>
           ) : (
             /* TABLE VIEW */
-            sortedList.length > 0 ? (
-              <>
-                <div className="tbl-scroll-wrap" style={{ padding: '12px' }}>
-                <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)' }}>
-                      <th style={{ padding: '10px 8px', width: '36px', minWidth: '36px' }}>
+            (isLoading || sortedList.length > 0) ? (
+              <Table
+                headers={[
+                  {
+                    label: (
+                      <input
+                        type="checkbox"
+                        checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
+                        onChange={handleSelectAll}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    ),
+                    style: { width: '36px', minWidth: '36px', padding: '10px 8px' }
+                  },
+                  { label: 'Project Title', style: { minWidth: '150px', padding: '10px 10px' } },
+                  { label: 'Customer Name', style: { minWidth: '110px', padding: '10px 10px' } },
+                  { label: 'Mobile', style: { minWidth: '100px', padding: '10px 10px' } },
+                  { label: 'Project Status', style: { minWidth: '130px', padding: '10px 10px' } },
+                  { label: 'Priority', style: { minWidth: '90px', padding: '10px 10px' } },
+                  { label: 'Budget', style: { minWidth: '100px', padding: '10px 10px' } },
+                  { label: 'Submission', style: { minWidth: '110px', padding: '10px 10px' } },
+                  { label: 'Lead Status', style: { minWidth: '140px', padding: '10px 10px' } },
+                  { label: 'Submitted Date', style: { minWidth: '130px', padding: '10px 10px' } },
+                  { label: 'Actions', style: { minWidth: '170px', textAlign: 'right', padding: '10px 10px' } }
+                ]}
+                data={paginatedEnquiries}
+                isLoading={isLoading}
+                emptyMessage="No enquiries found matching your filters."
+                minWidth="max-content"
+                renderRow={(enq) => {
+                  const isSelected = selectedIds.includes(enq.id);
+                  const parsed = parseNotes(enq.notes);
+                  const priority = parsed.priority || 'Medium';
+
+                  const priorityBadgeColors = {
+                    High: { text: 'var(--status-error)', bg: 'rgba(239, 68, 68, 0.15)', border: 'var(--status-error)' },
+                    Medium: { text: 'var(--status-warning)', bg: 'rgba(245, 158, 11, 0.15)', border: 'var(--status-warning)' },
+                    Low: { text: 'var(--txt-muted)', bg: 'var(--interaction-hover)', border: 'var(--sys-border)' }
+                  };
+                  const pBadge = priorityBadgeColors[priority];
+
+                  return (
+                    <tr 
+                      style={{ 
+                        background: isSelected ? 'var(--interaction-selected)' : 'transparent',
+                      }}
+                    >
+                      <td style={{ padding: '10px 8px' }}>
                         <input
                           type="checkbox"
-                          checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
-                          onChange={handleSelectAll}
+                          checked={isSelected}
+                          onChange={() => handleSelectOne(enq.id)}
                           style={{ cursor: 'pointer' }}
                         />
-                      </th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '150px' }}>Project Title</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>Customer Name</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>Mobile</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Project Status</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '90px' }}>Priority</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>Budget</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>Submission</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '140px' }}>Lead Status</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '130px' }}>Submitted Date</th>
-                      <th style={{ padding: '10px 10px', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '170px', textAlign: 'right' }}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedEnquiries.map((enq) => {
-                      const isSelected = selectedIds.includes(enq.id);
-                      const parsed = parseNotes(enq.notes);
-
-                      // Priority calculation
-                      const priority = parsed.priority || 'Medium';
-
-                      const priorityBadgeColors = {
-                        High: { text: 'var(--status-error)', bg: 'rgba(239, 68, 68, 0.15)', border: 'var(--status-error)' },
-                        Medium: { text: 'var(--status-warning)', bg: 'rgba(245, 158, 11, 0.15)', border: 'var(--status-warning)' },
-                        Low: { text: 'var(--txt-muted)', bg: 'var(--interaction-hover)', border: 'var(--sys-border)' }
-                      };
-                      const pBadge = priorityBadgeColors[priority];
-
-                      return (
-                        <tr 
-                          key={enq.id} 
-                          style={{ 
-                            borderBottom: '1px solid var(--sys-divider)',
-                            background: isSelected ? 'var(--interaction-selected)' : 'transparent',
-                            transition: 'background 0.2s ease'
+                      </td>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '600', color: 'var(--brand-accent)' }}>
+                        {enq.projectTitle || 'General Consultation'}
+                      </td>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px', color: 'var(--txt-primary)' }}>
+                        {enq.customerName}
+                      </td>
+                      <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '130px', color: 'var(--txt-muted)' }}>
+                        {enq.mobileNumber}
+                      </td>
+                      <td className="tbl-td" style={{ minWidth: '130px', maxWidth: '150px', color: 'var(--txt-secondary)' }}>
+                        {parsed.projectStatus}
+                      </td>
+                      <td className="tbl-td" style={{ minWidth: '90px', maxWidth: '110px' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          fontSize: '10.5px',
+                          fontWeight: '700',
+                          color: pBadge.text,
+                          background: pBadge.bg,
+                          border: `1px solid ${pBadge.border}`
+                        }}>
+                          {priority}
+                        </span>
+                      </td>
+                      <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '120px', color: 'var(--brand-primary)', fontWeight: '600' }}>
+                        {parsed.budget !== '-' ? parsed.budget : `₹${enq.price || '0'}`}
+                      </td>
+                      <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '130px', color: 'var(--txt-muted)' }}>
+                        {parsed.submissionDate}
+                      </td>
+                      <td className="tbl-td" style={{ minWidth: '140px', maxWidth: '160px' }}>
+                        <select
+                          className="form-select"
+                          style={{
+                            padding: '4px 20px 4px 8px',
+                            height: 'auto',
+                            fontSize: '11.5px',
+                            background: 'var(--input-bg)',
+                            borderColor: statusColors[enq.status || 'new'],
+                            color: statusColors[enq.status || 'new'],
+                            fontWeight: '600',
+                            width: '135px',
+                            appearance: 'none',
+                            WebkitAppearance: 'none',
+                            backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(statusColors[enq.status || 'new'])}' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'right 4px center',
+                            backgroundSize: '12px',
+                            cursor: 'pointer'
                           }}
-                          className="table-row-hover"
+                          value={enq.status || 'new'}
+                          onChange={(e) => handleStatusChange(enq.id, e.target.value)}
+                          disabled={isProcessing}
                         >
-                          <td style={{ padding: '10px 8px' }}>
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              onChange={() => handleSelectOne(enq.id)}
-                              style={{ cursor: 'pointer' }}
-                            />
-                          </td>
-                          <td className="tbl-td tbl-truncate" style={{ minWidth: '150px', maxWidth: '210px', fontWeight: '600', color: 'var(--brand-accent)' }}>
-                            {enq.projectTitle || 'General Consultation'}
-                          </td>
-                          <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '150px', color: 'var(--txt-primary)' }}>
-                            {enq.customerName}
-                          </td>
-                          <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '130px', color: 'var(--txt-muted)' }}>
-                            {enq.mobileNumber}
-                          </td>
-                          <td className="tbl-td" style={{ minWidth: '130px', maxWidth: '150px', color: 'var(--txt-secondary)' }}>
-                            {parsed.projectStatus}
-                          </td>
-                          <td className="tbl-td" style={{ minWidth: '90px', maxWidth: '110px' }}>
-                            <span style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              padding: '2px 8px',
-                              borderRadius: '12px',
-                              fontSize: '10.5px',
-                              fontWeight: '700',
-                              color: pBadge.text,
-                              background: pBadge.bg,
-                              border: `1px solid ${pBadge.border}`
-                            }}>
-                              {priority}
-                            </span>
-                          </td>
-                          <td className="tbl-td" style={{ minWidth: '100px', maxWidth: '120px', color: 'var(--brand-primary)', fontWeight: '600' }}>
-                            {parsed.budget !== '-' ? parsed.budget : `₹${enq.price || '0'}`}
-                          </td>
-                          <td className="tbl-td" style={{ minWidth: '110px', maxWidth: '130px', color: 'var(--txt-muted)' }}>
-                            {parsed.submissionDate}
-                          </td>
-                          <td className="tbl-td" style={{ minWidth: '140px', maxWidth: '160px' }}>
-                            <select
-                              className="form-select"
-                              style={{
-                                padding: '4px 20px 4px 8px',
-                                height: 'auto',
-                                fontSize: '11.5px',
-                                background: 'var(--input-bg)',
-                                borderColor: statusColors[enq.status || 'new'],
-                                color: statusColors[enq.status || 'new'],
-                                fontWeight: '600',
-                                width: '135px',
-                                appearance: 'none',
-                                WebkitAppearance: 'none',
-                                backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(statusColors[enq.status || 'new'])}' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundPosition: 'right 4px center',
-                                backgroundSize: '12px',
-                                cursor: 'pointer'
-                              }}
-                              value={enq.status || 'new'}
-                              onChange={(e) => handleStatusChange(enq.id, e.target.value)}
-                              disabled={isProcessing}
-                            >
-                              {statusKeys.map(k => (
-                                <option key={k} value={k} style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>{statusLabels[k]}</option>
-                              ))}
-                            </select>
-                          </td>
-                          <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--txt-muted)' }}>
-                            {formatDate(enq.createdAt)}
-                          </td>
-                          <td className="tbl-td" style={{ minWidth: '160px', maxWidth: '180px', textAlign: 'right' }}>
-                             <div style={{ display: 'inline-flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
-                               <Button
-                                 type="button"
-                                 variant="ghost"
-                                 onClick={() => setActiveEnquiry(enq)}
-                                 style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                 title="View Details"
-                                 disabled={isProcessing}
-                               >
-                                 <span className="material-icons-outlined" style={{ fontSize: '16px' }}>visibility</span>
-                               </Button>
-                               <Button
-                                 type="button"
-                                 variant="secondary"
-                                 onClick={() => handleOpenEditModal(enq)}
-                                 style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                 title="Edit Enquiry"
-                                 disabled={isProcessing}
-                               >
-                                 <span className="material-icons-outlined" style={{ fontSize: '16px' }}>edit</span>
-                               </Button>
+                          {statusKeys.map(k => (
+                            <option key={k} value={k} style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>{statusLabels[k]}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="tbl-td tbl-truncate" style={{ minWidth: '130px', maxWidth: '160px', color: 'var(--txt-muted)' }}>
+                        {formatDate(enq.createdAt)}
+                      </td>
+                      <td className="tbl-td" style={{ minWidth: '160px', maxWidth: '180px', textAlign: 'right' }}>
+                         <div style={{ display: 'inline-flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                           <Button
+                             type="button"
+                             variant="ghost"
+                             onClick={(e) => {
+                               e.stopPropagation();
+                               setActiveEnquiry(enq);
+                             }}
+                             style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                             title="View Details"
+                             disabled={isProcessing}
+                           >
+                             <span className="material-icons-outlined" style={{ fontSize: '16px' }}>visibility</span>
+                           </Button>
+                           <Button
+                             type="button"
+                             variant="secondary"
+                             onClick={(e) => {
+                               e.stopPropagation();
+                               handleOpenEditModal(enq);
+                             }}
+                             style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                             title="Edit Enquiry"
+                             disabled={isProcessing}
+                           >
+                             <span className="material-icons-outlined" style={{ fontSize: '16px' }}>edit</span>
+                           </Button>
 
-                               {/* 3-dot dropdown menu */}
-                               <div style={{ position: 'relative', display: 'inline-block' }}>
-                                 <Button
+                           {/* 3-dot dropdown menu */}
+                           <div style={{ position: 'relative', display: 'inline-block' }}>
+                             <Button
+                               type="button"
+                               variant="ghost"
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 handleMenuToggle(e, enq.id);
+                               }}
+                               style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                               title="More Actions"
+                               disabled={isProcessing}
+                             >
+                               <span className="material-icons-outlined" style={{ fontSize: '18px' }}>more_vert</span>
+                             </Button>
+                             {activeMenuId === enq.id && (
+                               <div
+                                 className="admin-icon-panel"
+                                 style={{
+                                   top: 'calc(100% + 4px)',
+                                   right: 0,
+                                   minWidth: '150px',
+                                   padding: 'var(--space-1)',
+                                   display: 'flex',
+                                   flexDirection: 'column',
+                                   gap: '2px',
+                                   background: 'var(--sys-surface-elevated)',
+                                   border: '1px solid var(--sys-border)'
+                                 }}
+                                 onClick={(e) => e.stopPropagation()}
+                               >
+                                 <button
                                    type="button"
-                                   variant="ghost"
-                                   onClick={(e) => handleMenuToggle(e, enq.id)}
-                                   style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                   title="More Actions"
-                                   disabled={isProcessing}
+                                   className="admin-sort-option"
+                                   onClick={() => {
+                                     handleOpenShippedModal(enq);
+                                     setActiveMenuId(null);
+                                   }}
                                  >
-                                   <span className="material-icons-outlined" style={{ fontSize: '18px' }}>more_vert</span>
-                                 </Button>
-                                 {activeMenuId === enq.id && (
-                                   <div
-                                     className="admin-icon-panel"
-                                     style={{
-                                       top: 'calc(100% + 4px)',
-                                       right: 0,
-                                       minWidth: '150px',
-                                       padding: 'var(--space-1)',
-                                       display: 'flex',
-                                       flexDirection: 'column',
-                                       gap: '2px',
-                                       background: 'var(--sys-surface-elevated)',
-                                       border: '1px solid var(--sys-border)'
-                                     }}
-                                     onClick={(e) => e.stopPropagation()}
-                                   >
-                                     <button
-                                       type="button"
-                                       className="admin-sort-option"
-                                       onClick={() => {
-                                         handleOpenShippedModal(enq);
-                                         setActiveMenuId(null);
-                                       }}
-                                     >
-                                       <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--brand-accent)' }}>local_shipping</span>
-                                       <span>Shipped</span>
-                                     </button>
-                                     <button
-                                       type="button"
-                                       className="admin-sort-option"
-                                       onClick={() => {
-                                         setEnquiryToDelete(enq);
-                                         setActiveMenuId(null);
-                                       }}
-                                       style={{ color: 'var(--status-error)' }}
-                                     >
-                                       <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--status-error)' }}>delete</span>
-                                       <span>Delete</span>
-                                     </button>
-                                   </div>
-                                 )}
-                               </div>
-                             </div>
-                           </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Pagination Footer */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)', flexWrap: 'wrap', gap: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>
-                    Showing Page {currentPage} of {totalPages || 1} ({sortedList.length} enquiries found)
-                  </span>
-                  <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>|</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>Rows per page:</span>
-                    <select
-                      value={itemsPerPage}
-                      onChange={(e) => {
-                        setItemsPerPage(Number(e.target.value));
-                        setCurrentPage(1);
-                      }}
-                      className="form-input"
-                      style={{
-                        padding: '4px 8px',
-                        fontSize: '12px',
-                        height: '28px',
-                        width: '70px',
-                        background: 'var(--input-bg)',
-                        border: '1px solid var(--sys-border)',
-                        borderRadius: '4px',
-                        color: 'var(--txt-primary)'
-                      }}
-                    >
-                      <option value="10" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>10</option>
-                      <option value="25" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>25</option>
-                      <option value="50" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>50</option>
-                      <option value="100" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>100</option>
-                    </select>
-                  </div>
-                </div>
-                {totalPages > 1 && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <Button
-                      variant="secondary"
-                      disabled={currentPage === 1}
-                      onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-                      style={{ padding: '6px 14px', fontSize: '12px' }}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      disabled={currentPage >= totalPages}
-                      onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-                      style={{ padding: '6px 14px', fontSize: '12px' }}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
+                                   <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--brand-accent)' }}>local_shipping</span>
+                                   <span>Shipped</span>
+                                 </button>
+                                 <button
+                                   type="button"
+                                   className="admin-sort-option"
+                                   onClick={() => {
+                                     setEnquiryToDelete(enq);
+                                     setActiveMenuId(null);
+                                   }}
+                                   style={{ color: 'var(--status-error)' }}
+                                 >
+                                   <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--status-error)' }}>delete</span>
+                                   <span>Delete</span>
+                                 </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                    </tr>
+                  );
+                }}
+              />
+            ) : (
               <div style={{ textAlign: 'center', padding: 'var(--space-8)', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <h3 style={{ margin: 0 }}>No enquiries match your criteria</h3>
                 <p style={{ marginTop: 'var(--space-2)', color: 'var(--txt-muted)', marginBottom: 0 }}>

@@ -4,6 +4,7 @@ import { SettingsSection } from './SettingsSection';
 import { useAuth } from '../../auth/context/AuthContext.jsx';
 import { activityLogService } from '../../../services/activityLogService';
 import { Button } from '../../../shared/components/ui/Button';
+import { Table } from '../../../shared/components/ui/Table';
 
 export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = false }) => {
   const { user } = useAuth();
@@ -77,56 +78,45 @@ export const ActivitySummary = ({ onBack, hideBreadcrumbs = false, hideCancel = 
     >
       <SettingsSection title="Recent Portal History" description="A complete chronological log of actions taken by your account.">
         
-        {/* Logs Table */}
-        <div style={{ overflowX: 'auto', background: 'var(--input-bg)', border: '1px solid var(--sys-border)', borderRadius: '8px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)' }}>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--txt-muted)' }}>Action</th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--txt-muted)' }}>Details</th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--txt-muted)' }}>Timestamp</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', color: 'var(--txt-muted)' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr key={log.id} style={{ borderBottom: '1px solid var(--sys-divider)', transition: 'background 0.2s' }}>
-                  <td style={{ padding: '12px 16px', color: 'var(--txt-primary)', fontWeight: '700' }}>
-                    <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--brand-primary)' }}>
-                      [{log.module}]
-                    </span>
-                    <br />
-                    {log.action}
-                  </td>
-                  <td style={{ padding: '12px 16px', color: 'var(--txt-secondary)' }}>{log.description}</td>
-                  <td style={{ padding: '12px 16px', color: 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{formatDate(log.created_at)}</td>
-                  <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                    <span 
-                      style={{ 
-                        fontSize: '10px', 
-                        fontWeight: '700', 
-                        color: getStatusColor(log.status), 
-                        background: log.status === 'SUCCESS' ? 'rgba(16, 185, 129, 0.15)' : log.status === 'FAILED' ? 'rgba(239, 68, 68, 0.15)' : 'var(--interaction-hover)',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        border: `1px solid ${log.status === 'SUCCESS' ? 'var(--status-success)' : log.status === 'FAILED' ? 'var(--status-danger)' : 'var(--sys-border)'}`
-                      }}
-                    >
-                      {log.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {logs.length === 0 && !isLoading && (
-                <tr>
-                  <td colSpan="4" style={{ padding: '24px', textAlign: 'center', color: 'var(--txt-muted)' }}>
-                    No recent activities recorded for this account.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          headers={[
+            { label: 'Action', style: { padding: '12px 16px', textAlign: 'left' } },
+            { label: 'Details', style: { padding: '12px 16px', textAlign: 'left' } },
+            { label: 'Timestamp', style: { padding: '12px 16px', textAlign: 'left' } },
+            { label: 'Status', style: { padding: '12px 16px', textAlign: 'center' } }
+          ]}
+          data={logs}
+          isLoading={isLoading}
+          emptyMessage="No recent activities recorded for this account."
+          renderRow={(log) => (
+            <tr>
+              <td style={{ padding: '12px 16px', color: 'var(--txt-primary)', fontWeight: '700' }}>
+                <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--brand-primary)' }}>
+                  [{log.module}]
+                </span>
+                <br />
+                {log.action}
+              </td>
+              <td style={{ padding: '12px 16px', color: 'var(--txt-secondary)' }}>{log.description}</td>
+              <td style={{ padding: '12px 16px', color: 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{formatDate(log.created_at)}</td>
+              <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                <span 
+                  style={{ 
+                    fontSize: '10px', 
+                    fontWeight: '700', 
+                    color: getStatusColor(log.status), 
+                    background: log.status === 'SUCCESS' ? 'rgba(16, 185, 129, 0.15)' : log.status === 'FAILED' ? 'rgba(239, 68, 68, 0.15)' : 'var(--interaction-hover)',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    border: `1px solid ${log.status === 'SUCCESS' ? 'var(--status-success)' : log.status === 'FAILED' ? 'var(--status-danger)' : 'var(--sys-border)'}`
+                  }}
+                >
+                  {log.status}
+                </span>
+              </td>
+            </tr>
+          )}
+        />
 
         {/* View All & Pagination Controls */}
         {!isExpanded ? (

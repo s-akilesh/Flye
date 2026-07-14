@@ -7,6 +7,7 @@ import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
+import { Table } from '../../../shared/components/ui/Table';
 import { useToast } from '../../../shared/context/ToastContext';
 import { trackEvent } from '../../../shared/analytics';
 
@@ -279,93 +280,56 @@ export const ManageContacts = () => {
           </div>
         </AdminToolbar>
 
-        {isLoading ? (
-          <div style={{ padding: 'var(--space-6)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-                  <Skeleton style={{ width: '20px', height: '16px', borderRadius: '4px' }} />
-                  <Skeleton style={{ flex: 2, height: '16px', borderRadius: '4px' }} />
-                  <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
-                  <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
-                  <Skeleton style={{ width: '100px', height: '16px', borderRadius: '4px' }} />
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : filteredContacts.length === 0 ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>
-            No contact submissions found matching the criteria.
-          </div>
-        ) : (
-          <>
-            <div className="tbl-scroll-wrap">
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)' }}>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Name</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Mobile Number</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Email</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Category</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Subject</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Status</th>
-                  <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Submitted Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedContacts.map((contact) => {
-                  const statusColorsStyle = STATUS_COLORS[contact.status] || STATUS_COLORS.new;
-                  const dateStr = contact.createdAt ? new Date(contact.createdAt).toLocaleDateString('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                  }) : '-';
-                  
-                  return (
-                    <tr 
-                      key={contact.id} 
-                      onClick={() => handleSelectContact(contact)}
-                      style={{ 
-                        borderBottom: '1px solid var(--sys-divider)', 
-                        cursor: 'pointer',
-                        transition: 'background 0.2s'
-                      }}
-                      className="admin-table-row"
-                    >
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-primary)', fontWeight: '600' }}>{contact.name}</td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>{contact.mobileNumber}</td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>{contact.email}</td>
-                      <td style={{ padding: '16px 20px', fontSize: '12px' }}>
-                        <span style={{ padding: '3px 8px', borderRadius: '12px', background: 'var(--interaction-hover)', color: 'var(--txt-secondary)', fontSize: '11px' }}>
-                          {contact.category}
-                        </span>
-                      </td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-primary)', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {contact.subject}
-                      </td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px' }}>
-                        <span style={{
-                          fontSize: '11px',
-                          fontWeight: '700',
-                          padding: '4px 10px',
-                          borderRadius: '20px',
-                          textTransform: 'capitalize',
-                          background: statusColorsStyle.bg,
-                          color: statusColorsStyle.color,
-                          border: `1px solid ${statusColorsStyle.border}`
-                        }}>
-                          {STATUS_LABELS[contact.status]}
-                        </span>
-                      </td>
-                      <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-muted)' }}>{dateStr}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+        <Table
+          headers={['Name', 'Mobile Number', 'Email', 'Category', 'Subject', 'Status', 'Submitted Date']}
+          data={paginatedContacts}
+          isLoading={isLoading}
+          emptyMessage="No contact submissions found matching the criteria."
+          minWidth="800px"
+          onRowClick={handleSelectContact}
+          renderRow={(contact) => {
+            const statusColorsStyle = STATUS_COLORS[contact.status] || STATUS_COLORS.new;
+            const dateStr = contact.createdAt ? new Date(contact.createdAt).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric'
+            }) : '-';
+            
+            return (
+              <tr style={{ cursor: 'pointer' }}>
+                <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-primary)', fontWeight: '600' }}>{contact.name}</td>
+                <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>{contact.mobileNumber}</td>
+                <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>{contact.email}</td>
+                <td style={{ padding: '16px 20px', fontSize: '12px' }}>
+                  <span style={{ padding: '3px 8px', borderRadius: '12px', background: 'var(--interaction-hover)', color: 'var(--txt-secondary)', fontSize: '11px' }}>
+                    {contact.category}
+                  </span>
+                </td>
+                <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-primary)', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {contact.subject}
+                </td>
+                <td style={{ padding: '16px 20px', fontSize: '13px' }}>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    padding: '4px 10px',
+                    borderRadius: '20px',
+                    textTransform: 'capitalize',
+                    background: statusColorsStyle.bg,
+                    color: statusColorsStyle.color,
+                    border: `1px solid ${statusColorsStyle.border}`
+                  }}>
+                    {STATUS_LABELS[contact.status]}
+                  </span>
+                </td>
+                <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--txt-muted)' }}>{dateStr}</td>
+              </tr>
+            );
+          }}
+        />
 
-          {/* Pagination Footer */}
+        {/* Pagination Footer */}
+        {!isLoading && filteredContacts.length > 0 && (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)', flexWrap: 'wrap', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '12.5px', color: 'var(--txt-muted)' }}>
@@ -420,8 +384,7 @@ export const ManageContacts = () => {
               </div>
             )}
           </div>
-        </>
-      )}
+        )}
       </Card>
     </div>
 

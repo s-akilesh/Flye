@@ -196,7 +196,7 @@ export const Contact = () => {
           font-weight: 700;
           line-height: 1.2;
           margin-bottom: var(--space-3);
-          color: #ffffff;
+          color: var(--txt-primary);
           display: flex;
           align-items: center;
           gap: 10px;
@@ -251,8 +251,8 @@ export const Contact = () => {
         .phone-input-container {
           display: flex;
           align-items: center;
-          background: rgba(255, 255, 255, 0.01);
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--sys-surface);
+          border: 1px solid var(--sys-border);
           border-radius: 6px;
           transition: all 0.25s var(--transition-ease);
           overflow: hidden;
@@ -260,20 +260,20 @@ export const Contact = () => {
         }
 
         .phone-input-container:hover {
-          border-color: rgba(255, 255, 255, 0.12);
+          border-color: var(--brand-primary);
         }
 
         .phone-input-container:focus-within {
           border-color: #8b5cf6;
           box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
-          background: rgba(0, 0, 0, 0.2);
+          background: var(--sys-surface);
         }
 
         .phone-prefix-select {
           background: transparent;
           border: none;
-          border-right: 1px solid rgba(255, 255, 255, 0.06);
-          color: var(--text-main, #f9fafb);
+          border-right: 1px solid var(--sys-border);
+          color: var(--txt-primary);
           padding: 0 var(--space-3);
           height: 100%;
           font-size: 13px;
@@ -282,8 +282,8 @@ export const Contact = () => {
         }
 
         .phone-prefix-select option {
-          background: #0d0c15;
-          color: var(--text-main, #f9fafb);
+          background: var(--sys-surface);
+          color: var(--txt-primary);
         }
 
         .phone-number-field {
@@ -293,7 +293,7 @@ export const Contact = () => {
           border: none !important;
           box-shadow: none !important;
           padding: 0 14px;
-          color: var(--text-main, #f9fafb);
+          color: var(--txt-primary);
           font-size: 13px;
           outline: none;
         }
@@ -302,10 +302,10 @@ export const Contact = () => {
         .contact-form-grid .form-input,
         .contact-form-grid .form-select,
         .contact-form-grid .form-textarea {
-          background: rgba(255, 255, 255, 0.01) !important;
-          border: 1px solid rgba(255, 255, 255, 0.06) !important;
+          background: var(--sys-surface) !important;
+          border: 1px solid var(--sys-border) !important;
           border-radius: 6px !important;
-          color: #ffffff !important;
+          color: var(--txt-primary) !important;
           padding: 10px 14px !important;
           font-size: 13px !important;
           transition: all 0.25s var(--transition-ease) !important;
@@ -319,14 +319,14 @@ export const Contact = () => {
         }
 
         .contact-form-grid .form-select option {
-          background: #0d0c15;
-          color: var(--text-main, #f9fafb);
+          background: var(--sys-surface);
+          color: var(--txt-primary);
         }
 
         .contact-form-grid .form-input:hover,
         .contact-form-grid .form-select:hover,
         .contact-form-grid .form-textarea:hover {
-          border-color: rgba(255, 255, 255, 0.12) !important;
+          border-color: var(--brand-primary) !important;
         }
 
         .contact-form-grid .form-input:focus,
@@ -334,7 +334,7 @@ export const Contact = () => {
         .contact-form-grid .form-textarea:focus {
           border-color: #8b5cf6 !important;
           box-shadow: 0 0 10px rgba(139, 92, 246, 0.15) !important;
-          background: rgba(0, 0, 0, 0.2) !important;
+          background: var(--sys-surface) !important;
         }
 
         .contact-form-grid .form-input.error-state,
@@ -347,7 +347,8 @@ export const Contact = () => {
         }
 
         .contact-form-grid ::placeholder {
-          color: rgba(255, 255, 255, 0.25) !important;
+          color: var(--txt-muted) !important;
+          opacity: 0.6 !important;
         }
 
         /* Rectangular submit button styling */

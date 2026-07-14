@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Card } from '../../../shared/components/ui/Card';
 import { Button } from '../../../shared/components/ui/Button';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
+import { Table } from '../../../shared/components/ui/Table';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useProjects } from '../../projects/hooks/useProjects';
@@ -1079,162 +1080,148 @@ export const AdminDashboard = () => {
               </span>
             )}
           </div>
-
           {filteredEnquiries.length === 0 ? (
             <Card className="card-glass" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
               <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: 0 }}>No records match the current filter.</p>
             </Card>
           ) : (
-            <Card className="card-glass" style={{ padding: '0', overflowX: 'auto', background: 'var(--sys-surface)', border: '1px solid var(--sys-border)' }}>
-              <table className="tbl-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--interaction-hover)' }}>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Student</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Project Kit</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Lead Status</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Priority</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Budget</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Submission</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</th>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEnquiries.map((enq) => {
-                    const statusColorsMap = {
-                      new: '#f59e0b',
-                      contacted: '#3b82f6',
-                      quoted: '#8b5cf6',
-                      confirmed: '#06b6d4',
-                      in_progress: '#6366f1',
-                      completed: '#10b981',
-                      rejected: '#ef4444'
-                    };
+            <Card className="card-glass" style={{ padding: '0', overflowX: 'auto', background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', display: 'flex', flexDirection: 'column' }}>
+              <Table
+                headers={[
+                  { label: 'Student', style: { padding: '12px 14px' } },
+                  { label: 'Project Kit', style: { padding: '12px 10px' } },
+                  { label: 'Lead Status', style: { padding: '12px 10px' } },
+                  { label: 'Priority', style: { padding: '12px 10px' } },
+                  { label: 'Budget', style: { padding: '12px 10px' } },
+                  { label: 'Submission', style: { padding: '12px 10px' } },
+                  { label: 'Created', style: { padding: '12px 10px' } },
+                  { label: 'Actions', style: { padding: '12px 14px', textAlign: 'right' } }
+                ]}
+                data={filteredEnquiries}
+                minWidth="800px"
+                renderRow={(enq) => {
+                  const priorityBadgeColors = {
+                    High: { text: '#ef4444', bg: 'rgba(239, 68, 68, 0.08)', border: 'rgba(239, 68, 68, 0.2)' },
+                    Medium: { text: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.2)' },
+                    Low: { text: 'var(--txt-muted)', bg: 'var(--interaction-hover)', border: 'var(--sys-border)' }
+                  };
 
-                    const priorityBadgeColors = {
-                      High: { text: '#ef4444', bg: 'rgba(239, 68, 68, 0.08)', border: 'rgba(239, 68, 68, 0.2)' },
-                      Medium: { text: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.2)' },
-                      Low: { text: 'var(--txt-muted)', bg: 'var(--interaction-hover)', border: 'var(--sys-border)' }
-                    };
+                  const pBadge = priorityBadgeColors[enq.priority];
 
-                    const pBadge = priorityBadgeColors[enq.priority];
-
-                    return (
-                      <tr key={enq.id} style={{ borderBottom: '1px solid var(--sys-divider)', fontSize: '13px', transition: 'background 0.2s' }}>
-                        <td style={{ padding: '12px 14px', color: 'var(--txt-primary)', fontWeight: '600' }}>
-                          <div>{enq.customerName}</div>
-                          <div style={{ fontSize: '10.5px', color: 'var(--txt-muted)', marginTop: '2px', fontWeight: 'normal' }}>{enq.mobileNumber}</div>
-                        </td>
-                        <td style={{ padding: '12px 10px', color: 'var(--txt-secondary)' }}>{enq.projectTitle}</td>
-                        <td style={{ padding: '12px 10px' }}>
-                          <select
-                            value={enq.status || 'new'}
-                            disabled={isProcessing}
-                            onChange={(e) => handleStatusChange(enq.id, e.target.value)}
+                  return (
+                    <tr key={enq.id}>
+                      <td style={{ padding: '12px 14px', color: 'var(--txt-primary)', fontWeight: '600' }}>
+                        <div>{enq.customerName}</div>
+                        <div style={{ fontSize: '10.5px', color: 'var(--txt-muted)', marginTop: '2px', fontWeight: 'normal' }}>{enq.mobileNumber}</div>
+                      </td>
+                      <td style={{ padding: '12px 10px', color: 'var(--txt-secondary)' }}>
+                        {enq.projectTitle || 'General Consultation'}
+                      </td>
+                      <td style={{ padding: '12px 10px' }}>
+                        <select
+                          value={enq.status || 'new'}
+                          disabled={isProcessing}
+                          onChange={(e) => handleStatusChange(enq.id, e.target.value)}
+                          style={{
+                            padding: '4px 20px 4px 8px',
+                            background: 'var(--input-bg)',
+                            borderRadius: '6px',
+                            fontSize: '11.5px',
+                            fontWeight: '600',
+                            color: statusColors[enq.status || 'new'],
+                            border: `1px solid ${statusColors[enq.status || 'new']}`,
+                            cursor: 'pointer',
+                            appearance: 'none',
+                            WebkitAppearance: 'none',
+                            backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(statusColors[enq.status || 'new'])}' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'right 4px center',
+                            backgroundSize: '12px'
+                          }}
+                        >
+                          {Object.entries(statusLabels).map(([k, label]) => (
+                            <option key={k} value={k} style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>{label}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td style={{ padding: '12px 10px' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          fontSize: '10.5px',
+                          fontWeight: '700',
+                          color: pBadge.text,
+                          background: pBadge.bg,
+                          border: `1px solid ${pBadge.border}`
+                        }}>
+                          {enq.priority}
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px 10px', color: 'var(--txt-primary)', fontWeight: '500' }}>
+                        {enq.parsedNotes?.budget && enq.parsedNotes?.budget !== '-' ? enq.parsedNotes.budget : `₹${enq.price || '0'}`}
+                      </td>
+                      <td style={{ padding: '12px 10px', color: 'var(--txt-muted)' }}>
+                        {formatDate(enq.parsedNotes?.submissionDate)}
+                      </td>
+                      <td style={{ padding: '12px 10px', color: 'var(--txt-muted)' }}>
+                        {formatDate(enq.createdAt || enq.created_at)}
+                      </td>
+                      <td style={{ padding: '12px 14px', textAlign: 'right' }}>
+                        <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
+                          <a
+                            href={`tel:${enq.mobileNumber}`}
                             style={{
-                              padding: '4px 20px 4px 8px',
-                              background: 'var(--input-bg)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '28px',
+                              height: '28px',
                               borderRadius: '6px',
-                              fontSize: '11.5px',
-                              fontWeight: '600',
-                              color: statusColorsMap[enq.status || 'new'],
-                              border: `1px solid ${statusColorsMap[enq.status || 'new']}`,
-                              cursor: 'pointer',
-                              appearance: 'none',
-                              WebkitAppearance: 'none',
-                              backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(statusColorsMap[enq.status || 'new'])}' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-                              backgroundRepeat: 'no-repeat',
-                              backgroundPosition: 'right 4px center',
-                              backgroundSize: '12px'
+                              background: 'var(--interaction-hover)',
+                              border: '1px solid var(--sys-border)',
+                              color: 'var(--txt-secondary)',
+                              textDecoration: 'none'
                             }}
+                            title="Call Student"
                           >
-                            {Object.entries(statusLabels).map(([k, label]) => (
-                              <option key={k} value={k} style={{ color: 'var(--txt-primary)', background: 'var(--sys-surface)' }}>{label}</option>
-                            ))}
-                          </select>
-                        </td>
-                        <td style={{ padding: '12px 10px' }}>
-                          <span style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            padding: '2px 8px',
-                            borderRadius: '12px',
-                            fontSize: '10.5px',
-                            fontWeight: '700',
-                            color: pBadge.text,
-                            background: pBadge.bg,
-                            border: `1px solid ${pBadge.border}`
-                          }}>
-                            {enq.priority}
-                          </span>
-                        </td>
-                        <td style={{ padding: '12px 10px', color: 'var(--txt-primary)', fontWeight: '500' }}>
-                          {enq.parsedNotes?.budget && enq.parsedNotes?.budget !== '-' ? enq.parsedNotes.budget : `₹${enq.price || '0'}`}
-                        </td>
-                        <td style={{ padding: '12px 10px', color: 'var(--txt-muted)' }}>
-                          {formatDate(enq.parsedNotes?.submissionDate)}
-                        </td>
-                        <td style={{ padding: '12px 10px', color: 'var(--txt-muted)' }}>
-                          {formatDate(enq.createdAt || enq.created_at)}
-                        </td>
-                        <td style={{ padding: '12px 14px', textAlign: 'right' }}>
-                          <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                            {/* Direct Call Button */}
-                            <a
-                              href={`tel:${enq.mobileNumber}`}
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                width: '28px',
-                                height: '28px',
-                                borderRadius: '6px',
-                                background: 'var(--interaction-hover)',
-                                border: '1px solid var(--sys-border)',
-                                color: 'var(--txt-secondary)',
-                                textDecoration: 'none'
-                              }}
-                              title="Call Student"
-                            >
-                              <span className="material-icons-outlined" style={{ fontSize: '15px' }}>phone</span>
-                            </a>
+                            <span className="material-icons-outlined" style={{ fontSize: '15px' }}>phone</span>
+                          </a>
 
-                            {/* Direct WhatsApp Button */}
-                            <a
-                              href={`https://wa.me/${String(enq.mobileNumber).replace(/\D/g, '')}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                width: '28px',
-                                height: '28px',
-                                borderRadius: '6px',
-                                background: 'rgba(16,185,129,0.05)',
-                                border: '1px solid rgba(16,185,129,0.15)',
-                                color: 'var(--accent-emerald)'
-                              }}
-                              title="WhatsApp Message"
-                            >
-                              <span className="material-icons" style={{ fontSize: '15px' }}>chat</span>
-                            </a>
+                          <a
+                            href={`https://wa.me/${String(enq.mobileNumber).replace(/\D/g, '')}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '28px',
+                              height: '28px',
+                              borderRadius: '6px',
+                              background: 'rgba(16,185,129,0.05)',
+                              border: '1px solid rgba(16,185,129,0.15)',
+                              color: 'var(--accent-emerald)'
+                            }}
+                            title="WhatsApp Message"
+                          >
+                            <span className="material-icons" style={{ fontSize: '15px' }}>chat</span>
+                          </a>
 
-                            {/* View Modal Trigger */}
-                            <Button
-                              variant="ghost"
-                              style={{ padding: '2px 8px', fontSize: '11px', height: '28px' }}
-                              onClick={() => setSelectedEnquiryDetails(enq)}
-                            >
-                              View
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                          <Button
+                            variant="ghost"
+                            style={{ padding: '2px 8px', fontSize: '11px', height: '28px' }}
+                            onClick={() => setSelectedEnquiryDetails(enq)}
+                          >
+                            View
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                }}
+              />
             </Card>
           )}
         </div>
@@ -1250,53 +1237,51 @@ export const AdminDashboard = () => {
               <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: 0 }}>No upcoming student submissions scheduled.</p>
             </Card>
           ) : (
-            <Card className="card-glass" style={{ padding: 0, background: 'var(--sys-surface)', border: '1px solid var(--sys-border)' }}>
-              <table className="tbl-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--interaction-hover)' }}>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Student</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Project Name</th>
-                    <th style={{ padding: '12px 10px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Time Remaining</th>
-                    <th style={{ padding: '12px 14px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Checklist Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dashboardData.upcomingSubmissionsList.map((sub, idx) => {
-                    const submissionStatusColors = {
-                      'Ready': { color: 'var(--accent-emerald)', bg: 'rgba(16, 185, 129, 0.08)' },
-                      'Documentation Pending': { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)' },
-                      'Need PPT': { color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)' },
-                      'Docs & PPT Pending': { color: '#ef4444', bg: 'rgba(239, 68, 68, 0.08)' }
-                    };
+            <Card className="card-glass" style={{ padding: 0, background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', display: 'flex', flexDirection: 'column' }}>
+              <Table
+                headers={[
+                  { label: 'Student', style: { padding: '12px 14px' } },
+                  { label: 'Project Name', style: { padding: '12px 10px' } },
+                  { label: 'Time Remaining', style: { padding: '12px 10px' } },
+                  { label: 'Checklist Status', style: { padding: '12px 14px' } }
+                ]}
+                data={dashboardData.upcomingSubmissionsList}
+                minWidth="800px"
+                renderRow={(sub) => {
+                  const submissionStatusColors = {
+                    'Ready': { color: 'var(--accent-emerald)', bg: 'rgba(16, 185, 129, 0.08)' },
+                    'Documentation Pending': { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)' },
+                    'Need PPT': { color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)' },
+                    'Docs & PPT Pending': { color: '#ef4444', bg: 'rgba(239, 68, 68, 0.08)' }
+                  };
 
-                    const sColor = submissionStatusColors[sub.status] || { color: 'var(--txt-primary)', bg: 'var(--interaction-hover)' };
+                  const sColor = submissionStatusColors[sub.status] || { color: 'var(--txt-primary)', bg: 'var(--interaction-hover)' };
 
-                    return (
-                      <tr key={idx} style={{ borderBottom: '1px solid var(--sys-divider)', fontSize: '13px' }}>
-                        <td style={{ padding: '12px 14px', color: 'var(--txt-primary)', fontWeight: '600' }}>{sub.studentName}</td>
-                        <td style={{ padding: '12px 10px', color: 'var(--txt-secondary)' }}>{sub.projectName}</td>
-                        <td style={{ padding: '12px 10px', fontWeight: '700', color: sub.daysLeft <= 2 ? 'var(--status-error)' : 'var(--txt-primary)' }}>
-                          {sub.daysLeft === 0 ? '🗓 Today' : sub.daysLeft === 1 ? '🗓 Tomorrow' : `${sub.daysLeft} Days Left`}
-                        </td>
-                        <td style={{ padding: '12px 14px' }}>
-                          <span style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            padding: '2px 8px',
-                            borderRadius: '12px',
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            color: sColor.color,
-                            background: sColor.bg
-                          }}>
-                            {sub.status}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                  return (
+                    <tr style={{ fontSize: '13px' }}>
+                      <td style={{ padding: '12px 14px', color: 'var(--txt-primary)', fontWeight: '600' }}>{sub.studentName}</td>
+                      <td style={{ padding: '12px 10px', color: 'var(--txt-secondary)' }}>{sub.projectName}</td>
+                      <td style={{ padding: '12px 10px', fontWeight: '700', color: sub.daysLeft <= 2 ? 'var(--status-error)' : 'var(--txt-primary)' }}>
+                        {sub.daysLeft === 0 ? '🗓 Today' : sub.daysLeft === 1 ? '🗓 Tomorrow' : `${sub.daysLeft} Days Left`}
+                      </td>
+                      <td style={{ padding: '12px 14px' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          color: sColor.color,
+                          background: sColor.bg
+                        }}>
+                          {sub.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                }}
+              />
             </Card>
           )}
         </div>

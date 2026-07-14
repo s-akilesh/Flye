@@ -11,6 +11,7 @@ export const LoginForm = ({ onForgotPassword }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,7 +78,7 @@ export const LoginForm = ({ onForgotPassword }) => {
         <input
           type="email"
           className="form-input"
-          placeholder="name@university.edu"
+          placeholder="Enter your mail id"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isSubmitting}
@@ -87,15 +88,40 @@ export const LoginForm = ({ onForgotPassword }) => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: 0 }}>Password</label>
-        <input
-          type="password"
-          className="form-input"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={isSubmitting}
-          required
-        />
+        <div style={{ position: 'relative', width: '100%' }}>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            className="form-input"
+            style={{ paddingRight: '40px' }}
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isSubmitting}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              color: 'var(--txt-muted)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 0
+            }}
+          >
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>
+              {showPassword ? 'visibility_off' : 'visibility'}
+            </span>
+          </button>
+        </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
           <button
             type="button"

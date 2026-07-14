@@ -7,6 +7,7 @@ import { Modal } from '../../../shared/components/ui/Modal';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { Input } from '../../../shared/components/ui/Input';
 import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
+import { Table } from '../../../shared/components/ui/Table';
 import { useToast } from '../../../shared/context/ToastContext';
 import { exportActivityLogsToExcel } from '../../../shared/utils/excel';
 import {
@@ -440,89 +441,51 @@ export const ActivityLogs = () => {
         </AdminToolbar>
 
           {/* Table Container */}
-          {isLoading ? (
-            <div style={{ padding: 'var(--space-6)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-                    <Skeleton style={{ width: '20px', height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ flex: 2, height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ width: '100px', height: '16px', borderRadius: '4px' }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : logs.length === 0 ? (
-            <div style={{ padding: '60px', textAlign: 'center', color: 'var(--txt-muted)' }}>
-              No activities found matching criteria.
-            </div>
-          ) : (
-            <div className="tbl-scroll-wrap">
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '900px' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid var(--sys-divider)', background: 'var(--interaction-hover)' }}>
-                    <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Log ID</th>
-                    <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Time</th>
-                    <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>User</th>
-                    <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Module</th>
-                    <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Action</th>
-                    <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Description</th>
-                    <th style={{ padding: '14px 20px', fontSize: '11px', textTransform: 'uppercase', color: 'var(--txt-muted)', fontWeight: '700' }}>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedLogs.map((log) => (
-                    <tr
-                      key={log.id}
-                      onClick={() => setSelectedLog(log)}
-                      style={{
-                        borderBottom: '1px solid var(--sys-divider)',
-                        cursor: 'pointer',
-                        transition: 'background 0.2s'
-                      }}
-                      className="table-row-hover"
-                    >
-                      <td style={{ padding: '14px 20px', fontSize: '12.5px', fontWeight: 'bold', color: 'var(--brand-primary)', fontFamily: 'monospace' }}>
-                        {`LOG-${log.id.slice(0, 8).toUpperCase()}`}
-                      </td>
-                      <td style={{ padding: '14px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>
-                        {new Date(log.created_at).toLocaleString('en-IN')}
-                      </td>
-                      <td style={{ padding: '14px 20px', fontSize: '13px', color: 'var(--txt-primary)', fontWeight: '600' }}>
-                        {log.profiles?.full_name || 'System'}
-                      </td>
-                      <td style={{ padding: '14px 20px', fontSize: '12px' }}>
-                        <span style={{
-                          background: 'var(--interaction-hover)',
-                          border: '1px solid var(--sys-border)',
-                          color: 'var(--txt-secondary)',
-                          padding: '3px 8px',
-                          borderRadius: '4px',
-                          fontSize: '11px',
-                          fontWeight: '600'
-                        }}>
-                          {log.module}
-                        </span>
-                      </td>
-                      <td style={{ padding: '14px 20px', fontSize: '12.5px', color: 'var(--txt-muted)', fontWeight: 'bold' }}>
-                        {log.action}
-                      </td>
-                      <td style={{ padding: '14px 20px', fontSize: '13px', color: 'var(--txt-primary)', maxWidth: '320px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {log.description}
-                      </td>
-                      <td style={{ padding: '14px 20px' }}>
-                        <span style={getStatusBadgeStyle(log.status)}>
-                          {log.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <Table
+            headers={['Log ID', 'Time', 'User', 'Module', 'Action', 'Description', 'Status']}
+            data={sortedLogs}
+            isLoading={isLoading}
+            emptyMessage="No activities found matching criteria."
+            minWidth="900px"
+            onRowClick={setSelectedLog}
+            renderRow={(log) => (
+              <tr style={{ cursor: 'pointer' }}>
+                <td style={{ padding: '14px 20px', fontSize: '12.5px', fontWeight: 'bold', color: 'var(--brand-primary)', fontFamily: 'monospace' }}>
+                  {`LOG-${log.id.slice(0, 8).toUpperCase()}`}
+                </td>
+                <td style={{ padding: '14px 20px', fontSize: '13px', color: 'var(--txt-secondary)' }}>
+                  {new Date(log.created_at).toLocaleString('en-IN')}
+                </td>
+                <td style={{ padding: '14px 20px', fontSize: '13px', color: 'var(--txt-primary)', fontWeight: '600' }}>
+                  {log.profiles?.full_name || 'System'}
+                </td>
+                <td style={{ padding: '14px 20px', fontSize: '12px' }}>
+                  <span style={{
+                    background: 'var(--interaction-hover)',
+                    border: '1px solid var(--sys-border)',
+                    color: 'var(--txt-secondary)',
+                    padding: '3px 8px',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    fontWeight: '600'
+                  }}>
+                    {log.module}
+                  </span>
+                </td>
+                <td style={{ padding: '14px 20px', fontSize: '12.5px', color: 'var(--txt-muted)', fontWeight: 'bold' }}>
+                  {log.action}
+                </td>
+                <td style={{ padding: '14px 20px', fontSize: '13px', color: 'var(--txt-primary)', maxWidth: '320px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {log.description}
+                </td>
+                <td style={{ padding: '14px 20px' }}>
+                  <span style={getStatusBadgeStyle(log.status)}>
+                    {log.status}
+                  </span>
+                </td>
+              </tr>
+            )}
+          />
 
           {/* Pagination Footer */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid var(--sys-divider)', background: 'var(--interaction-hover)', flexWrap: 'wrap', gap: '12px' }}>

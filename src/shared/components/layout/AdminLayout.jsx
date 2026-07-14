@@ -8,6 +8,16 @@ export const AdminLayout = () => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState({
+    manufacturing: true // open by default
+  });
+
+  const toggleGroup = (groupId) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupId]: !prev[groupId]
+    }));
+  };
 
   // Close mobile drawer on route change
   useEffect(() => {
@@ -54,6 +64,24 @@ export const AdminLayout = () => {
       icon: (
         <span className="material-icons-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
       )
+    },
+    {
+      id: 'manufacturing',
+      label: 'Manufacturing',
+      isGroup: true,
+      icon: (
+        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>precision_manufacturing</span>
+      ),
+      subItems: [
+        {
+          id: 'printing-inventory',
+          label: '3D Print Inventory',
+          path: ROUTES.ADMIN_PRINTING_INVENTORY,
+          icon: (
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>3d_rotation</span>
+          )
+        }
+      ]
     },
     {
       id: 'enquiries',
@@ -116,6 +144,95 @@ export const AdminLayout = () => {
           <nav>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {navItems.map((item) => {
+                if (item.isGroup) {
+                  const isExpanded = expandedGroups[item.id];
+                  const hasActiveChild = item.subItems.some(sub => 
+                    location.pathname === sub.path || 
+                    (sub.id === 'printing-inventory' && (
+                      location.pathname === ROUTES.ADMIN_PRINTING_INVENTORY_ADD ||
+                      location.pathname.startsWith('/admin/printing-inventory/edit/') ||
+                      location.pathname.startsWith('/admin/printing-inventory/details/')
+                    ))
+                  );
+                  return (
+                    <li key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <button
+                        type="button"
+                        onClick={() => toggleGroup(item.id)}
+                        className={`admin-nav-item ${hasActiveChild ? 'active' : ''}`}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: isCollapsed ? 'center' : 'space-between',
+                          gap: isCollapsed ? '0' : '12px',
+                          padding: '10px 12px',
+                          borderRadius: '6px',
+                          color: hasActiveChild ? 'var(--brand-primary)' : 'var(--sidebar-text)',
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textDecoration: 'none',
+                          fontSize: '13px',
+                          fontWeight: hasActiveChild ? '700' : '500',
+                          transition: 'all 0.2s ease',
+                          whiteSpace: 'nowrap',
+                          width: '100%',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          {item.icon}
+                          {!isCollapsed && <span>{item.label}</span>}
+                        </div>
+                        {!isCollapsed && (
+                          <span className="material-icons" style={{ fontSize: '16px', transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                            expand_more
+                          </span>
+                        )}
+                      </button>
+                      
+                      {isExpanded && !isCollapsed && (
+                        <ul style={{ listStyle: 'none', paddingLeft: '24px', margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {item.subItems.map((sub) => {
+                            const isSubActive = location.pathname === sub.path ||
+                              (sub.id === 'printing-inventory' && (
+                                location.pathname === ROUTES.ADMIN_PRINTING_INVENTORY_ADD ||
+                                location.pathname.startsWith('/admin/printing-inventory/edit/') ||
+                                location.pathname.startsWith('/admin/printing-inventory/details/')
+                              ));
+                            return (
+                              <li key={sub.id}>
+                                <Link
+                                  to={sub.path}
+                                  className={`admin-nav-item ${isSubActive ? 'active' : ''}`}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '12px',
+                                    padding: '8px 12px',
+                                    borderRadius: '6px',
+                                    color: isSubActive ? 'var(--brand-primary)' : 'var(--sidebar-text)',
+                                    background: isSubActive ? 'var(--sidebar-active-item)' : 'transparent',
+                                    border: isSubActive ? '1px solid var(--brand-primary)' : '1px solid transparent',
+                                    textDecoration: 'none',
+                                    fontSize: '12px',
+                                    fontWeight: isSubActive ? '700' : '500',
+                                    transition: 'all 0.2s ease',
+                                    whiteSpace: 'nowrap'
+                                  }}
+                                >
+                                  {sub.icon}
+                                  <span>{sub.label}</span>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                }
+
                 const isActive = location.pathname === item.path || 
                   (item.id === 'projects' && (location.pathname === ROUTES.ADMIN_ADD_PROJECT || location.pathname.startsWith('/admin/projects/edit/')));
                 return (

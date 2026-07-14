@@ -9,6 +9,7 @@ export const SignupForm = ({ onSignupSuccess }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const getPasswordStrength = (pwd) => {
     if (!pwd) return 0;
@@ -97,7 +98,7 @@ export const SignupForm = ({ onSignupSuccess }) => {
         <input
           type="text"
           className="form-input"
-          placeholder="Akilesh Kumar"
+          placeholder="Enter your full name"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           disabled={isSubmitting}
@@ -110,7 +111,7 @@ export const SignupForm = ({ onSignupSuccess }) => {
         <input
           type="email"
           className="form-input"
-          placeholder="name@university.edu"
+          placeholder="Enter your mail id"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isSubmitting}
@@ -120,15 +121,40 @@ export const SignupForm = ({ onSignupSuccess }) => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <label className="form-label" style={{ fontSize: '11px', fontWeight: '600', color: 'var(--txt-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Password</label>
-        <input
-          type="password"
-          className="form-input"
-          placeholder="At least 8 characters"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={isSubmitting}
-          required
-        />
+        <div style={{ position: 'relative', width: '100%' }}>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            className="form-input"
+            style={{ paddingRight: '40px' }}
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isSubmitting}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              color: 'var(--txt-muted)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 0
+            }}
+          >
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>
+              {showPassword ? 'visibility_off' : 'visibility'}
+            </span>
+          </button>
+        </div>
         
         {/* Password Strength Indicator */}
         {password && (

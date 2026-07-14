@@ -8,6 +8,7 @@ import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
+import { Table } from '../../../shared/components/ui/Table';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast } from '../../../shared/context/ToastContext';
 import { ROUTES } from '../../../shared/constants/routes';
@@ -845,208 +846,188 @@ export const ManageProjects = () => {
             </div>
           )}
 
-          {/* Conditional Table or Empty State rendering */}
-          {isLoading ? (
-            <div style={{ padding: 'var(--space-6)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-                    <Skeleton style={{ width: '20px', height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ flex: 2, height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ flex: 1, height: '16px', borderRadius: '4px' }} />
-                    <Skeleton style={{ width: '100px', height: '16px', borderRadius: '4px' }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : sortedList.length > 0 ? (
-            <>
-              <div className="tbl-scroll-wrap" style={{ padding: '0 var(--space-4) var(--space-4) var(--space-4)' }}>
-              <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid var(--sys-border)' }}>
-                    <th style={{ padding: 'var(--space-3) var(--space-2)', width: '36px', minWidth: '36px' }}>
+          {(isLoading || sortedList.length > 0) && (
+            <Table
+              headers={[
+                {
+                  label: (
+                    <input
+                      type="checkbox"
+                      checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
+                      onChange={handleSelectAll}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  ),
+                  style: { width: '36px', minWidth: '36px' }
+                },
+                'Project Name',
+                'Pricing',
+                'Status',
+                'Updated At',
+                { label: 'Actions', style: { textAlign: 'right' } }
+              ]}
+              data={paginatedProjects}
+              isLoading={isLoading}
+              emptyMessage="No management records match your filters."
+              minWidth="max-content"
+              renderRow={(proj) => {
+                const isSelected = selectedIds.includes(proj.id);
+                const mainPrice = proj.variants && proj.variants.length > 0
+                  ? Math.min(...proj.variants.filter(v => v.enabled).map(v => v.price))
+                  : proj.price;
+
+                return (
+                  <tr 
+                    style={{ 
+                      background: isSelected ? 'var(--interaction-selected)' : 'transparent',
+                    }}
+                  >
+                    <td>
                       <input
                         type="checkbox"
-                        checked={sortedList.length > 0 && selectedIds.length === sortedList.length}
-                        onChange={handleSelectAll}
+                        checked={isSelected}
+                        onChange={() => handleSelectOne(proj.id)}
                         style={{ cursor: 'pointer' }}
                       />
-                    </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px' }}>
-                      Project Name
-                    </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
-                      Pricing
-                    </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '100px' }}>
-                      Status
-                    </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '110px' }}>
-                      Updated At
-                    </th>
-                    <th style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--txt-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', minWidth: '220px', textAlign: 'right' }}>
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedProjects.map((proj) => {
-                    const isSelected = selectedIds.includes(proj.id);
-                    const mainPrice = proj.variants && proj.variants.length > 0
-                      ? Math.min(...proj.variants.filter(v => v.enabled).map(v => v.price))
-                      : proj.price;
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
+                        <span style={{ fontSize: '14px', color: 'var(--txt-primary)', display: 'block' }}>
+                          {proj.title}
+                        </span>
+                        <span style={{ fontSize: '11px', color: 'var(--txt-muted)', display: 'block' }}>
+                          {proj.technology || 'Arduino'}
+                        </span>
+                      </div>
+                    </td>
 
-                    return (
-                      <tr 
-                        key={proj.id} 
-                        style={{ 
-                          borderBottom: '1px solid var(--sys-divider)',
-                          background: isSelected ? 'var(--interaction-selected)' : 'transparent',
-                          transition: 'background 0.2s ease'
-                        }}
-                        className="table-row-hover"
-                      >
-                        <td style={{ padding: 'var(--space-3) var(--space-2)' }}>
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => handleSelectOne(proj.id)}
-                            style={{ cursor: 'pointer' }}
-                          />
-                        </td>
-                        <td className="tbl-td" style={{ minWidth: '220px' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
-                            <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--txt-primary)', display: 'block' }} className="tbl-line-clamp-1">
-                              {proj.title}
-                            </span>
-                            <span style={{ fontSize: '11px', color: 'var(--txt-muted)', display: 'block' }} className="tbl-line-clamp-1">
-                              {proj.technology || 'Arduino'}
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="tbl-td" style={{ minWidth: '110px' }}>
-                          <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--accent-emerald, #10b981)' }}>
-                            {proj.currency === 'INR' ? '₹' : '$'}{mainPrice}
-                          </span>
-                          {proj.variants && proj.variants.length > 1 && (
-                            <span style={{ display: 'block', fontSize: '10px', color: 'var(--txt-muted)' }}>
-                              {proj.variants.length} options
-                            </span>
-                          )}
-                        </td>
-                        <td className="tbl-td" style={{ minWidth: '100px' }}>
-                          {proj.status === 'active' ? (
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(16,185,129,0.1)', color: 'var(--accent-emerald, #10b981)', textTransform: 'uppercase' }}>
-                              Active
-                            </span>
-                          ) : proj.status === 'draft' ? (
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'var(--interaction-hover)', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>
-                              Draft
-                            </span>
-                          ) : proj.status === 'coming-soon' ? (
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(234,179,8,0.1)', color: '#eab308', textTransform: 'uppercase' }}>
-                              Soon
-                            </span>
-                          ) : (
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(239,68,68,0.1)', color: 'var(--accent-crimson, #ef4444)', textTransform: 'uppercase' }}>
-                              Archived
-                            </span>
-                          )}
-                        </td>
-                        <td className="tbl-td tbl-truncate" style={{ minWidth: '110px', maxWidth: '140px', color: 'var(--txt-muted)' }}>
-                          {proj.lastUpdated}
-                        </td>
-                        <td className="tbl-td" style={{ minWidth: '220px', maxWidth: '240px', textAlign: 'right' }}>
-                          <div style={{ display: 'inline-flex', gap: '8px', justifyContent: 'flex-end' }}>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              onClick={() => navigate(ROUTES.PROJECT_DETAILS.replace(':slug', proj.slug))}
-                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                              title="View Project"
+                    <td>
+                      <span style={{ fontSize: '14px', color: 'var(--accent-emerald, #10b981)' }}>
+                        {proj.currency === 'INR' ? '₹' : '$'}{mainPrice}
+                      </span>
+                      {proj.variants && proj.variants.length > 1 && (
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)' }}>
+                          {proj.variants.length} options
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      {proj.status === 'active' ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(16,185,129,0.1)', color: 'var(--accent-emerald, #10b981)', textTransform: 'uppercase' }}>
+                          Active
+                        </span>
+                      ) : proj.status === 'draft' ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'var(--interaction-hover)', color: 'var(--txt-muted)', textTransform: 'uppercase' }}>
+                          Draft
+                        </span>
+                      ) : proj.status === 'coming-soon' ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(234,179,8,0.1)', color: '#eab308', textTransform: 'uppercase' }}>
+                          Soon
+                        </span>
+                      ) : (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '700', padding: '3px 8px', borderRadius: '12px', background: 'rgba(239,68,68,0.1)', color: 'var(--accent-crimson, #ef4444)', textTransform: 'uppercase' }}>
+                          Archived
+                        </span>
+                      )}
+                    </td>
+                    <td style={{ color: 'var(--txt-muted)' }}>
+                      {proj.lastUpdated}
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <div style={{ display: 'inline-flex', gap: '8px', justifyContent: 'flex-end' }}>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(ROUTES.PROJECT_DETAILS.replace(':slug', proj.slug));
+                          }}
+                          style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          title="View Project"
+                        >
+                          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>visibility</span>
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(ROUTES.ADMIN_EDIT_PROJECT.replace(':slug', proj.slug));
+                          }}
+                          style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          title="Edit Project"
+                        >
+                          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>edit</span>
+                        </Button>
+                        {/* 3-dot dropdown menu */}
+                        <div style={{ position: 'relative', display: 'inline-block' }}>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMenuToggle(e, proj.id);
+                            }}
+                            style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            title="More Actions"
+                            disabled={isProcessing}
+                          >
+                            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>more_vert</span>
+                          </Button>
+                          {activeMenuId === proj.id && (
+                            <div
+                              className="admin-icon-panel"
+                              style={{
+                                position: 'absolute',
+                                top: 'calc(100% + 4px)',
+                                right: 0,
+                                minWidth: '130px',
+                                padding: 'var(--space-1)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '2px',
+                                background: '#0b0a10',
+                                border: '1px solid rgba(255, 255, 255, 0.08)',
+                                zIndex: 100
+                              }}
+                              onClick={(e) => e.stopPropagation()}
                             >
-                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>visibility</span>
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              onClick={() => navigate(ROUTES.ADMIN_EDIT_PROJECT.replace(':slug', proj.slug))}
-                              style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                              title="Edit Project"
-                            >
-                              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>edit</span>
-                            </Button>
-                            {/* 3-dot dropdown menu */}
-                            <div style={{ position: 'relative', display: 'inline-block' }}>
-                              <Button
+                              <button
                                 type="button"
-                                variant="ghost"
-                                onClick={(e) => handleMenuToggle(e, proj.id)}
-                                style={{ width: '36px', height: '36px', minWidth: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                title="More Actions"
-                                disabled={isProcessing}
+                                className="admin-sort-option"
+                                onClick={() => {
+                                  handleMenuClose();
+                                  handleDuplicate(proj);
+                                }}
+                                style={{ width: '100%', padding: '6px 12px', fontSize: '12px', textAlign: 'left', background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}
                               >
-                                <span className="material-icons-outlined" style={{ fontSize: '18px' }}>more_vert</span>
-                              </Button>
-                              {activeMenuId === proj.id && (
-                                <div
-                                  className="admin-icon-panel"
-                                  style={{
-                                    position: 'absolute',
-                                    top: 'calc(100% + 4px)',
-                                    right: 0,
-                                    minWidth: '130px',
-                                    padding: 'var(--space-1)',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '2px',
-                                    background: '#0b0a10',
-                                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                                    zIndex: 100
-                                  }}
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <button
-                                    type="button"
-                                    className="admin-sort-option"
-                                    onClick={() => {
-                                      setProjectToClone(proj);
-                                      setActiveMenuId(null);
-                                    }}
-                                    style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', border: 'none', background: 'none', color: '#fff', width: '100%', textAlign: 'left', cursor: 'pointer' }}
-                                  >
-                                    <span className="material-icons-outlined" style={{ fontSize: '16px', color: 'var(--accent-blue)' }}>content_copy</span>
-                                    <span>Clone</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="admin-sort-option"
-                                    onClick={() => {
-                                      setProjectToDelete(proj);
-                                      setActiveMenuId(null);
-                                    }}
-                                    style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', border: 'none', background: 'none', color: '#ef4444', width: '100%', textAlign: 'left', cursor: 'pointer' }}
-                                  >
-                                    <span className="material-icons-outlined" style={{ fontSize: '16px', color: '#ef4444' }}>delete</span>
-                                    <span>Delete</span>
-                                  </button>
-                                </div>
-                              )}
+                                Duplicate
+                              </button>
+                              <button
+                                type="button"
+                                className="admin-sort-option"
+                                onClick={() => {
+                                  handleMenuClose();
+                                  setProjectToDelete(proj);
+                                }}
+                                style={{ width: '100%', padding: '6px 12px', fontSize: '12px', textAlign: 'left', background: 'transparent', border: 'none', color: 'var(--status-danger)', cursor: 'pointer' }}
+                              >
+                                Delete
+                              </button>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              }}
+            />
+          )}
 
-            {/* Pagination Footer */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.01)', flexWrap: 'wrap', gap: '12px' }}>
+          {/* Pagination Footer */}
+          {!isLoading && sortedList.length > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid var(--sys-divider)', background: 'var(--sys-surface-elevated)', flexWrap: 'wrap', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #9ca3af)' }}>
                   Showing Page {currentPage} of {totalPages || 1} ({sortedList.length} projects found)
@@ -1100,8 +1081,9 @@ export const ManageProjects = () => {
                 </div>
               )}
             </div>
-          </>
-        ) : (
+          )}
+
+          {!isLoading && sortedList.length === 0 && (
             <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
               <h3>No management records match your filters</h3>
               <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-muted)' }}>

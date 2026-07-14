@@ -45,6 +45,12 @@ const TermsConditions = React.lazy(() => import('../modules/legal/pages/TermsCon
 const MyProjects = React.lazy(lazyRoutes.MyProjects);
 const ProfilePage = React.lazy(() => import('../modules/profile/pages/ProfilePage').then(module => ({ default: module.ProfilePage })));
 
+// 3D Print Inventory Lazy Pages
+const PrintingProductDetails = React.lazy(() => import('../modules/public/pages/PrintingProductDetails').then(module => ({ default: module.PrintingProductDetails })));
+const ProductList = React.lazy(() => import('../modules/printing-inventory/pages/ProductList').then(module => ({ default: module.ProductList })));
+const AddEditProduct = React.lazy(() => import('../modules/printing-inventory/pages/AddEditProduct').then(module => ({ default: module.AddEditProduct })));
+const AdminProductDetails = React.lazy(() => import('../modules/printing-inventory/pages/AdminProductDetails').then(module => ({ default: module.AdminProductDetails })));
+
 const MaintenanceGate = ({ children }) => {
   const { settings } = useSettings();
   const location = useLocation();
@@ -68,6 +74,7 @@ export const AppRouter = () => {
             <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
             <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
             <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
+            <Route path={ROUTES.PRINTING_DETAILS} element={<PrintingProductDetails />} />
             <Route path={ROUTES.CONTACT} element={<Contact />} />
             <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
             <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
@@ -90,6 +97,13 @@ export const AppRouter = () => {
               <Route path={ROUTES.ADMIN_PROJECTS} element={<ManageProjects />} />
               <Route path={ROUTES.ADMIN_ADD_PROJECT} element={<AddProject />} />
               <Route path={ROUTES.ADMIN_EDIT_PROJECT} element={<EditProject />} />
+              
+              {/* 3D Print Inventory Admin routes */}
+              <Route path={ROUTES.ADMIN_PRINTING_INVENTORY} element={<ProductList />} />
+              <Route path={ROUTES.ADMIN_PRINTING_INVENTORY_ADD} element={<AddEditProduct />} />
+              <Route path={ROUTES.ADMIN_PRINTING_INVENTORY_EDIT} element={<AddEditProduct />} />
+              <Route path={ROUTES.ADMIN_PRINTING_INVENTORY_DETAILS} element={<AdminProductDetails />} />
+
               <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ManageEnquiries />} />
               <Route path={ROUTES.ADMIN_CONTACTS} element={<ManageContacts />} />
               <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />

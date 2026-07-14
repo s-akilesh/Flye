@@ -13,6 +13,7 @@ import { Footer } from '../../../shared/components/layout/Footer';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useSettings } from '../../settings/hooks/useSettings';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
+import { ProjectGrid } from '../../projects/components/ProjectGrid';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -229,10 +230,10 @@ export const Home = () => {
 
           {/* Hero CTAs */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '16px', marginBottom: '48px' }}>
-            <Button variant="primary" onClick={() => handleScrollToSection('how-can-we-help')} style={{ padding: '12px 28px', fontSize: '14px', fontWeight: 'bold' }}>
+            <Button variant="primary" onClick={() => handleScrollToSection('how-can-we-help')} style={{ height: '40px', padding: '0 28px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '600' }}>
               Request / Find My project
             </Button>
-            <Button variant="secondary" onClick={() => navigate(ROUTES.PROJECTS)} style={{ padding: '12px 28px', fontSize: '14px', fontWeight: 'bold' }}>
+            <Button variant="secondary" onClick={() => navigate(ROUTES.PROJECTS)} style={{ height: '40px', padding: '0 28px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '600' }}>
               Browse Projects
             </Button>
           </div>
@@ -378,121 +379,8 @@ export const Home = () => {
         </div>
 
         {/* Featured Projects Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
-          {featuredProjects.map((proj) => {
-            const diff = proj.difficulty?.toLowerCase();
-            return (
-              <Card
-                key={proj.id}
-                id={`project-card-${proj.id}`}
-                className="project-card-premium"
-                onClick={(e) => {
-                  if (e.target.closest('.btn-card-order')) {
-                    handleOpenOrderModal(proj);
-                    return;
-                  }
-                  navigate(`/project/${proj.slug}`);
-                }}
-                style={{ 
-                  width: '100%', 
-                  boxSizing: 'border-box',
-                  cursor: 'pointer'
-                }}
-              >
-                <div className="card-top-row">
-                  {proj.badge && (
-                    <span className={`project-badge-tag ${proj.badge}`}>
-                      {proj.badge === 'best-seller' ? 'Best Seller' : proj.badge === 'new' ? 'New Release' : proj.badge === 'student' ? 'Student Project' : proj.badge}
-                    </span>
-                  )}
-                </div>
-
-                {/* Main Image Box */}
-                <div className="project-card-img" style={{ height: '140px', background: 'rgba(0, 0, 0, 0.25)', border: 'none', overflow: 'hidden', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                  {proj.images?.main ? (
-                    <img
-                      src={proj.images.main}
-                      alt={proj.title}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block'
-                      }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'block';
-                      }}
-                    />
-                  ) : null}
-                  <svg
-                    viewBox="0 0 48 48"
-                    style={{ display: proj.images?.main ? 'none' : 'block', width: '40px', height: '40px', stroke: 'var(--text-dim)' }}
-                  >
-                    <rect x="10" y="10" width="28" height="28" rx="2" fill="none" />
-                    <path d="M15,24 L33,24" />
-                    <circle cx="24" cy="24" r="4" fill="none" />
-                  </svg>
-                </div>
-
-                {/* Title */}
-                <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--txt-primary)', margin: '0 0 4px 0', textTransform: 'capitalize', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '40px', lineHeight: '1.25' }}>
-                  {proj.title}
-                </h3>
-
-                {/* Description */}
-                <p className="card-desc" style={{ fontSize: '12.5px', color: 'var(--txt-secondary)', margin: '0 0 12px 0', lineClamp: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
-                  {proj.description}
-                </p>
-
-                {/* Specs */}
-                <div className="card-spec-row" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                  <span className={`status-pill diff-${diff}`} style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px' }}>
-                    {proj.difficulty}
-                  </span>
-                  <span className="status-pill" style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'var(--interaction-hover)', color: 'var(--txt-muted)' }}>
-                    {proj.category}
-                  </span>
-                </div>
-
-                {/* Footer */}
-                <div className="project-card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--sys-divider)', paddingTop: '12px', marginTop: 'auto' }}>
-                  <span className="project-card-price" style={{ fontSize: '16px', fontWeight: '700', color: 'var(--txt-primary)' }}>₹{(Number(proj.price) || 0).toLocaleString('en-IN')}</span>
-                  <Button
-                    type="button"
-                    variant="none"
-                    className="btn-card-order"
-                    style={{
-                      paddingTop: '8px',
-                      paddingBottom: '8px',
-                      paddingLeft: '14px',
-                      paddingRight: '14px',
-                      background: 'var(--interaction-hover)',
-                      border: '1px solid var(--sys-border)',
-                      borderRadius: '8px',
-                      color: 'var(--txt-primary)',
-                      fontSize: '12px',
-                      fontFamily: 'Inter, sans-serif',
-                      fontWeight: '600',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      transition: 'all 0.25s ease',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="9" cy="21" r="1"></circle>
-                      <circle cx="20" cy="21" r="1"></circle>
-                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    REQUEST KIT
-                  </Button>
-                </div>
-              </Card>
-            );
-          })}
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <ProjectGrid projects={featuredProjects} onRequestOrder={handleOpenOrderModal} />
         </div>
       </section>
 
@@ -786,6 +674,7 @@ export const Home = () => {
                     <option value="Have Project idea" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>Have Project idea</option>
                     <option value="Need Only Support" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>Need Only Support</option>
                     <option value="Choosed Flyen Project" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>Choosed Flyen Project</option>
+                    <option value="3d Printing" style={{ background: 'var(--sys-surface-elevated)', color: 'var(--txt-primary)' }}>3d Printing</option>
                   </select>
                 </div>
 
@@ -838,9 +727,9 @@ export const Home = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--input-bg)',
+                        background: needDocument === 'Yes' ? 'rgba(139, 92, 246, 0.15)' : 'var(--input-bg)',
                         border: needDocument === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
-                        color: needDocument === 'Yes' ? 'var(--txt-inverse)' : 'var(--txt-secondary)'
+                        color: needDocument === 'Yes' ? 'var(--brand-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -880,9 +769,9 @@ export const Home = () => {
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         transition: 'all 0.25s',
-                        background: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--input-bg)',
+                        background: needPresentation === 'Yes' ? 'rgba(139, 92, 246, 0.15)' : 'var(--input-bg)',
                         border: needPresentation === 'Yes' ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
-                        color: needPresentation === 'Yes' ? 'var(--txt-inverse)' : 'var(--txt-secondary)'
+                        color: needPresentation === 'Yes' ? 'var(--brand-primary)' : 'var(--txt-secondary)'
                       }}
                     >
                       Yes
@@ -939,6 +828,7 @@ export const Home = () => {
               </Button>
               <Button
                 variant="primary"
+                className="btn-submit-calc"
                 disabled={isProcessing}
                 onClick={handleRequestSubmit}
                 style={{ flex: 1, height: '42px' }}

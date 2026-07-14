@@ -5,439 +5,351 @@ import { Button } from '../../../shared/components/ui/Button';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { ROUTES } from '../../../shared/constants/routes';
-import { usePrintingProducts } from '../hooks/usePrintingProducts';
 import { useToast } from '../../../shared/context/ToastContext';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 import { useAuth } from '../../auth/context/AuthContext.jsx';
-
-const SVG_MAP = {
-  gears: <polygon points="32,8 56,22 56,50 32,58 8,50 8,22" stroke="currentColor" strokeWidth="1.5" fill="none" />,
-  case: (
-    <>
-      <rect x="12" y="12" width="40" height="40" rx="4" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <line x1="12" y1="32" x2="52" y2="32" stroke="currentColor" strokeWidth="1.5" />
-    </>
-  ),
-  claw: <path d="M12,24 C12,12 24,12 24,24 M36,24 C36,12 24,12 24,24 M24,24 L24,44" stroke="currentColor" strokeWidth="1.5" fill="none" />,
-  cone: <polygon points="32,6 60,54 4,54" stroke="currentColor" strokeWidth="1.5" fill="none" />
-};
+import { masterDataService } from '../../../shared/services/masterDataService';
+import { printingInventoryService } from '../../printing-inventory/services/printingInventoryService';
+import { Card } from '../../../shared/components/ui/Card';
+import { Skeleton } from '../../../shared/components/ui/Skeleton';
+import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
 
 export const PrintingCatalog = () => {
   const navigate = useNavigate();
-  const { printingProducts } = usePrintingProducts();
   const { showToast } = useToast();
   const { profile } = useAuth();
 
   const seoProps = generateSEO(PageType.PRINTING);
-  const isSuperAdmin = profile?.role === 'super_admin';
 
-  if (!isSuperAdmin) {
-    return (
-      <>
-        <SEO {...seoProps} page={PageType.PRINTING} />
-        <div 
-          style={{ 
-            minHeight: '80vh', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            padding: 'var(--page-padding)',
-            boxSizing: 'border-box'
-          }}
-        >
-          <motion.div 
-            className="card-glass"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            style={{ 
-              maxWidth: '500px', 
-              width: '100%', 
-              padding: '48px 40px', 
-              textAlign: 'center', 
-              borderRadius: '16px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              background: 'rgba(10, 10, 15, 0.8)',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 50px rgba(139, 92, 246, 0.1)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '24px'
-            }}
-          >
-            <div 
-              style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                background: 'rgba(139, 92, 246, 0.1)', 
-                border: '1px solid rgba(139, 92, 246, 0.2)',
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                boxShadow: '0 0 20px rgba(139, 92, 246, 0.2)'
-              }}
-            >
-              <span className="material-icons-outlined" style={{ fontSize: '40px', color: '#8b5cf6' }}>
-                3d_rotation
-              </span>
-            </div>
-            
-            <div>
-              <h2 style={{ fontSize: '24px', fontWeight: '800', margin: '0 0 8px 0', letterSpacing: '0.5px', color: '#fff' }}>
-                3D Printing Service
-              </h2>
-              <span 
-                style={{ 
-                  fontSize: '11px', 
-                  fontWeight: '800', 
-                  textTransform: 'uppercase', 
-                  color: '#8b5cf6', 
-                  letterSpacing: '1.5px',
-                  background: 'rgba(139, 92, 246, 0.15)',
-                  padding: '4px 12px',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(139, 92, 246, 0.3)'
-                }}
-              >
-                Coming Soon
-              </span>
-            </div>
+  // States for DB Products & Master Data
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-            <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', lineHeight: '1.6', margin: 0 }}>
-              Our industrial prototype fabrication and 3D printing estimator terminal is currently undergoing final calibration. Stay tuned for premium print services.
-            </p>
+  // Search, Filter & Sort State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategories, setActiveCategories] = useState(['all']);
+  const [appliedCategories, setAppliedCategories] = useState(['all']);
+  const [sortBy, setSortBy] = useState('popular');
 
-            <Button 
-              type="button" 
-              variant="secondary" 
-              onClick={() => navigate(ROUTES.HOME)}
-              style={{ marginTop: '8px', width: '100%', padding: '12px 24px', fontWeight: '600' }}
-            >
-              Return Home
-            </Button>
-          </motion.div>
-        </div>
-      </>
-    );
-  }
-
-  // State
-  const [activeTab, setActiveTab] = useState('all');
-  const [material, setMaterial] = useState('pla');
-  const [infill, setInfill] = useState(40);
-  const [uploadedFile, setUploadedFile] = useState(null);
-  const [estimatedPrice, setEstimatedPrice] = useState('3.50');
-  const [orderedItem, setOrderedItem] = useState(null); // catalog orders
-  const [printJobReceipt, setPrintJobReceipt] = useState(null); // estimator order
-
-  // Calculate price dynamically
-  const calculatePrice = () => {
-    const materialMultipliers = {
-      pla: 0.10,
-      abs: 0.14,
-      petg: 0.16,
-      resin: 0.25
-    };
-
-    const multiplier = materialMultipliers[material] || 0.10;
-    const baseWeight = uploadedFile ? Math.min(200, Math.floor(uploadedFile.size / 15000)) : 35;
-    const finalWeight = Math.max(8, Math.floor(baseWeight * (0.4 + (infill / 100) * 0.6)));
-    const priceGrams = finalWeight * multiplier;
-    const baseCost = 3.50; // base cost in USD/INR scale
-    
-    // Map to INR price: multiplier * 80
-    const totalINR = Math.round((priceGrams + baseCost) * 80);
-    setEstimatedPrice(totalINR.toString());
-  };
-
+  // Load products and categories from DB / Master Data
   useEffect(() => {
-    calculatePrice();
-  }, [material, infill, uploadedFile]);
+    const loadInventoryData = async () => {
+      setIsLoading(true);
+      try {
+        const pubProducts = await printingInventoryService.getPublishedProducts();
+        setProducts(pubProducts);
 
-  // File Upload Handlers
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
+        const cats = await masterDataService.getValues('3d_print_category');
+        setCategories(cats);
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      validateAndSetFile(files[0]);
-    }
-  };
-
-  const handleFileClick = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.stl,.obj,.3mf';
-    input.onchange = (e) => {
-      if (e.target.files.length > 0) {
-        validateAndSetFile(e.target.files[0]);
+        const mats = await masterDataService.getValues('3d_print_material');
+        setMaterials(mats);
+      } catch (err) {
+        console.error(err);
+        showToast("❌ Failed to load 3D printing products.", "error");
+      } finally {
+        setIsLoading(false);
       }
     };
-    input.click();
-  };
+    loadInventoryData();
+  }, []);
 
-  const validateAndSetFile = (file) => {
-    const ext = file.name.split('.').pop().toLowerCase();
-    if (!['stl', 'obj', '3mf'].includes(ext)) {
-      showToast("Please upload an STL, OBJ, or 3MF model file.", "error");
-      return;
+  const handleToggleCategory = (cat) => {
+    if (cat === 'all') {
+      setActiveCategories(['all']);
+    } else {
+      let nextCats = activeCategories.filter(c => c !== 'all');
+      if (nextCats.includes(cat)) {
+        nextCats = nextCats.filter(c => c !== cat);
+      } else {
+        nextCats.push(cat);
+      }
+      if (nextCats.length === 0) {
+        setActiveCategories(['all']);
+      } else {
+        setActiveCategories(nextCats);
+      }
     }
-    setUploadedFile(file);
   };
 
-  const handleInitProject = () => {
-    if (!uploadedFile) {
-      showToast("Please select or drag an STL model file to begin estimation.", "error");
-      return;
+  const handleApplyFilters = () => {
+    setAppliedCategories([...activeCategories]);
+  };
+
+  const handleClearAll = () => {
+    setActiveCategories(['all']);
+    setAppliedCategories(['all']);
+    setSearchQuery('');
+  };
+
+  // Client-side Instant Filter
+  let filteredCatalog = products.filter(item => {
+    const matchesCategory = appliedCategories.includes('all') || appliedCategories.includes(item.category);
+    const matchesSearch = searchQuery === '' || 
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.material && item.material.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (item.category && item.category.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    return matchesCategory && matchesSearch;
+  });
+
+  // Client-side Instant Sort
+  filteredCatalog = [...filteredCatalog].sort((a, b) => {
+    if (sortBy === 'price-low') {
+      const priceA = a.contact_for_price ? Infinity : Number(a.price || 0);
+      const priceB = b.contact_for_price ? Infinity : Number(b.price || 0);
+      return priceA - priceB;
     }
+    if (sortBy === 'price-high') {
+      const priceA = a.contact_for_price ? -Infinity : Number(a.price || 0);
+      const priceB = b.contact_for_price ? -Infinity : Number(b.price || 0);
+      return priceB - priceA;
+    }
+    if (sortBy === 'newest') {
+      return new Date(b.created_at || b.updated_at || 0) - new Date(a.created_at || a.updated_at || 0);
+    }
+    // 'popular' default: by name A-Z
+    return a.name.localeCompare(b.name);
+  });
 
-    setPrintJobReceipt({
-      fileName: uploadedFile.name,
-      fileSize: `${(uploadedFile.size / (1024 * 1024)).toFixed(2)} MB`,
-      material: material.toUpperCase(),
-      infill: `${infill}%`,
-      price: estimatedPrice
-    });
+  const getLabelForValue = (list, val) => {
+    const item = list.find(x => x.key === val || x.value === val);
+    return item ? item.value : val;
   };
-
-  const filteredCatalog = activeTab === 'all' 
-    ? printingProducts 
-    : printingProducts.filter(item => item.category === activeTab);
 
   return (
     <>
       <SEO {...seoProps} page={PageType.PRINTING} />
+      <style>{`
+        #printing-portal .portal-header {
+          margin-bottom: 0px !important;
+        }
+      `}</style>
       <motion.section
-        className="portal-section"
+        className="portal-section portal-layout-fixed-height"
         id="printing-portal"
+        style={{ paddingTop: '73px', height: 'calc(100vh - 73px)' }}
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 15 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
-      <div className="portal-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-          <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
-            <svg viewBox="0 0 24 24">
-              <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
-            </svg>
-          </Button>
-          <div className="portal-title-area">
-            <h2>3D Printing Services</h2>
-            <p>Industrial Prototype Fabrication Terminal</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="portal-content printing-grid">
-        {/* Product Catalog View */}
-        <div className="product-catalog">
-          <div className="catalog-filters">
-            <button
-              className={`filter-tab ${activeTab === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveTab('all')}
-            >
-              All Products
-            </button>
-            <button
-              className={`filter-tab ${activeTab === 'prototypes' ? 'active' : ''}`}
-              onClick={() => setActiveTab('prototypes')}
-            >
-              Prototypes
-            </button>
-            <button
-              className={`filter-tab ${activeTab === 'educational' ? 'active' : ''}`}
-              onClick={() => setActiveTab('educational')}
-            >
-              Educational
-            </button>
-          </div>
-          
-          <div className="catalog-cards">
-            {filteredCatalog.map((item) => (
-              <div className="product-card" key={item.id}>
-                <div className="product-img">
-                  <svg viewBox="0 0 64 64">{SVG_MAP[item.iconType]}</svg>
-                </div>
-                <div className="product-details">
-                  <h4>{item.title}</h4>
-                  <p>{item.desc}</p>
-                  <div className="product-meta">
-                    <span className="product-price">₹{item.price}</span>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="btn-order-catalog"
-                      onClick={() => setOrderedItem(item)}
-                    >
-                      Order
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* File Estimator Calculator */}
-        <div className="service-calculator">
-          <h3>Printing Cost Estimator</h3>
-          
-          {/* Drag & Drop Zone */}
-          <div
-            className={`upload-zone ${uploadedFile ? 'dragover' : ''}`}
-            id="print-upload-zone"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            onClick={handleFileClick}
-          >
-            <svg viewBox="0 0 24 24">
-              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
-            </svg>
-            <div className="upload-info">
-              {uploadedFile ? (
-                <>
-                  <p style={{ color: 'var(--accent-blue)' }}>File Selected: {uploadedFile.name}</p>
-                  <span>Size: {(uploadedFile.size / (1024 * 1024)).toFixed(2)} MB &bull; Click to change</span>
-                </>
-              ) : (
-                <>
-                  <p>Upload model file</p>
-                  <span>Drag STL, OBJ, or 3MF here</span>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="calc-row">
-            <label htmlFor="calc-material">Material Filament</label>
-            <select
-              id="calc-material"
-              className="form-select"
-              value={material}
-              onChange={(e) => setMaterial(e.target.value)}
-            >
-              <option value="pla">PLA - Structural, Bio-Degradable</option>
-              <option value="abs">ABS - Impact Resistant, Industrial</option>
-              <option value="petg">PETG - Highly Flexible, Chemical-proof</option>
-              <option value="resin">RESIN - Extreme Detail, Smooth finish</option>
-            </select>
-          </div>
-
-          <div className="calc-row">
-            <label htmlFor="calc-infill">Infill Density: <span id="infill-val">{infill}%</span></label>
-            <input
-              type="range"
-              id="calc-infill"
-              min="10"
-              max="100"
-              value={infill}
-              className="calc-input"
-              style={{ padding: 0 }}
-              onChange={(e) => setInfill(parseInt(e.target.value))}
-            />
-          </div>
-
-          <div className="estimate-output">
-            <div>
-              <span className="mobile-price-lbl">Price Estimate</span>
-              <div className="estimate-price" id="calc-price">₹{estimatedPrice}</div>
-            </div>
-            <Button
-              type="button"
-              variant="primary"
-              className="btn-submit-calc"
-              id="btn-submit-calc"
-              onClick={handleInitProject}
-            >
-              Init Project
+        <div
+          className="portal-header"
+          style={{
+            width: 'auto',
+            marginLeft: 'calc(-1 * var(--page-padding))',
+            marginRight: 'calc(-1 * var(--page-padding))',
+            paddingLeft: 'var(--page-padding)',
+            paddingRight: 'var(--page-padding)',
+            paddingTop: '16px',
+            paddingBottom: '16px',
+            background: 'var(--sys-page-header-bg)',
+            borderBottom: '1px solid var(--sys-divider)',
+            marginBottom: '0px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+            <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
             </Button>
+            <div className="portal-title-area">
+              <h2>3D Printing Catalog</h2>
+              <p>Explore premium fabricated prototypes and parts.</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 1. Catalog Order Modal */}
-      <Modal isOpen={orderedItem !== null} onClose={() => setOrderedItem(null)} className="modal-content purple">
-        <div className="modal-icon">
-          <svg viewBox="0 0 24 24">
-            <polyline points="20,6 9,17 4,12" />
-          </svg>
-        </div>
-        <h4>CATALOG ORDER SUBMITTED</h4>
-        <p>Your request has been logged successfully. Summary receipt details below.</p>
-        
-        {orderedItem && (
-          <div className="modal-receipt">
-            <div className="receipt-row">
-              <span>PRODUCT MODEL:</span>
-              <span className="receipt-val">{orderedItem.title}</span>
-            </div>
-            <div className="receipt-row">
-              <span>CATEGORY:</span>
-              <span className="receipt-val">{orderedItem.category.toUpperCase()}</span>
-            </div>
-            <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
-              <span>UNIT COST:</span>
-              <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>
-                ₹{orderedItem.price}
-              </span>
+        <AdminToolbar
+          className="marketplace-toolbar"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            zIndex: 100,
+            background: 'var(--sys-surface)',
+            borderBottom: '1px solid var(--sys-divider)',
+            padding: '12px var(--page-padding)',
+            width: 'auto',
+            marginLeft: 'calc(-1 * var(--page-padding))',
+            marginRight: 'calc(-1 * var(--page-padding))',
+            borderRadius: 0,
+            position: 'sticky',
+            top: '80px'
+          }}
+          searchId="search-printing"
+          searchPlaceholder="Search 3D printing catalog.."
+          searchValue={searchQuery}
+          onSearchChange={(e) => setSearchQuery(e.target.value)}
+          showSearchIcon={true}
+          activeFilterCount={appliedCategories.includes('all') ? 0 : appliedCategories.length}
+          sortValue={sortBy}
+          onSortChange={(e) => setSortBy(e.target.value)}
+          sortOptions={[
+            { value: 'popular', label: 'Most Popular' },
+            { value: 'newest', label: 'Newest' },
+            { value: 'price-low', label: 'Price: Low to High' },
+            { value: 'price-high', label: 'Price: High to Low' }
+          ]}
+          onReset={handleClearAll}
+          onApply={handleApplyFilters}
+        >
+          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Categories */}
+            <div className="calc-row">
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
+              <div className="admin-chip-group">
+                <button
+                  type="button"
+                  onClick={() => handleToggleCategory('all')}
+                  className={`admin-chip ${activeCategories.includes('all') ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {categories.map((c) => (
+                  <button
+                    key={c.value}
+                    type="button"
+                    onClick={() => handleToggleCategory(c.value)}
+                    className={`admin-chip ${activeCategories.includes(c.value) && !activeCategories.includes('all') ? 'active' : ''}`}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        )}
-        
-        <Button variant="secondary" className="modal-btn" onClick={() => setOrderedItem(null)}>
-          Close
-        </Button>
-      </Modal>
+        </AdminToolbar>
 
-      {/* 2. Estimator Job Order Modal */}
-      <Modal isOpen={printJobReceipt !== null} onClose={() => setPrintJobReceipt(null)} className="modal-content purple">
-        <div className="modal-icon">
-          <svg viewBox="0 0 24 24">
-            <polyline points="20,6 9,17 4,12" />
-          </svg>
-        </div>
-        <h4>PRINT JOB SUBMITTED</h4>
-        <p>Your request has been logged successfully. Summary receipt details below.</p>
-        
-        {printJobReceipt && (
-          <div className="modal-receipt">
-            <div className="receipt-row">
-              <span>MODEL FILE:</span>
-              <span className="receipt-val" style={{ maxWidth: '180px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                {printJobReceipt.fileName}
-              </span>
-            </div>
-            <div className="receipt-row">
-              <span>FILE SIZE:</span>
-              <span className="receipt-val">{printJobReceipt.fileSize}</span>
-            </div>
-            <div className="receipt-row">
-              <span>MATERIAL FIL:</span>
-              <span className="receipt-val">{printJobReceipt.material}</span>
-            </div>
-            <div className="receipt-row">
-              <span>INFILL:</span>
-              <span className="receipt-val">{printJobReceipt.infill}</span>
-            </div>
-            <div className="receipt-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '8px', marginTop: '8px' }}>
-              <span>ESTIMATED COST:</span>
-              <span className="receipt-val" style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>
-                ₹{printJobReceipt.price}
-              </span>
-            </div>
+        <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', marginTop: '16px' }}>
+          <div className="marketplace-main" style={{ width: '100%', paddingTop: '12px' }}>
+
+            {/* Catalog Grid */}
+            {isLoading ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
+                {[1, 2, 3, 4].map(i => (
+                  <Card key={i} style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <Skeleton style={{ width: '100%', aspectRatio: '1.2', borderRadius: '8px' }} />
+                    <Skeleton style={{ width: '80%', height: '16px' }} />
+                    <Skeleton style={{ width: '50%', height: '12px' }} />
+                  </Card>
+                ))}
+              </div>
+            ) : filteredCatalog.length > 0 ? (
+              <div className="catalog-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
+                {filteredCatalog.map((item) => (
+                  <div
+                    className="product-card"
+                    key={item.id}
+                    onClick={() => navigate(ROUTES.PRINTING_DETAILS.replace(':id', item.id))}
+                    style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', border: '1px solid var(--sys-border)', borderRadius: '12px', background: 'var(--sys-surface)', overflow: 'hidden', transition: 'all 0.2s ease', position: 'relative' }}
+                  >
+                    {/* Image */}
+                    <div className="product-img" style={{ width: '100%', height: '120px', background: 'rgba(255, 255, 255, 0.02)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
+                      {item.primary_image_url ? (
+                        <img
+                          src={item.primary_image_url}
+                          alt={item.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <span className="material-icons-outlined" style={{ fontSize: '32px', color: 'var(--txt-muted)' }}>3d_rotation</span>
+                      )}
+                      
+                      {/* Heart Favorite Overlay */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        style={{
+                          position: 'absolute',
+                          top: '8px',
+                          right: '8px',
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          background: 'rgba(255, 255, 255, 0.8)',
+                          border: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          color: '#1f2937',
+                          zIndex: 2,
+                          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)'
+                        }}
+                      >
+                        <span className="material-icons-outlined" style={{ fontSize: '16px' }}>favorite_border</span>
+                      </button>
+                    </div>
+
+                    {/* Content */}
+                    <div className="product-details" style={{ padding: '16px 12px 12px 12px', display: 'flex', flexDirection: 'column', flex: 1, gap: '6px' }}>
+                      
+                      <h4 style={{ fontSize: '13.5px', fontWeight: '500', margin: 0, color: 'var(--txt-primary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
+                        {item.name}
+                      </h4>
+
+                      {/* Material & Stock Status info */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--txt-muted)' }}>
+                        <span>{getLabelForValue(materials, item.material) || 'PLA'}</span>
+                        <span>•</span>
+                        <span style={{
+                          fontWeight: '600',
+                          color: item.stock_quantity > 0 ? 'var(--status-success)' : 'var(--status-danger)'
+                        }}>
+                          {item.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                        </span>
+                      </div>
+
+                      {/* Pricing block */}
+                      <div style={{ marginTop: 'auto', paddingTop: '4px' }}>
+                        {item.contact_for_price ? (
+                          <span style={{ fontSize: '13px', color: 'var(--brand-primary)', fontWeight: '600', textTransform: 'uppercase' }}>
+                            Price On Request
+                          </span>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                            <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--txt-primary)' }}>
+                              ₹{item.price}
+                            </span>
+                            <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textDecoration: 'line-through' }}>
+                              ₹{Math.round(item.price * 1.4)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Full-width View Details button */}
+                      <Button
+                        type="button"
+                        variant="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(ROUTES.PRINTING_DETAILS.replace(':id', item.id));
+                        }}
+                        style={{ width: '100%', height: '34px', fontSize: '11.5px', fontWeight: '600', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                      >
+                        <span className="material-icons-outlined" style={{ fontSize: '15px' }}>shopping_cart</span>
+                        View Details
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 24px', gap: '12px' }}>
+                <span className="material-icons-outlined" style={{ fontSize: '40px', color: 'var(--txt-muted)' }}>inventory_2</span>
+                <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: 0 }}>No published products match your criteria.</p>
+              </div>
+            )}
           </div>
-        )}
-        
-        <Button variant="secondary" className="modal-btn" onClick={() => setPrintJobReceipt(null)}>
-          Close
-        </Button>
-      </Modal>
-    </motion.section>
+        </div>
+      </motion.section>
     </>
   );
 };
