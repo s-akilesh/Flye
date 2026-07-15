@@ -681,15 +681,21 @@ export const AddProject = () => {
             </div>
 
             <div className="calc-row" style={{ marginBottom: 'var(--space-3)' }}>
-              <label htmlFor="proj-desc">Short Description (Card Summary) *</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label htmlFor="proj-desc" style={{ marginBottom: 0 }}>Short Description (Card Summary) *</label>
+                <span style={{ fontSize: '11px', color: (description || '').length > 180 ? 'var(--status-danger)' : 'var(--txt-muted)' }}>
+                  {(description || '').length} / 200
+                </span>
+              </div>
               <textarea
                 id="proj-desc"
                 className="form-textarea"
                 required
+                maxLength={200}
                 placeholder="A brief overview of the project shown on the marketplace cards..."
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                style={{ minHeight: '80px' }}
+                onChange={(e) => setDescription(e.target.value.substring(0, 200))}
+                style={{ minHeight: '80px', marginTop: '6px' }}
               />
             </div>
 

@@ -2,61 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://flyen.in/</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://flyen.in/projects</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://flyen.in/contact</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://flyen.in/printing</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://flyen.in/about</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://flyen.in/departments</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://flyen.in/privacy-policy</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://flyen.in/terms-and-conditions</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://flyen.in/project/gsm-based-emergency-alert-and-live-location-sharing-system</loc>
-    <lastmod>2026-07-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://flyen.in/project/gsm-based-emergency-alert-and-live-location-sharing-system-gsm-based-emergency-alert-and-live-location-sharing-systemgsm-based-emergency-alert-and-live-location-sharing-systemgsm-based-emergency-alert-and-live-location-sharing-systemgsm-based-emergency-alert-and-live-location-sharing-systemgsm-based-emergency-alert-and-live-location-sharing-systemgsm-based-emergency-alert-and-live-location-sharing-system</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

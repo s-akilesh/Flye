@@ -12,6 +12,11 @@ export const BOTTOM_NAVIGATION = [
     path: '/projects'
   },
   {
+    id: 'printing',
+    label: '3D Printing',
+    path: '/printing'
+  },
+  {
     id: 'enquiries',
     label: 'My Enquiries',
     adminPath: '/admin/enquiries',

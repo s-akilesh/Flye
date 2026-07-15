@@ -156,6 +156,32 @@ export const ProjectListing = () => {
   return (
     <>
       <SEO {...seoProps} page={PageType.PROJECT_LISTING} />
+      <style>{`
+        @media (min-width: 768px) and (max-width: 991px) {
+          #kits-portal {
+            padding-top: 14px !important;
+          }
+          #kits-portal .portal-header {
+            display: block !important;
+          }
+          #kits-portal .marketplace-toolbar {
+            position: sticky !important;
+            top: 52px !important;
+            margin-left: calc(-1 * var(--page-padding)) !important;
+            margin-right: calc(-1 * var(--page-padding)) !important;
+            width: auto !important;
+            border-radius: 0px !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-top: 1px solid var(--sys-border) !important;
+            border-bottom: 1px solid var(--sys-border) !important;
+            box-shadow: none !important;
+          }
+          #kits-portal .portal-content-flex {
+            padding-top: 16px !important;
+          }
+        }
+      `}</style>
       <motion.section
         className="portal-section portal-layout-fixed-height"
         id="kits-portal"
@@ -293,7 +319,7 @@ export const ProjectListing = () => {
       <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', marginTop: '16px' }}>
         <div className="marketplace-main" style={{ width: '100%', paddingTop: '12px' }}>
           {isLoading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
+            <div className="project-marketplace-grid" style={{ width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Skeleton key={i} variant="card" style={{ height: '360px' }} />
               ))}

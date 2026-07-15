@@ -68,6 +68,15 @@ const BottomNavIcon = ({ id, isActive }) => {
       </svg>
     );
   }
+  if (id === 'printing') {
+    return (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="1" />

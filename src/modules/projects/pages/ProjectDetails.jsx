@@ -217,6 +217,23 @@ export const ProjectDetails = () => {
     setOrderStep('input');
   };
 
+  const openEnquiryModal = () => {
+    setSelectedVariant(null);
+    setTargetOrderProject(project);
+    setRequestorName('');
+    setContactNumber('');
+    setContactPrefix('+91');
+    setFormErrors({});
+    setProjectStatus('Choosed Flyen Project');
+    setCustomProjectTitle(project ? project.title : '');
+    setProjectBudget(project ? String(project.price || '') : '');
+    setSubmissionDate('');
+    setNeedDocument('No');
+    setNeedPresentation('No');
+    setProjectRemarks('');
+    setOrderStep('input');
+  };
+
   const openOrderModalForVariant = (kit) => {
     eventTracker.trackFilterApplied('view_pricing', kit?.name || 'variant');
     setSelectedVariant(kit);
@@ -325,7 +342,7 @@ export const ProjectDetails = () => {
           <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
         </button>
         <span className="mobile-learning-title" style={{ textTransform: 'uppercase' }}>
-          {title}
+          Project Details
         </span>
         <div style={{ width: '36px' }}></div>
       </header>
@@ -497,6 +514,19 @@ export const ProjectDetails = () => {
                 <span className="material-icons-outlined" style={{ fontSize: '16px' }}>chat</span>
                 Contact Us
               </a>
+
+              {(!price || Number(price) <= 0) && (
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="width-100"
+                  onClick={openEnquiryModal}
+                  style={{ marginTop: '8px', height: '40px', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                >
+                  <span className="material-icons-outlined" style={{ fontSize: '16px' }}>mail</span>
+                  Submit Enquiry
+                </Button>
+              )}
             </div>
           </div>
 
