@@ -14,6 +14,8 @@ import { ROUTES } from '../../../shared/constants/routes';
 import { useSettings } from '../../settings/hooks/useSettings';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 import { ProjectGrid } from '../../projects/components/ProjectGrid';
+import { supabase } from '../../../shared/services/supabaseClient';
+import { storageService } from '../../../shared/services/storageService';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -21,7 +23,105 @@ export const Home = () => {
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
   const { settings } = useSettings();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+
+  const isSuperAdmin = profile?.role === 'super_admin';
+
+  const [botImage, setBotImage] = useState('/flyen_bot.png');
+  const [roverImage, setRoverImage] = useState('/flyen_rc_rover.png');
+  const [isUploadingBot, setIsUploadingBot] = useState(false);
+  const [isUploadingRover, setIsUploadingRover] = useState(false);
+
+  const botFileInputRef = useRef(null);
+  const roverFileInputRef = useRef(null);
+
+  // Fetch showcase assets from master_data
+  useEffect(() => {
+    const fetchShowcaseAssets = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('master_data')
+          .select('*')
+          .eq('type', 'homepage_assets');
+        
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          const botAsset = data.find(item => item.key === 'flyen_bot_image');
+          const roverAsset = data.find(item => item.key === 'flyen_rc_rover_image');
+          if (botAsset?.value) setBotImage(botAsset.value);
+          if (roverAsset?.value) setRoverImage(roverAsset.value);
+        }
+      } catch (err) {
+        console.error('Failed to load showcase assets from master_data:', err);
+      }
+    };
+
+    fetchShowcaseAssets();
+  }, []);
+
+  const handleImageReplace = async (e, key) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      storageService.validateFile(file, 'image');
+    } catch (valErr) {
+      showToast(valErr.message, 'error');
+      return;
+    }
+
+    if (key === 'flyen_bot_image') {
+      setIsUploadingBot(true);
+    } else {
+      setIsUploadingRover(true);
+    }
+
+    try {
+      const fileExt = file.name.split('.').pop().toLowerCase();
+      const targetName = `showcase-${key}-${Date.now()}.${fileExt}`;
+      const uploadResult = await storageService.uploadFile('website-assets', 'showcase', file, targetName);
+      const publicUrl = uploadResult.publicUrl;
+
+      // Update Database
+      const { data, error: fetchError } = await supabase
+        .from('master_data')
+        .select('*')
+        .eq('type', 'homepage_assets')
+        .eq('key', key);
+
+      if (fetchError) throw fetchError;
+
+      if (data && data.length > 0) {
+        const { error: updateError } = await supabase
+          .from('master_data')
+          .update({ value: publicUrl, updated_at: new Date().toISOString() })
+          .eq('id', data[0].id);
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await supabase
+          .from('master_data')
+          .insert({ type: 'homepage_assets', key, value: publicUrl, is_active: true });
+        if (insertError) throw insertError;
+      }
+
+      if (key === 'flyen_bot_image') {
+        setBotImage(publicUrl);
+      } else {
+        setRoverImage(publicUrl);
+      }
+      showToast('Showcase image updated successfully!', 'success');
+    } catch (err) {
+      console.error('Failed to replace image:', err);
+      showToast('Failed to replace image: ' + err.message, 'error');
+    } finally {
+      if (key === 'flyen_bot_image') {
+        setIsUploadingBot(false);
+      } else {
+        setIsUploadingRover(false);
+      }
+    }
+  };
 
   const seoProps = generateSEO(PageType.HOME);
 
@@ -130,6 +230,45 @@ export const Home = () => {
     } catch (e) {
       console.error(e);
       showToast('Something went wrong. Please try again.', 'error');
+    }
+  };
+
+  // Showcase section animation variants
+  const showcaseContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const showcaseLeftVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+    }
+  };
+
+  const showcaseRightVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+    }
+  };
+
+  const showcaseFeatureVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -366,6 +505,120 @@ export const Home = () => {
               </button>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* 2.5. SECTION 2.5: FLYEN ROBOTICS & DEVELOPMENT KITS (SHOWCASE) */}
+      <section id="robotics-kits" style={{ padding: '0', marginBottom: '80px', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ width: '100%', margin: '0 auto' }}>
+          <div className="kits-showcase-container">
+            {/* Panel 1: Flyen Bot Cover Photo */}
+            <div className="kits-img-panel">
+              <span className="kits-panel-label">
+                <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--status-success)' }}></span>
+                Flyen Bot
+              </span>
+              {isSuperAdmin && (
+                <>
+                  <input 
+                    type="file" 
+                    ref={botFileInputRef} 
+                    style={{ display: 'none' }} 
+                    accept=".jpg,.jpeg,.png,.webp,.svg"
+                    onChange={(e) => handleImageReplace(e, 'flyen_bot_image')}
+                  />
+                  <button 
+                    type="button" 
+                    className="kits-replace-btn"
+                    onClick={() => botFileInputRef.current?.click()}
+                    title="Replace Image"
+                  >
+                    <span className="material-icons">photo_camera</span>
+                  </button>
+                </>
+              )}
+              {isUploadingBot && (
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 11 }}>
+                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold' }}>Uploading...</span>
+                </div>
+              )}
+              <img src={botImage} alt="Flyen Bot" className="kits-cover-img" />
+            </div>
+
+            {/* Panel 2: Flyen RC Rover Cover Photo */}
+            <div className="kits-img-panel">
+              <span className="kits-panel-label">
+                <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--brand-accent)' }}></span>
+                Flyen RC Rover
+              </span>
+              {isSuperAdmin && (
+                <>
+                  <input 
+                    type="file" 
+                    ref={roverFileInputRef} 
+                    style={{ display: 'none' }} 
+                    accept=".jpg,.jpeg,.png,.webp,.svg"
+                    onChange={(e) => handleImageReplace(e, 'flyen_rc_rover_image')}
+                  />
+                  <button 
+                    type="button" 
+                    className="kits-replace-btn"
+                    onClick={() => roverFileInputRef.current?.click()}
+                    title="Replace Image"
+                  >
+                    <span className="material-icons">photo_camera</span>
+                  </button>
+                </>
+              )}
+              {isUploadingRover && (
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 11 }}>
+                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold' }}>Uploading...</span>
+                </div>
+              )}
+              <img src={roverImage} alt="Flyen RC Rover" className="kits-cover-img" />
+            </div>
+
+            {/* Panel 3: Content & Feature Panel */}
+            <div className="kits-info-panel">
+              {/* SVG Faint Circuit overlay */}
+              <div className="kits-circuit-overlay" />
+              
+              <div style={{ zIndex: 1 }}>
+                <h3 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 8px 0' }}>Build. Learn. Innovate.</h3>
+                <p style={{ fontSize: '14px', color: 'var(--txt-secondary)', margin: '0 0 20px 0', lineHeight: '1.5' }}>
+                  Turn ideas into moving robots through fun, hands-on learning.
+                </p>
+
+                <h4 style={{ fontSize: '11px', fontWeight: '800', color: 'var(--brand-primary)', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 12px 0' }}>
+                  What You'll Learn
+                </h4>
+
+                <div className="kits-learn-list">
+                  {[
+                    "Build your own robot",
+                    "Make your rover move and explore",
+                    "Learn how sensors work",
+                    "Discover real electronics",
+                    "Write your first programs",
+                    "Control robots with code",
+                    "Create exciting hands-on projects",
+                    "Turn your ideas into real inventions"
+                  ].map((item, idx) => (
+                    <div key={idx} className="kits-learn-item">
+                      <span className="material-icons kits-learn-icon">check</span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginTop: '8px', zIndex: 1 }}>
+                <button type="button" className="kits-btn-launching">
+                  🚀 Launching Soon
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
