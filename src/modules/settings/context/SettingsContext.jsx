@@ -112,11 +112,7 @@ export const SettingsProvider = ({ children, initialSettings }) => {
       try {
         setLoading(true);
         setError(null);
-        // Race Supabase fetch against a 3s timeout to ensure fast initial page load
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Settings fetch timeout')), 3000)
-        );
-        const dbRow = await Promise.race([settingsService.getSettings(), timeoutPromise]);
+        const dbRow = await settingsService.getSettings();
         if (dbRow) {
           const mapped = mapDbToContext(dbRow);
           setSettings((prev) => ({ ...prev, ...mapped }));

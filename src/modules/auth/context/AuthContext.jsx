@@ -27,9 +27,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   /**
-  const loadingProfileUserIdRef = React.useRef(null);
-
-  /**
    * Helper to load profile data based on the authenticated user.
    */
   const loadProfile = async (currentUser) => {
@@ -37,10 +34,6 @@ export const AuthProvider = ({ children }) => {
       setProfile(null);
       return;
     }
-    if (loadingProfileUserIdRef.current === currentUser.id) {
-      return; // Already fetching profile for this user
-    }
-    loadingProfileUserIdRef.current = currentUser.id;
     try {
       logger.log(`[AuthContext] Fetching profile for user ID: ${currentUser.id}`);
       const userProfile = await userService.getProfileById(currentUser.id);
@@ -65,8 +58,6 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       logger.error('[AuthContext] Failed to load user profile:', err);
       setProfile(null);
-    } finally {
-      loadingProfileUserIdRef.current = null;
     }
   };
 
@@ -80,18 +71,30 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    // Safety timeout to guarantee loading state is released within 2.5s
-    const safetyTimer = setTimeout(() => {
-      if (isMounted) {
+    // 1. Get initial session on mount
+    const initializeAuth = async () => {
+      try {
+        logger.log('[AuthContext] Initializing auth session...');
+        const activeSession = await authService.getCurrentSession();
+        setSession(activeSession);
+        const currentUser = activeSession?.user ?? null;
+        setUser(currentUser);
+        if (currentUser) {
+          await loadProfile(currentUser);
+        } else {
+          setViewModeState('user');
+        }
+      } catch (err) {
+        logger.error('[AuthContext] Error during auth initialization:', err);
+      } finally {
         setLoading(false);
       }
-    }, 2500);
+    };
 
-    // Listen to auth state transitions - Supabase onAuthStateChange automatically fires INITIAL_SESSION on subscribe
+    initializeAuth();
+
+    // 2. Listen to auth state transitions
     const subscription = authService.onAuthStateChange(async (event, activeSession) => {
-      if (!isMounted) return;
       logger.log(`[AuthContext] Auth state changed: ${event}`);
       setSession(activeSession);
       const currentUser = activeSession?.user ?? null;
@@ -102,14 +105,10 @@ export const AuthProvider = ({ children }) => {
         setProfile(null);
         setViewModeState('user');
       }
-      if (isMounted) {
-        setLoading(false);
-      }
+      setLoading(false);
     });
 
     return () => {
-      isMounted = false;
-      clearTimeout(safetyTimer);
       logger.log('[AuthContext] Unsubscribing from auth state listener.');
       subscription.unsubscribe();
     };
