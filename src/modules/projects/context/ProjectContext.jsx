@@ -14,7 +14,10 @@ export const ProjectProvider = ({ children, initialProjects }) => {
     }
     setIsLoading(true);
     try {
-      const data = await ProjectRepository.getAll();
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Projects fetch timeout')), 3500)
+      );
+      const data = await Promise.race([ProjectRepository.getAll(), timeoutPromise]);
       setProjects(data);
     } catch (e) {
       console.error("Failed to load projects from repository", e);

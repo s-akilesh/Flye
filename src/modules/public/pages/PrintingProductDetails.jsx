@@ -425,8 +425,8 @@ export const PrintingProductDetails = () => {
                     onClick={openQuoteModal}
                     style={{ height: '44px', fontWeight: '700', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   >
-                    <span className="material-icons-outlined" style={{ fontSize: '20px' }}>request_quote</span>
-                    Get Quote
+                    <span className="material-icons-outlined" style={{ fontSize: '20px' }}>shopping_cart</span>
+                    Buy Now
                   </Button>
                 </Card>
 

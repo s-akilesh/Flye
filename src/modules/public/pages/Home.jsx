@@ -370,7 +370,7 @@ export const Home = () => {
           {/* Hero CTAs */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '16px', marginBottom: '48px' }}>
             <Button variant="primary" onClick={() => handleScrollToSection('how-can-we-help')} style={{ height: '40px', padding: '0 28px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '600' }}>
-              Request / Find My project
+              Submit your Project Enquiry
             </Button>
             <Button variant="secondary" onClick={() => navigate(ROUTES.PROJECTS)} style={{ height: '40px', padding: '0 28px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '600' }}>
               Browse Projects

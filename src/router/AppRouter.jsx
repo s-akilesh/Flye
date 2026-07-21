@@ -8,9 +8,11 @@ import { ProtectedRoute } from '../modules/auth/components/ProtectedRoute.jsx';
 import { MaintenancePage } from '../modules/public/pages/MaintenancePage';
 import { useSettings } from '../modules/settings/hooks/useSettings';
 
+import { Home } from '../modules/public/pages/Home';
+
 // Export Route dynamic import descriptors for link prefetching
 export const lazyRoutes = {
-  Home: () => import('../modules/public/pages/Home').then(module => ({ default: module.Home })),
+  Home: () => Promise.resolve({ default: Home }),
   ProjectListing: () => import('../modules/projects/pages/ProjectListing').then(module => ({ default: module.ProjectListing })),
   ProjectDetails: () => import('../modules/projects/pages/ProjectDetails').then(module => ({ default: module.ProjectDetails })),
   PrintingCatalog: () => import('../modules/public/pages/PrintingCatalog').then(module => ({ default: module.PrintingCatalog })),
@@ -20,7 +22,6 @@ export const lazyRoutes = {
 };
 
 // Lazy Load Public Pages
-const Home = React.lazy(lazyRoutes.Home);
 const ProjectListing = React.lazy(lazyRoutes.ProjectListing);
 const ProjectDetails = React.lazy(lazyRoutes.ProjectDetails);
 const PrintingCatalog = React.lazy(lazyRoutes.PrintingCatalog);
