@@ -98,8 +98,21 @@ const mapContextToDb = (contextData) => {
 };
 
 export const SettingsProvider = ({ children, initialSettings }) => {
-  const [settings, setSettings] = useState(initialSettings || { ...DEFAULT_SETTINGS });
-  const [loading, setLoading] = useState(!initialSettings);
+  const [settings, setSettings] = useState(() => {
+    if (initialSettings) return initialSettings;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const cached = localStorage.getItem('flyen_platform_settings');
+        if (cached) {
+          return { ...DEFAULT_SETTINGS, ...JSON.parse(cached) };
+        }
+      } catch (e) {
+        // ignore JSON parse error
+      }
+    }
+    return { ...DEFAULT_SETTINGS };
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Load settings from Supabase on startup
@@ -108,25 +121,41 @@ export const SettingsProvider = ({ children, initialSettings }) => {
       setLoading(false);
       return;
     }
+    let isMounted = true;
     const loadPlatformSettings = async () => {
       try {
         setLoading(true);
         setError(null);
-        const dbRow = await settingsService.getSettings();
-        if (dbRow) {
+        // Race Supabase fetch against a 3.5s timeout to ensure fast page load
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Settings fetch timeout')), 3500)
+        );
+        const dbRow = await Promise.race([settingsService.getSettings(), timeoutPromise]);
+        if (dbRow && isMounted) {
           const mapped = mapDbToContext(dbRow);
           setSettings((prev) => ({ ...prev, ...mapped }));
+          if (typeof window !== 'undefined' && window.localStorage) {
+            try {
+              localStorage.setItem('flyen_platform_settings', JSON.stringify(mapped));
+            } catch (e) {
+              // ignore storage error
+            }
+          }
         }
       } catch (err) {
         logger.error('Failed to load settings from Supabase:', err);
-        // Fallback to DEFAULT_SETTINGS, do not crash (handled gracefully)
-        setError(err.message || 'Failed to load platform settings.');
+        if (isMounted) {
+          setError(err.message || 'Failed to load platform settings.');
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadPlatformSettings();
+    return () => { isMounted = false; };
   }, [initialSettings]);
 
   // Update Favicon and Document Title reactively when settings change
@@ -160,6 +189,11 @@ export const SettingsProvider = ({ children, initialSettings }) => {
       const updatedRow = await settingsService.updateSettings(dbPayload);
       const mapped = mapDbToContext(updatedRow);
       setSettings((prev) => ({ ...prev, ...mapped }));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+          localStorage.setItem('flyen_platform_settings', JSON.stringify(mapped));
+        } catch (e) {}
+      }
       return { success: true };
     } catch (err) {
       logger.error('Failed to save settings to Supabase:', err);
@@ -175,6 +209,11 @@ export const SettingsProvider = ({ children, initialSettings }) => {
       const updatedRow = await settingsService.updateSettings(dbPayload);
       const mapped = mapDbToContext(updatedRow);
       setSettings({ ...DEFAULT_SETTINGS, ...mapped });
+      if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+          localStorage.setItem('flyen_platform_settings', JSON.stringify(mapped));
+        } catch (e) {}
+      }
       return { success: true };
     } catch (err) {
       logger.error('Failed to reset settings in Supabase:', err);
@@ -190,22 +229,6 @@ export const SettingsProvider = ({ children, initialSettings }) => {
     saveSettings,
     resetDefaults
   }), [settings, loading, error, updateSettings, saveSettings, resetDefaults]);
-
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--bg-primary, #0a0a0c)', color: 'var(--text-muted, #94a3b8)', fontFamily: 'Inter, sans-serif' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '40px', height: '40px', border: '3px solid rgba(255,255,255,0.05)', borderTopColor: 'var(--accent-violet, #8b5cf6)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-          <span style={{ fontSize: '11px', letterSpacing: '2px', fontWeight: '600', color: 'var(--text-dim, #64748b)' }}>LOADING FLYEN PLATFORM...</span>
-        </div>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
-      </div>
-    );
-  }
 
   return (
     <SettingsContext.Provider value={contextValue}>

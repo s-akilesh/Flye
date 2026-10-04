@@ -3,12 +3,39 @@ import { useTheme } from '../../../shared/context/ThemeContext';
 import { SettingsSection } from '../../settings/components/SettingsSection';
 
 export const AppearanceSettings = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, isUserView } = useTheme();
+
+  if (isUserView) {
+    return (
+      <SettingsSection 
+        title="Appearance Settings" 
+        description="Public platform viewing preference."
+      >
+        <div style={{
+          padding: '20px',
+          borderRadius: '12px',
+          border: '1px solid var(--sys-border)',
+          background: 'var(--interaction-selected)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
+          <span className="material-icons-outlined" style={{ fontSize: '28px', color: 'var(--brand-primary)' }}>light_mode</span>
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: '700', margin: '0 0 4px 0', color: 'var(--txt-primary)' }}>Light Theme (Fixed for User View)</h4>
+            <p style={{ fontSize: '12px', color: 'var(--txt-muted)', margin: 0 }}>
+              The Flyen public engineering and shopping portal is standardized in crisp Light Theme for optimal readability and accessibility.
+            </p>
+          </div>
+        </div>
+      </SettingsSection>
+    );
+  }
 
   return (
     <SettingsSection 
       title="Appearance Settings" 
-      description="Customize the look and feel of your Flyen console interface."
+      description="Customize the look and feel of your Flyen admin console."
     >
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-4)', marginTop: '8px' }}>
         

@@ -8,6 +8,8 @@ export const ROUTES = {
   ADMIN_PRINTING_INVENTORY_ADD: '/admin/printing-inventory/add',
   ADMIN_PRINTING_INVENTORY_EDIT: '/admin/printing-inventory/edit/:id',
   ADMIN_PRINTING_INVENTORY_DETAILS: '/admin/printing-inventory/details/:id',
+  ADMIN_CATEGORIES: '/admin/categories',
+  ADMIN_CATEGORY_DETAILS: '/admin/categories/:id',
   VIDEOS: '/videos',
   CONTACT: '/contact',
   PRIVACY_POLICY: '/privacy-policy',
@@ -34,5 +36,7 @@ export const ROUTES = {
   STUDENT_DASHBOARD: '/dashboard',
   STUDENT_SETTINGS: '/settings',
   MY_PROFILE: '/profile',
-  ADMIN_PROFILE: '/admin/profile'
+  ADMIN_PROFILE: '/admin/profile',
+  FEEDBACK: '/feedback',
+  ADMIN_REVIEWS: '/admin/reviews'
 };

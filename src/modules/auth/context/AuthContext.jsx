@@ -39,14 +39,11 @@ export const AuthProvider = ({ children }) => {
       const userProfile = await userService.getProfileById(currentUser.id);
       setProfile(userProfile);
       
-      // Perform guest enquiries linking using user's phone suffix match
+      // Perform guest enquiries linking asynchronously in the background without blocking profile load
       if (userProfile?.phone) {
-        try {
-          logger.log(`[AuthContext] Triggering dynamic guest enquiries linking for phone: ${userProfile.phone}`);
-          await enquiryService.linkGuestEnquiriesToUser(userProfile.phone, currentUser.id);
-        } catch (linkErr) {
+        enquiryService.linkGuestEnquiriesToUser(userProfile.phone, currentUser.id).catch(linkErr => {
           logger.error('[AuthContext] Failed to dynamically link guest enquiries:', linkErr);
-        }
+        });
       }
       
       // Security Guard: If the user is not an admin, force viewMode to 'user'
@@ -71,11 +68,21 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
+    let isMounted = true;
+
+    // Safety timeout to guarantee loading state is released within 2.5s
+    const safetyTimer = setTimeout(() => {
+      if (isMounted) {
+        setLoading(false);
+      }
+    }, 2500);
+
     // 1. Get initial session on mount
     const initializeAuth = async () => {
       try {
         logger.log('[AuthContext] Initializing auth session...');
         const activeSession = await authService.getCurrentSession();
+        if (!isMounted) return;
         setSession(activeSession);
         const currentUser = activeSession?.user ?? null;
         setUser(currentUser);
@@ -87,7 +94,9 @@ export const AuthProvider = ({ children }) => {
       } catch (err) {
         logger.error('[AuthContext] Error during auth initialization:', err);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -95,6 +104,7 @@ export const AuthProvider = ({ children }) => {
 
     // 2. Listen to auth state transitions
     const subscription = authService.onAuthStateChange(async (event, activeSession) => {
+      if (!isMounted) return;
       logger.log(`[AuthContext] Auth state changed: ${event}`);
       setSession(activeSession);
       const currentUser = activeSession?.user ?? null;
@@ -105,10 +115,14 @@ export const AuthProvider = ({ children }) => {
         setProfile(null);
         setViewModeState('user');
       }
-      setLoading(false);
+      if (isMounted) {
+        setLoading(false);
+      }
     });
 
     return () => {
+      isMounted = false;
+      clearTimeout(safetyTimer);
       logger.log('[AuthContext] Unsubscribing from auth state listener.');
       subscription.unsubscribe();
     };

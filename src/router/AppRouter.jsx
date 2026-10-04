@@ -7,25 +7,18 @@ import { PageLoading } from '../shared/components/ui/PageLoading';
 import { ProtectedRoute } from '../modules/auth/components/ProtectedRoute.jsx';
 import { MaintenancePage } from '../modules/public/pages/MaintenancePage';
 import { useSettings } from '../modules/settings/hooks/useSettings';
+import { Home } from '../modules/public/pages/Home';
 
-// Export Route dynamic import descriptors for link prefetching
-export const lazyRoutes = {
-  Home: () => import('../modules/public/pages/Home').then(module => ({ default: module.Home })),
-  ProjectListing: () => import('../modules/projects/pages/ProjectListing').then(module => ({ default: module.ProjectListing })),
-  ProjectDetails: () => import('../modules/projects/pages/ProjectDetails').then(module => ({ default: module.ProjectDetails })),
-  PrintingCatalog: () => import('../modules/public/pages/PrintingCatalog').then(module => ({ default: module.PrintingCatalog })),
-  LearningHub: () => import('../modules/public/pages/LearningHub').then(module => ({ default: module.LearningHub })),
-  Contact: () => import('../modules/public/pages/Contact').then(module => ({ default: module.Contact })),
-  MyProjects: () => import('../modules/my-projects/pages/MyProjects').then(module => ({ default: module.MyProjects }))
-};
+import { lazyRoutes } from './lazyRoutes';
+export { lazyRoutes };
 
 // Lazy Load Public Pages
-const Home = React.lazy(lazyRoutes.Home);
 const ProjectListing = React.lazy(lazyRoutes.ProjectListing);
 const ProjectDetails = React.lazy(lazyRoutes.ProjectDetails);
 const PrintingCatalog = React.lazy(lazyRoutes.PrintingCatalog);
 const LearningHub = React.lazy(lazyRoutes.LearningHub);
 const Contact = React.lazy(lazyRoutes.Contact);
+const Feedback = React.lazy(lazyRoutes.Feedback);
 
 // Lazy Load Admin Pages
 const AdminDashboard = React.lazy(() => import('../modules/dashboard/pages/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
@@ -33,6 +26,7 @@ const ManageProjects = React.lazy(() => import('../modules/projects/pages/Manage
 const AddProject = React.lazy(() => import('../modules/projects/pages/AddProject').then(module => ({ default: module.AddProject })));
 const EditProject = React.lazy(() => import('../modules/projects/pages/EditProject').then(module => ({ default: module.EditProject })));
 const ManageEnquiries = React.lazy(() => import('../modules/enquiries/pages/ManageEnquiries').then(module => ({ default: module.ManageEnquiries })));
+const ManageReviews = React.lazy(() => import('../modules/reviews/pages/ManageReviews').then(module => ({ default: module.ManageReviews })));
 const AdminSettings = React.lazy(() => import('../modules/settings/pages/AdminSettings').then(module => ({ default: module.AdminSettings })));
 const ManageContacts = React.lazy(() => import('../modules/contact/pages/ManageContacts').then(module => ({ default: module.ManageContacts })));
 const ActivityLogs = React.lazy(() => import('../modules/dashboard/pages/ActivityLogs').then(module => ({ default: module.ActivityLogs })));
@@ -50,6 +44,10 @@ const PrintingProductDetails = React.lazy(() => import('../modules/public/pages/
 const ProductList = React.lazy(() => import('../modules/printing-inventory/pages/ProductList').then(module => ({ default: module.ProductList })));
 const AddEditProduct = React.lazy(() => import('../modules/printing-inventory/pages/AddEditProduct').then(module => ({ default: module.AddEditProduct })));
 const AdminProductDetails = React.lazy(() => import('../modules/printing-inventory/pages/AdminProductDetails').then(module => ({ default: module.AdminProductDetails })));
+
+// Category Management Lazy Pages
+const CategoryList = React.lazy(() => import('../modules/categories/pages/CategoryList').then(module => ({ default: module.CategoryList })));
+const CategoryDetails = React.lazy(() => import('../modules/categories/pages/CategoryDetails').then(module => ({ default: module.CategoryDetails })));
 
 const MaintenanceGate = ({ children }) => {
   const { settings } = useSettings();
@@ -76,6 +74,9 @@ export const AppRouter = () => {
             <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
             <Route path={ROUTES.PRINTING_DETAILS} element={<PrintingProductDetails />} />
             <Route path={ROUTES.CONTACT} element={<Contact />} />
+            <Route path={ROUTES.FEEDBACK} element={<Feedback />} />
+            <Route path="/review" element={<Feedback />} />
+            <Route path="/reviews" element={<Feedback />} />
             <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
             <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
             <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
@@ -104,7 +105,13 @@ export const AppRouter = () => {
               <Route path={ROUTES.ADMIN_PRINTING_INVENTORY_EDIT} element={<AddEditProduct />} />
               <Route path={ROUTES.ADMIN_PRINTING_INVENTORY_DETAILS} element={<AdminProductDetails />} />
 
+              {/* Category Management Admin routes */}
+              <Route path={ROUTES.ADMIN_CATEGORIES} element={<CategoryList />} />
+              <Route path={ROUTES.ADMIN_CATEGORY_DETAILS} element={<CategoryDetails />} />
+
               <Route path={ROUTES.ADMIN_ENQUIRIES} element={<ManageEnquiries />} />
+              <Route path={ROUTES.ADMIN_REVIEWS} element={<ManageReviews />} />
+              <Route path="/admin/feedback" element={<ManageReviews />} />
               <Route path={ROUTES.ADMIN_CONTACTS} element={<ManageContacts />} />
               <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
               <Route path={ROUTES.ADMIN_PROFILE} element={<ProfilePage />} />

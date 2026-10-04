@@ -129,10 +129,11 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
             width: '100%',
             padding: '12px',
             fontWeight: '700',
-            fontSize: '13px',
-            background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
+            fontSize: '13.5px',
+            background: 'var(--brand-primary, #38bdf8)',
+            color: '#ffffff',
             border: 'none',
-            boxShadow: '0 4px 16px var(--interaction-focus)'
+            boxShadow: '0 4px 18px rgba(56, 189, 248, 0.35)'
           }}
         >
           {isSubmitting ? 'Sending Link...' : 'Send Reset Link'}

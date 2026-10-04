@@ -1,0 +1,11 @@
+// Export Route dynamic import descriptors for link prefetching & code splitting
+export const lazyRoutes = {
+  Home: () => import('../modules/public/pages/Home').then(module => ({ default: module.Home })),
+  ProjectListing: () => import('../modules/projects/pages/ProjectListing').then(module => ({ default: module.ProjectListing })),
+  ProjectDetails: () => import('../modules/projects/pages/ProjectDetails').then(module => ({ default: module.ProjectDetails })),
+  PrintingCatalog: () => import('../modules/public/pages/PrintingCatalog').then(module => ({ default: module.PrintingCatalog })),
+  LearningHub: () => import('../modules/public/pages/LearningHub').then(module => ({ default: module.LearningHub })),
+  Contact: () => import('../modules/public/pages/Contact').then(module => ({ default: module.Contact })),
+  Feedback: () => import('../modules/public/pages/Feedback').then(module => ({ default: module.Feedback })),
+  MyProjects: () => import('../modules/my-projects/pages/MyProjects').then(module => ({ default: module.MyProjects }))
+};

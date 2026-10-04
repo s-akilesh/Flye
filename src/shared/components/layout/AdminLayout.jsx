@@ -9,7 +9,7 @@ export const AdminLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState({
-    manufacturing: true // open by default
+    inventory: true // open by default
   });
 
   const toggleGroup = (groupId) => {
@@ -58,27 +58,35 @@ export const AdminLayout = () => {
       )
     },
     {
-      id: 'projects',
-      label: 'Manage Projects',
-      path: ROUTES.ADMIN_PROJECTS,
-      icon: (
-        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
-      )
-    },
-    {
-      id: 'manufacturing',
-      label: 'Manufacturing',
+      id: 'inventory',
+      label: 'Inventory',
       isGroup: true,
       icon: (
-        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>precision_manufacturing</span>
+        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
       ),
       subItems: [
         {
+          id: 'projects',
+          label: 'Electronic',
+          path: ROUTES.ADMIN_PROJECTS,
+          icon: (
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>memory</span>
+          )
+        },
+        {
           id: 'printing-inventory',
-          label: '3D Print Inventory',
+          label: '3D Printing',
           path: ROUTES.ADMIN_PRINTING_INVENTORY,
           icon: (
             <span className="material-icons-outlined" style={{ fontSize: '18px' }}>3d_rotation</span>
+          )
+        },
+        {
+          id: 'categories',
+          label: 'Categories',
+          path: ROUTES.ADMIN_CATEGORIES,
+          icon: (
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>category</span>
           )
         }
       ]
@@ -89,6 +97,14 @@ export const AdminLayout = () => {
       path: ROUTES.ADMIN_ENQUIRIES,
       icon: (
         <span className="material-icons-outlined" style={{ fontSize: '18px' }}>chat_bubble_outline</span>
+      )
+    },
+    {
+      id: 'reviews',
+      label: 'Customer Reviews',
+      path: ROUTES.ADMIN_REVIEWS,
+      icon: (
+        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>rate_review</span>
       )
     },
     {
@@ -152,6 +168,14 @@ export const AdminLayout = () => {
                       location.pathname === ROUTES.ADMIN_PRINTING_INVENTORY_ADD ||
                       location.pathname.startsWith('/admin/printing-inventory/edit/') ||
                       location.pathname.startsWith('/admin/printing-inventory/details/')
+                    )) ||
+                    (sub.id === 'projects' && (
+                      location.pathname === ROUTES.ADMIN_ADD_PROJECT ||
+                      location.pathname.startsWith('/admin/projects/edit/')
+                    )) ||
+                    (sub.id === 'categories' && (
+                      location.pathname === ROUTES.ADMIN_CATEGORIES ||
+                      location.pathname.startsWith('/admin/categories/')
                     ))
                   );
                   return (
@@ -199,6 +223,14 @@ export const AdminLayout = () => {
                                 location.pathname === ROUTES.ADMIN_PRINTING_INVENTORY_ADD ||
                                 location.pathname.startsWith('/admin/printing-inventory/edit/') ||
                                 location.pathname.startsWith('/admin/printing-inventory/details/')
+                              )) ||
+                              (sub.id === 'projects' && (
+                                location.pathname === ROUTES.ADMIN_ADD_PROJECT ||
+                                location.pathname.startsWith('/admin/projects/edit/')
+                              )) ||
+                              (sub.id === 'categories' && (
+                                location.pathname === ROUTES.ADMIN_CATEGORIES ||
+                                location.pathname.startsWith('/admin/categories/')
                               ));
                             return (
                               <li key={sub.id}>

@@ -84,6 +84,8 @@ export const PrintingCatalog = () => {
     setSearchQuery('');
   };
 
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
   // Client-side Instant Filter
   let filteredCatalog = products.filter(item => {
     const matchesCategory = appliedCategories.includes('all') || appliedCategories.includes(item.category);
@@ -120,23 +122,21 @@ export const PrintingCatalog = () => {
     return item ? item.value : val;
   };
 
+  const isFiltered = (appliedCategories.length > 0 && !appliedCategories.includes('all')) || searchQuery !== '';
+
   return (
     <>
       <SEO {...seoProps} page={PageType.PRINTING} />
-      <style>{`
-        #printing-portal .portal-header {
-          margin-bottom: 0px !important;
-        }
-      `}</style>
       <motion.section
-        className="portal-section portal-layout-fixed-height"
+        className="portal-section"
         id="printing-portal"
-        style={{ paddingTop: '73px', height: 'calc(100vh - 73px)' }}
+        style={{ paddingTop: '73px', minHeight: 'calc(100vh - 73px)' }}
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 15 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
+        {/* Light Theme Page Header Banner */}
         <div
           className="portal-header"
           style={{
@@ -158,54 +158,89 @@ export const PrintingCatalog = () => {
             </Button>
             <div className="portal-title-area">
               <h2>3D Printing Catalog</h2>
-              <p>Explore premium fabricated prototypes and parts.</p>
             </div>
           </div>
         </div>
 
-        <AdminToolbar
-          className="marketplace-toolbar"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            zIndex: 100,
-            background: 'var(--sys-surface)',
-            borderBottom: '1px solid var(--sys-divider)',
-            padding: '12px var(--page-padding)',
-            width: 'auto',
-            marginLeft: 'calc(-1 * var(--page-padding))',
-            marginRight: 'calc(-1 * var(--page-padding))',
-            borderRadius: 0,
-            position: 'sticky',
-            top: '80px'
-          }}
-          searchId="search-printing"
-          searchPlaceholder="Search 3D printing catalog.."
-          searchValue={searchQuery}
-          onSearchChange={(e) => setSearchQuery(e.target.value)}
-          showSearchIcon={true}
-          activeFilterCount={appliedCategories.includes('all') ? 0 : appliedCategories.length}
-          sortValue={sortBy}
-          onSortChange={(e) => setSortBy(e.target.value)}
-          sortOptions={[
-            { value: 'popular', label: 'Most Popular' },
-            { value: 'newest', label: 'Newest' },
-            { value: 'price-low', label: 'Price: Low to High' },
-            { value: 'price-high', label: 'Price: High to Low' }
-          ]}
-          onReset={handleClearAll}
-          onApply={handleApplyFilters}
-        >
-          <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Categories */}
-            <div className="calc-row">
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
-              <div className="admin-chip-group">
+        {/* 2-Column Marketplace Container: Left Sidebar (Desktop/Mid) + Right Main Grid */}
+        <div className="marketplace-layout-container" style={{ padding: '20px 0' }}>
+          
+          {/* ========================================================================
+              LEFT SIDEBAR: FILTER & SORT (Web View - Large and Mid screens >= 768px)
+              ======================================================================== */}
+          <aside className="marketplace-desktop-sidebar">
+            {/* Search Input */}
+            <div className="sidebar-filter-group">
+              <label className="sidebar-group-title">Search Catalog</label>
+              <div style={{ position: 'relative' }}>
+                <Input
+                  type="text"
+                  id="search-printing-desktop"
+                  className="form-input"
+                  placeholder="Search products, materials..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ width: '100%', paddingRight: '36px', height: '38px', fontSize: '12.5px' }}
+                />
+                <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--txt-muted)', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+                  <span className="material-icons-outlined" style={{ fontSize: '18px' }}>search</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Sort Option */}
+            <div className="sidebar-filter-group">
+              <label className="sidebar-group-title">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="form-select"
+                style={{
+                  width: '100%',
+                  height: '38px',
+                  fontSize: '12.5px',
+                  background: 'var(--form-bg)',
+                  color: 'var(--txt-primary)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '6px',
+                  padding: '0 10px',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="popular" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Most Popular</option>
+                <option value="newest" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Newest</option>
+                <option value="price-low" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Price: Low to High</option>
+                <option value="price-high" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Price: High to Low</option>
+              </select>
+            </div>
+
+            {/* Categories Section */}
+            <div className="sidebar-filter-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label className="sidebar-group-title">Categories</label>
+                {isFiltered && (
+                  <button
+                    type="button"
+                    onClick={handleClearAll}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--brand-primary)',
+                      fontSize: '11px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      padding: 0
+                    }}
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+              <div className="admin-chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
                 <button
                   type="button"
                   onClick={() => handleToggleCategory('all')}
-                  className={`admin-chip ${activeCategories.includes('all') ? 'active' : ''}`}
+                  className={`admin-chip ${appliedCategories.includes('all') ? 'active' : ''}`}
                 >
                   All
                 </button>
@@ -214,18 +249,52 @@ export const PrintingCatalog = () => {
                     key={c.value}
                     type="button"
                     onClick={() => handleToggleCategory(c.value)}
-                    className={`admin-chip ${activeCategories.includes(c.value) && !activeCategories.includes('all') ? 'active' : ''}`}
+                    className={`admin-chip ${appliedCategories.includes(c.value) && !appliedCategories.includes('all') ? 'active' : ''}`}
                   >
                     {c.label}
                   </button>
                 ))}
               </div>
             </div>
-          </div>
-        </AdminToolbar>
+          </aside>
 
-        <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', marginTop: '16px' }}>
-          <div className="marketplace-main" style={{ width: '100%', paddingTop: '12px' }}>
+          {/* ========================================================================
+              RIGHT MAIN: PRODUCT GRID & MOBILE TRIGGER
+              ======================================================================== */}
+          <main className="marketplace-main">
+            
+            {/* Mobile Filter & Search Bar (< 768px) */}
+            <div className="mobile-filter-bar">
+              <div style={{ flex: 1, position: 'relative' }}>
+                <Input
+                  type="text"
+                  placeholder="Search 3D catalog..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ width: '100%', height: '38px', fontSize: '13px', paddingRight: '36px' }}
+                />
+                <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--txt-muted)', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+                  <span className="material-icons-outlined" style={{ fontSize: '18px' }}>search</span>
+                </span>
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setIsMobileFiltersOpen(true)}
+                style={{ height: '38px', padding: '0 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                <span className="material-icons-outlined" style={{ fontSize: '18px' }}>tune</span>
+                Filter
+                {isFiltered && <span className="admin-icon-badge" style={{ marginLeft: '4px' }}>•</span>}
+              </Button>
+            </div>
+
+            {/* Results Count Bar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '500' }}>
+                Showing <strong style={{ color: 'var(--txt-primary)' }}>{filteredCatalog.length}</strong> {filteredCatalog.length === 1 ? '3D item' : '3D items'}
+              </div>
+            </div>
 
             {/* Catalog Grid */}
             {isLoading ? (
@@ -342,13 +411,89 @@ export const PrintingCatalog = () => {
                 ))}
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 24px', gap: '12px' }}>
-                <span className="material-icons-outlined" style={{ fontSize: '40px', color: 'var(--txt-muted)' }}>inventory_2</span>
-                <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: 0 }}>No published products match your criteria.</p>
+              <div className="marketplace-empty-state active" style={{ marginTop: '16px' }}>
+                <span className="material-icons-outlined" style={{ fontSize: '40px', color: 'var(--txt-muted)', marginBottom: '12px' }}>inventory_2</span>
+                <h3>No matching 3D products found</h3>
+                <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: '8px 0 16px 0' }}>Try changing categories or searching for a different keyword.</p>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <Button variant="outline" onClick={handleClearAll}>
+                    Reset Filters
+                  </Button>
+                </div>
               </div>
             )}
-          </div>
+          </main>
         </div>
+
+        {/* Mobile Filter & Sort Drawer Modal */}
+        <Modal
+          isOpen={isMobileFiltersOpen}
+          onClose={() => setIsMobileFiltersOpen(false)}
+          className="modal-content purple mobile-filter-modal"
+          style={{ maxWidth: '500px', width: '92%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '20px' }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700' }}>Filter & Sort</h3>
+            <button
+              type="button"
+              onClick={() => setIsMobileFiltersOpen(false)}
+              style={{ background: 'transparent', border: 'none', color: 'var(--txt-muted)', cursor: 'pointer' }}
+            >
+              <span className="material-icons">close</span>
+            </button>
+          </div>
+
+          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Sort */}
+            <div>
+              <label className="sidebar-group-title" style={{ display: 'block', marginBottom: '8px' }}>Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="form-select"
+                style={{ width: '100%', height: '38px', fontSize: '13px' }}
+              >
+                <option value="popular">Most Popular</option>
+                <option value="newest">Newest</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+              </select>
+            </div>
+
+            {/* Categories */}
+            <div>
+              <label className="sidebar-group-title" style={{ display: 'block', marginBottom: '8px' }}>Categories</label>
+              <div className="admin-chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                <button
+                  type="button"
+                  onClick={() => handleToggleCategory('all')}
+                  className={`admin-chip ${appliedCategories.includes('all') ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {categories.map((c) => (
+                  <button
+                    key={c.value}
+                    type="button"
+                    onClick={() => handleToggleCategory(c.value)}
+                    className={`admin-chip ${appliedCategories.includes(c.value) && !appliedCategories.includes('all') ? 'active' : ''}`}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', marginTop: '20px', paddingTop: '12px', borderTop: '1px solid var(--sys-divider)' }}>
+            <Button variant="secondary" onClick={handleClearAll} style={{ flex: 1 }}>
+              Reset
+            </Button>
+            <Button variant="primary" onClick={() => setIsMobileFiltersOpen(false)} style={{ flex: 1 }}>
+              Apply
+            </Button>
+          </div>
+        </Modal>
       </motion.section>
     </>
   );

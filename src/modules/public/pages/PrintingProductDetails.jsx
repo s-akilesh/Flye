@@ -500,7 +500,7 @@ export const PrintingProductDetails = () => {
                             ) : (
                               <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)' }}>₹{rel.price}</span>
                             )}
-                            <Button variant="secondary" style={{ height: '28px', padding: '0 10px', fontSize: '11px' }}>Details</Button>
+                            <Button variant="primary" style={{ height: '28px', padding: '0 12px', fontSize: '11px', fontWeight: '600' }}>Details</Button>
                           </div>
                         </Card>
                       ))}
@@ -637,17 +637,6 @@ export const PrintingProductDetails = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
-                  <Input
-                    type="text"
-                    placeholder="e.g. Smart Irrigation System"
-                    value={customProjectTitle}
-                    onChange={(e) => setCustomProjectTitle(e.target.value)}
-                    className="form-input"
-                  />
-                </div>
-
                 <div style={{ display: projectStatus === '3d Printing' ? 'none' : 'block' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
                   <Input
@@ -656,18 +645,6 @@ export const PrintingProductDetails = () => {
                     value={projectBudget}
                     onChange={(e) => setProjectBudget(e.target.value.replace(/\D/g, ''))}
                     className="form-input"
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
-                  <Input
-                    type="date"
-                    value={submissionDate}
-                    onChange={(e) => setSubmissionDate(e.target.value)}
-                    onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
-                    className="form-input"
-                    style={{ colorScheme: 'dark', height: '38px' }}
                   />
                 </div>
 

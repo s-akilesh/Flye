@@ -222,8 +222,8 @@ export const AuthGateway = () => {
               {/* Sliding Tab Selectors */}
               <div style={{
                 display: 'flex',
-                background: 'var(--input-bg)',
-                border: '1px solid var(--sys-border)',
+                background: '#12111d',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 padding: '4px',
                 borderRadius: '8px',
                 marginBottom: '24px'
@@ -235,10 +235,10 @@ export const AuthGateway = () => {
                     flex: 1,
                     padding: '8px 12px',
                     borderRadius: '6px',
-                    background: activeTab === 'login' ? 'var(--interaction-selected)' : 'none',
-                    border: 'none',
-                    color: activeTab === 'login' ? 'var(--txt-primary)' : 'var(--txt-muted)',
-                    fontSize: '12px',
+                    background: activeTab === 'login' ? 'rgba(56, 189, 248, 0.15)' : 'none',
+                    border: activeTab === 'login' ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid transparent',
+                    color: activeTab === 'login' ? '#38bdf8' : '#94a3b8',
+                    fontSize: '12.5px',
                     fontWeight: '700',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
@@ -253,10 +253,10 @@ export const AuthGateway = () => {
                     flex: 1,
                     padding: '8px 12px',
                     borderRadius: '6px',
-                    background: activeTab === 'signup' ? 'var(--interaction-selected)' : 'none',
-                    border: 'none',
-                    color: activeTab === 'signup' ? 'var(--txt-primary)' : 'var(--txt-muted)',
-                    fontSize: '12px',
+                    background: activeTab === 'signup' ? 'rgba(56, 189, 248, 0.15)' : 'none',
+                    border: activeTab === 'signup' ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid transparent',
+                    color: activeTab === 'signup' ? '#38bdf8' : '#94a3b8',
+                    fontSize: '12.5px',
                     fontWeight: '700',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
@@ -280,7 +280,7 @@ export const AuthGateway = () => {
                 textAlign: 'center',
                 marginTop: '32px',
                 paddingTop: '20px',
-                borderTop: '1px solid var(--sys-divider)'
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)'
               }}>
                 <button
                   type="button"
@@ -288,15 +288,15 @@ export const AuthGateway = () => {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: 'var(--txt-muted)',
+                    color: '#94a3b8',
                     fontSize: '12px',
                     fontWeight: '600',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                     textDecoration: 'none'
                   }}
-                  onMouseEnter={(e) => e.target.style.color = 'var(--txt-primary)'}
-                  onMouseLeave={(e) => e.target.style.color = 'var(--txt-muted)'}
+                  onMouseEnter={(e) => e.target.style.color = '#38bdf8'}
+                  onMouseLeave={(e) => e.target.style.color = '#94a3b8'}
                 >
                   Continue as Guest →
                 </button>

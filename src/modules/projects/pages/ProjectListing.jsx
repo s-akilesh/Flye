@@ -127,9 +127,29 @@ export const ProjectListing = () => {
   const [appliedCategories, setAppliedCategories] = useState(['all']);
   const [appliedFeatures, setAppliedFeatures] = useState([]);
 
-  const handleApplyFilters = () => {
-    setAppliedCategories([...activeCategories]);
-    setAppliedFeatures([...activeFeatures]);
+  const handleCategoryToggle = (cat) => {
+    toggleCategory(cat);
+    if (cat === 'all') {
+      setAppliedCategories(['all']);
+    } else {
+      let next = appliedCategories.filter(c => c !== 'all');
+      if (next.includes(cat)) {
+        next = next.filter(c => c !== cat);
+      } else {
+        next.push(cat);
+      }
+      if (next.length === 0) next = ['all'];
+      setAppliedCategories(next);
+    }
+  };
+
+  const handleFeatureToggle = (feat) => {
+    toggleFeature(feat);
+    if (appliedFeatures.includes(feat)) {
+      setAppliedFeatures(appliedFeatures.filter(f => f !== feat));
+    } else {
+      setAppliedFeatures([...appliedFeatures, feat]);
+    }
   };
 
   // Filter and sort projects using centralized hook
@@ -153,196 +173,335 @@ export const ProjectListing = () => {
     clearAISearch();
   };
 
+  const isFiltered = (appliedCategories.length > 0 && !appliedCategories.includes('all')) || appliedFeatures.length > 0 || searchQuery !== '';
+
   return (
     <>
       <SEO {...seoProps} page={PageType.PROJECT_LISTING} />
-      <style>{`
-        @media (min-width: 768px) and (max-width: 991px) {
-          #kits-portal {
-            padding-top: 14px !important;
-          }
-          #kits-portal .portal-header {
-            display: block !important;
-          }
-          #kits-portal .marketplace-toolbar {
-            position: sticky !important;
-            top: 52px !important;
-            margin-left: calc(-1 * var(--page-padding)) !important;
-            margin-right: calc(-1 * var(--page-padding)) !important;
-            width: auto !important;
-            border-radius: 0px !important;
-            border-left: none !important;
-            border-right: none !important;
-            border-top: 1px solid var(--sys-border) !important;
-            border-bottom: 1px solid var(--sys-border) !important;
-            box-shadow: none !important;
-          }
-          #kits-portal .portal-content-flex {
-            padding-top: 16px !important;
-          }
-        }
-      `}</style>
       <motion.section
-        className="portal-section portal-layout-fixed-height"
+        className="portal-section"
         id="kits-portal"
-        style={{ paddingTop: '73px', height: 'calc(100vh - 73px)' }}
+        style={{ paddingTop: '73px', minHeight: 'calc(100vh - 73px)' }}
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 15 }}
       >
-      <div
-        className="portal-header"
-        style={{
-          width: 'auto',
-          marginLeft: 'calc(-1 * var(--page-padding))',
-          marginRight: 'calc(-1 * var(--page-padding))',
-          paddingLeft: 'var(--page-padding)',
-          paddingRight: 'var(--page-padding)',
-          paddingTop: '16px',
-          paddingBottom: '16px',
-          background: 'var(--sys-page-header-bg)',
-          borderBottom: '1px solid var(--sys-divider)',
-          marginBottom: '0px'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-          <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
-            <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
-          </Button>
-          <div className="portal-title-area">
-            <h2>Project Kits</h2>
-            <p>Explore robotics, IoT, automation, GPS tracking, Arduino, and educational engineering projects.</p>
+        {/* Light Theme Page Header Banner */}
+        <div
+          className="portal-header"
+          style={{
+            width: 'auto',
+            marginLeft: 'calc(-1 * var(--page-padding))',
+            marginRight: 'calc(-1 * var(--page-padding))',
+            paddingLeft: 'var(--page-padding)',
+            paddingRight: 'var(--page-padding)',
+            paddingTop: '16px',
+            paddingBottom: '16px',
+            background: 'var(--sys-page-header-bg)',
+            borderBottom: '1px solid var(--sys-divider)',
+            marginBottom: '0px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+            <Button variant="secondary" className="btn-back" onClick={() => navigate(ROUTES.HOME)} style={{ padding: '8px', minWidth: 'auto' }}>
+              <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
+            </Button>
+            <div className="portal-title-area">
+              <h2>Project Kits</h2>
+            </div>
           </div>
-        </div>
-        <div className="portal-header-meta">
-          {aiFilterResult && (
-            <span
-              className="badge-count ai-active"
-              onClick={clearAISearch}
-            >
-              Clear AI Search ✕
-            </span>
-          )}
-        </div>
-      </div>
-
-      <AdminToolbar
-        className="marketplace-toolbar"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          zIndex: 100,
-          background: 'var(--sys-surface)',
-          borderBottom: '1px solid var(--sys-divider)',
-          padding: '12px var(--page-padding)',
-          width: 'auto',
-          marginLeft: 'calc(-1 * var(--page-padding))',
-          marginRight: 'calc(-1 * var(--page-padding))',
-          borderRadius: 0,
-          position: 'sticky',
-          top: '80px'
-        }}
-        searchId="search-kits"
-        searchPlaceholder="Search Projects.."
-        searchValue={searchQuery}
-        onSearchChange={(e) => setSearchQuery(e.target.value)}
-        showSearchIcon={true}
-        activeFilterCount={
-          (appliedCategories.includes('all') ? 0 : appliedCategories.length) +
-          appliedFeatures.length
-        }
-        sortValue={sortBy}
-        onSortChange={(e) => setSortBy(e.target.value)}
-        sortOptions={[
-          { value: 'popular', label: 'Most Popular' },
-          { value: 'newest', label: 'Newest' },
-          { value: 'price-low', label: 'Price: Low to High' },
-          { value: 'price-high', label: 'Price: High to Low' }
-        ]}
-        onReset={handleClearAll}
-        onApply={handleApplyFilters}
-      >
-        <div className="admin-filter-panel-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Categories */}
-          <div className="calc-row">
-            <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Categories</label>
-            <div className="admin-chip-group">
-              <button
-                type="button"
-                onClick={() => toggleCategory('all')}
-                className={`admin-chip ${activeCategories.includes('all') ? 'active' : ''}`}
+          <div className="portal-header-meta">
+            {aiFilterResult && (
+              <span
+                className="badge-count ai-active"
+                onClick={clearAISearch}
               >
-                All
-              </button>
-              {dbCategories.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => toggleCategory(item.value)}
-                  className={`admin-chip ${activeCategories.includes(item.value) && !activeCategories.includes('all') ? 'active' : ''}`}
-                >
-                  {item.value}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Included Features */}
-          <div className="calc-row">
-            <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Included Features</label>
-            <div className="admin-chip-group">
-              <button
-                type="button"
-                onClick={() => {
-                  activeFeatures.forEach(f => toggleFeature(f));
-                }}
-                className={`admin-chip ${activeFeatures.length === 0 ? 'active' : ''}`}
-              >
-                All
-              </button>
-              {Object.values(PROJECT_FEATURES).map((f) => (
-                <button
-                  key={f}
-                  type="button"
-                  onClick={() => toggleFeature(f)}
-                  className={`admin-chip ${activeFeatures.includes(f) ? 'active' : ''}`}
-                >
-                  {FEATURE_LABELS[f]}
-                </button>
-              ))}
-            </div>
+                Clear AI Search ✕
+              </span>
+            )}
           </div>
         </div>
-      </AdminToolbar>
 
-      <div className="portal-content-flex marketplace-layout" style={{ maxWidth: '100%', width: '100%', marginTop: '16px' }}>
-        <div className="marketplace-main" style={{ width: '100%', paddingTop: '12px' }}>
-          {isLoading ? (
-            <div className="project-marketplace-grid" style={{ width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Skeleton key={i} variant="card" style={{ height: '360px' }} />
-              ))}
-            </div>
-          ) : filteredList.length > 0 ? (
-            <ProjectGrid projects={filteredList} onRequestOrder={handleOpenOrderModal} />
-          ) : (
-            <div className="marketplace-empty-state active" id="marketplace-empty-state">
-              <div className="empty-icon">📂</div>
-              <h3>No matching projects found</h3>
-              <p>Try refining your query search, checking other filter tags, or browsing the whole database.</p>
-              <div className="empty-btn-group">
-                <Button variant="primary" className="btn-empty-reset" id="btn-reset-filters" onClick={handleClearAll}>
-                  Reset Filters
-                </Button>
-                <Button variant="secondary" className="btn-empty-browse" id="btn-browse-all" onClick={handleClearAll}>
-                  Browse All Projects
-                </Button>
+        {/* 2-Column Marketplace Container: Left Sidebar (Desktop/Mid) + Right Main Grid */}
+        <div className="marketplace-layout-container" style={{ padding: '20px 0' }}>
+          
+          {/* ========================================================================
+              LEFT SIDEBAR: FILTER & SORT (Web View - Large and Mid screens >= 768px)
+              ======================================================================== */}
+          <aside className="marketplace-desktop-sidebar">
+            {/* Search Input */}
+            <div className="sidebar-filter-group">
+              <label className="sidebar-group-title">Search Projects</label>
+              <div style={{ position: 'relative' }}>
+                <Input
+                  type="text"
+                  id="search-kits-desktop"
+                  className="form-input"
+                  placeholder="Search by title, topic..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ width: '100%', paddingRight: '36px', height: '38px', fontSize: '12.5px' }}
+                />
+                <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--txt-muted)', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+                  <span className="material-icons-outlined" style={{ fontSize: '18px' }}>search</span>
+                </span>
               </div>
             </div>
-          )}
+
+            {/* Sort Option */}
+            <div className="sidebar-filter-group">
+              <label className="sidebar-group-title">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="form-select"
+                style={{
+                  width: '100%',
+                  height: '38px',
+                  fontSize: '12.5px',
+                  background: 'var(--form-bg)',
+                  color: 'var(--txt-primary)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '6px',
+                  padding: '0 10px',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="popular" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Most Popular</option>
+                <option value="newest" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Newest Releases</option>
+                <option value="price-low" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Price: Low to High</option>
+                <option value="price-high" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Price: High to Low</option>
+              </select>
+            </div>
+
+            {/* Categories Section */}
+            <div className="sidebar-filter-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label className="sidebar-group-title">Categories</label>
+                {isFiltered && (
+                  <button
+                    type="button"
+                    onClick={handleClearAll}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--brand-primary)',
+                      fontSize: '11px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      padding: 0
+                    }}
+                  >
+                    Reset All
+                  </button>
+                )}
+              </div>
+              <div className="admin-chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
+                <button
+                  type="button"
+                  onClick={() => handleCategoryToggle('all')}
+                  className={`admin-chip ${appliedCategories.includes('all') ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {dbCategories.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => handleCategoryToggle(item.value)}
+                    className={`admin-chip ${appliedCategories.includes(item.value) && !appliedCategories.includes('all') ? 'active' : ''}`}
+                  >
+                    {item.value}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Included Features Section */}
+            <div className="sidebar-filter-group">
+              <label className="sidebar-group-title">Included Features</label>
+              <div className="admin-chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAppliedFeatures([]);
+                  }}
+                  className={`admin-chip ${appliedFeatures.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {Object.values(PROJECT_FEATURES).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => handleFeatureToggle(f)}
+                    className={`admin-chip ${appliedFeatures.includes(f) ? 'active' : ''}`}
+                  >
+                    {FEATURE_LABELS[f]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </aside>
+
+          {/* ========================================================================
+              RIGHT MAIN: PRODUCT GRID & MOBILE TRIGGER
+              ======================================================================== */}
+          <main className="marketplace-main">
+            
+            {/* Mobile Filter & Search Bar (< 768px) */}
+            <div className="mobile-filter-bar">
+              <div style={{ flex: 1, position: 'relative' }}>
+                <Input
+                  type="text"
+                  placeholder="Search projects..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ width: '100%', height: '38px', fontSize: '13px', paddingRight: '36px' }}
+                />
+                <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--txt-muted)', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+                  <span className="material-icons-outlined" style={{ fontSize: '18px' }}>search</span>
+                </span>
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setIsMobileFiltersOpen(true)}
+                style={{ height: '38px', padding: '0 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                <span className="material-icons-outlined" style={{ fontSize: '18px' }}>tune</span>
+                Filter
+                {isFiltered && <span className="admin-icon-badge" style={{ marginLeft: '4px' }}>•</span>}
+              </Button>
+            </div>
+
+            {/* Results Count Bar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '500' }}>
+                Showing <strong style={{ color: 'var(--txt-primary)' }}>{filteredList.length}</strong> {filteredList.length === 1 ? 'project kit' : 'project kits'}
+              </div>
+            </div>
+
+            {/* Grid / Skeletons / Empty */}
+            {isLoading ? (
+              <div className="project-marketplace-grid" style={{ width: '100%' }}>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Skeleton key={i} variant="card" style={{ height: '320px', borderRadius: '12px' }} />
+                ))}
+              </div>
+            ) : filteredList.length > 0 ? (
+              <ProjectGrid projects={filteredList} onRequestOrder={handleOpenOrderModal} />
+            ) : (
+              <div className="marketplace-empty-state active" id="marketplace-empty-state">
+                <div className="empty-icon">📂</div>
+                <h3>No matching projects found</h3>
+                <p>Try refining your query search, checking other filter tags, or browsing the whole database.</p>
+                <div className="empty-btn-group" style={{ marginTop: '16px', display: 'flex', gap: '12px' }}>
+                  <Button variant="secondary" id="btn-reset-filters" onClick={handleClearAll}>
+                    Reset Filters
+                  </Button>
+                  <Button variant="secondary" id="btn-browse-all" onClick={handleClearAll}>
+                    Browse All Projects
+                  </Button>
+                </div>
+              </div>
+            )}
+          </main>
         </div>
-      </div>
+
+        {/* Mobile Filter & Sort Drawer Modal */}
+        <Modal
+          isOpen={isMobileFiltersOpen}
+          onClose={() => setIsMobileFiltersOpen(false)}
+          className="modal-content purple mobile-filter-modal"
+          style={{ maxWidth: '500px', width: '92%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '20px' }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700' }}>Filter & Sort</h3>
+            <button
+              type="button"
+              onClick={() => setIsMobileFiltersOpen(false)}
+              style={{ background: 'transparent', border: 'none', color: 'var(--txt-muted)', cursor: 'pointer' }}
+            >
+              <span className="material-icons">close</span>
+            </button>
+          </div>
+
+          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Sort */}
+            <div>
+              <label className="sidebar-group-title" style={{ display: 'block', marginBottom: '8px' }}>Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="form-select"
+                style={{ width: '100%', height: '38px', fontSize: '13px' }}
+              >
+                <option value="popular">Most Popular</option>
+                <option value="newest">Newest Releases</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+              </select>
+            </div>
+
+            {/* Categories */}
+            <div>
+              <label className="sidebar-group-title" style={{ display: 'block', marginBottom: '8px' }}>Categories</label>
+              <div className="admin-chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                <button
+                  type="button"
+                  onClick={() => handleCategoryToggle('all')}
+                  className={`admin-chip ${appliedCategories.includes('all') ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {dbCategories.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => handleCategoryToggle(item.value)}
+                    className={`admin-chip ${appliedCategories.includes(item.value) && !appliedCategories.includes('all') ? 'active' : ''}`}
+                  >
+                    {item.value}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Features */}
+            <div>
+              <label className="sidebar-group-title" style={{ display: 'block', marginBottom: '8px' }}>Included Features</label>
+              <div className="admin-chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                <button
+                  type="button"
+                  onClick={() => setAppliedFeatures([])}
+                  className={`admin-chip ${appliedFeatures.length === 0 ? 'active' : ''}`}
+                >
+                  All
+                </button>
+                {Object.values(PROJECT_FEATURES).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => handleFeatureToggle(f)}
+                    className={`admin-chip ${appliedFeatures.includes(f) ? 'active' : ''}`}
+                  >
+                    {FEATURE_LABELS[f]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', marginTop: '20px', paddingTop: '12px', borderTop: '1px solid var(--sys-divider)' }}>
+            <Button variant="secondary" onClick={handleClearAll} style={{ flex: 1 }}>
+              Reset
+            </Button>
+            <Button variant="primary" onClick={() => setIsMobileFiltersOpen(false)} style={{ flex: 1 }}>
+              Apply
+            </Button>
+          </div>
+        </Modal>
 
 
 
@@ -470,18 +629,6 @@ export const ProjectListing = () => {
                     <option value="Choosed Flyen Project" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>Choosed Flyen Project</option>
                     <option value="3d Printing" style={{ background: 'var(--sys-surface)', color: 'var(--txt-primary)' }}>3d Printing</option>
                   </select>
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
-                  <Input
-                    type="text"
-                    placeholder="e.g. Smart Irrigation System"
-                    value={projectStatus === 'Choosed Flyen Project' ? (orderedProject?.title || customProjectTitle) : customProjectTitle}
-                    onChange={(e) => setCustomProjectTitle(e.target.value)}
-                    disabled={projectStatus === 'Choosed Flyen Project' && !!orderedProject}
-                    className="form-input"
-                  />
                 </div>
 
                 <div>

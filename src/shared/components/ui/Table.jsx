@@ -62,14 +62,11 @@ const clampTextNodes = (node) => {
       <div
         title={textContent}
         style={{
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
+          whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          wordBreak: 'break-word',
-          maxHeight: '2.8em',
-          lineHeight: '1.4'
+          maxWidth: '100%',
+          display: 'block'
         }}
       >
         {node}
@@ -88,17 +85,22 @@ const clampTextNodes = (node) => {
       if (['Button', 'Badge', 'Skeleton', 'Link'].includes(typeName)) return node;
     }
 
-    // Flex/grid containers: recurse into children but do not clamp the container itself
-    if (node.props.style && (node.props.style.display === 'flex' || node.props.style.display === 'grid')) {
+    // Flex/grid containers: recurse into children with minWidth: 0
+    if (node.props.style && (node.props.style.display === 'flex' || node.props.style.display === 'grid' || node.props.style.display === 'inline-flex')) {
       if (node.props.children) {
         return React.cloneElement(node, {
+          style: {
+            ...node.props.style,
+            minWidth: 0,
+            maxWidth: '100%'
+          },
           children: React.Children.map(node.props.children, clampTextNodes)
         });
       }
       return node;
     }
 
-    // Normal element (like span): check if its own children are clampable
+    // Normal element (like span, p, div): check if its own children are clampable
     const textContent = getTextContent(node.props.children);
     const hasClamping = textContent.trim() && isClampableText(node.props.children);
     if (hasClamping) {
@@ -106,14 +108,11 @@ const clampTextNodes = (node) => {
         <div
           title={textContent}
           style={{
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
+            whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            wordBreak: 'break-word',
-            maxHeight: '2.8em',
-            lineHeight: '1.4'
+            maxWidth: '100%',
+            display: 'block'
           }}
         >
           {node}
@@ -245,14 +244,11 @@ export const Table = ({
                   clampedChildren = (
                     <div
                       style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
+                        whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        wordBreak: 'break-word',
-                        maxHeight: '2.8em',
-                        lineHeight: '1.4'
+                        maxWidth: '100%',
+                        display: 'block'
                       }}
                     >
                       {child.props.children}

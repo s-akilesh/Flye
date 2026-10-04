@@ -20,32 +20,32 @@
   --txt-secondary: #9ca3af;
   --txt-muted: #6b7280;
   --txt-disabled: #4b5563;
-  --txt-inverse: #0f172a;
+  --txt-inverse: #ffffff;
 
   /* 3. BRAND */
-  --brand-primary: #8b5cf6;
-  --brand-primary-hover: #a78bfa;
-  --brand-primary-active: #7c3aed;
-  --brand-accent: #3b82f6;
+  --brand-primary: #38bdf8;
+  --brand-primary-hover: #7dd3fc;
+  --brand-primary-active: #0ea5e9;
+  --brand-accent: #60a5fa;
 
   /* 4. STATUS */
   --status-success: #10b981;
   --status-warning: #f59e0b;
   --status-error: #ef4444;
-  --status-info: #3b82f6;
+  --status-info: #38bdf8;
 
   /* 5. INTERACTION */
   --interaction-hover: rgba(255, 255, 255, 0.04);
   --interaction-active: rgba(255, 255, 255, 0.08);
-  --interaction-focus: rgba(139, 92, 246, 0.25);
-  --interaction-selected: rgba(139, 92, 246, 0.1);
+  --interaction-focus: rgba(56, 189, 248, 0.25);
+  --interaction-selected: rgba(56, 189, 248, 0.1);
   --interaction-disabled: rgba(255, 255, 255, 0.02);
 
   /* 6. INPUTS */
   --input-bg: rgba(0, 0, 0, 0.3);
   --input-border: rgba(255, 255, 255, 0.09);
   --input-placeholder: #6b7280;
-  --input-focus-ring: rgba(139, 92, 246, 0.4);
+  --input-focus-ring: rgba(56, 189, 248, 0.4);
   --input-readonly: rgba(255, 255, 255, 0.02);
   --input-disabled: rgba(255, 255, 255, 0.01);
 
@@ -54,11 +54,11 @@
   --table-row: transparent;
   --table-row-alt: rgba(255, 255, 255, 0.01);
   --table-row-hover: rgba(255, 255, 255, 0.03);
-  --table-row-selected: rgba(139, 92, 246, 0.08);
+  --table-row-selected: rgba(56, 189, 248, 0.08);
 
   /* 8. SIDEBAR */
   --sidebar-bg: rgba(10, 10, 15, 0.96);
-  --sidebar-active-item: rgba(139, 92, 246, 0.15);
+  --sidebar-active-item: rgba(56, 189, 248, 0.15);
   --sidebar-hover-item: rgba(255, 255, 255, 0.03);
   --sidebar-text: #9ca3af;
   --sidebar-icon: #6b7280;
@@ -155,7 +155,7 @@
   --space-10: 80px;
 
   --grid-gap: 24px;
-  --page-padding: 24px;
+  --page-padding: 40px;
   --max-width: 100%;
   --filter-width: 290px;
 }
@@ -185,29 +185,29 @@
   --txt-inverse: #f9fafb;
 
   /* 3. BRAND */
-  --brand-primary: #6d28d9;
-  --brand-primary-hover: #7c3aed;
-  --brand-primary-active: #5b21b6;
-  --brand-accent: #2563eb;
+  --brand-primary: #0284c7;
+  --brand-primary-hover: #0369a1;
+  --brand-primary-active: #075985;
+  --brand-accent: #38bdf8;
 
   /* 4. STATUS */
   --status-success: #059669;
   --status-warning: #d97706;
   --status-error: #dc2626;
-  --status-info: #2563eb;
+  --status-info: #0284c7;
 
   /* 5. INTERACTION */
   --interaction-hover: rgba(15, 23, 42, 0.03);
   --interaction-active: rgba(15, 23, 42, 0.06);
-  --interaction-focus: rgba(109, 40, 217, 0.2);
-  --interaction-selected: rgba(109, 40, 217, 0.08);
+  --interaction-focus: rgba(2, 132, 199, 0.2);
+  --interaction-selected: rgba(2, 132, 199, 0.08);
   --interaction-disabled: rgba(15, 23, 42, 0.02);
 
   /* 6. INPUTS */
   --input-bg: rgba(255, 255, 255, 0.9);
   --input-border: rgba(15, 23, 42, 0.12);
   --input-placeholder: #94a3b8;
-  --input-focus-ring: rgba(109, 40, 217, 0.3);
+  --input-focus-ring: rgba(2, 132, 199, 0.3);
   --input-readonly: rgba(15, 23, 42, 0.02);
   --input-disabled: rgba(15, 23, 42, 0.03);
 
@@ -216,30 +216,30 @@
   --table-row: transparent;
   --table-row-alt: rgba(15, 23, 42, 0.01);
   --table-row-hover: rgba(15, 23, 42, 0.03);
-  --table-row-selected: rgba(109, 40, 217, 0.06);
+  --table-row-selected: rgba(2, 132, 199, 0.06);
 
   /* 8. SIDEBAR */
   --sidebar-bg: rgba(255, 255, 255, 0.96);
-  --sidebar-active-item: rgba(109, 40, 217, 0.08);
+  --sidebar-active-item: rgba(2, 132, 199, 0.08);
   --sidebar-hover-item: rgba(15, 23, 42, 0.03);
   --sidebar-text: #475569;
   --sidebar-icon: #64748b;
 
   /* 9. HEADER & FOOTER (BRAND TOKENS) */
-  --header-bg: rgba(8, 7, 13, 0.85);
-  --header-border: rgba(255, 255, 255, 0.15);
+  --header-bg: rgba(11, 15, 23, 0.96);
+  --header-border: rgba(255, 255, 255, 0.1);
   --header-icon: #9ca3af;
-  --header-search: rgba(255, 255, 255, 0.05);
+  --header-search: rgba(255, 255, 255, 0.06);
   --header-txt-primary: #f9fafb;
   --header-txt-secondary: #9ca3af;
-  --header-interaction-hover: rgba(255, 255, 255, 0.05);
-  --header-interaction-active: rgba(255, 255, 255, 0.08);
-  --sys-page-header-bg: #f1f5f9;
-  --footer-bg: rgba(10, 10, 15, 0.96);
+  --header-interaction-hover: rgba(255, 255, 255, 0.06);
+  --header-interaction-active: rgba(255, 255, 255, 0.1);
+  --sys-page-header-bg: rgba(11, 15, 23, 0.96);
+  --footer-bg: #0b0f17;
   --footer-border: rgba(255, 255, 255, 0.08);
   --footer-txt-primary: #f9fafb;
-  --footer-txt-secondary: #9ca3af;
-  --footer-txt-muted: #6b7280;
+  --footer-txt-secondary: #94a3b8;
+  --footer-txt-muted: #64748b;
 
   /* 10. SHADOWS */
   --shadow-sm: 0 1px 2px rgba(15,23,42,0.05);

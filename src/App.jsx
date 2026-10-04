@@ -8,26 +8,29 @@ import { ToastProvider } from './shared/context/ToastContext';
 import { AuthProvider } from './modules/auth/context/AuthContext.jsx';
 import { ThemeProvider } from './shared/context/ThemeContext.jsx';
 import { AnalyticsProvider } from './shared/analytics/index.js';
+import { ErrorBoundary } from './shared/components/ui/ErrorBoundary';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AnalyticsProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <SettingsProvider>
-              <ThemeProvider>
-                <ProjectProvider>
-                  <EnquiryProvider>
-                    <AppRouter />
-                  </EnquiryProvider>
-                </ProjectProvider>
-              </ThemeProvider>
-            </SettingsProvider>
-          </AuthProvider>
-        </ToastProvider>
-      </AnalyticsProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AnalyticsProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <SettingsProvider>
+                <ThemeProvider>
+                  <ProjectProvider>
+                    <EnquiryProvider>
+                      <AppRouter />
+                    </EnquiryProvider>
+                  </ProjectProvider>
+                </ThemeProvider>
+              </SettingsProvider>
+            </AuthProvider>
+          </ToastProvider>
+        </AnalyticsProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

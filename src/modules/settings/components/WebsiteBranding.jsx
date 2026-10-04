@@ -34,6 +34,48 @@ export const WebsiteBranding = ({ onBack }) => {
   const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
 
+  // S3 Storage Files State (direct from website-assets/landingscreen-slider)
+  const [s3Files, setS3Files] = useState([]);
+  const [isLoadingS3, setIsLoadingS3] = useState(false);
+
+  const loadS3Files = async () => {
+    setIsLoadingS3(true);
+    try {
+      const files = await storageService.listFiles('website-assets', 'landingscreen-slider');
+      const validFiles = (files || []).filter(f => 
+        f.name && 
+        !f.name.startsWith('.') &&
+        /\.(jpe?g|png|webp|svg|gif|avif)$/i.test(f.name)
+      );
+      setS3Files(validFiles);
+    } catch (e) {
+      logger.error('Failed to list files from S3 landingscreen-slider:', e);
+    } finally {
+      setIsLoadingS3(false);
+    }
+  };
+
+  useEffect(() => {
+    loadS3Files();
+  }, []);
+
+  const handleDeleteS3File = async (fileName) => {
+    if (!window.confirm(`Are you sure you want to permanently delete "${fileName}" from S3 storage? It will immediately disappear from the landing screen slider.`)) {
+      return;
+    }
+    try {
+      const res = await storageService.deleteFile('website-assets', `landingscreen-slider/${fileName}`);
+      if (!res.success && res.error) {
+        throw new Error(res.error);
+      }
+      await loadS3Files();
+      alert(`Deleted "${fileName}" from S3 storage.`);
+    } catch (err) {
+      logger.error('Failed to delete S3 file:', err);
+      alert('Failed to delete from S3: ' + (err.message || 'Unknown error'));
+    }
+  };
+
   useEffect(() => {
     const changed = Object.keys(form).some(key => form[key] !== (settings[key] || ''));
     setIsDirty(changed);
@@ -68,7 +110,6 @@ export const WebsiteBranding = ({ onBack }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate Logo: png, jpg, jpeg, webp, svg, <= 5MB
     const allowedExts = ['png', 'jpg', 'jpeg', 'webp', 'svg'];
     const fileExt = file.name.split('.').pop().toLowerCase();
     if (!allowedExts.includes(fileExt)) {
@@ -82,9 +123,9 @@ export const WebsiteBranding = ({ onBack }) => {
 
     setIsUploadingLogo(true);
     try {
-      const oldPath = extractPathFromUrl(form.websiteLogo, 'logos');
+      const oldPath = extractPathFromUrl(form.websiteLogo, 'website-assets') || extractPathFromUrl(form.websiteLogo, 'logos');
       const targetName = `website-logo-${Date.now()}.${fileExt}`;
-      const result = await storageService.replaceFile('logos', 'website', file, oldPath, targetName);
+      const result = await storageService.replaceFile('website-assets', 'logos', file, oldPath, targetName);
       handleChange('websiteLogo', result.publicUrl);
     } catch (err) {
       logger.error('Logo upload failed:', err);
@@ -98,7 +139,6 @@ export const WebsiteBranding = ({ onBack }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate Favicon: ico, png, svg, <= 1MB
     const allowedExts = ['ico', 'png', 'svg'];
     const fileExt = file.name.split('.').pop().toLowerCase();
     if (!allowedExts.includes(fileExt)) {
@@ -112,9 +152,9 @@ export const WebsiteBranding = ({ onBack }) => {
 
     setIsUploadingFavicon(true);
     try {
-      const oldPath = extractPathFromUrl(form.websiteFavicon, 'favicons');
+      const oldPath = extractPathFromUrl(form.websiteFavicon, 'website-assets') || extractPathFromUrl(form.websiteFavicon, 'favicons');
       const targetName = `favicon-${Date.now()}.${fileExt}`;
-      const result = await storageService.replaceFile('favicons', 'website', file, oldPath, targetName);
+      const result = await storageService.replaceFile('website-assets', 'favicons', file, oldPath, targetName);
       handleChange('websiteFavicon', result.publicUrl);
     } catch (err) {
       logger.error('Favicon upload failed:', err);
@@ -228,6 +268,123 @@ export const WebsiteBranding = ({ onBack }) => {
             </div>
           </div>
         </div>
+      </SettingsSection>
+
+      <SettingsSection 
+        title="Landing Screen Slider Images (S3 Storage)" 
+        description="Live view of images stored in the S3 bucket folder website-assets/landingscreen-slider. Any image in this folder is automatically shown on the landing page slider in real-time."
+      >
+        {/* Header Toolbar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <span style={{ fontSize: '12px', background: 'var(--sys-surface)', border: '1px solid var(--sys-border)', padding: '4px 10px', borderRadius: '20px', color: 'var(--txt-secondary)' }}>
+              Live S3 Images: <strong>{s3Files.length}</strong>
+            </span>
+          </div>
+
+          <button
+            type="button"
+            className="product-btn"
+            onClick={loadS3Files}
+            disabled={isLoadingS3}
+            style={{ fontSize: '11px', padding: '6px 12px' }}
+          >
+            {isLoadingS3 ? 'Refreshing...' : '🔄 Refresh S3 Images'}
+          </button>
+        </div>
+
+        {/* S3 Storage Files Grid */}
+        {isLoadingS3 ? (
+          <div style={{ padding: '24px', textAlign: 'center', color: 'var(--txt-muted)' }}>Loading files from S3 storage...</div>
+        ) : s3Files.length === 0 ? (
+          <div style={{ padding: '24px', textAlign: 'center', background: 'var(--sys-surface)', borderRadius: '8px', border: '1px solid var(--sys-border)', color: 'var(--txt-muted)', fontSize: '13px' }}>
+            No images found in S3 storage folder <code>website-assets/landingscreen-slider</code>. Place images directly inside this bucket folder to display them automatically on the homepage landing slider.
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '14px' }}>
+            {s3Files.map((file, idx) => {
+              const publicUrl = storageService.getPublicUrl('website-assets', `landingscreen-slider/${file.name}`);
+              const sizeKb = file.metadata?.size 
+                ? (file.metadata.size / 1024).toFixed(0) + ' KB' 
+                : (file.size ? (file.size / 1024).toFixed(0) + ' KB' : 'Image');
+              
+              const displayName = file.name
+                .replace(/\.[^/.]+$/, '')
+                .replace(/^slider-[\d]+-/, '')
+                .replace(/[_-]+/g, ' ');
+
+              return (
+                <div 
+                  key={file.id || file.name || idx}
+                  style={{
+                    background: 'var(--sys-surface)',
+                    border: '1px solid var(--sys-border)',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}
+                >
+                  <div style={{ height: '140px', background: '#000', overflow: 'hidden', position: 'relative' }}>
+                    <img 
+                      src={publicUrl} 
+                      alt={file.name} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    <span 
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        left: '8px',
+                        background: 'rgba(0, 223, 162, 0.9)',
+                        color: '#090d16',
+                        fontSize: '10px',
+                        fontWeight: '700',
+                        padding: '2px 6px',
+                        borderRadius: '4px'
+                      }}
+                    >
+                      LIVE ON LANDING
+                    </span>
+                  </div>
+
+                  <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                    <div 
+                      title={file.name}
+                      style={{ fontWeight: '600', fontSize: '13px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    >
+                      {displayName || file.name}
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--txt-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <code>{file.name}</code>
+                    </div>
+                    <div style={{ fontSize: '10px', color: 'var(--txt-muted)' }}>
+                      Size: {sizeKb}
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 'auto', paddingTop: '8px', borderTop: '1px solid var(--sys-border)' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteS3File(file.name)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          fontSize: '11px',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          padding: '4px 0',
+                          fontWeight: '500'
+                        }}
+                      >
+                        Delete from S3
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </SettingsSection>
     </SettingsLayout>
   );

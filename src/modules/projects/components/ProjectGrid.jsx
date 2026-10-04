@@ -24,9 +24,9 @@ export const ProjectGrid = ({ projects, onRequestOrder }) => {
       <style>{`
         .project-marketplace-grid {
           display: grid !important;
-          grid-template-columns: repeat(auto-fill, 320px) !important;
-          gap: 20px 16px !important;
-          justify-content: center !important;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+          gap: 20px !important;
+          width: 100% !important;
         }
         
         /* Desktop Layout (min-width: 768px) */

@@ -22,7 +22,6 @@ export const Contact = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [category, setCategory] = useState('');
-  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,12 +36,13 @@ export const Contact = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email)) newErrors.email = true;
     
-    // Validate phone
-    const isValidPhone = phonePrefix === '+91' ? phone.trim().length === 10 : (phone.trim().length >= 7 && phone.trim().length <= 15);
-    if (!phone.trim() || !isValidPhone) newErrors.phone = true;
+    // Validate phone (optional, validate format only if provided)
+    if (phone.trim()) {
+      const isValidPhone = phonePrefix === '+91' ? phone.trim().length === 10 : (phone.trim().length >= 7 && phone.trim().length <= 15);
+      if (!isValidPhone) newErrors.phone = true;
+    }
     
     if (!category) newErrors.category = true;
-    if (!subject.trim()) newErrors.subject = true;
     if (!message.trim()) newErrors.message = true;
 
     if (Object.keys(newErrors).length > 0) {
@@ -53,12 +53,14 @@ export const Contact = () => {
     setErrors({});
     setIsSubmitting(true);
 
+    const formattedPhone = phone.trim() ? `${phonePrefix} ${phone.trim()}` : '';
+
     const contactData = {
       name: name.trim(),
-      mobileNumber: `${phonePrefix}${phone.trim()}`,
+      mobileNumber: formattedPhone,
       email: email.trim(),
       category: category,
-      subject: subject.trim(),
+      subject: category || 'General Inquiry',
       message: message.trim()
     };
 
@@ -71,7 +73,7 @@ export const Contact = () => {
         if (typeof window !== 'undefined' && window.gtag) {
           window.gtag('event', 'contact_form_submit', {
             category: category,
-            subject: subject.trim()
+            subject: contactData.subject
           });
         }
       } catch (ae) {
@@ -83,7 +85,7 @@ export const Contact = () => {
       // 3. Send email notifications sequentially via EmailJS
       const emailPayload = {
         name: contactData.name,
-        phone: contactData.mobileNumber,
+        phone: contactData.mobileNumber || 'Not provided',
         email: contactData.email,
         category: contactData.category,
         subject: contactData.subject,
@@ -106,7 +108,6 @@ export const Contact = () => {
       setPhone('');
       setEmail('');
       setCategory('');
-      setSubject('');
       setMessage('');
     } catch (err) {
       if (!import.meta.env.PROD) {
@@ -452,17 +453,21 @@ export const Contact = () => {
                 />
               </div>
 
-              {/* Phone Number */}
+              {/* Phone Number (Optional) */}
               <div className="form-group">
-                <label htmlFor="phone-number">Phone number *</label>
+                <label htmlFor="phone-number">Phone number</label>
                 <div className={`phone-input-container ${errors.phone ? 'error-state' : ''}`}>
                   <select
                     className="phone-prefix-select"
                     value={phonePrefix}
                     onChange={(e) => {
                       setPhonePrefix(e.target.value);
-                      const isValid = e.target.value === '+91' ? phone.length === 10 : (phone.length >= 7 && phone.length <= 15);
-                      setErrors(prev => ({ ...prev, phone: !isValid }));
+                      if (phone.trim()) {
+                        const isValid = e.target.value === '+91' ? phone.trim().length === 10 : (phone.trim().length >= 7 && phone.trim().length <= 15);
+                        setErrors(prev => ({ ...prev, phone: !isValid }));
+                      } else {
+                        setErrors(prev => ({ ...prev, phone: false }));
+                      }
                     }}
                   >
                     <option value="+1">+1</option>
@@ -475,13 +480,16 @@ export const Contact = () => {
                   <input
                     id="phone-number"
                     type="tel"
-                    required
                     value={phone}
                     onChange={(e) => {
                       const val = e.target.value.replace(/\D/g, '');
                       setPhone(val);
-                      const isValid = phonePrefix === '+91' ? val.length === 10 : (val.length >= 7 && val.length <= 15);
-                      setErrors(prev => ({ ...prev, phone: !isValid }));
+                      if (val.trim()) {
+                        const isValid = phonePrefix === '+91' ? val.trim().length === 10 : (val.trim().length >= 7 && val.trim().length <= 15);
+                        setErrors(prev => ({ ...prev, phone: !isValid }));
+                      } else {
+                        setErrors(prev => ({ ...prev, phone: false }));
+                      }
                     }}
                     placeholder="Enter phone number"
                     className="phone-number-field"
@@ -495,7 +503,7 @@ export const Contact = () => {
               </div>
 
               {/* Email Address */}
-              <div className="form-group contact-form-full">
+              <div className="form-group">
                 <label htmlFor="email">Email Address *</label>
                 <Input
                   id="email"
@@ -535,23 +543,6 @@ export const Contact = () => {
                   <option value="Career / Internship">Career / Internship</option>
                   <option value="Other">Other</option>
                 </select>
-              </div>
-
-              {/* Subject */}
-              <div className="form-group">
-                <label htmlFor="subject">Subject *</label>
-                <Input
-                  id="subject"
-                  type="text"
-                  required
-                  value={subject}
-                  onChange={(e) => {
-                    setSubject(e.target.value);
-                    if (errors.subject) setErrors(prev => ({ ...prev, subject: false }));
-                  }}
-                  placeholder="Enter a short subject or title"
-                  className={`form-input ${errors.subject ? 'error-state' : ''}`}
-                />
               </div>
 
               {/* Message */}

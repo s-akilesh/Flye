@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes.js';
 import { Button } from '../ui/Button';
-import { lazyRoutes } from '../../../router/AppRouter';
+import { lazyRoutes } from '../../../router/lazyRoutes';
 import { useSettings } from '../../../modules/settings/hooks/useSettings';
 import { useAuth } from '../../../modules/auth/context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
@@ -72,19 +72,6 @@ export const Header = ({ onToggleDrawer }) => {
     };
   }, [showProfileDropdown]);
 
-  const handleScrollToSection = (id) => {
-    if (location.pathname === '/') {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      navigate('/');
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 150);
-    }
-  };
-
   const handleLogout = async () => {
     try {
       setShowLogoutConfirm(false);
@@ -124,17 +111,6 @@ export const Header = ({ onToggleDrawer }) => {
           <Link to="/projects" onMouseEnter={() => lazyRoutes.ProjectListing()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
           <Link to="/printing" onMouseEnter={() => lazyRoutes.PrintingCatalog()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
           <Link to="/my-projects" onMouseEnter={() => lazyRoutes.MyProjects()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>My Enquiries</Link>
-          <a
-            href="/#about"
-            onMouseEnter={() => lazyRoutes.Home()}
-            onClick={(e) => {
-              e.preventDefault();
-              handleScrollToSection('about');
-            }}
-            style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}
-          >
-            About
-          </a>
           <Link to="/contact" onMouseEnter={() => lazyRoutes.Contact()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Contact</Link>
         </nav>
       ) }
@@ -197,31 +173,33 @@ export const Header = ({ onToggleDrawer }) => {
           </div>
         )}
 
-        {/* Theme Switcher Toggle */}
-        <button
-          type="button"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="btn-header header-theme-toggle"
-          style={{
-            padding: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'none',
-            border: 'none',
-            color: 'var(--header-icon)',
-            cursor: 'pointer',
-            transition: 'color 0.2s',
-            marginRight: 'var(--space-1)'
-          }}
-          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        >
-          {theme === 'dark' ? (
-            <span className="material-icons-outlined" style={{ fontSize: '20px' }}>light_mode</span>
-          ) : (
-            <span className="material-icons-outlined" style={{ fontSize: '20px' }}>dark_mode</span>
-          )}
-        </button>
+        {/* Theme Switcher Toggle - only rendered in Admin View */}
+        {user && isAdmin && viewMode === 'admin' && (
+          <button
+            type="button"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="btn-header header-theme-toggle"
+            style={{
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'none',
+              border: 'none',
+              color: 'var(--header-icon)',
+              cursor: 'pointer',
+              transition: 'color 0.2s',
+              marginRight: 'var(--space-1)'
+            }}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {theme === 'dark' ? (
+              <span className="material-icons-outlined" style={{ fontSize: '20px' }}>light_mode</span>
+            ) : (
+              <span className="material-icons-outlined" style={{ fontSize: '20px' }}>dark_mode</span>
+            )}
+          </button>
+        )}
 
         {/* Hamburger Trigger for Mobile */}
         <button

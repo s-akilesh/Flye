@@ -183,11 +183,12 @@ export const SignupForm = ({ onSignupSuccess }) => {
           width: '100%',
           padding: '12px',
           fontWeight: '700',
-          fontSize: '13px',
+          fontSize: '13.5px',
           marginTop: '8px',
-          background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))',
+          background: 'var(--brand-primary, #38bdf8)',
+          color: '#ffffff',
           border: 'none',
-          boxShadow: '0 4px 16px var(--interaction-focus)'
+          boxShadow: '0 4px 18px rgba(56, 189, 248, 0.35)'
         }}
       >
         {isSubmitting ? 'Creating Account...' : 'Create Account'}

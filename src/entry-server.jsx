@@ -8,6 +8,7 @@ import { ProjectListing } from './modules/projects/pages/ProjectListing';
 import { ProjectDetails } from './modules/projects/pages/ProjectDetails';
 import { PrintingCatalog } from './modules/public/pages/PrintingCatalog';
 import { Contact } from './modules/public/pages/Contact';
+import { Feedback } from './modules/public/pages/Feedback';
 
 // Real context providers
 import { SettingsProvider } from './modules/settings/context/SettingsContext';
@@ -34,6 +35,7 @@ export function render(url, ssrData = {}) {
                       <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
                       <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
                       <Route path={ROUTES.CONTACT} element={<Contact />} />
+                      <Route path={ROUTES.FEEDBACK} element={<Feedback />} />
                       <Route path="*" element={<Home />} />
                     </Routes>
                   </MainLayout>

@@ -174,7 +174,7 @@ export const ProductList = () => {
   };
 
   return (
-    <div style={{ padding: 'var(--page-padding)', boxSizing: 'border-box' }}>
+    <div style={{ width: '100%', boxSizing: 'border-box', paddingBottom: '40px' }}>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -183,8 +183,8 @@ export const ProductList = () => {
         {/* Module Title */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: '800', margin: 0, color: 'var(--txt-primary)' }}>3D Print Inventory</h1>
-            <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: '4px 0 0 0' }}>Master catalogue of 3D printing inventory and specifications.</p>
+            <h1 style={{ fontSize: '24px', fontWeight: '800', margin: 0, color: 'var(--txt-primary)' }}>3D Printing</h1>
+            <p style={{ fontSize: '13px', color: 'var(--txt-muted)', margin: '4px 0 0 0' }}>Master catalogue of 3D printing products and specifications.</p>
           </div>
           <Button
             variant="primary"

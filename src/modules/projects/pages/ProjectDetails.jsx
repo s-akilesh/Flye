@@ -1003,18 +1003,6 @@ export const ProjectDetails = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Project Title</label>
-                  <Input
-                    type="text"
-                    placeholder="e.g. Smart Irrigation System"
-                    value={projectStatus === 'Choosed Flyen Project' ? (`${targetOrderProject?.title || ''}${selectedVariant ? ` (${selectedVariant.name})` : ''}` || customProjectTitle) : customProjectTitle}
-                    onChange={(e) => setCustomProjectTitle(e.target.value)}
-                    disabled={projectStatus === 'Choosed Flyen Project' && !!targetOrderProject}
-                    className="form-input"
-                  />
-                </div>
-
                 <div style={{ display: projectStatus === '3d Printing' ? 'none' : 'block' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Budget (₹)</label>
                   <Input
@@ -1026,7 +1014,7 @@ export const ProjectDetails = () => {
                   />
                 </div>
 
-                <div>
+                <div style={{ display: projectStatus === '3d Printing' ? 'none' : 'block' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: 'var(--txt-muted)', marginBottom: '8px', fontWeight: 'bold' }}>Submission Date</label>
                   <Input
                     type="date"

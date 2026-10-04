@@ -105,7 +105,8 @@ const routes = [
   { url: '/about', pageType: 'ABOUT' },
   { url: '/departments', pageType: 'DEPARTMENTS' },
   { url: '/privacy-policy', pageType: 'PRIVACY' },
-  { url: '/terms-and-conditions', pageType: 'TERMS' }
+  { url: '/terms-and-conditions', pageType: 'TERMS' },
+  { url: '/feedback', pageType: 'CONTACT' }
 ];
 
 // Add dynamic project detail routes
