@@ -318,8 +318,8 @@ export const Home = () => {
       {
         id: 't-4',
         name: 'Pooja Nair',
-        role: 'Maker & Product Designer',
-        institution: 'Bengaluru',
+        role: '',
+        institution: '',
         rating: 5,
         project: 'Custom Batch 3D Prints',
         avatarText: 'PN',

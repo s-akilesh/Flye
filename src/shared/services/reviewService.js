@@ -62,8 +62,8 @@ const DEFAULT_SEED_REVIEWS = [
   {
     id: 'rev-seed-4',
     name: 'Pooja Nair',
-    role: 'Maker & Product Designer',
-    institution: 'Bengaluru',
+    role: '',
+    institution: '',
     project: 'Custom Batch 3D Prints',
     category: '3D Printing',
     rating: 5,
