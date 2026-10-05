@@ -46,27 +46,51 @@ export const Feedback = () => {
     });
   };
 
-  const handleAvatarUpload = async (e) => {
+  const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
+
+  const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate size < 2MB
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      showToast('⚠️ Image size exceeds 2MB. Please upload an image under 2MB.', 'error');
+      e.target.value = '';
+      return;
+    }
+
+    // Validate image format
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file (JPG, PNG, WebP).', 'error');
+      e.target.value = '';
+      return;
+    }
 
     setIsUploading(true);
     try {
       const uploaded = await storageService.uploadImage('website-assets', 'reviews', file);
       if (uploaded?.publicUrl) {
         setAvatarUrl(uploaded.publicUrl);
-        showToast('🖼️ Photo uploaded successfully!', 'success');
+        showToast('🖼️ Image attached successfully!', 'success');
       } else {
         const previewUrl = URL.createObjectURL(file);
         setAvatarUrl(previewUrl);
-        showToast('🖼️ Photo attached to review.', 'info');
+        showToast('🖼️ Image attached to review.', 'info');
       }
     } catch (err) {
       console.error(err);
-      showToast('❌ Failed to upload image file.', 'error');
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarUrl(previewUrl);
+      showToast('🖼️ Image attached.', 'info');
     } finally {
       setIsUploading(false);
+      e.target.value = '';
     }
+  };
+
+  const handleRemoveImage = () => {
+    setAvatarUrl('');
+    showToast('Image removed.', 'info');
   };
 
   const handleSubmit = async (e) => {
@@ -429,71 +453,143 @@ export const Feedback = () => {
                     />
                   </div>
 
-                  {/* Photo & Avatar Customization */}
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    padding: '14px 16px',
-                    borderRadius: '8px',
-                    background: 'var(--sys-surface-hover)',
-                    border: '1px solid var(--sys-divider)'
-                  }}>
-                    {/* Visual Avatar Preview */}
-                    <div style={{
-                      width: '46px',
-                      height: '46px',
-                      borderRadius: '50%',
-                      background: avatarUrl ? 'transparent' : previewBg,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#ffffff',
-                      fontWeight: '800',
-                      fontSize: '16px',
-                      overflow: 'hidden',
-                      flexShrink: 0,
-                      border: '2px solid rgba(255, 255, 255, 0.2)'
-                    }}>
-                      {avatarUrl ? (
-                        <img src={avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      ) : (
-                        previewInitials
-                      )}
+                  {/* Photo Attachment (Max 1 image, < 2MB) */}
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <label style={{ fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)' }}>
+                        Attach Image <span style={{ color: 'var(--txt-muted)', fontWeight: '400' }}>(Optional)</span>
+                      </label>
+                      <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
+                        Max 1 image • Under 2MB (JPG, PNG, WEBP)
+                      </span>
                     </div>
 
-                    <div style={{ flex: 1, textAlign: 'left' }}>
-                      <div style={{ fontSize: '12.5px', fontWeight: '700', color: 'var(--txt-primary)' }}>
-                        Reviewer Profile Badge
-                      </div>
-                      <div style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '2px' }}>
-                        Auto-generated initials badge or upload your photo.
-                      </div>
-                    </div>
+                    {avatarUrl ? (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '12px 16px',
+                        borderRadius: '10px',
+                        background: 'var(--sys-surface-hover)',
+                        border: '1px solid var(--sys-divider)',
+                        gap: '14px',
+                        flexWrap: 'wrap'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            border: '1px solid rgba(255, 255, 255, 0.15)',
+                            background: '#0f172a',
+                            flexShrink: 0
+                          }}>
+                            <img src={avatarUrl} alt="Attached image preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--txt-primary)' }}>
+                              Image attached
+                            </div>
+                            <div style={{ fontSize: '11px', color: 'var(--flyen-teal, #10b981)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                              <span className="material-icons" style={{ fontSize: '13px' }}>check_circle</span>
+                              Ready to submit (under 2MB)
+                            </div>
+                          </div>
+                        </div>
 
-                    <label style={{
-                      cursor: isUploading ? 'not-allowed' : 'pointer',
-                      fontSize: '11.5px',
-                      color: 'var(--accent-blue, #38bdf8)',
-                      fontWeight: '700',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      border: '1px solid var(--accent-blue, #38bdf8)',
-                      background: 'rgba(56, 189, 248, 0.08)'
-                    }}>
-                      <span className="material-icons" style={{ fontSize: '15px' }}>upload</span>
-                      {isUploading ? 'Uploading...' : (avatarUrl ? 'Change Photo' : 'Attach Photo')}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleAvatarUpload}
-                        disabled={isUploading}
-                        style={{ display: 'none' }}
-                      />
-                    </label>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <label style={{
+                            cursor: 'pointer',
+                            fontSize: '11.5px',
+                            color: 'var(--accent-blue, #38bdf8)',
+                            fontWeight: '700',
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            border: '1px solid rgba(56, 189, 248, 0.4)',
+                            background: 'rgba(56, 189, 248, 0.08)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}>
+                            <span className="material-icons" style={{ fontSize: '14px' }}>change_circle</span>
+                            Change
+                            <input
+                              type="file"
+                              accept="image/png, image/jpeg, image/jpg, image/webp"
+                              onChange={handleImageUpload}
+                              disabled={isUploading}
+                              style={{ display: 'none' }}
+                            />
+                          </label>
+
+                          <button
+                            type="button"
+                            onClick={handleRemoveImage}
+                            style={{
+                              cursor: 'pointer',
+                              fontSize: '11.5px',
+                              color: '#ef4444',
+                              fontWeight: '700',
+                              padding: '6px 12px',
+                              borderRadius: '6px',
+                              border: '1px solid rgba(239, 68, 68, 0.4)',
+                              background: 'rgba(239, 68, 68, 0.08)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px'
+                            }}
+                          >
+                            <span className="material-icons" style={{ fontSize: '14px' }}>delete_outline</span>
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <label style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '22px 16px',
+                        borderRadius: '10px',
+                        background: 'var(--sys-surface-hover)',
+                        border: '1px dashed var(--sys-border)',
+                        cursor: isUploading ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          background: 'rgba(99, 102, 241, 0.12)',
+                          color: 'var(--brand-primary, #6366f1)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '8px'
+                        }}>
+                          <span className="material-icons" style={{ fontSize: '22px' }}>
+                            {isUploading ? 'hourglass_top' : 'add_photo_alternate'}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--txt-primary)' }}>
+                          {isUploading ? 'Uploading Image...' : 'Click to Attach 1 Image'}
+                        </div>
+                        <div style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '4px' }}>
+                          PNG, JPG, WEBP • Max file size: 2MB
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/png, image/jpeg, image/jpg, image/webp"
+                          onChange={handleImageUpload}
+                          disabled={isUploading}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
+                    )}
                   </div>
 
                   {/* Submit Action */}

@@ -11,11 +11,13 @@ import { reviewService, getInitials, getAvatarBg } from '../../../shared/service
 import { storageService } from '../../../shared/services/storageService';
 import { ROUTES } from '../../../shared/constants/routes';
 
-const SERVICE_OPTIONS = [
-  '3D Printing',
-  'Project',
-  '3D Printing & Project'
-];
+const RATING_DESCRIPTIONS = {
+  5: '⭐⭐⭐⭐⭐ Exceptional Quality & Precision',
+  4: '⭐⭐⭐⭐ Very Good Experience',
+  3: '⭐⭐⭐ Average / Met Expectations',
+  2: '⭐⭐ Needs Improvement',
+  1: '⭐ Unsatisfactory'
+};
 
 export const ManageReviews = () => {
   const { showToast } = useToast();
@@ -28,12 +30,11 @@ export const ManageReviews = () => {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
+  const [formRating, setFormRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
-  const [formRole, setFormRole] = useState('');
-  const [formInstitution, setFormInstitution] = useState('');
-  const [formProject, setFormProject] = useState(SERVICE_OPTIONS[0]);
-  const [formRating, setFormRating] = useState(5);
+  const [selectedServices, setSelectedServices] = useState(['3D Printing']);
   const [formComment, setFormComment] = useState('');
   const [formAvatarUrl, setFormAvatarUrl] = useState('');
   const [formStatus, setFormStatus] = useState('approved');
@@ -72,14 +73,23 @@ export const ManageReviews = () => {
     showToast('📋 Feedback link copied! Share this with your customers.', 'success');
   };
 
+  const toggleService = (service) => {
+    setSelectedServices(prev => {
+      if (prev.includes(service)) {
+        return prev.filter(s => s !== service);
+      } else {
+        return [...prev, service];
+      }
+    });
+  };
+
   const handleOpenAddModal = () => {
     setEditingReview(null);
+    setFormRating(5);
+    setHoverRating(0);
     setFormName('');
     setFormEmail('');
-    setFormRole('');
-    setFormInstitution('');
-    setFormProject(SERVICE_OPTIONS[0]);
-    setFormRating(5);
+    setSelectedServices(['3D Printing']);
     setFormComment('');
     setFormAvatarUrl('');
     setFormStatus('approved');
@@ -90,22 +100,47 @@ export const ManageReviews = () => {
   const handleOpenEditModal = (rev, e) => {
     if (e) e.stopPropagation();
     setEditingReview(rev);
+    setFormRating(Number(rev.rating) || 5);
+    setHoverRating(0);
     setFormName(rev.name || '');
     setFormEmail(rev.email || '');
-    setFormRole(rev.role || '');
-    setFormInstitution(rev.institution || '');
-    setFormProject(rev.project || SERVICE_OPTIONS[0]);
-    setFormRating(Number(rev.rating) || 5);
+
+    const proj = (rev.project || '').toLowerCase();
+    const is3d = proj.includes('3d') || proj.includes('print');
+    const isProj = proj.includes('project') || proj.includes('kit') || proj.includes('node') || proj.includes('chassis') || proj.includes('rover') || proj.includes('solar');
+
+    if (is3d && isProj) {
+      setSelectedServices(['3D Printing', 'Project']);
+    } else if (isProj) {
+      setSelectedServices(['Project']);
+    } else {
+      setSelectedServices(['3D Printing']);
+    }
+
     setFormComment(rev.comment || '');
     setFormAvatarUrl(rev.avatar_url || '');
     setFormStatus(rev.status || 'approved');
-    setFormShowInHome(!!rev.show_in_home);
+    setFormShowInHome(rev.show_in_home !== false);
     setIsModalOpen(true);
   };
 
-  const handleFileUpload = async (e) => {
+  const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
+
+  const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      showToast('⚠️ Image size exceeds 2MB limit. Please choose an image under 2MB.', 'error');
+      e.target.value = '';
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file (JPG, PNG, WebP).', 'error');
+      e.target.value = '';
+      return;
+    }
 
     setIsUploading(true);
     try {
@@ -116,13 +151,22 @@ export const ManageReviews = () => {
       } else {
         const previewUrl = URL.createObjectURL(file);
         setFormAvatarUrl(previewUrl);
+        showToast('🖼️ Image attached to review.', 'info');
       }
     } catch (err) {
       console.error(err);
-      showToast('❌ Failed to upload image.', 'error');
+      const previewUrl = URL.createObjectURL(file);
+      setFormAvatarUrl(previewUrl);
+      showToast('🖼️ Image attached.', 'info');
     } finally {
       setIsUploading(false);
+      e.target.value = '';
     }
+  };
+
+  const handleRemoveImage = () => {
+    setFormAvatarUrl('');
+    showToast('Image removed.', 'info');
   };
 
   const handleToggleHomeVisibility = async (rev, e) => {
@@ -156,6 +200,10 @@ export const ManageReviews = () => {
       showToast('Please enter customer name.', 'error');
       return;
     }
+    if (selectedServices.length === 0) {
+      showToast('Please select at least one service: 3D Printing or Project.', 'error');
+      return;
+    }
     if (!formComment.trim()) {
       showToast('Please enter review comment.', 'error');
       return;
@@ -163,19 +211,36 @@ export const ManageReviews = () => {
 
     setIsSaving(true);
     try {
+      const is3d = selectedServices.includes('3D Printing');
+      const isProj = selectedServices.includes('Project');
+
+      let projectLabel = '3D Printing';
+      let categoryLabel = '3D Printing';
+
+      if (is3d && isProj) {
+        projectLabel = '3D Printing & Project';
+        categoryLabel = '3D Printing & Electronics Kit';
+      } else if (isProj) {
+        projectLabel = 'Project';
+        categoryLabel = 'Electronics Kit';
+      } else {
+        projectLabel = '3D Printing';
+        categoryLabel = '3D Printing';
+      }
+
       const payload = {
         name: formName.trim(),
         email: formEmail.trim() || null,
-        role: formRole.trim() || 'Maker / Customer',
-        institution: formInstitution.trim() || '',
-        project: formProject.trim(),
-        category: formProject.includes('3D') ? '3D Printing' : 'Electronics Kit',
+        role: null,
+        institution: null,
+        project: projectLabel,
+        category: categoryLabel,
         rating: Number(formRating) || 5,
         comment: formComment.trim(),
-        avatar_url: formAvatarUrl,
+        avatar_url: formAvatarUrl || '',
         avatar_text: getInitials(formName),
         avatar_bg: getAvatarBg(formName),
-        status: formStatus,
+        status: formStatus || 'approved',
         show_in_home: formShowInHome
       };
 
@@ -764,55 +829,76 @@ export const ManageReviews = () => {
           isOpen={isModalOpen}
           onClose={() => !isSaving && setIsModalOpen(false)}
           className="modal-content purple"
-          style={{ maxWidth: '580px', width: '92%', padding: '24px' }}
+          style={{ maxWidth: '620px', width: '92%', padding: '24px', maxHeight: '90vh', overflowY: 'auto' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: 'var(--txt-primary)' }}>
-              {editingReview ? 'Edit Review' : 'Add Customer Review'}
-            </h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="material-icons" style={{ color: 'var(--brand-primary)', fontSize: '22px' }}>rate_review</span>
+              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: 'var(--txt-primary)' }}>
+                {editingReview ? 'Edit Customer Review' : 'Add Customer Review'}
+              </h3>
+            </div>
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
               disabled={isSaving}
-              style={{ background: 'transparent', border: 'none', color: 'var(--txt-muted)', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: 'var(--txt-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
             >
               <span className="material-icons">close</span>
             </button>
           </div>
 
-          <form onSubmit={handleSaveReview} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleSaveReview} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             
-            {/* Rating Stars Selector */}
-            <div style={{ textAlign: 'left' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '6px' }}>
-                Rating *
+            {/* 1. Overall Satisfaction Rating */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px',
+              borderRadius: '12px',
+              background: 'var(--sys-surface-hover)',
+              border: '1px solid var(--sys-divider)',
+              textAlign: 'center'
+            }}>
+              <label style={{ fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '8px' }}>
+                Overall Satisfaction Rating *
               </label>
-              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setFormRating(star)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '2px',
-                      color: formRating >= star ? '#f59e0b' : 'var(--txt-muted)'
-                    }}
-                  >
-                    <span className="material-icons" style={{ fontSize: '24px' }}>
-                      {formRating >= star ? 'star' : 'star_border'}
-                    </span>
-                  </button>
-                ))}
-                <span style={{ fontSize: '12px', fontWeight: '700', color: '#f59e0b', marginLeft: '8px' }}>
-                  {formRating} Star{formRating > 1 ? 's' : ''}
-                </span>
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '6px' }}>
+                {[1, 2, 3, 4, 5].map((star) => {
+                  const active = (hoverRating || formRating) >= star;
+                  return (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setFormRating(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '2px',
+                        color: active ? '#f59e0b' : 'var(--txt-muted)',
+                        transform: active ? 'scale(1.15)' : 'scale(1)',
+                        transition: 'transform 0.15s ease, color 0.15s ease'
+                      }}
+                      title={`${star} Star${star > 1 ? 's' : ''}`}
+                    >
+                      <span className="material-icons" style={{ fontSize: '28px' }}>
+                        {active ? 'star' : 'star_border'}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
+              <span style={{ fontSize: '11.5px', fontWeight: '600', color: '#f59e0b' }}>
+                {RATING_DESCRIPTIONS[hoverRating || formRating]}
+              </span>
             </div>
 
-            {/* Name & Email */}
+            {/* 2. Customer Name & Email */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
               <div style={{ textAlign: 'left' }}>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '6px' }}>
@@ -825,13 +911,13 @@ export const ManageReviews = () => {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   required
-                  style={{ width: '100%', height: '38px', fontSize: '13px' }}
+                  style={{ width: '100%', height: '40px', fontSize: '13px' }}
                 />
               </div>
 
               <div style={{ textAlign: 'left' }}>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '6px' }}>
-                  Email
+                  Email Address <span style={{ color: 'var(--txt-muted)', fontWeight: '400' }}>(Optional)</span>
                 </label>
                 <Input
                   type="email"
@@ -839,29 +925,298 @@ export const ManageReviews = () => {
                   placeholder="e.g. akash@example.com"
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  style={{ width: '100%', height: '38px', fontSize: '13px' }}
+                  style={{ width: '100%', height: '40px', fontSize: '13px' }}
                 />
               </div>
             </div>
 
-            {/* Product / Service & Moderation Status */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-              <div style={{ textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '6px' }}>
+            {/* 3. Product or Service Experienced */}
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <label style={{ fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)' }}>
                   Product or Service Experienced *
                 </label>
-                <select
-                  value={formProject}
-                  onChange={(e) => setFormProject(e.target.value)}
-                  className="form-select"
-                  style={{ width: '100%', height: '38px', fontSize: '13px' }}
-                >
-                  {SERVICE_OPTIONS.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
+                  (Select one or both)
+                </span>
               </div>
 
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '10px'
+              }}>
+                {/* 3D Printing Option */}
+                <div
+                  onClick={() => toggleService('3D Printing')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: selectedServices.includes('3D Printing')
+                      ? '2px solid var(--brand-primary, #6366f1)'
+                      : '1px solid var(--sys-divider)',
+                    background: selectedServices.includes('3D Printing')
+                      ? 'rgba(99, 102, 241, 0.08)'
+                      : 'var(--sys-surface-hover)',
+                    boxShadow: selectedServices.includes('3D Printing')
+                      ? '0 0 10px rgba(99, 102, 241, 0.2)'
+                      : 'none',
+                    transition: 'all 0.2s ease',
+                    userSelect: 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '6px',
+                      background: selectedServices.includes('3D Printing') ? 'rgba(99, 102, 241, 0.15)' : 'var(--sys-surface)',
+                      color: selectedServices.includes('3D Printing') ? 'var(--brand-primary, #6366f1)' : 'var(--txt-secondary)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <span className="material-icons" style={{ fontSize: '18px' }}>view_in_ar</span>
+                    </div>
+                    <div>
+                      <div style={{
+                        fontSize: '13px',
+                        fontWeight: '700',
+                        color: selectedServices.includes('3D Printing') ? 'var(--brand-primary, #6366f1)' : 'var(--txt-primary)'
+                      }}>
+                        3D Printing
+                      </div>
+                      <div style={{ fontSize: '10.5px', color: 'var(--txt-muted)' }}>
+                        Custom prints & parts
+                      </div>
+                    </div>
+                  </div>
+
+                  <span
+                    className="material-icons"
+                    style={{
+                      fontSize: '20px',
+                      color: selectedServices.includes('3D Printing') ? 'var(--brand-primary, #6366f1)' : 'var(--txt-muted)'
+                    }}
+                  >
+                    {selectedServices.includes('3D Printing') ? 'check_circle' : 'radio_button_unchecked'}
+                  </span>
+                </div>
+
+                {/* Project Option */}
+                <div
+                  onClick={() => toggleService('Project')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: selectedServices.includes('Project')
+                      ? '2px solid var(--brand-primary, #6366f1)'
+                      : '1px solid var(--sys-divider)',
+                    background: selectedServices.includes('Project')
+                      ? 'rgba(99, 102, 241, 0.08)'
+                      : 'var(--sys-surface-hover)',
+                    boxShadow: selectedServices.includes('Project')
+                      ? '0 0 10px rgba(99, 102, 241, 0.2)'
+                      : 'none',
+                    transition: 'all 0.2s ease',
+                    userSelect: 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '6px',
+                      background: selectedServices.includes('Project') ? 'rgba(99, 102, 241, 0.15)' : 'var(--sys-surface)',
+                      color: selectedServices.includes('Project') ? 'var(--brand-primary, #6366f1)' : 'var(--txt-secondary)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <span className="material-icons" style={{ fontSize: '18px' }}>memory</span>
+                    </div>
+                    <div>
+                      <div style={{
+                        fontSize: '13px',
+                        fontWeight: '700',
+                        color: selectedServices.includes('Project') ? 'var(--brand-primary, #6366f1)' : 'var(--txt-primary)'
+                      }}>
+                        Project
+                      </div>
+                      <div style={{ fontSize: '10.5px', color: 'var(--txt-muted)' }}>
+                        Hardware & engineering builds
+                      </div>
+                    </div>
+                  </div>
+
+                  <span
+                    className="material-icons"
+                    style={{
+                      fontSize: '20px',
+                      color: selectedServices.includes('Project') ? 'var(--brand-primary, #6366f1)' : 'var(--txt-muted)'
+                    }}
+                  >
+                    {selectedServices.includes('Project') ? 'check_circle' : 'radio_button_unchecked'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Detailed Review & Feedback */}
+            <div style={{ textAlign: 'left' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '6px' }}>
+                Detailed Review & Feedback *
+              </label>
+              <textarea
+                value={formComment}
+                onChange={(e) => setFormComment(e.target.value)}
+                rows={3}
+                className="form-textarea"
+                placeholder="Enter client testimonial text (print precision, schematics, delivery speed, mentor support)..."
+                required
+                style={{ width: '100%', fontSize: '13px', lineHeight: 1.6, padding: '10px 12px' }}
+              />
+            </div>
+
+            {/* 5. Image Attachment (Max 1 image, < 2MB) */}
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <label style={{ fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)' }}>
+                  Attach Image <span style={{ color: 'var(--txt-muted)', fontWeight: '400' }}>(Optional)</span>
+                </label>
+                <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
+                  Max 1 image • Under 2MB
+                </span>
+              </div>
+
+              {formAvatarUrl ? (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '10px 14px',
+                  borderRadius: '8px',
+                  background: 'var(--sys-surface-hover)',
+                  border: '1px solid var(--sys-divider)',
+                  gap: '12px',
+                  flexWrap: 'wrap'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '6px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      background: '#0f172a',
+                      flexShrink: 0
+                    }}>
+                      <img src={formAvatarUrl} alt="Review attachment" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '12.5px', fontWeight: '700', color: 'var(--txt-primary)' }}>
+                        Image attached
+                      </div>
+                      <div style={{ fontSize: '10.5px', color: 'var(--flyen-teal, #10b981)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '1px' }}>
+                        <span className="material-icons" style={{ fontSize: '12px' }}>check_circle</span>
+                        Ready to save (&lt; 2MB)
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <label style={{
+                      cursor: 'pointer',
+                      fontSize: '11px',
+                      color: 'var(--accent-blue, #38bdf8)',
+                      fontWeight: '700',
+                      padding: '5px 10px',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(56, 189, 248, 0.4)',
+                      background: 'rgba(56, 189, 248, 0.08)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      <span className="material-icons" style={{ fontSize: '13px' }}>change_circle</span>
+                      Change
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                        onChange={handleImageUpload}
+                        disabled={isUploading}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      style={{
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                        color: '#ef4444',
+                        fontWeight: '700',
+                        padding: '5px 10px',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(239, 68, 68, 0.4)',
+                        background: 'rgba(239, 68, 68, 0.08)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <span className="material-icons" style={{ fontSize: '13px' }}>delete_outline</span>
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <label style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '16px 14px',
+                  borderRadius: '8px',
+                  background: 'var(--sys-surface-hover)',
+                  border: '1px dashed var(--sys-border)',
+                  cursor: isUploading ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s ease',
+                  textAlign: 'center'
+                }}>
+                  <span className="material-icons" style={{ fontSize: '22px', color: 'var(--brand-primary, #6366f1)', marginBottom: '4px' }}>
+                    {isUploading ? 'hourglass_top' : 'add_photo_alternate'}
+                  </span>
+                  <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--txt-primary)' }}>
+                    {isUploading ? 'Uploading Image...' : 'Click to Attach 1 Image'}
+                  </div>
+                  <div style={{ fontSize: '10.5px', color: 'var(--txt-muted)', marginTop: '2px' }}>
+                    PNG, JPG, WEBP • Max 2MB
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* 6. Moderation Status & Feature on Home Screen */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+              
+              {/* Moderation Status */}
               <div style={{ textAlign: 'left' }}>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '6px' }}>
                   Moderation Status
@@ -870,84 +1225,68 @@ export const ManageReviews = () => {
                   value={formStatus}
                   onChange={(e) => setFormStatus(e.target.value)}
                   className="form-select"
-                  style={{ width: '100%', height: '38px', fontSize: '13px' }}
+                  style={{ width: '100%', height: '40px', fontSize: '13px' }}
                 >
                   <option value="approved">Approved (Active)</option>
                   <option value="pending">Pending Moderation</option>
                   <option value="rejected">Rejected (Hidden)</option>
                 </select>
               </div>
-            </div>
 
-            {/* Review Quote */}
-            <div style={{ textAlign: 'left' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '6px' }}>
-                Review / Feedback *
-              </label>
-              <textarea
-                value={formComment}
-                onChange={(e) => setFormComment(e.target.value)}
-                rows={3}
-                className="form-textarea"
-                placeholder="Enter client testimonial text..."
-                required
-                style={{ width: '100%', fontSize: '13px', lineHeight: 1.6, padding: '10px 12px' }}
-              />
-            </div>
-
-            {/* Photo & Home Toggle */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '12px 16px',
-              borderRadius: '8px',
-              background: 'var(--sys-surface-hover)',
-              border: '1px solid var(--sys-divider)'
-            }}>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--txt-primary)' }}>Feature on Home Screen</div>
-                <div style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '2px' }}>Display on the public website home slider showcase.</div>
-              </div>
-              <label style={{ position: 'relative', display: 'inline-block', width: '42px', height: '24px', cursor: 'pointer', margin: 0 }}>
-                <input
-                  type="checkbox"
-                  checked={formShowInHome}
-                  onChange={(e) => setFormShowInHome(e.target.checked)}
-                  style={{ opacity: 0, width: 0, height: 0 }}
-                />
-                <span style={{
-                  position: 'absolute',
-                  cursor: 'pointer',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: formShowInHome ? 'var(--brand-primary)' : '#4b5563',
-                  transition: '0.3s',
-                  borderRadius: '24px'
-                }}>
+              {/* Feature on Home Screen Option */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                background: 'var(--sys-surface-hover)',
+                border: '1px solid var(--sys-divider)'
+              }}>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: '12.5px', fontWeight: '700', color: 'var(--txt-primary)' }}>Feature on Home Screen</div>
+                  <div style={{ fontSize: '10.5px', color: 'var(--txt-muted)', marginTop: '1px' }}>Show in home slider</div>
+                </div>
+                <label style={{ position: 'relative', display: 'inline-block', width: '40px', height: '22px', cursor: 'pointer', margin: 0 }}>
+                  <input
+                    type="checkbox"
+                    checked={formShowInHome}
+                    onChange={(e) => setFormShowInHome(e.target.checked)}
+                    style={{ opacity: 0, width: 0, height: 0 }}
+                  />
                   <span style={{
                     position: 'absolute',
-                    height: '18px',
-                    width: '18px',
-                    left: formShowInHome ? '21px' : '3px',
-                    bottom: '3px',
-                    backgroundColor: 'white',
+                    cursor: 'pointer',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: formShowInHome ? 'var(--brand-primary)' : '#4b5563',
                     transition: '0.3s',
-                    borderRadius: '50%'
-                  }} />
-                </span>
-              </label>
+                    borderRadius: '22px'
+                  }}>
+                    <span style={{
+                      position: 'absolute',
+                      height: '16px',
+                      width: '16px',
+                      left: formShowInHome ? '21px' : '3px',
+                      bottom: '3px',
+                      backgroundColor: 'white',
+                      transition: '0.3s',
+                      borderRadius: '50%'
+                    }} />
+                  </span>
+                </label>
+              </div>
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '6px' }}>
               <Button variant="secondary" onClick={() => setIsModalOpen(false)} disabled={isSaving}>
                 Cancel
               </Button>
               <Button variant="primary" type="submit" disabled={isSaving || isUploading}>
-                {isSaving ? 'Saving...' : 'Save Review'}
+                {isSaving ? 'Saving...' : (editingReview ? 'Update Review' : 'Save Review')}
               </Button>
             </div>
           </form>

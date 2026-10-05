@@ -266,10 +266,8 @@ export const Home = () => {
         return listToUse.map(r => ({
           id: r.id,
           name: r.name,
-          role: r.role || 'Maker / Customer',
-          institution: r.institution || '',
           rating: Number(r.rating) || 5,
-          project: r.project || 'Flyen Custom Project',
+          project: r.project || '3D Printing & Project',
           avatarText: r.avatar_text || getInitials(r.name),
           avatarBg: r.avatar_bg || getAvatarBg(r.name),
           avatarUrl: r.avatar_url || '',
@@ -282,8 +280,6 @@ export const Home = () => {
       {
         id: 't-1',
         name: 'Akash Sharma',
-        role: 'Final Year Mechatronics',
-        institution: 'IIT Madras',
         rating: 5,
         project: 'Autonomous Rover Kit',
         avatarText: 'AS',
@@ -294,8 +290,6 @@ export const Home = () => {
       {
         id: 't-2',
         name: 'Sneha Reddy',
-        role: 'IoT Developer & Researcher',
-        institution: 'Anna University',
         rating: 5,
         project: 'Custom Drone Chassis',
         avatarText: 'SR',
@@ -306,8 +300,6 @@ export const Home = () => {
       {
         id: 't-3',
         name: 'Vikram Patel',
-        role: 'Robotics Team Lead',
-        institution: 'SRM Tech Team',
         rating: 5,
         project: 'Industrial IoT Edge Node',
         avatarText: 'VP',
@@ -318,8 +310,6 @@ export const Home = () => {
       {
         id: 't-4',
         name: 'Pooja Nair',
-        role: '',
-        institution: '',
         rating: 5,
         project: 'Custom Batch 3D Prints',
         avatarText: 'PN',
@@ -330,8 +320,6 @@ export const Home = () => {
       {
         id: 't-5',
         name: 'Karthik Verma',
-        role: 'EEE Project Lead',
-        institution: 'NIT Trichy',
         rating: 5,
         project: 'Solar Energy Monitor Kit',
         avatarText: 'KV',
@@ -950,12 +938,9 @@ export const Home = () => {
                       </div>
                       <div className="flyen-testi-author-details">
                         <h4 className="flyen-testi-author-name">{t.name}</h4>
-                        {(t.role || t.institution) && (
-                          <div className="flyen-testi-author-role">
-                            {[t.role, t.institution].filter(Boolean).join(' • ')}
-                          </div>
+                        {t.project && (
+                          <span className="flyen-testi-author-tag">📦 {t.project}</span>
                         )}
-                        <span className="flyen-testi-author-tag">📦 {t.project}</span>
                       </div>
                     </div>
                   </div>
