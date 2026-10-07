@@ -11,6 +11,7 @@ import { ROUTES } from '../../../shared/constants/routes';
 import { useEnquiries } from '../../enquiries/hooks/useEnquiries';
 import { useSettings } from '../../settings/hooks/useSettings';
 import { useToast } from '../../../shared/context/ToastContext';
+import { useCart } from '../../../shared/context/CartContext.jsx';
 import { useAuth } from '../../auth/context/AuthContext';
 import { ProgressiveAuthModal } from '../../auth/components/ProgressiveAuthModal';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
@@ -70,6 +71,7 @@ export const ProjectDetails = () => {
   const { addEnquiry, isProcessing } = useEnquiries();
   const { settings } = useSettings();
   const { showToast } = useToast();
+  const { addToCart, openCart } = useCart();
 
   const project = getProjectBySlug(slug);
   const { user, viewMode } = useAuth();
@@ -605,14 +607,43 @@ export const ProjectDetails = () => {
                           </ul>
                         </div>
 
-                        {/* Lower Part: Buy Now Button */}
-                        <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                        {/* Lower Part: Add to Cart & Buy Now Buttons */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%', marginTop: '4px' }}>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => {
+                              addToCart({
+                                id: `${project.id}_${kit.id}`,
+                                name: `${project.title} (${kit.name})`,
+                                price: kit.price,
+                                image: project.images?.main || project.thumbnail,
+                                category: 'project-kit',
+                                url: ROUTES.PROJECT_DETAILS.replace(':slug', project.slug)
+                              }, 1, { variant: kit.name, projectTitle: project.title }, true);
+                            }}
+                            style={{ width: '100%', padding: '10px 16px', fontSize: '13px', fontWeight: '600', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                          >
+                            <span className="material-icons-outlined" style={{ fontSize: '17px' }}>shopping_bag</span>
+                            Add to Cart
+                          </Button>
                           <Button
                             type="button"
                             variant="primary"
-                            onClick={() => openOrderModalForVariant(kit)}
-                            style={{ width: '100%', padding: '10px 24px', fontSize: '13px', fontWeight: '700', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            onClick={() => {
+                              addToCart({
+                                id: `${project.id}_${kit.id}`,
+                                name: `${project.title} (${kit.name})`,
+                                price: kit.price,
+                                image: project.images?.main || project.thumbnail,
+                                category: 'project-kit',
+                                url: ROUTES.PROJECT_DETAILS.replace(':slug', project.slug)
+                              }, 1, { variant: kit.name, projectTitle: project.title }, false);
+                              openCart();
+                            }}
+                            style={{ width: '100%', padding: '10px 16px', fontSize: '13px', fontWeight: '700', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
                           >
+                            <span className="material-icons-outlined" style={{ fontSize: '17px' }}>bolt</span>
                             Buy Now
                           </Button>
                         </div>

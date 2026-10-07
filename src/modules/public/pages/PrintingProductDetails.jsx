@@ -12,11 +12,13 @@ import { masterDataService } from '../../../shared/services/masterDataService';
 import { contactService } from '../../contact/services/contactService';
 import { printingInventoryService } from '../../printing-inventory/services/printingInventoryService';
 import { useEnquiries } from '../../enquiries/hooks/useEnquiries';
+import { useCart } from '../../../shared/context/CartContext.jsx';
 
 export const PrintingProductDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { showToast } = useToast();
+  const { addToCart, openCart } = useCart();
 
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -419,15 +421,66 @@ export const PrintingProductDetails = () => {
                     )}
                   </div>
 
-                  {/* CTA */}
-                  <Button
-                    variant="primary"
-                    onClick={openQuoteModal}
-                    style={{ height: '44px', fontWeight: '700', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                  >
-                    <span className="material-icons-outlined" style={{ fontSize: '20px' }}>shopping_cart</span>
-                    Buy Now
-                  </Button>
+                  {/* CTA Buttons */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => {
+                          addToCart({
+                            id: product.id,
+                            name: product.name,
+                            sku: product.sku,
+                            price: product.price,
+                            contact_for_price: product.contact_for_price,
+                            image: activeImage,
+                            category: '3d-print',
+                            url: ROUTES.PRINTING_DETAILS.replace(':id', product.id)
+                          }, 1, { material: getLabelForValue(materials, product.material) }, true);
+                        }}
+                        style={{ height: '44px', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                      >
+                        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>shopping_bag</span>
+                        Add to Cart
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="primary"
+                        onClick={() => {
+                          if (product.contact_for_price) {
+                            openQuoteModal();
+                          } else {
+                            addToCart({
+                              id: product.id,
+                              name: product.name,
+                              sku: product.sku,
+                              price: product.price,
+                              contact_for_price: product.contact_for_price,
+                              image: activeImage,
+                              category: '3d-print',
+                              url: ROUTES.PRINTING_DETAILS.replace(':id', product.id)
+                            }, 1, { material: getLabelForValue(materials, product.material) }, false);
+                            openCart();
+                          }
+                        }}
+                        style={{ height: '44px', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                      >
+                        <span className="material-icons-outlined" style={{ fontSize: '18px' }}>bolt</span>
+                        Buy Now
+                      </Button>
+                    </div>
+                    {product.contact_for_price && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={openQuoteModal}
+                        style={{ height: '38px', fontSize: '12px', fontWeight: '600' }}
+                      >
+                        Request Custom Quote
+                      </Button>
+                    )}
+                  </div>
                 </Card>
 
                 {/* Technical Specifications */}

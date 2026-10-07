@@ -15,6 +15,7 @@ import { reviewService, getInitials, getAvatarBg } from '../../../shared/service
 import { storageService } from '../../../shared/services/storageService';
 import { ROUTES } from '../../../shared/constants/routes';
 import { useSettings } from '../../settings/hooks/useSettings';
+import { useCart } from '../../../shared/context/CartContext';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 
 const BACKDROP_ROTATIONS = ['-4deg', '4.5deg', '-5deg', '4deg', '-4.5deg', '3.5deg'];
@@ -51,6 +52,7 @@ export const Home = () => {
   const { showToast } = useToast();
   const { settings } = useSettings();
   const { user } = useAuth();
+  const { addToCart } = useCart();
 
   const seoProps = generateSEO(PageType.HOME);
 
@@ -698,77 +700,7 @@ export const Home = () => {
         </section>
 
         {/* ========================================================================
-            3. READY-MADE PROJECT KITS (DB DATA)
-            ======================================================================== */}
-        <section className="flyen-sand-section">
-          <div className="flyen-sand-header">
-            <div>
-              <h2>Ready-Made Project Kits</h2>
-              <p>Top-rated final year project kits and precision tested hardware packages</p>
-            </div>
-            <span className="flyen-sand-link" onClick={() => navigate(ROUTES.PROJECTS)}>
-              View all project kits &rarr;
-            </span>
-          </div>
-
-          <div className="flyen-products-grid">
-            {isProjectsLoading ? (
-              [1, 2, 3, 4].map((n) => (
-                <div key={n} className="flyen-product-card" style={{ opacity: 0.6 }}>
-                  <div className="flyen-product-thumb" style={{ background: 'var(--sys-surface-hover)' }} />
-                  <div className="flyen-product-info" style={{ padding: '16px' }}>
-                    <div style={{ height: '14px', width: '60px', background: 'var(--sys-surface-hover)', borderRadius: '4px', marginBottom: '8px' }} />
-                    <div style={{ height: '18px', width: '80%', background: 'var(--sys-surface-hover)', borderRadius: '4px' }} />
-                  </div>
-                </div>
-              ))
-            ) : readyMadeProjects.length > 0 ? (
-              readyMadeProjects.map((prod) => (
-                <div key={prod.id} className="flyen-product-card">
-                  <div className="flyen-product-thumb">
-                    {prod.badge && <span className="flyen-product-badge">{prod.badge}</span>}
-                    {prod.image ? (
-                      <img src={prod.image} alt={prod.title} className="flyen-product-img" loading="lazy" />
-                    ) : (
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', minHeight: '160px', background: 'var(--sys-surface-hover)', color: 'var(--txt-muted)' }}>
-                        <span className="material-icons" style={{ fontSize: '36px' }}>memory</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flyen-product-info">
-                    <div>
-                      <h3 className="flyen-product-title">{prod.title}</h3>
-                    </div>
-                    <div>
-                      <div className="flyen-product-price">{prod.price}</div>
-                      <button 
-                        type="button" 
-                        className="flyen-btn-card-action"
-                        onClick={() => {
-                          if (prod.slug) {
-                            navigate(ROUTES.PROJECT_DETAILS.replace(':slug', prod.slug));
-                          } else {
-                            handleOpenOrderModal(prod);
-                          }
-                        }}
-                      >
-                        <span>Buy Kit</span>
-                        <span className="material-icons" style={{ fontSize: '16px' }}>shopping_cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 20px', color: 'var(--txt-muted)' }}>
-                <p>No project kits currently available.</p>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* ========================================================================
-            4. 3D PRINTED PRODUCTS & PARTS (WHITE BACKGROUND)
+            3. 3D PRINTED PRODUCTS & PARTS (WHITE BACKGROUND)
             ======================================================================== */}
         <section className="flyen-sand-section" style={{ background: '#ffffff', color: '#0f172a', borderTop: '1px solid rgba(0, 0, 0, 0.05)', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}>
           <div className="flyen-sand-header">
@@ -815,11 +747,15 @@ export const Home = () => {
                         type="button" 
                         className="flyen-btn-card-action"
                         onClick={() => {
-                          if (prod.idNum) {
-                            navigate(ROUTES.PRINTING_DETAILS.replace(':id', prod.idNum));
-                          } else {
-                            handleOpenFormModal(`Order 3D Print: ${prod.title}`);
-                          }
+                          addToCart({
+                            id: prod.id || prod.idNum,
+                            idNum: prod.idNum,
+                            title: prod.title,
+                            price: prod.price,
+                            image: prod.image,
+                            category: '3D Printing',
+                            type: '3d_print'
+                          }, 1, {}, true);
                         }}
                       >
                         <span>Buy Now</span>
@@ -832,6 +768,80 @@ export const Home = () => {
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 20px', color: 'var(--txt-muted)' }}>
                 <p>No 3D print products currently available.</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* ========================================================================
+            4. READY-MADE PROJECT KITS (DB DATA)
+            ======================================================================== */}
+        <section className="flyen-sand-section">
+          <div className="flyen-sand-header">
+            <div>
+              <h2>Ready-Made Project Kits</h2>
+              <p>Top-rated final year project kits and precision tested hardware packages</p>
+            </div>
+            <span className="flyen-sand-link" onClick={() => navigate(ROUTES.PROJECTS)}>
+              View all project kits &rarr;
+            </span>
+          </div>
+
+          <div className="flyen-products-grid">
+            {isProjectsLoading ? (
+              [1, 2, 3, 4].map((n) => (
+                <div key={n} className="flyen-product-card" style={{ opacity: 0.6 }}>
+                  <div className="flyen-product-thumb" style={{ background: 'var(--sys-surface-hover)' }} />
+                  <div className="flyen-product-info" style={{ padding: '16px' }}>
+                    <div style={{ height: '14px', width: '60px', background: 'var(--sys-surface-hover)', borderRadius: '4px', marginBottom: '8px' }} />
+                    <div style={{ height: '18px', width: '80%', background: 'var(--sys-surface-hover)', borderRadius: '4px' }} />
+                  </div>
+                </div>
+              ))
+            ) : readyMadeProjects.length > 0 ? (
+              readyMadeProjects.map((prod) => (
+                <div key={prod.id} className="flyen-product-card">
+                  <div className="flyen-product-thumb">
+                    {prod.badge && <span className="flyen-product-badge">{prod.badge}</span>}
+                    {prod.image ? (
+                      <img src={prod.image} alt={prod.title} className="flyen-product-img" loading="lazy" />
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', minHeight: '160px', background: 'var(--sys-surface-hover)', color: 'var(--txt-muted)' }}>
+                        <span className="material-icons" style={{ fontSize: '36px' }}>memory</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flyen-product-info">
+                    <div>
+                      <h3 className="flyen-product-title">{prod.title}</h3>
+                    </div>
+                    <div>
+                      <div className="flyen-product-price">{prod.price}</div>
+                      <button 
+                        type="button" 
+                        className="flyen-btn-card-action"
+                        onClick={() => {
+                          addToCart({
+                            id: prod.id || prod.slug,
+                            slug: prod.slug,
+                            title: prod.title,
+                            price: prod.price,
+                            image: prod.image,
+                            category: 'Project Kit',
+                            type: 'project'
+                          }, 1, {}, true);
+                        }}
+                      >
+                        <span>Buy Kit</span>
+                        <span className="material-icons" style={{ fontSize: '16px' }}>shopping_cart</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 20px', color: 'var(--txt-muted)' }}>
+                <p>No project kits currently available.</p>
               </div>
             )}
           </div>

@@ -15,6 +15,7 @@ import { SettingsProvider } from './modules/settings/context/SettingsContext';
 import { ProjectProvider } from './modules/projects/context/ProjectContext';
 import { AuthProvider } from './modules/auth/context/AuthContext';
 import { ToastProvider } from './shared/context/ToastContext';
+import { CartProvider } from './shared/context/CartContext';
 import { EnquiryProvider } from './modules/enquiries/context/EnquiryContext';
 import { ThemeProvider } from './shared/context/ThemeContext.jsx';
 import { MainLayout } from './shared/components/layout/MainLayout';
@@ -25,23 +26,25 @@ export function render(url, ssrData = {}) {
       <SettingsProvider initialSettings={ssrData.settings}>
         <AuthProvider>
           <ToastProvider>
-            <EnquiryProvider>
-              <ProjectProvider initialProjects={ssrData.projects}>
-                <ThemeProvider>
-                  <MainLayout>
-                    <Routes>
-                      <Route path={ROUTES.HOME} element={<Home />} />
-                      <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
-                      <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
-                      <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
-                      <Route path={ROUTES.CONTACT} element={<Contact />} />
-                      <Route path={ROUTES.FEEDBACK} element={<Feedback />} />
-                      <Route path="*" element={<Home />} />
-                    </Routes>
-                  </MainLayout>
-                </ThemeProvider>
-              </ProjectProvider>
-            </EnquiryProvider>
+            <CartProvider>
+              <EnquiryProvider>
+                <ProjectProvider initialProjects={ssrData.projects}>
+                  <ThemeProvider>
+                    <MainLayout>
+                      <Routes>
+                        <Route path={ROUTES.HOME} element={<Home />} />
+                        <Route path={ROUTES.PROJECTS} element={<ProjectListing />} />
+                        <Route path={ROUTES.PROJECT_DETAILS} element={<ProjectDetails />} />
+                        <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
+                        <Route path={ROUTES.CONTACT} element={<Contact />} />
+                        <Route path={ROUTES.FEEDBACK} element={<Feedback />} />
+                        <Route path="*" element={<Home />} />
+                      </Routes>
+                    </MainLayout>
+                  </ThemeProvider>
+                </ProjectProvider>
+              </EnquiryProvider>
+            </CartProvider>
           </ToastProvider>
         </AuthProvider>
       </SettingsProvider>

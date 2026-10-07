@@ -6,22 +6,32 @@ import { lazyRoutes } from '../../../router/lazyRoutes';
 import { useSettings } from '../../../modules/settings/hooks/useSettings';
 import { useAuth } from '../../../modules/auth/context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
+import { useCart } from '../../context/CartContext.jsx';
 import { Modal } from '../ui/Modal';
 import { supabase } from '../../services/supabaseClient.js';
 import { notificationService } from '../../services/notificationService.js';
 import { NotificationDropdown } from './NotificationDropdown.jsx';
 
-export const Header = ({ onToggleDrawer }) => {
+export const Header = ({ onToggleDrawer, onOpenSearch }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { settings } = useSettings();
   const { user, profile, isAdmin, logout, viewMode, setViewMode, loading } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { totalItems, openCart } = useCart();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAdminNotifications, setShowAdminNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const dropdownRef = useRef(null);
+
+  const handleTriggerSearch = () => {
+    if (onOpenSearch) {
+      onOpenSearch();
+    } else {
+      window.dispatchEvent(new CustomEvent('open-flyen-search'));
+    }
+  };
 
   const [notificationsList, setNotificationsList] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -115,7 +125,95 @@ export const Header = ({ onToggleDrawer }) => {
         </nav>
       ) }
       
-      <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+      <div className="nav-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        
+        {/* Global Search Trigger (Left of User Profile) */}
+        <button
+          type="button"
+          onClick={handleTriggerSearch}
+          className="btn-header header-search-trigger"
+          style={{
+            padding: '7px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
+            border: 'none',
+            color: 'var(--header-icon, var(--txt-secondary))',
+            cursor: 'pointer',
+            transition: 'color 0.2s, background-color 0.2s',
+            borderRadius: '8px',
+            position: 'relative'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--flyen-teal, #00dfa2)';
+            e.currentTarget.style.backgroundColor = 'var(--header-interaction-hover, rgba(255, 255, 255, 0.05))';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--header-icon, var(--txt-secondary))';
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+          title="Global Search (Ctrl+K)"
+          aria-label="Global Search"
+        >
+          <span className="material-icons-outlined" style={{ fontSize: '20px' }}>search</span>
+        </button>
+
+        {/* Shopping Cart Trigger (Left of User Profile) */}
+        <button
+          type="button"
+          onClick={openCart}
+          className="btn-header header-cart-trigger"
+          style={{
+            padding: '7px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
+            border: 'none',
+            color: totalItems > 0 ? 'var(--flyen-teal, #00dfa2)' : 'var(--header-icon, var(--txt-secondary))',
+            cursor: 'pointer',
+            position: 'relative',
+            transition: 'color 0.2s, background-color 0.2s',
+            borderRadius: '8px'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--flyen-teal, #00dfa2)';
+            e.currentTarget.style.backgroundColor = 'var(--header-interaction-hover, rgba(255, 255, 255, 0.05))';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = totalItems > 0 ? 'var(--flyen-teal, #00dfa2)' : 'var(--header-icon, var(--txt-secondary))';
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+          title={`Shopping Cart (${totalItems} items)`}
+          aria-label="Shopping Cart"
+        >
+          <span className="material-icons-outlined" style={{ fontSize: '20px' }}>shopping_bag</span>
+          {totalItems > 0 && (
+            <span
+              style={{
+                position: 'absolute',
+                top: '0px',
+                right: '0px',
+                background: 'var(--flyen-teal, #00dfa2)',
+                color: '#000000',
+                borderRadius: '10px',
+                minWidth: '16px',
+                height: '16px',
+                padding: '0 4px',
+                fontSize: '9.5px',
+                fontWeight: '900',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 0 8px rgba(0, 223, 162, 0.6)'
+              }}
+            >
+              {totalItems > 99 ? '99+' : totalItems}
+            </span>
+          )}
+        </button>
+
         {/* Notification Bell */}
         {user && isAdmin && viewMode === 'admin' && (
           <div style={{ position: 'relative' }}>
