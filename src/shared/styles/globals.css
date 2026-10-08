@@ -6449,7 +6449,7 @@ table td {
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   border-bottom: none;
-  padding: 12px 0;
+  padding: 16px 0;
   margin: 0;
   box-sizing: border-box;
   position: relative;
