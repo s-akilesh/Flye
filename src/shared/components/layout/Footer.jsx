@@ -149,10 +149,10 @@ export const Footer = () => {
           {/* Column 3: SERVICES */}
           <div className="flyen-footer-col">
             <span className="flyen-footer-col-title">SERVICES</span>
+            <Link to={ROUTES.PROJECTS} className="flyen-footer-link">Project</Link>
+            <Link to={ROUTES.PRINTING} className="flyen-footer-link">3D Printing</Link>
             <Link to={ROUTES.PRINTING} className="flyen-footer-link">Custom 3D Printing</Link>
-            <Link to={`${ROUTES.PRINTING}?category=parts`} className="flyen-footer-link">Replacement Parts</Link>
             <Link to={ROUTES.CONTACT} className="flyen-footer-link">Bulk Orders</Link>
-            <Link to={ROUTES.CONTACT} className="flyen-footer-link">Help Choosing Products</Link>
             <Link to={ROUTES.CONTACT} className="flyen-footer-link">Contact</Link>
           </div>
 
