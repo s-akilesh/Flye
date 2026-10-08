@@ -48,7 +48,7 @@ export const SupportLayout = ({
       <div className="flyen-support-container">
         
         {/* Top Header Banner */}
-        <header className="flyen-support-header">
+        <div className="flyen-support-header">
           <div className="flyen-support-badge-row">
             <span className="flyen-support-badge">{badge}</span>
           </div>
@@ -59,7 +59,7 @@ export const SupportLayout = ({
             <span className="flyen-support-meta-dot">•</span>
             <span>Last Updated: {lastUpdated || 'October 2026'}</span>
           </div>
-        </header>
+        </div>
 
         {/* 2-Column Responsive Layout: Sticky Sidebar Navigation + Content Area */}
         <div className="flyen-support-grid">

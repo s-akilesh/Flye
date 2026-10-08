@@ -8352,8 +8352,9 @@ table td {
   min-height: calc(100vh - 140px);
   background: var(--sys-bg, #06090f);
   color: var(--txt-primary, #f8fafc);
-  padding: 40px var(--page-padding, 40px) 80px;
+  padding: 100px var(--page-padding, 40px) 80px;
   box-sizing: border-box;
+  position: relative;
 }
 
 .flyen-support-container {
@@ -8363,9 +8364,20 @@ table td {
 }
 
 .flyen-support-header {
-  margin-bottom: 40px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: static !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0 0 24px 0 !important;
+  margin-bottom: 40px !important;
+  z-index: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .flyen-support-badge-row {
@@ -8425,8 +8437,16 @@ table td {
 }
 
 @media (max-width: 900px) {
+  .flyen-support-page-root {
+    padding-top: 84px;
+  }
+
   .flyen-support-grid {
     grid-template-columns: 1fr;
+  }
+
+  .flyen-support-sidebar {
+    position: static;
   }
 }
 
