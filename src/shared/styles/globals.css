@@ -6377,9 +6377,10 @@ table td {
   font-size: 50px;
   font-weight: 800;
   line-height: 1.15;
-  color: var(--txt-primary);
+  color: #ffffff !important;
   margin: 0 0 16px 0;
   letter-spacing: -0.8px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
 }
 
 @media (max-width: 960px) {
@@ -6396,15 +6397,18 @@ table td {
 }
 
 .flyen-hero-teal-text {
-  color: var(--flyen-teal);
+  color: var(--flyen-teal, #00dfa2) !important;
+  text-shadow: 0 0 25px rgba(0, 223, 162, 0.5);
 }
 
 .flyen-hero-sub-2 {
   font-size: 16px;
   line-height: 1.6;
-  color: var(--txt-secondary);
+  color: rgba(241, 245, 249, 0.9) !important;
   margin: 0 0 36px 0;
   max-width: 540px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+  font-weight: 400;
 }
 
 @media (max-width: 600px) {
@@ -6423,24 +6427,25 @@ table td {
   font-size: 14px;
   font-weight: 700;
   background: var(--flyen-teal);
-  color: #ffffff;
+  color: #000000 !important;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 4px 18px rgba(0, 223, 162, 0.35);
   transition: all 0.25s ease;
   text-decoration: none;
 }
 
 .flyen-btn-teal,
 .flyen-btn-teal * {
-  color: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
 }
 
 .flyen-btn-teal:hover {
   background: var(--flyen-teal-hover);
-  color: #ffffff;
+  color: #000000 !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(56, 189, 248, 0.5);
+  box-shadow: 0 6px 24px rgba(0, 223, 162, 0.55);
 }
 
 .flyen-btn-outline {
@@ -6452,19 +6457,26 @@ table td {
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  color: var(--txt-primary);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   cursor: pointer;
   transition: all 0.25s ease;
   text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.flyen-btn-outline,
+.flyen-btn-outline * {
+  color: #ffffff !important;
 }
 
 .flyen-btn-outline:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.16);
   border-color: var(--flyen-teal);
-  color: var(--flyen-teal);
+  color: #ffffff !important;
   transform: translateY(-2px);
 }
 
