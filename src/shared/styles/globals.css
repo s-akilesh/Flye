@@ -7654,7 +7654,11 @@ table td {
 .flyen-workflow-showcase-section {
   position: relative;
   width: 100%;
-  padding: 90px var(--page-padding, 40px);
+  min-height: 500px;
+  padding: 135px var(--page-padding, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   box-sizing: border-box;
   background: #080c14;
@@ -7769,7 +7773,7 @@ table td {
 
 @media (max-width: 540px) {
   .flyen-workflow-showcase-section {
-    padding: 64px 20px;
+    padding: 90px 20px;
   }
 
   .flyen-workflow-title {
