@@ -30,7 +30,7 @@ export const Footer = () => {
     };
   }, []);
 
-  const shopLinks = categories.length > 0
+  const categoryLinks = categories.length > 0
     ? categories.map(cat => {
         const isProject = cat.type === 'project_category';
         const route = isProject
@@ -136,10 +136,10 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Column 2: SHOP */}
+          {/* Column 2: CATEGORY */}
           <div className="flyen-footer-col">
-            <span className="flyen-footer-col-title">SHOP</span>
-            {shopLinks.map(link => (
+            <span className="flyen-footer-col-title">CATEGORY</span>
+            {categoryLinks.map(link => (
               <Link key={link.id} to={link.route} className="flyen-footer-link">
                 {link.title}
               </Link>
