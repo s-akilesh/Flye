@@ -649,100 +649,97 @@ export const Home = () => {
         </section>
 
         {/* ========================================================================
-            3. ENGINEERING & MANUFACTURING SHOWCASE (BACKGROUND IMAGE BANNERS FROM S3)
+            3. FULL-SCREEN SHOWCASE 1: 3D PRINTED PARTS & PROTOTYPING
             ======================================================================== */}
-        <section className="flyen-showcase-section">
-          <div className="flyen-section-container">
-            <div className="flyen-showcase-grid">
-              
-              {/* Card 1: 3D Printing & Precision Manufacturing */}
-              <div className="flyen-showcase-card">
-                <div 
-                  className="flyen-showcase-card-bg"
-                  style={{ backgroundImage: `url(${s3ProductShowcaseBg})` }}
-                />
-                <div className="flyen-showcase-card-overlay" />
-                <div className="flyen-showcase-card-content">
-                  <div className="flyen-showcase-pill">
-                    <span>Precision 3D Manufacturing</span>
-                  </div>
-                  <h2 className="flyen-showcase-title">
-                    High-Tolerance 3D Printed Parts & Prototyping
-                  </h2>
-                  <p className="flyen-showcase-desc">
-                    Industrial SLA, FDM, and resin components engineered for robotic assemblies, functional enclosures, and replacement spares.
-                  </p>
-                  <div className="flyen-showcase-specs">
-                    <span className="flyen-showcase-spec-tag">±0.1mm Precision</span>
-                    <span className="flyen-showcase-spec-tag">Engineering Materials</span>
-                    <span className="flyen-showcase-spec-tag">Rapid Dispatch</span>
-                  </div>
-                  <div className="flyen-showcase-actions">
-                    <button 
-                      type="button" 
-                      className="flyen-btn-teal"
-                      onClick={() => navigate(ROUTES.PRINTING)}
-                    >
-                      Explore 3D Catalog
-                    </button>
-                    <button 
-                      type="button" 
-                      className="flyen-btn-outline"
-                      onClick={() => handleOpenFormModal('Custom 3D Printing Quote')}
-                    >
-                      Instant Quote
-                    </button>
-                  </div>
-                </div>
+        <section className="flyen-fullscreen-showcase-section">
+          <div 
+            className="flyen-fullscreen-showcase-bg"
+            style={{ backgroundImage: `url(${s3ProductShowcaseBg})` }}
+          />
+          <div className="flyen-fullscreen-showcase-overlay" />
+          <div className="flyen-section-container flyen-fullscreen-showcase-container">
+            <div className="flyen-fullscreen-showcase-content">
+              <div className="flyen-showcase-pill">
+                <span>Precision 3D Manufacturing</span>
               </div>
-
-              {/* Card 2: Ready-Made Project Kits & Hardware */}
-              <div className="flyen-showcase-card">
-                <div 
-                  className="flyen-showcase-card-bg"
-                  style={{ backgroundImage: `url(${s3ProjectKitsBg})` }}
-                />
-                <div className="flyen-showcase-card-overlay" />
-                <div className="flyen-showcase-card-content">
-                  <div className="flyen-showcase-pill">
-                    <span>Turnkey Hardware</span>
-                  </div>
-                  <h2 className="flyen-showcase-title">
-                    Ready-Made Project Kits & IoT Systems
-                  </h2>
-                  <p className="flyen-showcase-desc">
-                    Pre-tested hardware packages, sensor suites, and microcontroller bundles with complete schematics, source code, and guides.
-                  </p>
-                  <div className="flyen-showcase-specs">
-                    <span className="flyen-showcase-spec-tag">Plug & Play</span>
-                    <span className="flyen-showcase-spec-tag">Verified Schematics</span>
-                    <span className="flyen-showcase-spec-tag">Full Documentation</span>
-                  </div>
-                  <div className="flyen-showcase-actions">
-                    <button 
-                      type="button" 
-                      className="flyen-btn-teal"
-                      onClick={() => navigate(ROUTES.PROJECTS)}
-                    >
-                      View Project Kits
-                    </button>
-                    <button 
-                      type="button" 
-                      className="flyen-btn-outline"
-                      onClick={() => navigate(ROUTES.COMPONENTS || '/components')}
-                    >
-                      Component Library
-                    </button>
-                  </div>
-                </div>
+              <h2 className="flyen-fullscreen-showcase-title">
+                High-Tolerance 3D Printed Parts & Prototyping
+              </h2>
+              <p className="flyen-fullscreen-showcase-desc">
+                Industrial SLA, FDM, and resin components engineered for robotic assemblies, functional enclosures, and replacement spares.
+              </p>
+              <div className="flyen-showcase-specs">
+                <span className="flyen-showcase-spec-tag">±0.1mm Precision</span>
+                <span className="flyen-showcase-spec-tag">Engineering Materials</span>
+                <span className="flyen-showcase-spec-tag">Rapid Dispatch</span>
               </div>
-
+              <div className="flyen-fullscreen-showcase-actions">
+                <button 
+                  type="button" 
+                  className="flyen-btn-teal"
+                  onClick={() => navigate(ROUTES.PRINTING)}
+                >
+                  Explore 3D Catalog
+                </button>
+                <button 
+                  type="button" 
+                  className="flyen-btn-outline"
+                  onClick={() => handleOpenFormModal('Custom 3D Printing Quote')}
+                >
+                  Instant Quote
+                </button>
+              </div>
             </div>
           </div>
         </section>
 
         {/* ========================================================================
-            4. TESTIMONIALS & TRUST FACTOR (SPEECH-BUBBLE SLIDER UI)
+            4. FULL-SCREEN SHOWCASE 2: READY-MADE PROJECT KITS & HARDWARE
+            ======================================================================== */}
+        <section className="flyen-fullscreen-showcase-section">
+          <div 
+            className="flyen-fullscreen-showcase-bg"
+            style={{ backgroundImage: `url(${s3ProjectKitsBg})` }}
+          />
+          <div className="flyen-fullscreen-showcase-overlay" />
+          <div className="flyen-section-container flyen-fullscreen-showcase-container">
+            <div className="flyen-fullscreen-showcase-content">
+              <div className="flyen-showcase-pill">
+                <span>Turnkey Hardware</span>
+              </div>
+              <h2 className="flyen-fullscreen-showcase-title">
+                Ready-Made Project Kits & IoT Systems
+              </h2>
+              <p className="flyen-fullscreen-showcase-desc">
+                Pre-tested hardware packages, sensor suites, and microcontroller bundles with complete schematics, source code, and guides.
+              </p>
+              <div className="flyen-showcase-specs">
+                <span className="flyen-showcase-spec-tag">Plug & Play</span>
+                <span className="flyen-showcase-spec-tag">Verified Schematics</span>
+                <span className="flyen-showcase-spec-tag">Full Documentation</span>
+              </div>
+              <div className="flyen-fullscreen-showcase-actions">
+                <button 
+                  type="button" 
+                  className="flyen-btn-teal"
+                  onClick={() => navigate(ROUTES.PROJECTS)}
+                >
+                  View Project Kits
+                </button>
+                <button 
+                  type="button" 
+                  className="flyen-btn-outline"
+                  onClick={() => navigate(ROUTES.COMPONENTS || '/components')}
+                >
+                  Component Library
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================
+            5. TESTIMONIALS & TRUST FACTOR (SPEECH-BUBBLE SLIDER UI)
             ======================================================================== */}
         <section className="flyen-testimonials-section">
           <div className="flyen-section-container">
