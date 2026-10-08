@@ -90,6 +90,10 @@ export const Home = () => {
     return storageService.getPublicUrl('website-assets', 'products-banner/project_kits_bg.jpg') || '/kit_hw.jpg';
   }, []);
 
+  const s3CustomWorkflowBg = useMemo(() => {
+    return storageService.getPublicUrl('website-assets', 'products-banner/custom_workflow_bg.jpg') || '/svc_enclosure.jpg';
+  }, []);
+
   const heroCards = useMemo(() => {
     if (s3SliderFiles && s3SliderFiles.length > 0) {
       const valid = s3SliderFiles
@@ -857,39 +861,44 @@ export const Home = () => {
         </section>
 
         {/* ========================================================================
-            6. HOW CUSTOM ORDERS WORK (WARM SAND CONTAINER - 4 STEPS)
+            6. HOW CUSTOM ORDERS WORK (BACKGROUND IMAGE SECTION FROM S3)
             ======================================================================== */}
-        <section className="flyen-sand-section">
-          <div className="flyen-sand-header">
-            <div>
-              <h2>How Custom Orders Work.</h2>
-              <p>Simple 4-step workflow from your initial 3D model to doorstep delivery</p>
-            </div>
-          </div>
-
-          <div className="flyen-process-grid-4">
-            <div className="flyen-process-dark-card">
-              <div className="flyen-process-num-badge">1</div>
-              <h3 className="flyen-process-title">Upload CAD or Idea</h3>
-              <p className="flyen-process-desc">Submit your .STL, .STEP file or project specifications through our quick enquiry form.</p>
+        <section className="flyen-workflow-showcase-section">
+          <div 
+            className="flyen-workflow-showcase-bg"
+            style={{ backgroundImage: `url(${s3CustomWorkflowBg})` }}
+          />
+          <div className="flyen-workflow-showcase-overlay" />
+          <div className="flyen-section-container flyen-workflow-showcase-container">
+            <div className="flyen-workflow-header">
+              <h2 className="flyen-workflow-title">How Custom Orders Work.</h2>
+              <p className="flyen-workflow-sub">Simple 4-step workflow from your initial 3D model to doorstep delivery</p>
             </div>
 
-            <div className="flyen-process-dark-card">
-              <div className="flyen-process-num-badge">2</div>
-              <h3 className="flyen-process-title">Instant Review & Quote</h3>
-              <p className="flyen-process-desc">Our engineers review tolerances, recommend optimal materials, and provide a transparent quote.</p>
-            </div>
+            <div className="flyen-process-grid-4">
+              <div className="flyen-process-dark-card">
+                <div className="flyen-process-num-badge">1</div>
+                <h3 className="flyen-process-title">Upload CAD or Idea</h3>
+                <p className="flyen-process-desc">Submit your .STL, .STEP file or project specifications through our quick enquiry form.</p>
+              </div>
 
-            <div className="flyen-process-dark-card">
-              <div className="flyen-process-num-badge">3</div>
-              <h3 className="flyen-process-title">Precision Print & QC</h3>
-              <p className="flyen-process-desc">Your parts are fabricated on calibrated industrial 3D printers and verified for dimensional accuracy.</p>
-            </div>
+              <div className="flyen-process-dark-card">
+                <div className="flyen-process-num-badge">2</div>
+                <h3 className="flyen-process-title">Instant Review & Quote</h3>
+                <p className="flyen-process-desc">Our engineers review tolerances, recommend optimal materials, and provide a transparent quote.</p>
+              </div>
 
-            <div className="flyen-process-dark-card">
-              <div className="flyen-process-num-badge">4</div>
-              <h3 className="flyen-process-title">Doorstep Express Delivery</h3>
-              <p className="flyen-process-desc">Securely packaged with tracking information and delivered directly to your doorstep or college lab.</p>
+              <div className="flyen-process-dark-card">
+                <div className="flyen-process-num-badge">3</div>
+                <h3 className="flyen-process-title">Precision Print & QC</h3>
+                <p className="flyen-process-desc">Your parts are fabricated on calibrated industrial 3D printers and verified for dimensional accuracy.</p>
+              </div>
+
+              <div className="flyen-process-dark-card">
+                <div className="flyen-process-num-badge">4</div>
+                <h3 className="flyen-process-title">Doorstep Express Delivery</h3>
+                <p className="flyen-process-desc">Securely packaged with tracking information and delivered directly to your doorstep or college lab.</p>
+              </div>
             </div>
           </div>
         </section>
