@@ -876,7 +876,7 @@ export const Home = () => {
               <div className="flyen-workflow-actions">
                 <button 
                   type="button" 
-                  className="flyen-btn-teal"
+                  className="flyen-btn-outline"
                   onClick={() => handleOpenFormModal('Custom Order Workflow')}
                 >
                   Know More

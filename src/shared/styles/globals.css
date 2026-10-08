@@ -7736,6 +7736,27 @@ table td {
   margin-top: 12px;
 }
 
+.flyen-workflow-actions .flyen-btn-outline {
+  background: transparent;
+  color: #ffffff !important;
+  border: 1px solid #ffffff;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.flyen-workflow-actions .flyen-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #ffffff;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
 @media (max-width: 960px) {
   .flyen-workflow-title {
     font-size: 32px;
