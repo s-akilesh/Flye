@@ -6373,58 +6373,6 @@ table td {
   backdrop-filter: blur(8px);
 }
 
-.flyen-hero-vector-backdrop {
-  position: absolute;
-  top: 60%;
-  left: -105%;
-  transform: translateY(-50%);
-  width: 1510px;
-  height: 1510px;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.14;
-  color: #94a3b8;
-  filter: drop-shadow(0 0 20px rgba(148, 163, 184, 0.1));
-  user-select: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.flyen-hero-printer-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-@media (max-width: 1200px) {
-  .flyen-hero-vector-backdrop {
-    width: 1290px;
-    height: 1290px;
-    top: 60%;
-    left: -100%;
-  }
-}
-
-@media (max-width: 960px) {
-  .flyen-hero-vector-backdrop {
-    top: 60%;
-    left: -35%;
-    transform: translate(-50%, -50%);
-    width: 1090px;
-    height: 1090px;
-    opacity: 0.11;
-  }
-}
-
-@media (max-width: 600px) {
-  .flyen-hero-vector-backdrop {
-    width: 810px;
-    height: 810px;
-    top: 60%;
-    left: -40%;
-    opacity: 0.08;
-  }
-}
-
 .flyen-hero-title-2 {
   font-size: 50px;
   font-weight: 800;

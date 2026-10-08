@@ -530,50 +530,6 @@ export const Home = () => {
 
           <div className="flyen-section-container">
             <div className="flyen-hero-stage">
-              {/* 3D Printer Line Vector Art Watermark Backdrop */}
-              <div className="flyen-hero-vector-backdrop" aria-hidden="true">
-                <svg 
-                  className="flyen-hero-printer-svg" 
-                  viewBox="0 0 440 440" 
-                  fill="none" 
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Filament Guide Feed Tube Arch */}
-                  <path 
-                    d="M 128 195 C 128 75, 246 75, 246 172" 
-                    stroke="currentColor" 
-                    strokeWidth="10" 
-                    strokeLinecap="round" 
-                  />
-                  {/* Spool Mount Brackets to Main Frame */}
-                  <line x1="106" y1="218" x2="156" y2="218" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                  <line x1="106" y1="262" x2="156" y2="262" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                  {/* Filament Spool Cylinder */}
-                  <rect x="114" y="195" width="28" height="90" rx="7" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                  {/* Outer Chamber Frame */}
-                  <rect x="156" y="112" width="180" height="212" rx="16" stroke="currentColor" strokeWidth="12" strokeLinejoin="round" />
-                  {/* Inner Chamber Window */}
-                  <rect x="174" y="130" width="144" height="176" rx="10" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                  {/* Horizontal X-Axis Rail */}
-                  <line x1="174" y1="188" x2="218" y2="188" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                  <line x1="274" y1="188" x2="306" y2="188" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                  {/* Right Stepper Motor Mount */}
-                  <rect x="306" y="174" width="20" height="38" rx="5" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                  {/* Central Extruder Carriage */}
-                  <rect x="218" y="172" width="56" height="32" rx="5" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                  {/* Tapered Nozzle Cone */}
-                  <path d="M 226 204 L 266 204 L 254 242 L 238 242 Z" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                  {/* Nozzle Needle Tip */}
-                  <line x1="246" y1="242" x2="246" y2="262" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                  {/* 3D Printed Object */}
-                  <rect x="254" y="260" width="44" height="24" rx="6" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                  {/* Build Plate Platform */}
-                  <rect x="188" y="284" width="116" height="24" rx="6" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                  {/* Machine Base & Feet */}
-                  <path d="M 184 308 L 184 340 L 206 340 L 216 324 L 276 324 L 286 340 L 308 340 L 308 308" stroke="currentColor" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-
               <div className="flyen-hero-text-wrap">
                 <div className="flyen-hero-badge">
                   <span className="flyen-hero-badge-dot" />
