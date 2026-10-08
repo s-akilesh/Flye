@@ -614,6 +614,11 @@ export const Home = () => {
             ======================================================================== */}
         <section className="flyen-category-section">
           <div className="flyen-section-container">
+            <div className="flyen-category-header-row">
+              <span className="flyen-category-pill-badge">CATEGORIES</span>
+              <h2 className="flyen-category-section-heading">Browse Popular Categories</h2>
+            </div>
+
             <div className="flyen-categories-grid">
               {isCategoriesLoading ? (
                 [1, 2, 3, 4, 5, 6].map(n => (
