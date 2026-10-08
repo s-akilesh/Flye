@@ -570,9 +570,13 @@ export const Home = () => {
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Hero Sub-Section: KPI / Trust Metrics Strip - Inside Landing Screen */}
-          <div className="flyen-hero-kpi-subsection">
+        {/* ========================================================================
+            2. KPI / TRUST METRICS STRIP (FULL WIDTH BRIDGING SECTION)
+            ======================================================================== */}
+        <section className="flyen-kpi-fullwidth-section">
+          <div className="flyen-kpi-fullwidth-container">
             <div className="flyen-kpi-card">
               <div className="flyen-kpi-number">250+</div>
               <div className="flyen-kpi-label">Projects Delivered</div>
