@@ -6740,7 +6740,186 @@ table td {
   color: var(--flyen-teal, #00dfa2);
 }
 
+/* ==========================================================================
+   Engineering Products & Hardware Showcase Banners (S3 Background Images)
+   ========================================================================== */
+.flyen-showcase-section {
+  width: 100%;
+  padding: 64px var(--page-padding, 40px);
+  background: #080c14;
+  box-sizing: border-box;
+  position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
 
+[data-theme='light'] .flyen-showcase-section {
+  background: #f8fafc;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.flyen-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 960px) {
+  .flyen-showcase-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.flyen-showcase-card {
+  position: relative;
+  min-height: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.flyen-showcase-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 223, 162, 0.4);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+}
+
+.flyen-showcase-card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.flyen-showcase-card:hover .flyen-showcase-card-bg {
+  transform: scale(1.05);
+}
+
+.flyen-showcase-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 12, 20, 0.35) 0%,
+    rgba(8, 12, 20, 0.75) 45%,
+    rgba(8, 12, 20, 0.96) 100%
+  );
+  z-index: 2;
+  transition: opacity 0.35s ease;
+}
+
+.flyen-showcase-card-content {
+  position: relative;
+  z-index: 3;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.flyen-showcase-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(0, 223, 162, 0.14);
+  border: 1px solid rgba(0, 223, 162, 0.35);
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #00dfa2;
+}
+
+.flyen-showcase-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.flyen-showcase-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #cbd5e1;
+  margin: 0;
+  max-width: 520px;
+}
+
+.flyen-showcase-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 8px 0;
+}
+
+.flyen-showcase-spec-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  color: #e2e8f0;
+}
+
+.flyen-showcase-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .flyen-showcase-section {
+    padding: 40px 16px;
+  }
+
+  .flyen-showcase-card {
+    min-height: 380px;
+  }
+
+  .flyen-showcase-card-content {
+    padding: 24px 20px;
+    gap: 10px;
+  }
+
+  .flyen-showcase-title {
+    font-size: 20px;
+  }
+
+  .flyen-showcase-desc {
+    font-size: 12.5px;
+  }
+
+  .flyen-showcase-actions {
+    width: 100%;
+  }
+
+  .flyen-showcase-actions button {
+    flex: 1;
+    text-align: center;
+  }
+}
 
 /* --- Products Cards Grid (4 Cards in Sand Container) --- */
 .flyen-products-grid {

@@ -81,6 +81,15 @@ export const Home = () => {
     ];
   }, []);
 
+  // Background showcase images loaded from Supabase S3 bucket (website-assets/products-banner) with fallback
+  const s3ProductShowcaseBg = useMemo(() => {
+    return storageService.getPublicUrl('website-assets', 'products-banner/product_showcase_bg.jpg') || '/svc_batch.jpg';
+  }, []);
+
+  const s3ProjectKitsBg = useMemo(() => {
+    return storageService.getPublicUrl('website-assets', 'products-banner/project_kits_bg.jpg') || '/kit_hw.jpg';
+  }, []);
+
   const heroCards = useMemo(() => {
     if (s3SliderFiles && s3SliderFiles.length > 0) {
       const valid = s3SliderFiles
@@ -640,155 +649,100 @@ export const Home = () => {
         </section>
 
         {/* ========================================================================
-            3. 3D PRINTED PRODUCTS & PARTS (WHITE BACKGROUND)
+            3. ENGINEERING & MANUFACTURING SHOWCASE (BACKGROUND IMAGE BANNERS FROM S3)
             ======================================================================== */}
-        <section className="flyen-sand-section" style={{ background: '#ffffff', color: '#0f172a', borderTop: '1px solid rgba(0, 0, 0, 0.05)', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}>
-          <div className="flyen-sand-header">
-            <div>
-              <h2 style={{ color: '#0f172a' }}>3D Printed Products & Replacement Parts</h2>
-              <p style={{ color: '#64748b' }}>Curated gifts, household utility items, home décor, and high-tolerance 3D printer components</p>
-            </div>
-            <span className="flyen-sand-link" style={{ color: '#0f172a' }} onClick={() => navigate(ROUTES.PRINTING)}>
-              Explore 3D catalog &rarr;
-            </span>
-          </div>
-
-          <div className="flyen-products-grid">
-            {isPrintingLoading ? (
-              [1, 2, 3, 4].map((n) => (
-                <div key={n} className="flyen-product-card" style={{ opacity: 0.6 }}>
-                  <div className="flyen-product-thumb" style={{ background: 'var(--sys-surface-hover)' }} />
-                  <div className="flyen-product-info" style={{ padding: '16px' }}>
-                    <div style={{ height: '14px', width: '60px', background: 'var(--sys-surface-hover)', borderRadius: '4px', marginBottom: '8px' }} />
-                    <div style={{ height: '18px', width: '80%', background: 'var(--sys-surface-hover)', borderRadius: '4px' }} />
+        <section className="flyen-showcase-section">
+          <div className="flyen-section-container">
+            <div className="flyen-showcase-grid">
+              
+              {/* Card 1: 3D Printing & Precision Manufacturing */}
+              <div className="flyen-showcase-card">
+                <div 
+                  className="flyen-showcase-card-bg"
+                  style={{ backgroundImage: `url(${s3ProductShowcaseBg})` }}
+                />
+                <div className="flyen-showcase-card-overlay" />
+                <div className="flyen-showcase-card-content">
+                  <div className="flyen-showcase-pill">
+                    <span>Precision 3D Manufacturing</span>
+                  </div>
+                  <h2 className="flyen-showcase-title">
+                    High-Tolerance 3D Printed Parts & Prototyping
+                  </h2>
+                  <p className="flyen-showcase-desc">
+                    Industrial SLA, FDM, and resin components engineered for robotic assemblies, functional enclosures, and replacement spares.
+                  </p>
+                  <div className="flyen-showcase-specs">
+                    <span className="flyen-showcase-spec-tag">±0.1mm Precision</span>
+                    <span className="flyen-showcase-spec-tag">Engineering Materials</span>
+                    <span className="flyen-showcase-spec-tag">Rapid Dispatch</span>
+                  </div>
+                  <div className="flyen-showcase-actions">
+                    <button 
+                      type="button" 
+                      className="flyen-btn-teal"
+                      onClick={() => navigate(ROUTES.PRINTING)}
+                    >
+                      Explore 3D Catalog
+                    </button>
+                    <button 
+                      type="button" 
+                      className="flyen-btn-outline"
+                      onClick={() => handleOpenFormModal('Custom 3D Printing Quote')}
+                    >
+                      Instant Quote
+                    </button>
                   </div>
                 </div>
-              ))
-            ) : readyMadePrintingProducts.length > 0 ? (
-              readyMadePrintingProducts.map((prod) => (
-                <div key={prod.id} className="flyen-product-card">
-                  <div className="flyen-product-thumb">
-                    {prod.badge && <span className="flyen-product-badge">{prod.badge}</span>}
-                    {prod.image ? (
-                      <img src={prod.image} alt={prod.title} className="flyen-product-img" loading="lazy" />
-                    ) : (
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', minHeight: '160px', background: 'var(--sys-surface-hover)', color: 'var(--txt-muted)' }}>
-                        <span className="material-icons" style={{ fontSize: '36px' }}>view_in_ar</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flyen-product-info">
-                    <div>
-                      <h3 className="flyen-product-title">{prod.title}</h3>
-                    </div>
-                    <div>
-                      <div className="flyen-product-price">{prod.price}</div>
-                      <button 
-                        type="button" 
-                        className="flyen-btn-card-action"
-                        onClick={() => {
-                          addToCart({
-                            id: prod.id || prod.idNum,
-                            idNum: prod.idNum,
-                            title: prod.title,
-                            price: prod.price,
-                            image: prod.image,
-                            category: '3D Printing',
-                            type: '3d_print'
-                          }, 1, {}, true);
-                        }}
-                      >
-                        <span>Buy Now</span>
-                        <span className="material-icons" style={{ fontSize: '16px' }}>shopping_cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 20px', color: 'var(--txt-muted)' }}>
-                <p>No 3D print products currently available.</p>
               </div>
-            )}
+
+              {/* Card 2: Ready-Made Project Kits & Hardware */}
+              <div className="flyen-showcase-card">
+                <div 
+                  className="flyen-showcase-card-bg"
+                  style={{ backgroundImage: `url(${s3ProjectKitsBg})` }}
+                />
+                <div className="flyen-showcase-card-overlay" />
+                <div className="flyen-showcase-card-content">
+                  <div className="flyen-showcase-pill">
+                    <span>Turnkey Hardware</span>
+                  </div>
+                  <h2 className="flyen-showcase-title">
+                    Ready-Made Project Kits & IoT Systems
+                  </h2>
+                  <p className="flyen-showcase-desc">
+                    Pre-tested hardware packages, sensor suites, and microcontroller bundles with complete schematics, source code, and guides.
+                  </p>
+                  <div className="flyen-showcase-specs">
+                    <span className="flyen-showcase-spec-tag">Plug & Play</span>
+                    <span className="flyen-showcase-spec-tag">Verified Schematics</span>
+                    <span className="flyen-showcase-spec-tag">Full Documentation</span>
+                  </div>
+                  <div className="flyen-showcase-actions">
+                    <button 
+                      type="button" 
+                      className="flyen-btn-teal"
+                      onClick={() => navigate(ROUTES.PROJECTS)}
+                    >
+                      View Project Kits
+                    </button>
+                    <button 
+                      type="button" 
+                      className="flyen-btn-outline"
+                      onClick={() => navigate(ROUTES.COMPONENTS || '/components')}
+                    >
+                      Component Library
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </section>
 
         {/* ========================================================================
-            4. READY-MADE PROJECT KITS (DB DATA)
-            ======================================================================== */}
-        <section className="flyen-sand-section">
-          <div className="flyen-sand-header">
-            <div>
-              <h2>Ready-Made Project Kits</h2>
-              <p>Top-rated final year project kits and precision tested hardware packages</p>
-            </div>
-            <span className="flyen-sand-link" onClick={() => navigate(ROUTES.PROJECTS)}>
-              View all project kits &rarr;
-            </span>
-          </div>
-
-          <div className="flyen-products-grid">
-            {isProjectsLoading ? (
-              [1, 2, 3, 4].map((n) => (
-                <div key={n} className="flyen-product-card" style={{ opacity: 0.6 }}>
-                  <div className="flyen-product-thumb" style={{ background: 'var(--sys-surface-hover)' }} />
-                  <div className="flyen-product-info" style={{ padding: '16px' }}>
-                    <div style={{ height: '14px', width: '60px', background: 'var(--sys-surface-hover)', borderRadius: '4px', marginBottom: '8px' }} />
-                    <div style={{ height: '18px', width: '80%', background: 'var(--sys-surface-hover)', borderRadius: '4px' }} />
-                  </div>
-                </div>
-              ))
-            ) : readyMadeProjects.length > 0 ? (
-              readyMadeProjects.map((prod) => (
-                <div key={prod.id} className="flyen-product-card">
-                  <div className="flyen-product-thumb">
-                    {prod.badge && <span className="flyen-product-badge">{prod.badge}</span>}
-                    {prod.image ? (
-                      <img src={prod.image} alt={prod.title} className="flyen-product-img" loading="lazy" />
-                    ) : (
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', minHeight: '160px', background: 'var(--sys-surface-hover)', color: 'var(--txt-muted)' }}>
-                        <span className="material-icons" style={{ fontSize: '36px' }}>memory</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flyen-product-info">
-                    <div>
-                      <h3 className="flyen-product-title">{prod.title}</h3>
-                    </div>
-                    <div>
-                      <div className="flyen-product-price">{prod.price}</div>
-                      <button 
-                        type="button" 
-                        className="flyen-btn-card-action"
-                        onClick={() => {
-                          addToCart({
-                            id: prod.id || prod.slug,
-                            slug: prod.slug,
-                            title: prod.title,
-                            price: prod.price,
-                            image: prod.image,
-                            category: 'Project Kit',
-                            type: 'project'
-                          }, 1, {}, true);
-                        }}
-                      >
-                        <span>Buy Kit</span>
-                        <span className="material-icons" style={{ fontSize: '16px' }}>shopping_cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 20px', color: 'var(--txt-muted)' }}>
-                <p>No project kits currently available.</p>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* ========================================================================
-            5. TESTIMONIALS & TRUST FACTOR (SPEECH-BUBBLE SLIDER UI)
+            4. TESTIMONIALS & TRUST FACTOR (SPEECH-BUBBLE SLIDER UI)
             ======================================================================== */}
         <section className="flyen-testimonials-section">
           <div className="flyen-section-container">
