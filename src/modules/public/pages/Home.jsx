@@ -77,12 +77,6 @@ export const Home = () => {
         title: 'Hardware & Enclosure Design',
         tag: 'Custom Enclosures',
         image: '/svc_enclosure.jpg'
-      },
-      {
-        id: 'initial-slider-4',
-        title: 'Batch Additive Manufacturing',
-        tag: 'Batch Production',
-        image: '/svc_batch.jpg'
       }
     ];
   }, []);
@@ -106,9 +100,9 @@ export const Home = () => {
         })
         .filter(asset => asset.image && !failedImages.has(asset.image));
 
-      if (valid.length > 0) return valid;
+      if (valid.length > 0) return valid.slice(0, 3);
     }
-    return defaultInitialCards.filter(asset => asset.image && !failedImages.has(asset.image));
+    return defaultInitialCards.filter(asset => asset.image && !failedImages.has(asset.image)).slice(0, 3);
   }, [s3SliderFiles, failedImages, defaultInitialCards]);
 
   // Fetch real published 3D print products, categories, reviews, and S3 homepage slider files
@@ -563,31 +557,23 @@ export const Home = () => {
                     <span>Get Custom 3D Quote</span>
                   </button>
                 </div>
-
-                {/* Interactive Slide Progress Indicators */}
-                {heroCards && heroCards.length > 1 && (
-                  <div className="flyen-hero-slider-nav">
-                    <div className="flyen-hero-slider-dots">
-                      {heroCards.map((card, idx) => (
-                        <button
-                          key={card.id || idx}
-                          type="button"
-                          onClick={() => setActiveHeroCardIdx(idx)}
-                          className={`flyen-hero-slider-dot ${idx === (activeHeroCardIdx % heroCards.length) ? 'active' : ''}`}
-                          title={`Slide ${idx + 1}: ${card.title || 'Slide'}`}
-                          aria-label={`Go to slide ${idx + 1}`}
-                        >
-                          <span className="flyen-hero-slider-dot-bar" />
-                        </button>
-                      ))}
-                    </div>
-                    <div className="flyen-hero-slider-tag-pill">
-                      <span className="material-icons" style={{ fontSize: '13px', color: 'var(--flyen-teal)' }}>auto_awesome</span>
-                      <span>{heroCards[activeHeroCardIdx % heroCards.length]?.title || 'Custom Engineering'}</span>
-                    </div>
-                  </div>
-                )}
               </div>
+
+              {/* Right Column Vertically Center-Aligned 3-Dot Navigation */}
+              {heroCards && heroCards.length > 1 && (
+                <div className="flyen-hero-vertical-nav" aria-label="Slider navigation">
+                  {heroCards.slice(0, 3).map((card, idx) => (
+                    <button
+                      key={card.id || idx}
+                      type="button"
+                      onClick={() => setActiveHeroCardIdx(idx)}
+                      className={`flyen-hero-v-dot ${idx === (activeHeroCardIdx % heroCards.length) ? 'active' : ''}`}
+                      title={`Slide ${idx + 1}: ${card.title || 'Slide'}`}
+                      aria-label={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
