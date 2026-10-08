@@ -554,8 +554,7 @@ export const Home = () => {
                     className="flyen-btn-teal"
                     onClick={() => navigate(ROUTES.PROJECTS)}
                   >
-                    <span>Explore Products</span>
-                    <span className="material-icons" style={{ fontSize: '18px' }}>arrow_forward</span>
+                    Explore Products
                   </button>
 
                   <button 
@@ -563,8 +562,7 @@ export const Home = () => {
                     className="flyen-btn-outline"
                     onClick={() => handleOpenFormModal('Custom 3D Printing Quote')}
                   >
-                    <span className="material-icons" style={{ fontSize: '18px', color: 'var(--flyen-teal)' }}>tune</span>
-                    <span>Get Custom 3D Quote</span>
+                    Get Custom 3D Quote
                   </button>
                 </div>
               </div>
