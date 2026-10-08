@@ -6704,66 +6704,7 @@ table td {
   transform: scale(1.08);
 }
 
-.flyen-category-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 14px 16px;
-  border-radius: 0 0 40px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  box-sizing: border-box;
-  z-index: 2;
-  transition: background 0.3s ease;
-}
 
-[data-theme='light'] .flyen-category-info {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.flyen-category-card:hover .flyen-category-info {
-  background: rgba(0, 0, 0, 0.7);
-}
-
-[data-theme='light'] .flyen-category-card:hover .flyen-category-info {
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.flyen-category-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff !important;
-  margin: 0;
-  line-height: 1.3;
-  letter-spacing: 0.2px;
-  text-align: center;
-  transition: color 0.2s ease, text-shadow 0.2s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-[data-theme='light'] .flyen-category-title {
-  color: #ffffff !important;
-}
-
-.flyen-category-card:hover .flyen-category-title {
-  color: #ffffff !important;
-  text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
-}
-
-[data-theme='light'] .flyen-category-card:hover .flyen-category-title {
-  color: #ffffff !important;
-  text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
-}
 
 /* --- Products Cards Grid (4 Cards in Sand Container) --- */
 .flyen-products-grid {

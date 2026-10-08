@@ -605,11 +605,7 @@ export const Home = () => {
               {isCategoriesLoading ? (
                 [1, 2, 3, 4, 5, 6].map(n => (
                   <div key={n} className="flyen-category-card" style={{ opacity: 0.6 }}>
-                    <div className="flyen-category-thumb" style={{ background: 'var(--sys-surface-hover)' }}>
-                      <div className="flyen-category-info">
-                        <div style={{ height: '16px', width: '70%', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px', margin: '0 auto' }} />
-                      </div>
-                    </div>
+                    <div className="flyen-category-thumb" style={{ background: 'var(--sys-surface-hover)' }} />
                   </div>
                 ))
               ) : (
@@ -618,6 +614,7 @@ export const Home = () => {
                     key={cat.id} 
                     className="flyen-category-card"
                     onClick={() => navigate(cat.route)}
+                    title={cat.title}
                   >
                     <div className="flyen-category-thumb">
                       {cat.image ? (
@@ -632,9 +629,6 @@ export const Home = () => {
                           <span className="material-icons" style={{ fontSize: '36px' }}>category</span>
                         </div>
                       )}
-                      <div className="flyen-category-info">
-                        <h3 className="flyen-category-title">{cat.title}</h3>
-                      </div>
                     </div>
                   </div>
                 ))
