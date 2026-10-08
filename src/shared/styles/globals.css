@@ -6288,29 +6288,29 @@ table td {
   align-items: center;
   gap: 12px;
   z-index: 20;
-  padding: 12px 8px;
-  background: rgba(10, 15, 25, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  padding: 0;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
 }
 
 .flyen-hero-v-dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.45);
   border: none;
   padding: 0;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   outline: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .flyen-hero-v-dot:hover {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   transform: scale(1.25);
 }
 
@@ -6318,13 +6318,14 @@ table td {
   height: 26px;
   border-radius: 12px;
   background: var(--flyen-teal, #00dfa2);
+  box-shadow: 0 0 12px rgba(0, 223, 162, 0.6);
 }
 
 @media (max-width: 768px) {
   .flyen-hero-vertical-nav {
     right: 16px;
     gap: 10px;
-    padding: 10px 6px;
+    padding: 0;
   }
   .flyen-hero-v-dot {
     width: 7px;
