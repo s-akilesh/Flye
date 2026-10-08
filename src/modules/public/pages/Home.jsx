@@ -554,11 +554,11 @@ export const Home = () => {
             <div className="flyen-hero-stage">
               <div className="flyen-hero-text-wrap">
                 <h1 className="flyen-hero-title-2">
-                  Built Around <span className="flyen-hero-teal-text">Your Idea.</span>
+                  Made with <span className="flyen-hero-teal-text">Purpose.</span>
                 </h1>
 
                 <p className="flyen-hero-sub-2">
-                  From a simple concept to a finished product, we create custom prints and project solutions made for you.
+                  Thoughtfully designed 3D-printed products, custom creations, and practical solutions made for everyday use, learning, making, and more.
                 </p>
 
                 <div className="flyen-hero-cta-row">
