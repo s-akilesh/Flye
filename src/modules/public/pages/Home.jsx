@@ -857,62 +857,7 @@ export const Home = () => {
         </section>
 
         {/* ========================================================================
-            6. CUSTOM 3D PRINTING & FABRICATION SERVICES (30/70 SPLIT CARD)
-            ======================================================================== */}
-        <section className="flyen-dark-section">
-          <div className="flyen-section-container">
-            <div className="flyen-custom-mfg-card">
-              <div className="flyen-custom-mfg-media">
-                {customMfgImage ? (
-                  <img 
-                    src={customMfgImage} 
-                    alt="Custom Manufacturing & 3D Printing Services" 
-                    className="flyen-custom-mfg-img" 
-                    loading="lazy" 
-                  />
-                ) : (
-                  <div className="flyen-custom-mfg-placeholder" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '260px', background: 'rgba(0, 223, 162, 0.05)' }}>
-                    <span className="material-icons" style={{ fontSize: '64px', color: 'var(--flyen-teal)' }}>precision_manufacturing</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flyen-custom-mfg-content">
-                <h2 className="flyen-custom-mfg-section-title">Custom Manufacturing & 3D Printing Services</h2>
-                <h3 className="flyen-custom-mfg-title">Got an idea? We’ll make it.</h3>
-                
-                <ul className="flyen-custom-mfg-features">
-                  <li>
-                    <span className="material-icons flyen-custom-mfg-check">check_circle</span>
-                    <span>Custom designs</span>
-                  </li>
-                  <li>
-                    <span className="material-icons flyen-custom-mfg-check">check_circle</span>
-                    <span>Any size, shape or style</span>
-                  </li>
-                  <li>
-                    <span className="material-icons flyen-custom-mfg-check">check_circle</span>
-                    <span>Made for gifts, projects & more</span>
-                  </li>
-                </ul>
-
-                <div className="flyen-custom-mfg-action">
-                  <button 
-                    type="button" 
-                    className="flyen-custom-mfg-btn"
-                    onClick={() => handleOpenFormModal('Custom Manufacturing Quote')}
-                  >
-                    <span>Get Quote</span>
-                    <span className="material-icons" style={{ fontSize: '18px' }}>arrow_forward</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================
-            5. HOW CUSTOM ORDERS WORK (WARM SAND CONTAINER - 4 STEPS)
+            6. HOW CUSTOM ORDERS WORK (WARM SAND CONTAINER - 4 STEPS)
             ======================================================================== */}
         <section className="flyen-sand-section">
           <div className="flyen-sand-header">
