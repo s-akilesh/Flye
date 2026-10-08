@@ -850,8 +850,7 @@ export const Home = () => {
                 className="flyen-review-cta-btn"
                 onClick={() => navigate(ROUTES.FEEDBACK || '/feedback')}
               >
-                <span>Have you built with Flyen? Share your review</span>
-                <span className="material-icons" style={{ fontSize: '16px' }}>arrow_forward</span>
+                <span>Share your review</span>
               </button>
             </div>
           </div>
