@@ -6144,8 +6144,9 @@ table td {
   color: var(--flyen-teal-hover);
 }
 
-/* --- Hero Section 2.0 (Full Frame Height & Full Width with Integrated KPI) --- */
+/* --- Hero Section 2.0 (Full Background Dynamic Slider + Integrated KPI) --- */
 .flyen-hero-section-full {
+  position: relative;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
@@ -6158,6 +6159,7 @@ table td {
   padding-bottom: 0 !important;
   overflow: hidden;
   width: 100%;
+  background: #080c14;
 }
 
 .flyen-hero-section-full .flyen-section-container {
@@ -6168,17 +6170,111 @@ table td {
   height: 100%;
   max-width: 100% !important;
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
-.flyen-hero-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
-  padding: 0 0 16px 0;
-  transform: translateY(-12px);
-  flex: 1;
+/* Dynamic Full-Bleed Background Slider */
+.flyen-hero-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  background: #080c14;
+}
+
+.flyen-hero-bg-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.flyen-hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+.flyen-hero-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background: 
+    linear-gradient(90deg, rgba(8, 12, 20, 0.96) 0%, rgba(8, 12, 20, 0.88) 40%, rgba(8, 12, 20, 0.55) 75%, rgba(8, 12, 20, 0.7) 100%),
+    linear-gradient(180deg, rgba(8, 12, 20, 0.5) 0%, transparent 25%, transparent 65%, rgba(8, 12, 20, 0.98) 100%);
+}
+
+.flyen-hero-bg-glow {
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 223, 162, 0.12) 0%, transparent 70%);
+  z-index: 1;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.flyen-hero-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 740px;
+  padding: 40px 0 24px 0;
+  z-index: 3;
+}
+
+.flyen-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(0, 223, 162, 0.1);
+  border: 1px solid rgba(0, 223, 162, 0.3);
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--flyen-teal);
+  margin-bottom: 20px;
+  width: fit-content;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(0, 223, 162, 0.15);
+}
+
+.flyen-hero-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--flyen-teal);
+  box-shadow: 0 0 8px var(--flyen-teal);
+  display: inline-block;
+  animation: heroPulse 2s infinite ease-in-out;
+}
+
+@keyframes heroPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.35); opacity: 0.4; }
 }
 
 @media (max-width: 960px) {
@@ -6190,9 +6286,7 @@ table td {
     padding-right: 36px !important;
   }
 
-  .flyen-hero-2 {
-    grid-template-columns: 1fr;
-    gap: 36px;
+  .flyen-hero-stage {
     padding: 20px 0 32px 0;
   }
 }
@@ -6201,6 +6295,11 @@ table td {
   .flyen-hero-section-full {
     padding-left: 20px !important;
     padding-right: 20px !important;
+  }
+
+  .flyen-hero-badge {
+    font-size: 11.5px;
+    padding: 5px 12px;
   }
 }
 
@@ -6221,6 +6320,57 @@ table td {
   gap: 14px;
   flex-wrap: wrap;
   margin-bottom: 24px;
+}
+
+.flyen-hero-slider-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.flyen-hero-slider-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flyen-hero-slider-dot {
+  height: 6px;
+  width: 22px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.flyen-hero-slider-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.flyen-hero-slider-dot.active {
+  width: 42px;
+  background: var(--flyen-teal);
+  box-shadow: 0 0 12px rgba(0, 223, 162, 0.6);
+}
+
+.flyen-hero-slider-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 11.5px;
+  color: var(--txt-muted);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  backdrop-filter: blur(8px);
 }
 
 .flyen-hero-vector-backdrop {
@@ -6305,13 +6455,13 @@ table td {
   font-size: 16px;
   line-height: 1.6;
   color: var(--txt-secondary);
-  margin: 0 0 82px 0;
-  max-width: 520px;
+  margin: 0 0 36px 0;
+  max-width: 540px;
 }
 
 @media (max-width: 600px) {
   .flyen-hero-sub-2 {
-    margin: 0 0 48px 0;
+    margin: 0 0 28px 0;
   }
 }
 
@@ -6354,84 +6504,20 @@ table td {
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
   color: var(--txt-primary);
-  border: 1px solid var(--sys-border);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   transition: all 0.25s ease;
   text-decoration: none;
 }
 
 .flyen-btn-outline:hover {
-  background: var(--interaction-hover);
+  background: rgba(255, 255, 255, 0.12);
   border-color: var(--flyen-teal);
   color: var(--flyen-teal);
   transform: translateY(-2px);
-}
-
-/* Multi-Card Layered Hero Showcase (Matching Reference Image) */
-.flyen-hero-stacked-showcase {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.flyen-hero-stacked-container {
-  position: relative;
-  width: 100%;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Layer 1: Tilted Background Accent Card (Reference Style) */
-.flyen-hero-stacked-backdrop {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: -10px;
-  bottom: -10px;
-  border-radius: 20px;
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
-  z-index: 1;
-  opacity: 0.95;
-}
-
-/* Layer 2: Main Foreground Card */
-.flyen-hero-stacked-card {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #090d16;
-  border: none;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-
-.flyen-hero-card-img-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.flyen-hero-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.flyen-hero-stacked-card:hover .flyen-hero-card-img {
-  transform: scale(1.04);
 }
 
 /* ==========================================================================

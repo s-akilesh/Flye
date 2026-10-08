@@ -56,16 +56,33 @@ export const Home = () => {
 
   const seoProps = generateSEO(PageType.HOME);
 
-  // Dynamic Slider Cards driven directly from S3 Storage (website-assets/landingscreen-slider)
+  // Dynamic Background Slider Cards driven directly from S3 Storage (website-assets/landingscreen-slider) & public fallbacks
   const defaultInitialCards = useMemo(() => {
     const s3Url = storageService.getPublicUrl('website-assets', 'landingscreen-slider/landing_screen_bg.jpg');
     return [
       {
-        id: 'initial-slider-card',
-        title: 'Precision Engineering',
-        image: s3Url || '/landing_screen_bg.jpg',
-        backdropBg: BACKDROP_GRADIENTS[0],
-        rotate: BACKDROP_ROTATIONS[0]
+        id: 'initial-slider-1',
+        title: 'Precision 3D Engineering',
+        tag: '3D Prototyping',
+        image: s3Url || '/landing_screen_bg.jpg'
+      },
+      {
+        id: 'initial-slider-2',
+        title: 'High-Tolerance Custom Parts',
+        tag: 'Industrial Prototyping',
+        image: '/svc_resin.jpg'
+      },
+      {
+        id: 'initial-slider-3',
+        title: 'Hardware & Enclosure Design',
+        tag: 'Custom Enclosures',
+        image: '/svc_enclosure.jpg'
+      },
+      {
+        id: 'initial-slider-4',
+        title: 'Batch Additive Manufacturing',
+        tag: 'Batch Production',
+        image: '/svc_batch.jpg'
       }
     ];
   }, []);
@@ -84,10 +101,7 @@ export const Home = () => {
             id: `s3-slider-${file.id || file.name || idx}`,
             title: formattedTitle || 'Flyen Precision Engineering',
             tag: 'Precision Engineering',
-            sub: 'Custom manufacturing, hardware prototyping & verified kits',
-            image: publicUrl,
-            backdropBg: BACKDROP_GRADIENTS[idx % BACKDROP_GRADIENTS.length],
-            rotate: BACKDROP_ROTATIONS[idx % BACKDROP_ROTATIONS.length]
+            image: publicUrl
           };
         })
         .filter(asset => asset.image && !failedImages.has(asset.image));
@@ -136,12 +150,12 @@ export const Home = () => {
     return () => { isMounted = false; };
   }, []);
 
-  // Active swapping interval (every 3.5 seconds across slider cards)
+  // Background slide rotation interval (every 3 seconds)
   useEffect(() => {
     if (!heroCards || heroCards.length <= 1) return;
     const timer = setInterval(() => {
       setActiveHeroCardIdx((prev) => (prev + 1) % heroCards.length);
-    }, 3500);
+    }, 3000);
     return () => clearInterval(timer);
   }, [heroCards.length]);
 
@@ -475,151 +489,145 @@ export const Home = () => {
             1. HERO SECTION 2.0 (HIGH IMPACT VISUALS + VALUE PILLARS)
             ======================================================================== */}
         <section className="flyen-dark-section flyen-hero-section-full">
+          {/* Dynamic Full-Bleed Background Image Slider (Rotates every 3 seconds) */}
+          <div className="flyen-hero-bg-container" aria-hidden="true">
+            <AnimatePresence initial={false} mode="sync">
+              {heroCards && heroCards.length > 0 && (
+                <motion.div
+                  key={`hero-bg-slide-${activeHeroCardIdx % heroCards.length}-${heroCards[activeHeroCardIdx % heroCards.length]?.image}`}
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    opacity: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] },
+                    scale: { duration: 3.5, ease: 'easeOut' }
+                  }}
+                  className="flyen-hero-bg-slide"
+                >
+                  <img
+                    src={heroCards[activeHeroCardIdx % heroCards.length]?.image}
+                    alt="Flyen 3D Printing & Project Engineering"
+                    className="flyen-hero-bg-img"
+                    onError={() => {
+                      const currentImg = heroCards[activeHeroCardIdx % heroCards.length]?.image;
+                      if (currentImg) {
+                        setFailedImages(prev => {
+                          const next = new Set(prev);
+                          next.add(currentImg);
+                          return next;
+                        });
+                      }
+                    }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* High-End Dark Tech Gradient & Subtle Glow Overlay */}
+            <div className="flyen-hero-bg-overlay" />
+            <div className="flyen-hero-bg-glow" />
+          </div>
+
           <div className="flyen-section-container">
-            <div className="flyen-hero-2">
-              
-              {/* Left Column: Heading, Subtitle & CTAs with Vector Art Backdrop */}
-              <div className="flyen-hero-left-content">
-                {/* 3D Printer Line Vector Art Watermark Backdrop */}
-                <div className="flyen-hero-vector-backdrop" aria-hidden="true">
-                  <svg 
-                    className="flyen-hero-printer-svg" 
-                    viewBox="0 0 440 440" 
-                    fill="none" 
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    {/* Filament Guide Feed Tube Arch */}
-                    <path 
-                      d="M 128 195 C 128 75, 246 75, 246 172" 
-                      stroke="currentColor" 
-                      strokeWidth="10" 
-                      strokeLinecap="round" 
-                    />
-                    {/* Spool Mount Brackets to Main Frame */}
-                    <line x1="106" y1="218" x2="156" y2="218" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                    <line x1="106" y1="262" x2="156" y2="262" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                    {/* Filament Spool Cylinder */}
-                    <rect x="114" y="195" width="28" height="90" rx="7" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                    {/* Outer Chamber Frame */}
-                    <rect x="156" y="112" width="180" height="212" rx="16" stroke="currentColor" strokeWidth="12" strokeLinejoin="round" />
-                    {/* Inner Chamber Window */}
-                    <rect x="174" y="130" width="144" height="176" rx="10" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                    {/* Horizontal X-Axis Rail */}
-                    <line x1="174" y1="188" x2="218" y2="188" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                    <line x1="274" y1="188" x2="306" y2="188" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                    {/* Right Stepper Motor Mount */}
-                    <rect x="306" y="174" width="20" height="38" rx="5" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                    {/* Central Extruder Carriage */}
-                    <rect x="218" y="172" width="56" height="32" rx="5" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                    {/* Tapered Nozzle Cone */}
-                    <path d="M 226 204 L 266 204 L 254 242 L 238 242 Z" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                    {/* Nozzle Needle Tip */}
-                    <line x1="246" y1="242" x2="246" y2="262" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-                    {/* 3D Printed Object */}
-                    <rect x="254" y="260" width="44" height="24" rx="6" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                    {/* Build Plate Platform */}
-                    <rect x="188" y="284" width="116" height="24" rx="6" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
-                    {/* Machine Base & Feet */}
-                    <path d="M 184 308 L 184 340 L 206 340 L 216 324 L 276 324 L 286 340 L 308 340 L 308 308" stroke="currentColor" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-
-                <div className="flyen-hero-text-wrap">
-                  <h1 className="flyen-hero-title-2">
-                    Built Around <span className="flyen-hero-teal-text">Your Idea.</span>
-                  </h1>
-
-                  <p className="flyen-hero-sub-2">
-                    From a simple concept to a finished product, we create custom prints and project solutions made for you.
-                  </p>
-
-                  <div className="flyen-hero-cta-row">
-                    <button 
-                      type="button" 
-                      className="flyen-btn-teal"
-                      onClick={() => navigate(ROUTES.PROJECTS)}
-                    >
-                      <span>Explore Products</span>
-                      <span className="material-icons" style={{ fontSize: '18px' }}>arrow_forward</span>
-                    </button>
-
-                    <button 
-                      type="button" 
-                      className="flyen-btn-outline"
-                      onClick={() => handleOpenFormModal('Custom 3D Printing Quote')}
-                    >
-                      <span className="material-icons" style={{ fontSize: '18px', color: 'var(--flyen-teal)' }}>tune</span>
-                      <span>Get Custom 3D Quote</span>
-                    </button>
-                  </div>
-                </div>
+            <div className="flyen-hero-stage">
+              {/* 3D Printer Line Vector Art Watermark Backdrop */}
+              <div className="flyen-hero-vector-backdrop" aria-hidden="true">
+                <svg 
+                  className="flyen-hero-printer-svg" 
+                  viewBox="0 0 440 440" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Filament Guide Feed Tube Arch */}
+                  <path 
+                    d="M 128 195 C 128 75, 246 75, 246 172" 
+                    stroke="currentColor" 
+                    strokeWidth="10" 
+                    strokeLinecap="round" 
+                  />
+                  {/* Spool Mount Brackets to Main Frame */}
+                  <line x1="106" y1="218" x2="156" y2="218" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+                  <line x1="106" y1="262" x2="156" y2="262" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+                  {/* Filament Spool Cylinder */}
+                  <rect x="114" y="195" width="28" height="90" rx="7" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
+                  {/* Outer Chamber Frame */}
+                  <rect x="156" y="112" width="180" height="212" rx="16" stroke="currentColor" strokeWidth="12" strokeLinejoin="round" />
+                  {/* Inner Chamber Window */}
+                  <rect x="174" y="130" width="144" height="176" rx="10" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
+                  {/* Horizontal X-Axis Rail */}
+                  <line x1="174" y1="188" x2="218" y2="188" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+                  <line x1="274" y1="188" x2="306" y2="188" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+                  {/* Right Stepper Motor Mount */}
+                  <rect x="306" y="174" width="20" height="38" rx="5" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
+                  {/* Central Extruder Carriage */}
+                  <rect x="218" y="172" width="56" height="32" rx="5" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
+                  {/* Tapered Nozzle Cone */}
+                  <path d="M 226 204 L 266 204 L 254 242 L 238 242 Z" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
+                  {/* Nozzle Needle Tip */}
+                  <line x1="246" y1="242" x2="246" y2="262" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+                  {/* 3D Printed Object */}
+                  <rect x="254" y="260" width="44" height="24" rx="6" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
+                  {/* Build Plate Platform */}
+                  <rect x="188" y="284" width="116" height="24" rx="6" stroke="currentColor" strokeWidth="10" strokeLinejoin="round" />
+                  {/* Machine Base & Feet */}
+                  <path d="M 184 308 L 184 340 L 206 340 L 216 324 L 276 324 L 286 340 L 308 340 L 308 308" stroke="currentColor" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
 
-              {/* Right Column: Layered Multi-Card Showcase */}
-              <div className="flyen-hero-stacked-showcase">
-                {heroCards && heroCards.length > 0 ? (
-                  (() => {
-                    const currentCard = heroCards[activeHeroCardIdx % heroCards.length] || heroCards[0];
-                    return (
-                      <div className="flyen-hero-stacked-container">
-                        {/* Layer 1: Tilted Background Accent Card (Reference Style) */}
-                        <div 
-                          className="flyen-hero-stacked-backdrop"
-                          style={{
-                            background: currentCard.backdropBg,
-                            transform: `rotate(${currentCard.rotate})`
-                          }}
-                        />
+              <div className="flyen-hero-text-wrap">
+                <div className="flyen-hero-badge">
+                  <span className="flyen-hero-badge-dot" />
+                  <span>Custom 3D Printing & Project Engineering</span>
+                </div>
 
-                        {/* Layer 2: Main Foreground Card */}
-                        <div className="flyen-hero-stacked-card">
-                          <AnimatePresence mode="wait">
-                            <motion.div
-                              key={`hero-card-slide-${activeHeroCardIdx}-${currentCard.id || currentCard.image}`}
-                              initial={{ opacity: 0, scale: 0.96 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 0.96 }}
-                              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                              className="flyen-hero-card-img-wrap"
-                            >
-                              <img 
-                                src={currentCard.image} 
-                                alt={currentCard.title || "Flyen Engineering Product Showcase"} 
-                                className="flyen-hero-card-img"
-                                onError={() => {
-                                  if (currentCard?.image) {
-                                    setFailedImages(prev => {
-                                      const next = new Set(prev);
-                                      next.add(currentCard.image);
-                                      return next;
-                                    });
-                                  }
-                                }}
-                              />
-                            </motion.div>
-                          </AnimatePresence>
-                        </div>
-                      </div>
-                    );
-                  })()
-                ) : (
-                  /* Clean Minimal Image Fallback (No text / placeholder elements) */
-                  <div className="flyen-hero-stacked-container">
-                    <div 
-                      className="flyen-hero-stacked-backdrop"
-                      style={{
-                        background: BACKDROP_GRADIENTS[0],
-                        transform: `rotate(${BACKDROP_ROTATIONS[0]})`
-                      }}
-                    />
-                    <div className="flyen-hero-stacked-card">
-                      <div className="flyen-hero-card-img-wrap">
-                        <img 
-                          src={storageService.getPublicUrl('website-assets', 'landingscreen-slider/landing_screen_bg.jpg') || '/landing_screen_bg.jpg'} 
-                          alt="Flyen Engineering Product Showcase" 
-                          className="flyen-hero-card-img"
-                        />
-                      </div>
+                <h1 className="flyen-hero-title-2">
+                  Built Around <span className="flyen-hero-teal-text">Your Idea.</span>
+                </h1>
+
+                <p className="flyen-hero-sub-2">
+                  From a simple concept to a finished product, we create custom prints and project solutions made for you.
+                </p>
+
+                <div className="flyen-hero-cta-row">
+                  <button 
+                    type="button" 
+                    className="flyen-btn-teal"
+                    onClick={() => navigate(ROUTES.PROJECTS)}
+                  >
+                    <span>Explore Products</span>
+                    <span className="material-icons" style={{ fontSize: '18px' }}>arrow_forward</span>
+                  </button>
+
+                  <button 
+                    type="button" 
+                    className="flyen-btn-outline"
+                    onClick={() => handleOpenFormModal('Custom 3D Printing Quote')}
+                  >
+                    <span className="material-icons" style={{ fontSize: '18px', color: 'var(--flyen-teal)' }}>tune</span>
+                    <span>Get Custom 3D Quote</span>
+                  </button>
+                </div>
+
+                {/* Interactive Slide Progress Indicators */}
+                {heroCards && heroCards.length > 1 && (
+                  <div className="flyen-hero-slider-nav">
+                    <div className="flyen-hero-slider-dots">
+                      {heroCards.map((card, idx) => (
+                        <button
+                          key={card.id || idx}
+                          type="button"
+                          onClick={() => setActiveHeroCardIdx(idx)}
+                          className={`flyen-hero-slider-dot ${idx === (activeHeroCardIdx % heroCards.length) ? 'active' : ''}`}
+                          title={`Slide ${idx + 1}: ${card.title || 'Slide'}`}
+                          aria-label={`Go to slide ${idx + 1}`}
+                        >
+                          <span className="flyen-hero-slider-dot-bar" />
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flyen-hero-slider-tag-pill">
+                      <span className="material-icons" style={{ fontSize: '13px', color: 'var(--flyen-teal)' }}>auto_awesome</span>
+                      <span>{heroCards[activeHeroCardIdx % heroCards.length]?.title || 'Custom Engineering'}</span>
                     </div>
                   </div>
                 )}
