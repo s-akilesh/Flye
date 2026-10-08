@@ -522,6 +522,22 @@ export const Home = () => {
             <div className="flyen-hero-bg-glow" />
           </div>
 
+          {/* Right Screen Edge Vertically Center-Aligned 3-Dot Navigation */}
+          {heroCards && heroCards.length > 1 && (
+            <div className="flyen-hero-vertical-nav" aria-label="Slider navigation">
+              {heroCards.slice(0, 3).map((card, idx) => (
+                <button
+                  key={card.id || idx}
+                  type="button"
+                  onClick={() => setActiveHeroCardIdx(idx)}
+                  className={`flyen-hero-v-dot ${idx === (activeHeroCardIdx % heroCards.length) ? 'active' : ''}`}
+                  title={`Slide ${idx + 1}: ${card.title || 'Slide'}`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
           <div className="flyen-section-container">
             <div className="flyen-hero-stage">
               <div className="flyen-hero-text-wrap">
@@ -558,22 +574,6 @@ export const Home = () => {
                   </button>
                 </div>
               </div>
-
-              {/* Right Column Vertically Center-Aligned 3-Dot Navigation */}
-              {heroCards && heroCards.length > 1 && (
-                <div className="flyen-hero-vertical-nav" aria-label="Slider navigation">
-                  {heroCards.slice(0, 3).map((card, idx) => (
-                    <button
-                      key={card.id || idx}
-                      type="button"
-                      onClick={() => setActiveHeroCardIdx(idx)}
-                      className={`flyen-hero-v-dot ${idx === (activeHeroCardIdx % heroCards.length) ? 'active' : ''}`}
-                      title={`Slide ${idx + 1}: ${card.title || 'Slide'}`}
-                      aria-label={`Go to slide ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
             </div>
           </div>
 
