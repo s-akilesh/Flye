@@ -659,9 +659,6 @@ export const Home = () => {
           <div className="flyen-fullscreen-showcase-overlay" />
           <div className="flyen-section-container flyen-fullscreen-showcase-container">
             <div className="flyen-fullscreen-showcase-content">
-              <div className="flyen-showcase-pill">
-                <span>Precision 3D Manufacturing</span>
-              </div>
               <h2 className="flyen-fullscreen-showcase-title">
                 High-Tolerance 3D Printed Parts & Prototyping
               </h2>
@@ -704,9 +701,6 @@ export const Home = () => {
           <div className="flyen-fullscreen-showcase-overlay" />
           <div className="flyen-section-container flyen-fullscreen-showcase-container">
             <div className="flyen-fullscreen-showcase-content">
-              <div className="flyen-showcase-pill">
-                <span>Turnkey Hardware</span>
-              </div>
               <h2 className="flyen-fullscreen-showcase-title">
                 Ready-Made Project Kits & IoT Systems
               </h2>
