@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useLegalPage } from '../hooks/useLegalPage.js';
+import { SupportLayout } from '../components/SupportLayout.jsx';
 import { SEO } from '../../../shared/seo/SEO.jsx';
 import { PageType } from '../../../shared/seo/constants/pageTypes.js';
 import { generateSEO } from '../../../shared/seo/generateSEO.js';
 import { trackEvent } from '../../../shared/analytics/analytics.js';
 import { sanitizeHtml } from '../../../shared/utils/security.js';
-
 
 export const TermsConditions = () => {
   const { pageData, isLoading, fetchPage } = useLegalPage();
@@ -16,9 +16,8 @@ export const TermsConditions = () => {
     trackEvent('terms_conditions_viewed');
   }, [fetchPage]);
 
-  // Format updated timestamp
   const formatDate = (isoString) => {
-    if (!isoString) return '';
+    if (!isoString) return 'October 2026';
     const date = new Date(isoString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -30,79 +29,78 @@ export const TermsConditions = () => {
   return (
     <>
       <SEO {...seoProps} page={PageType.TERMS} />
-      <div 
-        className="legal-page-wrapper"
-        style={{
-          maxWidth: '800px',
-          margin: '0 auto',
-          padding: 'var(--space-8) var(--page-padding)',
-          color: 'var(--txt-primary)',
-          textAlign: 'left',
-          minHeight: '60vh'
-        }}
+      <SupportLayout
+        badge="TERMS OF SERVICE"
+        title={pageData?.title || "Terms and Conditions"}
+        description="Standard legal terms, platform usage rules, intellectual property guidelines, warranties, and service agreements."
+        version={pageData?.version || "1.0.0"}
+        lastUpdated={formatDate(pageData?.updated_at)}
       >
         {isLoading ? (
-          <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--text-muted)' }}>
-            Loading document details...
-          </div>
-        ) : pageData ? (
-          <article>
-            {/* Header / Versioning details */}
-            <div 
-              style={{ 
-                borderBottom: '1px solid var(--sys-divider)', 
-                paddingBottom: '16px', 
-                marginBottom: '32px' 
-              }}
-            >
-              <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 12px 0' }}>
-                {pageData.title || 'Terms & Conditions'}
-              </h1>
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  gap: '16px', 
-                  fontSize: '12px', 
-                  color: 'var(--text-muted, #6b7280)' 
-                }}
-              >
-                <span>Version {pageData.version || '1.0.0'}</span>
-                <span>•</span>
-                <span>Last Updated: {formatDate(pageData.updated_at)}</span>
+          <div className="flyen-support-loading">Loading terms details...</div>
+        ) : pageData?.content ? (
+          <article 
+            className="rich-text-content"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(pageData.content) }}
+          />
+        ) : (
+          <article className="flyen-support-article">
+            
+            {/* Highlight Metric Cards */}
+            <div className="flyen-support-highlights-grid">
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-value">Fair Use</div>
+                <div className="flyen-support-metric-label">Maker Platform Terms</div>
+              </div>
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-value">100% IP</div>
+                <div className="flyen-support-metric-label">Your CAD Ownership</div>
+              </div>
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-value">GST Ready</div>
+                <div className="flyen-support-metric-label">Compliant Invoicing</div>
+              </div>
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-label">India Laws</div>
+                <div className="flyen-support-metric-label">Jurisdiction</div>
               </div>
             </div>
 
-            {/* Content body */}
-            <div 
-              className="rich-text-content"
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(pageData.content) }}
-              style={{
-                lineHeight: '1.7',
-                fontSize: '14.5px',
-                color: 'var(--text-secondary, #e5e7eb)'
-              }}
-            />
+            {/* Section 1 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">1. Acceptance of Terms</h2>
+              <p>
+                By accessing Flyen or placing an order for hardware project kits, standard 3D printed components, or custom manufacturing services, you agree to be bound by these Terms and Conditions.
+              </p>
+            </section>
+
+            {/* Section 2 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">2. Product Specifications & Accuracy</h2>
+              <p>
+                We strive to display electronic component descriptions, pin diagrams, and 3D print specifications with maximum technical precision. Given the nature of electronic prototyping, slight component batch variations may occur while maintaining identical functional performance.
+              </p>
+            </section>
+
+            {/* Section 3 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">3. User Conduct & Prohibited Designs</h2>
+              <p>
+                Users agree not to submit 3D models or project requests involving restricted weapons, harmful implements, or designs infringing on third-party patents or copyrights.
+              </p>
+            </section>
+
+            {/* Section 4 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">4. Limitation of Liability</h2>
+              <p>
+                Flyen provides project kits and prototyping components for educational, experimental, and prototype engineering purposes. Flyen is not liable for indirect or consequential damages arising from improper circuit wiring, reverse voltage application, or user modifications.
+              </p>
+            </section>
+
           </article>
-        ) : (
-          <div 
-            style={{ 
-              padding: '60px var(--space-4)', 
-              textAlign: 'center', 
-              background: 'rgba(255, 255, 255, 0.01)', 
-              border: '1px solid rgba(255, 255, 255, 0.06)',
-              borderRadius: '8px'
-            }}
-          >
-            <span className="material-icons-outlined" style={{ fontSize: '48px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-              description
-            </span>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 8px 0' }}>Terms & Conditions are under review</h3>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
-              The Terms & Conditions page is currently being updated. Please check back later.
-            </p>
-          </div>
         )}
-      </div>
+      </SupportLayout>
     </>
   );
 };

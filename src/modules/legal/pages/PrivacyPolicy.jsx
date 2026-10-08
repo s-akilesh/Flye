@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useLegalPage } from '../hooks/useLegalPage.js';
+import { SupportLayout } from '../components/SupportLayout.jsx';
 import { SEO } from '../../../shared/seo/SEO.jsx';
 import { PageType } from '../../../shared/seo/constants/pageTypes.js';
 import { generateSEO } from '../../../shared/seo/generateSEO.js';
 import { trackEvent } from '../../../shared/analytics/analytics.js';
 import { sanitizeHtml } from '../../../shared/utils/security.js';
-
 
 export const PrivacyPolicy = () => {
   const { pageData, isLoading, fetchPage } = useLegalPage();
@@ -16,9 +16,8 @@ export const PrivacyPolicy = () => {
     trackEvent('privacy_policy_viewed');
   }, [fetchPage]);
 
-  // Format updated timestamp
   const formatDate = (isoString) => {
-    if (!isoString) return '';
+    if (!isoString) return 'October 2026';
     const date = new Date(isoString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -30,79 +29,89 @@ export const PrivacyPolicy = () => {
   return (
     <>
       <SEO {...seoProps} page={PageType.PRIVACY} />
-      <div 
-        className="legal-page-wrapper"
-        style={{
-          maxWidth: '800px',
-          margin: '0 auto',
-          padding: 'var(--space-8) var(--page-padding)',
-          color: 'var(--txt-primary)',
-          textAlign: 'left',
-          minHeight: '60vh'
-        }}
+      <SupportLayout
+        badge="DATA PRIVACY & SECURITY"
+        title={pageData?.title || "Privacy Policy"}
+        description="Our commitment to safeguarding your personal data, payment confidentiality, CAD file intellectual property, and communication records."
+        version={pageData?.version || "1.0.0"}
+        lastUpdated={formatDate(pageData?.updated_at)}
       >
         {isLoading ? (
-          <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--text-muted)' }}>
-            Loading document details...
-          </div>
-        ) : pageData ? (
-          <article>
-            {/* Header / Versioning details */}
-            <div 
-              style={{ 
-                borderBottom: '1px solid var(--sys-divider)', 
-                paddingBottom: '16px', 
-                marginBottom: '32px' 
-              }}
-            >
-              <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 12px 0' }}>
-                {pageData.title || 'Privacy Policy'}
-              </h1>
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  gap: '16px', 
-                  fontSize: '12px', 
-                  color: 'var(--text-muted, #6b7280)' 
-                }}
-              >
-                <span>Version {pageData.version || '1.0.0'}</span>
-                <span>•</span>
-                <span>Last Updated: {formatDate(pageData.updated_at)}</span>
+          <div className="flyen-support-loading">Loading privacy policy details...</div>
+        ) : pageData?.content ? (
+          <article 
+            className="rich-text-content"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(pageData.content) }}
+          />
+        ) : (
+          <article className="flyen-support-article">
+            
+            {/* Highlight Metric Cards */}
+            <div className="flyen-support-highlights-grid">
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-value">256-Bit</div>
+                <div className="flyen-support-metric-label">SSL Data Encryption</div>
+              </div>
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-value">Zero Sale</div>
+                <div className="flyen-support-metric-label">No Third-Party Ads</div>
+              </div>
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-value">100% Secure</div>
+                <div className="flyen-support-metric-label">PCI-DSS Payments</div>
+              </div>
+              <div className="flyen-support-metric-card">
+                <div className="flyen-support-metric-value">Full Control</div>
+                <div className="flyen-support-metric-label">Account Data Access</div>
               </div>
             </div>
 
-            {/* Content body */}
-            <div 
-              className="rich-text-content"
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(pageData.content) }}
-              style={{
-                lineHeight: '1.7',
-                fontSize: '14.5px',
-                color: 'var(--text-secondary, #e5e7eb)'
-              }}
-            />
+            {/* Section 1 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">1. Information We Collect</h2>
+              <p>
+                To provide high-quality engineering services, customized hardware builds, and 3D printing orders, we collect the following categories of information:
+              </p>
+              <ul className="flyen-support-list">
+                <li>
+                  <strong>Account & Contact Data:</strong> Full name, verified email address, mobile number, and delivery shipping coordinates.
+                </li>
+                <li>
+                  <strong>Technical Order Assets:</strong> 3D CAD models (.STL, .STEP, .OBJ), custom project specifications, and bill of materials (BOM) submitted for quotations.
+                </li>
+                <li>
+                  <strong>Transactional Records:</strong> Payment transaction references, tax invoicing particulars, and order histories (processed through secure RBI-compliant payment gateways).
+                </li>
+              </ul>
+            </section>
+
+            {/* Section 2 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">2. How We Protect & Use Your Data</h2>
+              <p>
+                Your information is used strictly to fulfill manufacturing orders, dispatch shipments, send automated tracking alerts, and provide responsive technical assistance. We never sell or monetize your personal information to marketing brokers.
+              </p>
+            </section>
+
+            {/* Section 3 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">3. Proprietary Design Confidentiality</h2>
+              <p>
+                All 3D design files and project schematics uploaded to the Flyen platform are treated as confidential intellectual property. Access is restricted exclusively to production engineers executing your order.
+              </p>
+            </section>
+
+            {/* Section 4 */}
+            <section className="flyen-support-section">
+              <h2 className="flyen-support-section-title">4. Cookies & Session Management</h2>
+              <p>
+                We use strictly necessary session cookies to maintain your authenticated login state, cart contents, and theme preferences. You may adjust browser cookie settings at any time.
+              </p>
+            </section>
+
           </article>
-        ) : (
-          <div 
-            style={{ 
-              padding: '60px var(--space-4)', 
-              textAlign: 'center', 
-              background: 'rgba(255, 255, 255, 0.01)', 
-              border: '1px solid rgba(255, 255, 255, 0.06)',
-              borderRadius: '8px'
-            }}
-          >
-            <span className="material-icons-outlined" style={{ fontSize: '48px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-              gavel
-            </span>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 8px 0' }}>Privacy Policy is under review</h3>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
-              The Privacy Policy page is currently being updated. Please check back later.
-            </p>
-          </div>
         )}
-      </div>
+      </SupportLayout>
     </>
   );
 };

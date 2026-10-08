@@ -106,6 +106,10 @@ const routes = [
   { url: '/departments', pageType: 'DEPARTMENTS' },
   { url: '/privacy-policy', pageType: 'PRIVACY' },
   { url: '/terms-and-conditions', pageType: 'TERMS' },
+  { url: '/shipping-and-delivery', pageType: 'TERMS' },
+  { url: '/returns-and-cancellations', pageType: 'TERMS' },
+  { url: '/personalised-order-policy', pageType: 'TERMS' },
+  { url: '/custom-printing-and-bulk-enquiries', pageType: 'CONTACT' },
   { url: '/feedback', pageType: 'CONTACT' }
 ];
 

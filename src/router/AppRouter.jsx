@@ -36,6 +36,10 @@ const AuthGateway = React.lazy(() => import('../modules/auth/pages/AuthGateway.j
 const AdminLayout = React.lazy(() => import('../shared/components/layout/AdminLayout').then(module => ({ default: module.AdminLayout })));
 const PrivacyPolicy = React.lazy(() => import('../modules/legal/pages/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
 const TermsConditions = React.lazy(() => import('../modules/legal/pages/TermsConditions').then(module => ({ default: module.TermsConditions })));
+const ShippingDelivery = React.lazy(() => import('../modules/legal/pages/ShippingDelivery').then(module => ({ default: module.ShippingDelivery })));
+const ReturnsCancellations = React.lazy(() => import('../modules/legal/pages/ReturnsCancellations').then(module => ({ default: module.ReturnsCancellations })));
+const PersonalisedOrderPolicy = React.lazy(() => import('../modules/legal/pages/PersonalisedOrderPolicy').then(module => ({ default: module.PersonalisedOrderPolicy })));
+const CustomBulkEnquiries = React.lazy(() => import('../modules/legal/pages/CustomBulkEnquiries').then(module => ({ default: module.CustomBulkEnquiries })));
 const MyProjects = React.lazy(lazyRoutes.MyProjects);
 const ProfilePage = React.lazy(() => import('../modules/profile/pages/ProfilePage').then(module => ({ default: module.ProfilePage })));
 
@@ -78,6 +82,10 @@ export const AppRouter = () => {
             <Route path="/review" element={<Feedback />} />
             <Route path="/reviews" element={<Feedback />} />
             <Route path={ROUTES.VIDEOS || '/videos'} element={<LearningHub />} />
+            <Route path={ROUTES.SHIPPING_DELIVERY || '/shipping-and-delivery'} element={<ShippingDelivery />} />
+            <Route path={ROUTES.RETURNS_CANCELLATIONS || '/returns-and-cancellations'} element={<ReturnsCancellations />} />
+            <Route path={ROUTES.PERSONALISED_ORDER_POLICY || '/personalised-order-policy'} element={<PersonalisedOrderPolicy />} />
+            <Route path={ROUTES.CUSTOM_BULK_ENQUIRIES || '/custom-printing-and-bulk-enquiries'} element={<CustomBulkEnquiries />} />
             <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
             <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
             <Route path={ROUTES.MY_PROJECTS} element={<MyProjects />} />

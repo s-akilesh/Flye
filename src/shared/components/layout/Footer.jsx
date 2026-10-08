@@ -159,10 +159,10 @@ export const Footer = () => {
           {/* Column 4: SUPPORT */}
           <div className="flyen-footer-col">
             <span className="flyen-footer-col-title">SUPPORT</span>
-            <Link to={ROUTES.TERMS_CONDITIONS} className="flyen-footer-link">Shipping and delivery</Link>
-            <Link to={ROUTES.TERMS_CONDITIONS} className="flyen-footer-link">Returns and cancellations</Link>
-            <Link to={ROUTES.TERMS_CONDITIONS} className="flyen-footer-link">Personalised-order policy</Link>
-            <Link to={ROUTES.CONTACT} className="flyen-footer-link">Custom printing and bulk enquiries</Link>
+            <Link to={ROUTES.SHIPPING_DELIVERY || '/shipping-and-delivery'} className="flyen-footer-link">Shipping and delivery</Link>
+            <Link to={ROUTES.RETURNS_CANCELLATIONS || '/returns-and-cancellations'} className="flyen-footer-link">Returns and cancellations</Link>
+            <Link to={ROUTES.PERSONALISED_ORDER_POLICY || '/personalised-order-policy'} className="flyen-footer-link">Personalised-order policy</Link>
+            <Link to={ROUTES.CUSTOM_BULK_ENQUIRIES || '/custom-printing-and-bulk-enquiries'} className="flyen-footer-link">Custom printing and bulk enquiries</Link>
             <Link to={ROUTES.PRIVACY_POLICY} className="flyen-footer-link">Privacy policy and terms</Link>
           </div>
 

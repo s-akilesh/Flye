@@ -9,6 +9,12 @@ import { ProjectDetails } from './modules/projects/pages/ProjectDetails';
 import { PrintingCatalog } from './modules/public/pages/PrintingCatalog';
 import { Contact } from './modules/public/pages/Contact';
 import { Feedback } from './modules/public/pages/Feedback';
+import { PrivacyPolicy } from './modules/legal/pages/PrivacyPolicy';
+import { TermsConditions } from './modules/legal/pages/TermsConditions';
+import { ShippingDelivery } from './modules/legal/pages/ShippingDelivery';
+import { ReturnsCancellations } from './modules/legal/pages/ReturnsCancellations';
+import { PersonalisedOrderPolicy } from './modules/legal/pages/PersonalisedOrderPolicy';
+import { CustomBulkEnquiries } from './modules/legal/pages/CustomBulkEnquiries';
 
 // Real context providers
 import { SettingsProvider } from './modules/settings/context/SettingsContext';
@@ -38,6 +44,12 @@ export function render(url, ssrData = {}) {
                         <Route path={ROUTES.PRINTING} element={<PrintingCatalog />} />
                         <Route path={ROUTES.CONTACT} element={<Contact />} />
                         <Route path={ROUTES.FEEDBACK} element={<Feedback />} />
+                        <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+                        <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
+                        <Route path={ROUTES.SHIPPING_DELIVERY || '/shipping-and-delivery'} element={<ShippingDelivery />} />
+                        <Route path={ROUTES.RETURNS_CANCELLATIONS || '/returns-and-cancellations'} element={<ReturnsCancellations />} />
+                        <Route path={ROUTES.PERSONALISED_ORDER_POLICY || '/personalised-order-policy'} element={<PersonalisedOrderPolicy />} />
+                        <Route path={ROUTES.CUSTOM_BULK_ENQUIRIES || '/custom-printing-and-bulk-enquiries'} element={<CustomBulkEnquiries />} />
                         <Route path="*" element={<Home />} />
                       </Routes>
                     </MainLayout>

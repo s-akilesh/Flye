@@ -7,8 +7,17 @@ import { RichTextEditor } from '../../../shared/components/ui/RichTextEditor';
 import { sanitizeHtml } from '../../../shared/utils/security.js';
 
 
+const TAB_CONFIGS = [
+  { id: 'privacy_policy', label: 'Privacy Policy' },
+  { id: 'terms_conditions', label: 'Terms & Conditions' },
+  { id: 'shipping_delivery', label: 'Shipping & Delivery' },
+  { id: 'returns_cancellations', label: 'Returns & Cancellations' },
+  { id: 'personalised_order_policy', label: 'Personalised-Order' },
+  { id: 'custom_bulk_enquiries', label: 'Bulk Enquiries' }
+];
+
 export const LegalPagesSettings = ({ onBack }) => {
-  const [activeTab, setActiveTab] = useState('privacy_policy'); // 'privacy_policy' | 'terms_conditions'
+  const [activeTab, setActiveTab] = useState('privacy_policy');
   const { pageData, isLoading, isProcessing, fetchPage, updatePage } = useLegalPage();
 
   const [form, setForm] = useState({
@@ -24,16 +33,17 @@ export const LegalPagesSettings = ({ onBack }) => {
   // Load page configuration on tab change
   useEffect(() => {
     fetchPage(activeTab, true).then((data) => {
+      const activeConfig = TAB_CONFIGS.find(t => t.id === activeTab);
       if (data) {
         setForm({
-          title: data.title || '',
+          title: data.title || activeConfig?.label || '',
           version: data.version || '1.0.0',
           content: data.content || '',
           published: data.published ?? false
         });
       } else {
         setForm({
-          title: activeTab === 'privacy_policy' ? 'Privacy Policy' : 'Terms & Conditions',
+          title: activeConfig?.label || '',
           version: '1.0.0',
           content: '',
           published: false
@@ -95,46 +105,34 @@ export const LegalPagesSettings = ({ onBack }) => {
       onCancel={onBack}
       saveStatus={saveStatus}
     >
-      <SettingsSection title="Select Legal Document" description="Toggle between Privacy Policy and Terms & Conditions.">
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
-          <button
-            type="button"
-            className="product-btn"
-            onClick={() => setActiveTab('privacy_policy')}
-            style={{
-              flex: 1,
-              background: activeTab === 'privacy_policy' ? 'var(--accent-violet, #8b5cf6)' : 'rgba(255, 255, 255, 0.02)',
-              border: activeTab === 'privacy_policy' ? '1px solid var(--accent-violet, #8b5cf6)' : '1px solid rgba(255, 255, 255, 0.08)',
-              color: '#fff',
-              padding: '10px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '13px',
-              transition: 'all 0.25s'
-            }}
-          >
-            Privacy Policy
-          </button>
-          <button
-            type="button"
-            className="product-btn"
-            onClick={() => setActiveTab('terms_conditions')}
-            style={{
-              flex: 1,
-              background: activeTab === 'terms_conditions' ? 'var(--accent-violet, #8b5cf6)' : 'rgba(255, 255, 255, 0.02)',
-              border: activeTab === 'terms_conditions' ? '1px solid var(--accent-violet, #8b5cf6)' : '1px solid rgba(255, 255, 255, 0.08)',
-              color: '#fff',
-              padding: '10px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '13px',
-              transition: 'all 0.25s'
-            }}
-          >
-            Terms & Conditions
-          </button>
+      <SettingsSection title="Select Legal / Support Document" description="Toggle between site policies and customer support agreements.">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px', marginBottom: '16px' }}>
+          {TAB_CONFIGS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              className="product-btn"
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                background: activeTab === tab.id ? 'var(--accent-violet, #8b5cf6)' : 'rgba(255, 255, 255, 0.02)',
+                border: activeTab === tab.id ? '1px solid var(--accent-violet, #8b5cf6)' : '1px solid rgba(255, 255, 255, 0.08)',
+                color: '#fff',
+                padding: '10px 12px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '12px',
+                textAlign: 'center',
+                transition: 'all 0.25s',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+              title={tab.label}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </SettingsSection>
 
