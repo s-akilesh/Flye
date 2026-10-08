@@ -669,15 +669,15 @@ export const Home = () => {
           <div className="flyen-section-container flyen-fullscreen-showcase-container">
             <div className="flyen-fullscreen-showcase-content">
               <h2 className="flyen-fullscreen-showcase-title">
-                High-Tolerance 3D Printed Parts & Prototyping
+                Precision in Every Print.
               </h2>
               <p className="flyen-fullscreen-showcase-desc">
-                Industrial SLA, FDM, and resin components engineered for robotic assemblies, functional enclosures, and replacement spares.
+                Quality 3D-printed parts, custom pieces, and functional products made with carefully selected materials and precise printing for reliable results.
               </p>
               <div className="flyen-showcase-specs">
-                <span className="flyen-showcase-spec-tag">±0.1mm Precision</span>
-                <span className="flyen-showcase-spec-tag">Engineering Materials</span>
-                <span className="flyen-showcase-spec-tag">Rapid Dispatch</span>
+                <span className="flyen-showcase-spec-tag">Multiple Materials</span>
+                <span className="flyen-showcase-spec-tag">Custom Designs</span>
+                <span className="flyen-showcase-spec-tag">Quality Finish</span>
               </div>
               <div className="flyen-fullscreen-showcase-actions">
                 <button 
