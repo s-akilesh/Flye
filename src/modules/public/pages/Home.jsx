@@ -752,12 +752,6 @@ export const Home = () => {
                 <h2 className="flyen-testi-main-title">
                   Reviews from <span>real makers</span>
                 </h2>
-                <div className="flyen-testi-trust-pill">
-                  <span className="flyen-testi-score">{customerRatingDisplay}/5</span>
-                  <span className="material-icons flyen-testi-star-icon">star</span>
-                  <span className="flyen-testi-trust-brand">Flyen Verified</span>
-                  <span className="flyen-testi-trust-count">• Based on {reviewStats?.total > 0 ? `${reviewStats.total}+ reviews` : '500+ student builds'}</span>
-                </div>
               </div>
 
               <div className="flyen-testi-header-right">
