@@ -723,9 +723,9 @@ export const Home = () => {
                 <button 
                   type="button" 
                   className="flyen-btn-outline"
-                  onClick={() => navigate(ROUTES.COMPONENTS || '/components')}
+                  onClick={() => handleOpenFormModal('Custom Project Kit Quote')}
                 >
-                  Component Library
+                  Instant Quote
                 </button>
               </div>
             </div>
