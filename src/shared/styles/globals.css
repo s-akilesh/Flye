@@ -8350,8 +8350,8 @@ table td {
 .flyen-support-page-root {
   width: 100%;
   min-height: calc(100vh - 140px);
-  background: var(--sys-bg, #06090f);
-  color: var(--txt-primary, #f8fafc);
+  background: var(--sys-bg);
+  color: var(--txt-primary);
   padding: 100px var(--page-padding, 40px) 80px;
   box-sizing: border-box;
   position: relative;
@@ -8372,7 +8372,7 @@ table td {
   justify-content: flex-start !important;
   background: transparent !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid var(--sys-border) !important;
   padding: 0 0 24px 0 !important;
   margin-bottom: 40px !important;
   z-index: 1 !important;
@@ -8390,19 +8390,25 @@ table td {
   gap: 6px;
   padding: 4px 12px;
   border-radius: 20px;
-  background: rgba(0, 223, 162, 0.1);
-  border: 1px solid rgba(0, 223, 162, 0.25);
+  background: rgba(0, 223, 162, 0.12);
+  border: 1px solid rgba(0, 223, 162, 0.3);
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: var(--flyen-teal, #00dfa2);
+  color: #00dfa2;
   text-transform: uppercase;
+}
+
+[data-theme='light'] .flyen-support-badge {
+  background: rgba(2, 132, 199, 0.1);
+  border-color: rgba(2, 132, 199, 0.3);
+  color: #0284c7;
 }
 
 .flyen-support-title {
   font-size: clamp(28px, 3.2vw, 40px);
   font-weight: 800;
-  color: #ffffff;
+  color: var(--txt-primary) !important;
   margin: 0 0 12px 0;
   letter-spacing: -0.6px;
   line-height: 1.2;
@@ -8410,7 +8416,7 @@ table td {
 
 .flyen-support-desc {
   font-size: 15px;
-  color: var(--txt-secondary, #94a3b8);
+  color: var(--txt-secondary);
   max-width: 780px;
   line-height: 1.6;
   margin: 0 0 16px 0;
@@ -8421,7 +8427,7 @@ table td {
   align-items: center;
   gap: 12px;
   font-size: 12px;
-  color: var(--txt-muted, #64748b);
+  color: var(--txt-muted);
 }
 
 .flyen-support-meta-dot {
@@ -8457,21 +8463,22 @@ table td {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  z-index: 10;
 }
 
 .flyen-support-nav-card {
-  background: #0b0f19;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--sys-surface);
+  border: 1px solid var(--sys-border);
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .flyen-support-nav-heading {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: var(--txt-muted, #64748b);
+  color: var(--txt-muted);
   text-transform: uppercase;
   display: block;
   margin-bottom: 12px;
@@ -8490,7 +8497,7 @@ table td {
   gap: 10px;
   padding: 10px 12px;
   border-radius: 8px;
-  color: var(--txt-secondary, #94a3b8);
+  color: var(--txt-secondary);
   text-decoration: none;
   font-size: 13.5px;
   font-weight: 500;
@@ -8499,15 +8506,20 @@ table td {
 }
 
 .flyen-support-nav-link:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: #ffffff;
+  background: var(--interaction-hover);
+  color: var(--txt-primary);
 }
 
 .flyen-support-nav-link.active {
-  background: rgba(0, 223, 162, 0.1);
+  background: var(--interaction-selected);
   border-color: rgba(0, 223, 162, 0.3);
-  color: var(--flyen-teal, #00dfa2);
+  color: #00dfa2;
   font-weight: 700;
+}
+
+[data-theme='light'] .flyen-support-nav-link.active {
+  border-color: rgba(2, 132, 199, 0.3);
+  color: #0284c7;
 }
 
 .flyen-support-nav-icon {
@@ -8515,29 +8527,34 @@ table td {
 }
 
 .flyen-support-help-card {
-  background: linear-gradient(145deg, rgba(0, 223, 162, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%);
-  border: 1px solid rgba(0, 223, 162, 0.2);
+  background: var(--sys-surface);
+  border: 1px solid var(--sys-border);
   border-radius: 12px;
   padding: 20px 16px;
   text-align: center;
+  box-shadow: var(--shadow-sm);
 }
 
 .flyen-support-help-icon {
   font-size: 28px;
-  color: var(--flyen-teal, #00dfa2);
+  color: #00dfa2;
   margin-bottom: 8px;
+}
+
+[data-theme='light'] .flyen-support-help-icon {
+  color: #0284c7;
 }
 
 .flyen-support-help-title {
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--txt-primary);
   margin: 0 0 6px 0;
 }
 
 .flyen-support-help-desc {
   font-size: 12px;
-  color: var(--txt-secondary, #94a3b8);
+  color: var(--txt-secondary);
   line-height: 1.5;
   margin: 0 0 14px 0;
 }
@@ -8547,7 +8564,7 @@ table td {
   width: 100%;
   padding: 8px 12px;
   border-radius: 6px;
-  background: var(--flyen-teal, #00dfa2);
+  background: #00dfa2;
   color: #06090f;
   font-size: 12px;
   font-weight: 700;
@@ -8557,17 +8574,22 @@ table td {
   box-sizing: border-box;
 }
 
+[data-theme='light'] .flyen-support-help-btn {
+  background: #0284c7;
+  color: #ffffff;
+}
+
 .flyen-support-help-btn:hover {
   opacity: 0.9;
 }
 
 /* Main Content Area */
 .flyen-support-content-area {
-  background: #0b0f19;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--sys-surface);
+  border: 1px solid var(--sys-border);
   border-radius: 12px;
   padding: 36px 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-md);
 }
 
 @media (max-width: 600px) {
@@ -8590,8 +8612,8 @@ table td {
 }
 
 .flyen-support-metric-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--interaction-hover);
+  border: 1px solid var(--sys-border);
   border-radius: 10px;
   padding: 16px;
   text-align: center;
@@ -8600,13 +8622,17 @@ table td {
 .flyen-support-metric-value {
   font-size: 20px;
   font-weight: 800;
-  color: var(--flyen-teal, #00dfa2);
+  color: #00dfa2;
   margin-bottom: 4px;
+}
+
+[data-theme='light'] .flyen-support-metric-value {
+  color: #0284c7;
 }
 
 .flyen-support-metric-label {
   font-size: 11px;
-  color: var(--txt-secondary, #94a3b8);
+  color: var(--txt-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -8619,14 +8645,14 @@ table td {
 .flyen-support-section-title {
   font-size: 18px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--txt-primary) !important;
   margin: 0 0 12px 0;
   letter-spacing: -0.3px;
 }
 
 .flyen-support-section p {
   font-size: 14.5px;
-  color: var(--txt-secondary, #cbd5e1);
+  color: var(--txt-secondary);
   line-height: 1.7;
   margin: 0 0 12px 0;
 }
@@ -8634,7 +8660,7 @@ table td {
 .flyen-support-list {
   margin: 0 0 16px 20px;
   padding: 0;
-  color: var(--txt-secondary, #cbd5e1);
+  color: var(--txt-secondary);
   font-size: 14px;
   line-height: 1.7;
 }
@@ -8643,16 +8669,24 @@ table td {
   margin-bottom: 8px;
 }
 
+.flyen-support-list strong {
+  color: var(--txt-primary);
+}
+
 .flyen-support-steps-list {
   margin: 0 0 16px 20px;
   padding: 0;
-  color: var(--txt-secondary, #cbd5e1);
+  color: var(--txt-secondary);
   font-size: 14px;
   line-height: 1.7;
 }
 
 .flyen-support-steps-list li {
   margin-bottom: 10px;
+}
+
+.flyen-support-steps-list strong {
+  color: var(--txt-primary);
 }
 
 .flyen-support-couriers-box {
@@ -8665,11 +8699,11 @@ table td {
 .flyen-support-courier-tag {
   padding: 6px 14px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--interaction-hover);
+  border: 1px solid var(--sys-border);
   font-size: 12px;
   font-weight: 600;
-  color: #e2e8f0;
+  color: var(--txt-primary);
 }
 
 .flyen-support-table-wrap {
@@ -8687,27 +8721,33 @@ table td {
 
 .flyen-support-table th {
   padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
+  background: var(--table-header);
+  border-bottom: 1px solid var(--sys-border);
+  color: var(--txt-primary);
   font-weight: 700;
 }
 
 .flyen-support-table td {
   padding: 12px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: var(--txt-secondary, #cbd5e1);
+  border-bottom: 1px solid var(--sys-divider);
+  color: var(--txt-secondary);
 }
 
 .flyen-support-alert-box {
   background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  border: 1px solid rgba(245, 158, 11, 0.3);
   border-radius: 8px;
   padding: 16px;
-  color: #fde68a;
+  color: var(--status-warning);
   font-size: 13.5px;
   line-height: 1.6;
   margin: 16px 0;
+}
+
+[data-theme='light'] .flyen-support-alert-box {
+  background: rgba(217, 119, 6, 0.08);
+  border-color: rgba(217, 119, 6, 0.3);
+  color: #b45309;
 }
 
 .flyen-support-cta-box {
@@ -8715,8 +8755,8 @@ table td {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  background: linear-gradient(135deg, rgba(0, 223, 162, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%);
-  border: 1px solid rgba(0, 223, 162, 0.3);
+  background: var(--interaction-selected);
+  border: 1px solid var(--sys-border);
   border-radius: 12px;
   padding: 24px;
   margin-top: 36px;
@@ -8732,13 +8772,13 @@ table td {
 .flyen-support-cta-title {
   font-size: 16px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--txt-primary);
   margin: 0 0 6px 0;
 }
 
 .flyen-support-cta-sub {
   font-size: 13px;
-  color: var(--txt-secondary, #94a3b8);
+  color: var(--txt-secondary);
   margin: 0;
   line-height: 1.5;
 }
@@ -8746,7 +8786,7 @@ table td {
 .flyen-support-loading {
   padding: 40px;
   text-align: center;
-  color: var(--txt-muted, #64748b);
+  color: var(--txt-muted);
   font-size: 14px;
 }
 
