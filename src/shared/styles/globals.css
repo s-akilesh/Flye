@@ -8449,46 +8449,6 @@ table td {
   }
 }
 
-.flyen-support-highlights-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 36px;
-}
-
-@media (max-width: 768px) {
-  .flyen-support-highlights-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.flyen-support-metric-card {
-  background: var(--interaction-hover);
-  border: 1px solid var(--sys-border);
-  border-radius: 10px;
-  padding: 16px;
-  text-align: center;
-}
-
-.flyen-support-metric-value {
-  font-size: 20px;
-  font-weight: 800;
-  color: #00dfa2;
-  margin-bottom: 4px;
-}
-
-[data-theme='light'] .flyen-support-metric-value {
-  color: #0284c7;
-}
-
-.flyen-support-metric-label {
-  font-size: 11px;
-  color: var(--txt-secondary);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
 .flyen-support-section {
   margin-bottom: 32px;
 }

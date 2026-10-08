@@ -45,27 +45,6 @@ export const TermsConditions = () => {
           />
         ) : (
           <article className="flyen-support-article">
-            
-            {/* Highlight Metric Cards */}
-            <div className="flyen-support-highlights-grid">
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Fair Use</div>
-                <div className="flyen-support-metric-label">Maker Platform Terms</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">100% IP</div>
-                <div className="flyen-support-metric-label">Your CAD Ownership</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">GST Ready</div>
-                <div className="flyen-support-metric-label">Compliant Invoicing</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-label">India Laws</div>
-                <div className="flyen-support-metric-label">Jurisdiction</div>
-              </div>
-            </div>
-
             {/* Section 1 */}
             <section className="flyen-support-section">
               <h2 className="flyen-support-section-title">1. Acceptance of Terms</h2>

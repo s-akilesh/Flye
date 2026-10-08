@@ -45,27 +45,6 @@ export const PrivacyPolicy = () => {
           />
         ) : (
           <article className="flyen-support-article">
-            
-            {/* Highlight Metric Cards */}
-            <div className="flyen-support-highlights-grid">
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">256-Bit</div>
-                <div className="flyen-support-metric-label">SSL Data Encryption</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Zero Sale</div>
-                <div className="flyen-support-metric-label">No Third-Party Ads</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">100% Secure</div>
-                <div className="flyen-support-metric-label">PCI-DSS Payments</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Full Control</div>
-                <div className="flyen-support-metric-label">Account Data Access</div>
-              </div>
-            </div>
-
             {/* Section 1 */}
             <section className="flyen-support-section">
               <h2 className="flyen-support-section-title">1. Information We Collect</h2>

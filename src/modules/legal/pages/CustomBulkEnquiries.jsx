@@ -52,27 +52,6 @@ export const CustomBulkEnquiries = () => {
           />
         ) : (
           <article className="flyen-support-article">
-            
-            {/* Highlight Metric Cards */}
-            <div className="flyen-support-highlights-grid">
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Tier Discounts</div>
-                <div className="flyen-support-metric-label">Volume Pricing (10+ Units)</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">24-Hr SLA</div>
-                <div className="flyen-support-metric-label">Fast Quotation Delivery</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Golden Sample</div>
-                <div className="flyen-support-metric-label">Pre-Production Proof</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">GST Ready</div>
-                <div className="flyen-support-metric-label">Official Tax Invoicing</div>
-              </div>
-            </div>
-
             {/* Section 1 */}
             <section className="flyen-support-section">
               <h2 className="flyen-support-section-title">1. Educational & Academic Institution Procurement</h2>

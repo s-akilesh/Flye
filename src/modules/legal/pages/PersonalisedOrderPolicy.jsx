@@ -49,27 +49,6 @@ export const PersonalisedOrderPolicy = () => {
           />
         ) : (
           <article className="flyen-support-article">
-            
-            {/* Highlight Metric Cards */}
-            <div className="flyen-support-highlights-grid">
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">±0.1 mm</div>
-                <div className="flyen-support-metric-label">Precision Tolerance</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">100% NDA</div>
-                <div className="flyen-support-metric-label">IP Confidentiality</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">6+ Materials</div>
-                <div className="flyen-support-metric-label">PLA, PETG, Resin, TPU</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Pre-Flight</div>
-                <div className="flyen-support-metric-label">Slicing & Wall Check</div>
-              </div>
-            </div>
-
             {/* Section 1 */}
             <section className="flyen-support-section">
               <h2 className="flyen-support-section-title">1. CAD File Submissions & Supported Formats</h2>

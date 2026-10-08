@@ -49,27 +49,6 @@ export const ShippingDelivery = () => {
           />
         ) : (
           <article className="flyen-support-article">
-            
-            {/* Highlight Metric Cards */}
-            <div className="flyen-support-highlights-grid">
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">24–48 Hrs</div>
-                <div className="flyen-support-metric-label">In-Stock Dispatch</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">2–4 Days</div>
-                <div className="flyen-support-metric-label">Custom 3D Printing</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">₹999+</div>
-                <div className="flyen-support-metric-label">Free Shipping Tier</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Pan-India</div>
-                <div className="flyen-support-metric-label">Express Coverage</div>
-              </div>
-            </div>
-
             {/* Section 1 */}
             <section className="flyen-support-section">
               <h2 className="flyen-support-section-title">1. Order Processing & Manufacturing Schedules</h2>

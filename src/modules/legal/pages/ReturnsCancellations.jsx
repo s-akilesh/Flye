@@ -49,27 +49,6 @@ export const ReturnsCancellations = () => {
           />
         ) : (
           <article className="flyen-support-article">
-            
-            {/* Highlight Metric Cards */}
-            <div className="flyen-support-highlights-grid">
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">7 Days</div>
-                <div className="flyen-support-metric-label">Replacement Window</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">100% Free</div>
-                <div className="flyen-support-metric-label">Pre-Dispatch Cancel</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">5–7 Days</div>
-                <div className="flyen-support-metric-label">Refund Settlement</div>
-              </div>
-              <div className="flyen-support-metric-card">
-                <div className="flyen-support-metric-value">Zero Fee</div>
-                <div className="flyen-support-metric-label">Defective Item Claim</div>
-              </div>
-            </div>
-
             {/* Section 1 */}
             <section className="flyen-support-section">
               <h2 className="flyen-support-section-title">1. 7-Day Replacement Guarantee</h2>
