@@ -606,6 +606,7 @@ export const Home = () => {
                 [1, 2, 3, 4, 5, 6].map(n => (
                   <div key={n} className="flyen-category-card" style={{ opacity: 0.6 }}>
                     <div className="flyen-category-thumb" style={{ background: 'var(--sys-surface-hover)' }} />
+                    <div style={{ height: '14px', width: '70%', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px' }} />
                   </div>
                 ))
               ) : (
@@ -630,6 +631,7 @@ export const Home = () => {
                         </div>
                       )}
                     </div>
+                    <span className="flyen-category-label-below">{cat.title}</span>
                   </div>
                 ))
               )}
