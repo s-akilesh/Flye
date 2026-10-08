@@ -537,7 +537,7 @@ export const Home = () => {
             </div>
           )}
 
-          <div className="flyen-section-container">
+          <div className="flyen-section-container flyen-hero-main-container">
             <div className="flyen-hero-stage">
               <div className="flyen-hero-text-wrap">
                 <h1 className="flyen-hero-title-2">
@@ -570,32 +570,30 @@ export const Home = () => {
               </div>
             </div>
           </div>
-        </section>
 
-        {/* ========================================================================
-            2. KPI / TRUST METRICS STRIP (FULL WIDTH BRIDGING SECTION)
-            ======================================================================== */}
-        <section className="flyen-kpi-fullwidth-section">
-          <div className="flyen-kpi-fullwidth-container">
-            <div className="flyen-kpi-card">
-              <div className="flyen-kpi-number">250+</div>
-              <div className="flyen-kpi-label">Projects Delivered</div>
-            </div>
-
-            <div className="flyen-kpi-divider" />
-
-            <div className="flyen-kpi-card">
-              <div className="flyen-kpi-number">15+</div>
-              <div className="flyen-kpi-label">Custom Prints</div>
-            </div>
-
-            <div className="flyen-kpi-divider" />
-
-            <div className="flyen-kpi-card">
-              <div className="flyen-kpi-number">
-                {customerRatingDisplay}<span className="flyen-kpi-star">★</span>
+          {/* Integrated Landing Screen KPI Strip - Always Visible on Landing */}
+          <div className="flyen-hero-kpi-integrated">
+            <div className="flyen-hero-kpi-inner">
+              <div className="flyen-kpi-card">
+                <div className="flyen-kpi-number">250+</div>
+                <div className="flyen-kpi-label">Projects Delivered</div>
               </div>
-              <div className="flyen-kpi-label">Customer Rating</div>
+
+              <div className="flyen-kpi-divider" />
+
+              <div className="flyen-kpi-card">
+                <div className="flyen-kpi-number">15+</div>
+                <div className="flyen-kpi-label">Custom Prints</div>
+              </div>
+
+              <div className="flyen-kpi-divider" />
+
+              <div className="flyen-kpi-card">
+                <div className="flyen-kpi-number">
+                  {customerRatingDisplay}<span className="flyen-kpi-star">★</span>
+                </div>
+                <div className="flyen-kpi-label">Customer Rating</div>
+              </div>
             </div>
           </div>
         </section>

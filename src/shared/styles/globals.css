@@ -6144,34 +6144,35 @@ table td {
   color: var(--flyen-teal-hover);
 }
 
-/* --- Hero Section 2.0 (Full Background Dynamic Slider + Integrated KPI) --- */
+/* --- Hero Section 2.0 (Full Background Dynamic Slider + Integrated KPI Strip) --- */
 .flyen-hero-section-full {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   box-sizing: border-box;
-  padding-left: max(60px, 4.5vw) !important;
-  padding-right: max(60px, 4.5vw) !important;
-  padding-top: calc(72px + 12px) !important;
-  padding-bottom: 40px !important;
   overflow: hidden;
   width: 100%;
   background: #080c14;
 }
 
-.flyen-hero-section-full .flyen-section-container {
+.flyen-hero-section-full .flyen-hero-main-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
-  height: 100%;
-  max-width: 100% !important;
   width: 100%;
+  max-width: 100% !important;
+  padding-left: max(60px, 4.5vw) !important;
+  padding-right: max(60px, 4.5vw) !important;
+  padding-top: calc(72px + 12px) !important;
+  padding-bottom: 12px !important;
   position: relative;
   z-index: 2;
+  box-sizing: border-box;
 }
 
 /* Dynamic Full-Bleed Background Slider */
@@ -6228,28 +6229,30 @@ table td {
   display: flex;
   flex-direction: column;
   max-width: 740px;
-  padding: 40px 0 24px 0;
+  padding: 0;
   z-index: 3;
 }
 
 @media (max-width: 960px) {
   .flyen-hero-section-full {
-    min-height: auto;
-    padding-top: 90px !important;
-    padding-bottom: 40px !important;
-    padding-left: 36px !important;
-    padding-right: 36px !important;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
-  .flyen-hero-stage {
-    padding: 20px 0 32px 0;
+  .flyen-hero-section-full .flyen-hero-main-container {
+    padding-top: 100px !important;
+    padding-bottom: 24px !important;
+    padding-left: 36px !important;
+    padding-right: 36px !important;
   }
 }
 
 @media (max-width: 600px) {
-  .flyen-hero-section-full {
+  .flyen-hero-section-full .flyen-hero-main-container {
     padding-left: 20px !important;
     padding-right: 20px !important;
+    padding-top: 90px !important;
   }
 }
 
@@ -6331,23 +6334,23 @@ table td {
 }
 
 .flyen-hero-title-2 {
-  font-size: 50px;
+  font-size: clamp(32px, 3.8vw, 48px);
   font-weight: 800;
   line-height: 1.15;
   color: #ffffff !important;
-  margin: 0 0 16px 0;
+  margin: 0 0 14px 0;
   letter-spacing: -0.8px;
 }
 
 @media (max-width: 960px) {
   .flyen-hero-title-2 {
-    font-size: 40px;
+    font-size: 38px;
   }
 }
 
 @media (max-width: 600px) {
   .flyen-hero-title-2 {
-    font-size: 32px;
+    font-size: 30px;
     line-height: 1.2;
   }
 }
@@ -6357,17 +6360,18 @@ table td {
 }
 
 .flyen-hero-sub-2 {
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 15.5px;
+  line-height: 1.55;
   color: rgba(241, 245, 249, 0.9) !important;
-  margin: 0 0 36px 0;
+  margin: 0 0 28px 0;
   max-width: 540px;
   font-weight: 400;
 }
 
 @media (max-width: 600px) {
   .flyen-hero-sub-2 {
-    margin: 0 0 28px 0;
+    margin: 0 0 24px 0;
+    font-size: 14px;
   }
 }
 
@@ -6432,20 +6436,23 @@ table td {
 }
 
 /* ==========================================================================
-   Landing Screen Hero KPI Sub-Section (Full Width Screen Strip)
+   Landing Screen Hero Integrated KPI Strip (Visible on Screen Landing)
    ========================================================================== */
+.flyen-hero-kpi-integrated,
 .flyen-kpi-fullwidth-section {
   width: 100%;
-  background: #080c14;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 36px 0;
+  background: rgba(8, 12, 20, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 0;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden;
-  z-index: 5;
+  z-index: 10;
+  flex-shrink: 0;
 }
 
+.flyen-hero-kpi-inner,
 .flyen-kpi-fullwidth-container {
   width: 100%;
   max-width: 1160px;
@@ -6454,7 +6461,6 @@ table td {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  flex-wrap: wrap;
   gap: 32px;
   box-sizing: border-box;
 }
@@ -6465,13 +6471,13 @@ table td {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 6px;
+  gap: 4px;
   flex: 1;
-  min-width: 180px;
+  min-width: 160px;
 }
 
 .flyen-kpi-number {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 900;
   color: #ffffff !important;
   letter-spacing: -0.5px;
@@ -6484,11 +6490,11 @@ table td {
 
 .flyen-kpi-star {
   color: #f59e0b !important;
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .flyen-kpi-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: #38bdf8 !important;
   letter-spacing: 0.8px;
@@ -6497,19 +6503,21 @@ table td {
 
 .flyen-kpi-divider {
   width: 1px;
-  height: 60px;
+  height: 48px;
   background: rgba(255, 255, 255, 0.14);
 }
 
 @media (max-width: 768px) {
+  .flyen-hero-kpi-integrated,
   .flyen-kpi-fullwidth-section {
-    padding: 28px 0;
+    padding: 20px 0;
   }
 
+  .flyen-hero-kpi-inner,
   .flyen-kpi-fullwidth-container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
     padding: 0 24px;
   }
 
@@ -6518,11 +6526,11 @@ table td {
   }
 
   .flyen-kpi-number {
-    font-size: 30px;
+    font-size: 26px;
   }
 
   .flyen-kpi-label {
-    font-size: 12px;
+    font-size: 11.5px;
   }
 }
 
