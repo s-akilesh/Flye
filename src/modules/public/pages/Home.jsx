@@ -517,9 +517,8 @@ export const Home = () => {
               )}
             </AnimatePresence>
 
-            {/* High-End Dark Tech Gradient & Subtle Glow Overlay */}
+            {/* High-End Dark Tech Gradient Overlay */}
             <div className="flyen-hero-bg-overlay" />
-            <div className="flyen-hero-bg-glow" />
           </div>
 
           {/* Right Screen Edge Vertically Center-Aligned 3-Dot Navigation */}
@@ -541,11 +540,6 @@ export const Home = () => {
           <div className="flyen-section-container">
             <div className="flyen-hero-stage">
               <div className="flyen-hero-text-wrap">
-                <div className="flyen-hero-badge">
-                  <span className="flyen-hero-badge-dot" />
-                  <span>Custom 3D Printing & Project Engineering</span>
-                </div>
-
                 <h1 className="flyen-hero-title-2">
                   Built Around <span className="flyen-hero-teal-text">Your Idea.</span>
                 </h1>
