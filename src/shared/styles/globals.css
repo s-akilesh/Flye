@@ -4546,11 +4546,16 @@ header {
     display: none !important;
   }
 
-  /* 1. Enforce 12px left and right margin spacing */
-  .main-viewport-content,
+  /* 1. Enforce 12px left and right margin spacing for admin console */
   .admin-main-content {
     padding-left: 12px !important;
     padding-right: 12px !important;
+  }
+  .main-viewport-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   .learning-main-content {
     padding-left: 12px !important;
@@ -8208,8 +8213,18 @@ table td {
 .flyen-footer-container {
   max-width: 1160px;
   margin: 0 auto;
-  padding: 0 var(--page-padding);
+  padding: 0 var(--page-padding, 40px);
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .flyen-main-footer {
+    padding: 48px 0 28px 0;
+  }
+
+  .flyen-footer-container {
+    padding: 0 20px !important;
+  }
 }
 
 .flyen-footer-grid {

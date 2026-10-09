@@ -482,10 +482,8 @@ export const Home = () => {
           flexDirection: 'column', 
           gap: '0', 
           paddingBottom: '0',
-          width: '100vw',
-          maxWidth: '100vw',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
+          width: '100%',
+          maxWidth: '100%',
           minHeight: 'calc(100vh - 120px)',
           boxSizing: 'border-box',
           overflowX: 'hidden'
