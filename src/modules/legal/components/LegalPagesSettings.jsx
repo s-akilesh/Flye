@@ -5,15 +5,15 @@ import { SettingsSection } from '../../settings/components/SettingsSection';
 import { Input } from '../../../shared/components/ui/Input';
 import { RichTextEditor } from '../../../shared/components/ui/RichTextEditor';
 import { sanitizeHtml } from '../../../shared/utils/security.js';
-
+import { DEFAULT_LEGAL_CONFIGS } from '../constants/defaultLegalContent.js';
 
 const TAB_CONFIGS = [
-  { id: 'privacy_policy', label: 'Privacy Policy' },
-  { id: 'terms_conditions', label: 'Terms & Conditions' },
-  { id: 'shipping_delivery', label: 'Shipping & Delivery' },
-  { id: 'returns_cancellations', label: 'Returns & Cancellations' },
-  { id: 'personalised_order_policy', label: 'Personalised-Order' },
-  { id: 'custom_bulk_enquiries', label: 'Bulk Enquiries' }
+  { id: 'privacy_policy', label: 'Privacy Policy', path: '/privacy-policy' },
+  { id: 'terms_conditions', label: 'Terms & Conditions', path: '/terms-and-conditions' },
+  { id: 'shipping_delivery', label: 'Shipping & Delivery', path: '/shipping-and-delivery' },
+  { id: 'returns_cancellations', label: 'Returns & Cancellations', path: '/returns-and-cancellations' },
+  { id: 'personalised_order_policy', label: 'Personalised-Order', path: '/personalised-order-policy' },
+  { id: 'custom_bulk_enquiries', label: 'Bulk Enquiries', path: '/custom-printing-and-bulk-enquiries' }
 ];
 
 export const LegalPagesSettings = ({ onBack }) => {
@@ -24,29 +24,31 @@ export const LegalPagesSettings = ({ onBack }) => {
     title: '',
     version: '1.0.0',
     content: '',
-    published: false
+    published: true
   });
 
   const [isDirty, setIsDirty] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
 
+  const activeConfig = TAB_CONFIGS.find(t => t.id === activeTab) || TAB_CONFIGS[0];
+
   // Load page configuration on tab change
   useEffect(() => {
     fetchPage(activeTab, true).then((data) => {
-      const activeConfig = TAB_CONFIGS.find(t => t.id === activeTab);
+      const defaultConfig = DEFAULT_LEGAL_CONFIGS[activeTab] || {};
       if (data) {
         setForm({
-          title: data.title || activeConfig?.label || '',
-          version: data.version || '1.0.0',
-          content: data.content || '',
-          published: data.published ?? false
+          title: data.title || defaultConfig.title || activeConfig.label || '',
+          version: data.version || defaultConfig.version || '1.0.0',
+          content: data.content || defaultConfig.content || '',
+          published: data.published ?? true
         });
       } else {
         setForm({
-          title: activeConfig?.label || '',
-          version: '1.0.0',
-          content: '',
-          published: false
+          title: defaultConfig.title || activeConfig.label || '',
+          version: defaultConfig.version || '1.0.0',
+          content: defaultConfig.content || '',
+          published: defaultConfig.published ?? true
         });
       }
       setIsDirty(false);
@@ -57,16 +59,35 @@ export const LegalPagesSettings = ({ onBack }) => {
   // Check if form is dirty
   useEffect(() => {
     if (!pageData) return;
+    const defaultConfig = DEFAULT_LEGAL_CONFIGS[activeTab] || {};
+    const origTitle = pageData.title || defaultConfig.title || '';
+    const origVersion = pageData.version || defaultConfig.version || '1.0.0';
+    const origContent = pageData.content || defaultConfig.content || '';
+    const origPublished = pageData.published ?? true;
+
     const changed = 
-      form.title !== (pageData.title || '') ||
-      form.version !== (pageData.version || '1.0.0') ||
-      form.content !== (pageData.content || '') ||
-      form.published !== (pageData.published ?? false);
+      form.title !== origTitle ||
+      form.version !== origVersion ||
+      form.content !== origContent ||
+      form.published !== origPublished;
     setIsDirty(changed);
-  }, [form, pageData]);
+  }, [form, pageData, activeTab]);
 
   const handleChange = (key, value) => {
     setForm(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleResetToDefault = () => {
+    const defaultConfig = DEFAULT_LEGAL_CONFIGS[activeTab];
+    if (defaultConfig) {
+      setForm({
+        title: defaultConfig.title,
+        version: defaultConfig.version,
+        content: defaultConfig.content,
+        published: true
+      });
+      setIsDirty(true);
+    }
   };
 
   const handleSave = async () => {
@@ -86,7 +107,7 @@ export const LegalPagesSettings = ({ onBack }) => {
       
       const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       setSaveStatus({
-        message: 'Legal Page Saved Successfully',
+        message: `${activeConfig.label} Saved Successfully`,
         lastUpdated: `${now}`
       });
     } catch (err) {
@@ -96,8 +117,8 @@ export const LegalPagesSettings = ({ onBack }) => {
 
   return (
     <SettingsLayout
-      title="Legal Pages"
-      description="Configure and publish site legal declarations like Privacy Policy and Terms & Conditions."
+      title="Legal & Support Pages"
+      description="Configure, compose and publish site legal declarations, warranties, and support policy documents."
       categoryName="Website"
       isDirty={isDirty}
       isLoading={isProcessing || isLoading}
@@ -136,7 +157,7 @@ export const LegalPagesSettings = ({ onBack }) => {
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Document Configuration" description="Set user-facing metadata.">
+      <SettingsSection title="Document Configuration" description="Set user-facing metadata and live publication status.">
         <div className="calc-row settings-field-row">
           <label className="form-label">Document Title</label>
           <Input
@@ -161,7 +182,7 @@ export const LegalPagesSettings = ({ onBack }) => {
           <div>
             <label className="form-label" style={{ marginBottom: 0 }}>Publish Status</label>
             <span style={{ fontSize: '11px', color: 'var(--text-muted, #6b7280)', display: 'block', marginTop: '2px' }}>
-              If enabled, this document version will be publicly accessible.
+              When enabled, this document version will be publicly accessible on the frontend.
             </span>
           </div>
           <input
@@ -173,7 +194,49 @@ export const LegalPagesSettings = ({ onBack }) => {
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Document Content" description="Compose rich-text content.">
+      <SettingsSection title="Document Content" description="Compose rich-text content for the customer-facing screen.">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <a
+              href={activeConfig.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: '12px',
+                color: 'var(--brand-primary, #00dfa2)',
+                textDecoration: 'none',
+                fontWeight: '600',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <span>Preview Live Screen: {activeConfig.path}</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+          <button
+            type="button"
+            onClick={handleResetToDefault}
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              color: 'var(--txt-secondary, #94a3b8)',
+              padding: '4px 10px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            title="Load default structured template content"
+          >
+            Reset to Standard Template
+          </button>
+        </div>
         <div style={{ marginTop: '8px' }}>
           <RichTextEditor
             value={form.content}
@@ -185,3 +248,4 @@ export const LegalPagesSettings = ({ onBack }) => {
     </SettingsLayout>
   );
 };
+

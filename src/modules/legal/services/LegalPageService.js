@@ -1,28 +1,35 @@
 import { supabase } from '../../../shared/services/supabaseClient.js';
+import { DEFAULT_LEGAL_CONFIGS } from '../constants/defaultLegalContent.js';
 
 export const LegalPageService = {
   /**
-   * Retrieves a legal page configuration by its key (admin mode, reads both published and draft).
+   * Retrieves a legal page configuration by its key (admin mode, reads DB or falls back to default).
    * @param {string} pageKey - The unique key identifier (e.g., 'privacy_policy').
    */
   getPage: async (pageKey) => {
     if (!pageKey) throw new Error('Missing pageKey identifier');
 
-    const { data, error } = await supabase
-      .from('legal_pages')
-      .select('*')
-      .eq('page_key', pageKey)
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from('legal_pages')
+        .select('*')
+        .eq('page_key', pageKey)
+        .maybeSingle();
 
-    if (error) {
-      console.error(`[LegalPageService] Error fetching page ${pageKey}:`, error);
-      throw error;
+      if (error) {
+        console.warn(`[LegalPageService] Notice fetching page ${pageKey}:`, error.message);
+      }
+
+      if (data) return data;
+    } catch (err) {
+      console.warn(`[LegalPageService] Falling back to default for ${pageKey}:`, err);
     }
-    return data;
+
+    return DEFAULT_LEGAL_CONFIGS[pageKey] || null;
   },
 
   /**
-   * Updates title, content, version, and updated timestamp for a page key.
+   * Updates or inserts title, content, version, and updated timestamp for a page key using upsert.
    * @param {string} pageKey - The unique key identifier.
    * @param {Object} updates - Fields to update.
    */
@@ -30,10 +37,12 @@ export const LegalPageService = {
     if (!pageKey) throw new Error('Missing pageKey identifier');
 
     const dbPayload = {
+      id: updates.id || `legal-${pageKey}`,
+      page_key: pageKey,
       title: updates.title,
       content: updates.content,
       version: updates.version || '1.0.0',
-      published: updates.published ?? false,
+      published: updates.published ?? true,
       updated_at: new Date().toISOString(),
       updated_by: updates.updatedBy || null
     };
@@ -47,8 +56,7 @@ export const LegalPageService = {
 
     const { data, error } = await supabase
       .from('legal_pages')
-      .update(dbPayload)
-      .eq('page_key', pageKey)
+      .upsert(dbPayload, { onConflict: 'page_key' })
       .select()
       .single();
 
@@ -85,23 +93,31 @@ export const LegalPageService = {
   },
 
   /**
-   * Public-facing getter to fetch only active published page configurations.
+   * Public-facing getter to fetch active published page configurations, with fallback.
    * @param {string} pageKey - The unique key identifier.
    */
   getPublishedPage: async (pageKey) => {
     if (!pageKey) throw new Error('Missing pageKey identifier');
 
-    const { data, error } = await supabase
-      .from('legal_pages')
-      .select('*')
-      .eq('page_key', pageKey)
-      .eq('published', true)
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from('legal_pages')
+        .select('*')
+        .eq('page_key', pageKey)
+        .eq('published', true)
+        .maybeSingle();
 
-    if (error) {
-      console.error(`[LegalPageService] Error fetching published page ${pageKey}:`, error);
-      throw error;
+      if (error) {
+        console.warn(`[LegalPageService] Notice fetching published page ${pageKey}:`, error.message);
+      }
+
+      if (data) return data;
+    } catch (err) {
+      console.warn(`[LegalPageService] Fallback to default for ${pageKey}:`, err);
     }
-    return data;
+
+    // Default configuration is always available published fallback
+    return DEFAULT_LEGAL_CONFIGS[pageKey] || null;
   }
 };
+
