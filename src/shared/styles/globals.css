@@ -6517,27 +6517,49 @@ table td {
 @media (max-width: 768px) {
   .flyen-hero-kpi-integrated,
   .flyen-kpi-fullwidth-section {
-    padding: 24px 0;
+    padding: 18px 0;
   }
 
   .flyen-hero-kpi-inner,
   .flyen-kpi-fullwidth-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 0 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 6px;
+    padding: 0 10px;
+  }
+
+  .flyen-kpi-card {
+    flex: 1;
+    min-width: 0;
+    padding: 0 2px;
+    gap: 4px;
   }
 
   .flyen-kpi-divider {
-    display: none;
+    display: block;
+    width: 1px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.14);
+    flex-shrink: 0;
   }
 
   .flyen-kpi-number {
-    font-size: 26px;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    line-height: 1;
+  }
+
+  .flyen-kpi-star {
+    font-size: 15px;
   }
 
   .flyen-kpi-label {
-    font-size: 11px;
+    font-size: 9.5px;
+    letter-spacing: 0.4px;
+    line-height: 1.2;
+    text-align: center;
   }
 }
 
