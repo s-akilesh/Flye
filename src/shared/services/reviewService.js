@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient.js';
 // Default initial testimonials for seed & offline fallback
 const DEFAULT_SEED_REVIEWS = [
   {
-    id: 'rev-seed-1',
+    id: 'a4e7b58b-f484-4cbb-a212-9d63bfe1e67a',
     name: 'Akash Sharma',
     project: 'Project',
     category: 'Electronics Kit',
@@ -20,7 +20,7 @@ const DEFAULT_SEED_REVIEWS = [
     updated_at: new Date().toISOString()
   },
   {
-    id: 'rev-seed-2',
+    id: 'a7afe9f0-6275-48b1-b766-7aebfbc0ab6a',
     name: 'Sneha Reddy',
     project: '3D Printing',
     category: '3D Printing',
@@ -37,7 +37,7 @@ const DEFAULT_SEED_REVIEWS = [
     updated_at: new Date().toISOString()
   },
   {
-    id: 'rev-seed-3',
+    id: '96a7774a-011c-4645-8acb-d4cc67fbf432',
     name: 'Vikram Patel',
     project: '3D Printing & Project',
     category: 'Electronics Kit',
@@ -54,7 +54,7 @@ const DEFAULT_SEED_REVIEWS = [
     updated_at: new Date().toISOString()
   },
   {
-    id: 'rev-seed-4',
+    id: 'b281fbb4-9a84-4fe1-bb38-9cb8c1e82811',
     name: 'Pooja Nair',
     project: '3D Printing',
     category: '3D Printing',
@@ -71,7 +71,7 @@ const DEFAULT_SEED_REVIEWS = [
     updated_at: new Date().toISOString()
   },
   {
-    id: 'rev-seed-5',
+    id: 'c8192aa1-419b-4cc8-8742-5f818cc271e9',
     name: 'Karthik Verma',
     project: 'Project',
     category: 'Electronics Kit',
@@ -95,6 +95,19 @@ const AVATAR_COLORS = [
   '#0d9488', '#f97316', '#3b82f6', '#8b5cf6', '#10b981',
   '#ec4899', '#06b6d4', '#6366f1', '#eab308', '#14b8a6'
 ];
+
+export const isUuid = (id) => typeof id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+export const generateUUID = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
 
 /**
  * Generates 2-letter uppercase initials from name.
@@ -120,6 +133,9 @@ export const getAvatarBg = (name) => {
 
 const getLocalReviews = () => {
   try {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return DEFAULT_SEED_REVIEWS;
+    }
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!raw) {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(DEFAULT_SEED_REVIEWS));
@@ -134,6 +150,9 @@ const getLocalReviews = () => {
 
 const saveLocalReviews = (items) => {
   try {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return;
+    }
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items));
   } catch (e) {
     console.warn('[reviewService] LocalStorage save failed:', e);
@@ -200,30 +219,31 @@ export const reviewService = {
     const avatarText = reviewData.avatar_text || getInitials(cleanName);
     const avatarBg = reviewData.avatar_bg || getAvatarBg(cleanName);
 
-    const newRecord = {
-      id: reviewData.id || `rev-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    const insertPayload = {
       name: cleanName,
       email: reviewData.email ? reviewData.email.trim() : null,
-      role: reviewData.role ? reviewData.role.trim() : 'Maker / Customer',
-      institution: reviewData.institution ? reviewData.institution.trim() : '',
-      project: reviewData.project ? reviewData.project.trim() : 'Flyen Custom Project',
+      role: reviewData.role ? reviewData.role.trim() : null,
+      institution: reviewData.institution ? reviewData.institution.trim() : null,
+      project: reviewData.project ? reviewData.project.trim() : '3D Printing & Project',
       category: reviewData.category || 'General',
       rating: Number(reviewData.rating) || 5,
       comment: reviewData.comment.trim(),
-      avatar_url: reviewData.avatar_url || '',
+      avatar_url: reviewData.avatar_url || null,
       avatar_text: avatarText,
       avatar_bg: avatarBg,
       status: reviewData.status || 'approved',
       show_in_home: reviewData.show_in_home !== undefined ? !!reviewData.show_in_home : true,
-      is_active: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      is_active: true
     };
+
+    if (reviewData.id && isUuid(reviewData.id)) {
+      insertPayload.id = reviewData.id;
+    }
 
     try {
       const { data, error } = await supabase
         .from('reviews')
-        .insert(newRecord)
+        .insert(insertPayload)
         .select()
         .single();
 
@@ -232,15 +252,24 @@ export const reviewService = {
         saveLocalReviews([data, ...local.filter(r => r.id !== data.id)]);
         return data;
       }
+      if (error) {
+        console.error('[reviewService] Supabase insert error:', error);
+      }
     } catch (err) {
       console.warn('[reviewService] Supabase insert failed, storing locally:', err);
     }
 
-    // Local Storage fallback
+    // Local Storage fallback with valid UUID
+    const fallbackRecord = {
+      id: reviewData.id && isUuid(reviewData.id) ? reviewData.id : generateUUID(),
+      ...insertPayload,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
     const current = getLocalReviews();
-    const updated = [newRecord, ...current.filter(r => r.id !== newRecord.id)];
+    const updated = [fallbackRecord, ...current.filter(r => r.id !== fallbackRecord.id)];
     saveLocalReviews(updated);
-    return newRecord;
+    return fallbackRecord;
   },
 
   /**
@@ -254,21 +283,26 @@ export const reviewService = {
       updated_at: new Date().toISOString()
     };
 
-    try {
-      const { data, error } = await supabase
-        .from('reviews')
-        .update(payload)
-        .eq('id', id)
-        .select()
-        .single();
+    if (isUuid(id)) {
+      try {
+        const { data, error } = await supabase
+          .from('reviews')
+          .update(payload)
+          .eq('id', id)
+          .select()
+          .maybeSingle();
 
-      if (!error && data) {
-        const local = getLocalReviews();
-        saveLocalReviews(local.map(r => (r.id === id ? { ...r, ...data } : r)));
-        return data;
+        if (!error && data) {
+          const local = getLocalReviews();
+          saveLocalReviews(local.map(r => (r.id === id ? { ...r, ...data } : r)));
+          return data;
+        }
+        if (error) {
+          console.warn('[reviewService] Supabase update warning:', error);
+        }
+      } catch (err) {
+        console.warn('[reviewService] Supabase update failed, updating locally:', err);
       }
-    } catch (err) {
-      console.warn('[reviewService] Supabase update failed, updating locally:', err);
     }
 
     const local = getLocalReviews();
@@ -283,13 +317,18 @@ export const reviewService = {
   async delete(id) {
     if (!id) throw new Error('Review ID is required');
 
-    try {
-      await supabase
-        .from('reviews')
-        .delete()
-        .eq('id', id);
-    } catch (err) {
-      console.warn('[reviewService] Supabase delete failed, deleting locally:', err);
+    if (isUuid(id)) {
+      try {
+        const { error } = await supabase
+          .from('reviews')
+          .delete()
+          .eq('id', id);
+        if (error) {
+          console.warn('[reviewService] Supabase delete warning:', error);
+        }
+      } catch (err) {
+        console.warn('[reviewService] Supabase delete failed, deleting locally:', err);
+      }
     }
 
     const local = getLocalReviews();
