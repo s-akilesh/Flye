@@ -171,7 +171,7 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
             justifyContent: 'center',
             background: 'none',
             border: 'none',
-            color: totalItems > 0 ? 'var(--flyen-teal, #00dfa2)' : 'var(--header-icon, var(--txt-secondary))',
+            color: 'var(--header-icon, var(--txt-secondary))',
             cursor: 'pointer',
             position: 'relative',
             transition: 'color 0.2s, background-color 0.2s',
@@ -182,7 +182,7 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
             e.currentTarget.style.backgroundColor = 'var(--header-interaction-hover, rgba(255, 255, 255, 0.05))';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = totalItems > 0 ? 'var(--flyen-teal, #00dfa2)' : 'var(--header-icon, var(--txt-secondary))';
+            e.currentTarget.style.color = 'var(--header-icon, var(--txt-secondary))';
             e.currentTarget.style.backgroundColor = 'transparent';
           }}
           title={`Shopping Cart (${totalItems} items)`}
