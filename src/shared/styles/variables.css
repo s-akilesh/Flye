@@ -226,19 +226,19 @@
   --sidebar-icon: #64748b;
 
   /* 9. HEADER & FOOTER (BRAND TOKENS) */
-  --header-bg: rgba(11, 15, 23, 0.96);
-  --header-border: rgba(255, 255, 255, 0.1);
-  --header-icon: #9ca3af;
-  --header-search: rgba(255, 255, 255, 0.06);
-  --header-txt-primary: #f9fafb;
-  --header-txt-secondary: #9ca3af;
-  --header-interaction-hover: rgba(255, 255, 255, 0.06);
-  --header-interaction-active: rgba(255, 255, 255, 0.1);
-  --sys-page-header-bg: rgba(11, 15, 23, 0.96);
-  --footer-bg: #0b0f17;
-  --footer-border: rgba(255, 255, 255, 0.08);
-  --footer-txt-primary: #f9fafb;
-  --footer-txt-secondary: #94a3b8;
+  --header-bg: rgba(248, 250, 252, 0.96);
+  --header-border: rgba(15, 23, 42, 0.08);
+  --header-icon: #64748b;
+  --header-search: rgba(15, 23, 42, 0.04);
+  --header-txt-primary: #0f172a;
+  --header-txt-secondary: #475569;
+  --header-interaction-hover: rgba(15, 23, 42, 0.05);
+  --header-interaction-active: rgba(15, 23, 42, 0.08);
+  --sys-page-header-bg: rgba(248, 250, 252, 0.96);
+  --footer-bg: #f1f5f9;
+  --footer-border: rgba(15, 23, 42, 0.08);
+  --footer-txt-primary: #0f172a;
+  --footer-txt-secondary: #475569;
   --footer-txt-muted: #64748b;
 
   /* 10. SHADOWS */

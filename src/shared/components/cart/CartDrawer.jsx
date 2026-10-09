@@ -183,9 +183,9 @@ export const CartDrawer = () => {
                 width: '100%',
                 maxWidth: '440px',
                 height: '100%',
-                background: 'var(--sys-surface, #0f131d)',
-                borderLeft: '1px solid var(--sys-border, rgba(255, 255, 255, 0.1))',
-                boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.6)',
+                background: 'var(--sys-surface)',
+                borderLeft: '1px solid var(--sys-border)',
+                boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.25)',
                 display: 'flex',
                 flexDirection: 'column',
                 zIndex: 10,
@@ -198,8 +198,8 @@ export const CartDrawer = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                borderBottom: '1px solid var(--sys-divider, rgba(255, 255, 255, 0.08))',
-                background: 'var(--header-bg, rgba(15, 19, 29, 0.95))',
+                borderBottom: '1px solid var(--sys-divider)',
+                background: 'var(--sys-surface-elevated)',
                 backdropFilter: 'blur(16px)'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -216,10 +216,10 @@ export const CartDrawer = () => {
                     <span className="material-icons" style={{ fontSize: '20px' }}>shopping_bag</span>
                   </div>
                   <div>
-                    <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: 'var(--txt-primary, #ffffff)' }}>
+                    <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: 'var(--txt-primary)' }}>
                       Shopping Cart
                     </h2>
-                    <span style={{ fontSize: '11.5px', color: 'var(--txt-muted, #94a3b8)' }}>
+                    <span style={{ fontSize: '11.5px', color: 'var(--txt-muted)' }}>
                       {totalItems} {totalItems === 1 ? 'item' : 'items'} selected
                     </span>
                   </div>
@@ -234,7 +234,7 @@ export const CartDrawer = () => {
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        color: 'var(--txt-muted, #94a3b8)',
+                        color: 'var(--txt-muted)',
                         fontSize: '12px',
                         cursor: 'pointer',
                         padding: '6px 8px',
@@ -245,7 +245,7 @@ export const CartDrawer = () => {
                         transition: 'color 0.2s'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
-                      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--txt-muted, #94a3b8)'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--txt-muted)'}
                     >
                       <span className="material-icons" style={{ fontSize: '15px' }}>delete_sweep</span>
                       Clear
@@ -260,9 +260,9 @@ export const CartDrawer = () => {
                       width: '32px',
                       height: '32px',
                       borderRadius: '8px',
-                      background: 'var(--sys-surface-hover, rgba(255, 255, 255, 0.05))',
-                      border: '1px solid var(--sys-divider, rgba(255, 255, 255, 0.08))',
-                      color: 'var(--txt-primary, #ffffff)',
+                      background: 'var(--interaction-hover)',
+                      border: '1px solid var(--sys-divider)',
+                      color: 'var(--txt-primary)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -282,7 +282,8 @@ export const CartDrawer = () => {
                 padding: '16px 20px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px'
+                gap: '12px',
+                background: 'var(--sys-bg)'
               }}>
                 {items.length > 0 ? (
                   items.map((item) => (
@@ -298,8 +299,9 @@ export const CartDrawer = () => {
                         gap: '12px',
                         padding: '12px',
                         borderRadius: '12px',
-                        background: 'var(--sys-surface-hover, rgba(255, 255, 255, 0.03))',
-                        border: '1px solid var(--sys-border, rgba(255, 255, 255, 0.07))',
+                        background: 'var(--sys-surface)',
+                        border: '1px solid var(--sys-border)',
+                        boxShadow: 'var(--shadow-sm)',
                         alignItems: 'center',
                         position: 'relative'
                       }}
@@ -311,8 +313,8 @@ export const CartDrawer = () => {
                           width: '64px',
                           height: '64px',
                           borderRadius: '8px',
-                          background: '#090d16',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          background: 'var(--interaction-hover)',
+                          border: '1px solid var(--sys-border)',
                           overflow: 'hidden',
                           display: 'flex',
                           alignItems: 'center',
@@ -343,7 +345,7 @@ export const CartDrawer = () => {
                             style={{
                               fontSize: '13.5px',
                               fontWeight: '700',
-                              color: 'var(--txt-primary, #ffffff)',
+                              color: 'var(--txt-primary)',
                               margin: '0 0 4px 0',
                               cursor: 'pointer',
                               whiteSpace: 'nowrap',
@@ -362,7 +364,7 @@ export const CartDrawer = () => {
                             style={{
                               background: 'transparent',
                               border: 'none',
-                              color: 'var(--txt-muted, #64748b)',
+                              color: 'var(--txt-muted)',
                               cursor: 'pointer',
                               padding: '2px',
                               display: 'flex',
@@ -371,7 +373,7 @@ export const CartDrawer = () => {
                               transition: 'color 0.15s'
                             }}
                             onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
-                            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--txt-muted, #64748b)'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--txt-muted)'}
                           >
                             <span className="material-icons" style={{ fontSize: '17px' }}>delete_outline</span>
                           </button>
@@ -391,7 +393,7 @@ export const CartDrawer = () => {
                           }}>
                             {item.type === 'project' ? 'Project Kit' : '3D Print'}
                           </span>
-                          <span style={{ fontSize: '11px', color: 'var(--txt-muted, #94a3b8)' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
                             {formatCurrency(item.numericPrice)} each
                           </span>
                         </div>
@@ -401,8 +403,8 @@ export const CartDrawer = () => {
                           <div style={{
                             display: 'inline-flex',
                             alignItems: 'center',
-                            background: 'var(--sys-surface, #090d16)',
-                            border: '1px solid var(--sys-divider, rgba(255, 255, 255, 0.1))',
+                            background: 'var(--sys-surface-elevated)',
+                            border: '1px solid var(--sys-border)',
                             borderRadius: '6px',
                             padding: '2px'
                           }}>
@@ -414,7 +416,7 @@ export const CartDrawer = () => {
                                 height: '24px',
                                 background: 'transparent',
                                 border: 'none',
-                                color: 'var(--txt-primary, #ffffff)',
+                                color: 'var(--txt-primary)',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -429,7 +431,7 @@ export const CartDrawer = () => {
                             <span style={{
                               fontSize: '12px',
                               fontWeight: '700',
-                              color: 'var(--txt-primary, #ffffff)',
+                              color: 'var(--txt-primary)',
                               minWidth: '24px',
                               textAlign: 'center'
                             }}>
@@ -444,7 +446,7 @@ export const CartDrawer = () => {
                                 height: '24px',
                                 background: 'transparent',
                                 border: 'none',
-                                color: 'var(--txt-primary, #ffffff)',
+                                color: 'var(--txt-primary)',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -479,21 +481,21 @@ export const CartDrawer = () => {
                       width: '72px',
                       height: '72px',
                       borderRadius: '50%',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px dashed rgba(255, 255, 255, 0.15)',
+                      background: 'var(--interaction-hover)',
+                      border: '1px dashed var(--sys-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: 'var(--txt-muted, #94a3b8)',
+                      color: 'var(--txt-muted)',
                       marginBottom: '16px'
                     }}>
                       <span className="material-icons" style={{ fontSize: '32px' }}>remove_shopping_cart</span>
                     </div>
 
-                    <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary, #ffffff)', margin: '0 0 6px 0' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)', margin: '0 0 6px 0' }}>
                       Your cart is empty
                     </h3>
-                    <p style={{ fontSize: '12.5px', color: 'var(--txt-muted, #94a3b8)', margin: '0 0 24px 0', maxWidth: '280px', lineHeight: 1.5 }}>
+                    <p style={{ fontSize: '12.5px', color: 'var(--txt-muted)', margin: '0 0 24px 0', maxWidth: '280px', lineHeight: 1.5 }}>
                       Explore our precision 3D printed parts and verified engineering project packages.
                     </p>
 
@@ -530,23 +532,23 @@ export const CartDrawer = () => {
               {items.length > 0 && (
                 <div style={{
                   padding: '20px 24px',
-                  borderTop: '1px solid var(--sys-divider, rgba(255, 255, 255, 0.08))',
-                  background: 'var(--header-bg, rgba(15, 19, 29, 0.98))',
+                  borderTop: '1px solid var(--sys-divider)',
+                  background: 'var(--sys-surface-elevated)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '12px'
                 }}>
                   {/* Price Breakdown */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '13px', color: 'var(--txt-secondary, #cbd5e1)', fontWeight: '600' }}>
+                    <span style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '600' }}>
                       Estimated Subtotal
                     </span>
-                    <span style={{ fontSize: '18px', fontWeight: '900', color: 'var(--txt-primary, #ffffff)' }}>
+                    <span style={{ fontSize: '18px', fontWeight: '900', color: 'var(--txt-primary)' }}>
                       {formattedSubtotal}
                     </span>
                   </div>
 
-                  <div style={{ fontSize: '11px', color: 'var(--txt-muted, #94a3b8)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--txt-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <span className="material-icons" style={{ fontSize: '13px', color: 'var(--flyen-teal)' }}>verified</span>
                     Pre-tested hardware & dimensional tolerance check included
                   </div>
@@ -580,7 +582,7 @@ export const CartDrawer = () => {
                         borderRadius: '8px',
                         background: 'rgba(37, 211, 102, 0.12)',
                         border: '1px solid rgba(37, 211, 102, 0.3)',
-                        color: '#25d366',
+                        color: '#16a34a',
                         fontSize: '12.5px',
                         fontWeight: '700',
                         display: 'flex',
