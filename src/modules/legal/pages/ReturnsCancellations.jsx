@@ -31,12 +31,9 @@ export const ReturnsCancellations = () => {
       <SEO 
         {...seoProps} 
         title={`${pageData?.title || 'Returns and Cancellations'} | Flyen`}
-        description={pageData?.description || "Comprehensive details on Flyen 7-day replacement guarantee, order cancellations, defective hardware claims, and refund processing."}
       />
       <SupportLayout
-        badge={pageData?.badge || "CUSTOMER ASSURANCE"}
         title={pageData?.title || "Returns and Cancellations"}
-        description={pageData?.description || "Clear policies regarding product replacements, cancellation windows, non-returnable items, and refund processing schedules."}
         version={pageData?.version || "1.0.0"}
         lastUpdated={formatDate(pageData?.updated_at)}
       >

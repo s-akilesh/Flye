@@ -31,12 +31,9 @@ export const ShippingDelivery = () => {
       <SEO 
         {...seoProps} 
         title={`${pageData?.title || 'Shipping and Delivery'} | Flyen`} 
-        description={pageData?.description || "Learn about Flyen shipping timelines, pan-India courier delivery, protective packaging, and order tracking."}
       />
       <SupportLayout
-        badge={pageData?.badge || "DISPATCH & LOGISTICS"}
         title={pageData?.title || "Shipping and Delivery"}
-        description={pageData?.description || "Complete guidelines regarding order processing times, courier transit schedules, packaging standards, and pan-India shipping."}
         version={pageData?.version || "1.0.0"}
         lastUpdated={formatDate(pageData?.updated_at)}
       >

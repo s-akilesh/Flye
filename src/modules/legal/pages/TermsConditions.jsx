@@ -30,9 +30,7 @@ export const TermsConditions = () => {
     <>
       <SEO {...seoProps} page={PageType.TERMS} />
       <SupportLayout
-        badge={pageData?.badge || "TERMS OF SERVICE"}
         title={pageData?.title || "Terms and Conditions"}
-        description={pageData?.description || "Standard legal terms, platform usage rules, intellectual property guidelines, warranties, and service agreements."}
         version={pageData?.version || "1.0.0"}
         lastUpdated={formatDate(pageData?.updated_at)}
       >

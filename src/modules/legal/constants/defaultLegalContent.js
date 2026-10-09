@@ -6,8 +6,6 @@ export const DEFAULT_LEGAL_CONFIGS = {
   privacy_policy: {
     page_key: 'privacy_policy',
     title: 'Privacy Policy',
-    badge: 'DATA PRIVACY & SECURITY',
-    description: 'Our commitment to safeguarding your personal data, payment confidentiality, CAD file intellectual property, and communication records.',
     version: '1.0.0',
     published: true,
     content: `
@@ -41,8 +39,6 @@ export const DEFAULT_LEGAL_CONFIGS = {
   terms_conditions: {
     page_key: 'terms_conditions',
     title: 'Terms & Conditions',
-    badge: 'TERMS OF SERVICE',
-    description: 'General terms governing purchases, prototyping services, CAD intellectual property ownership, and website access.',
     version: '1.0.0',
     published: true,
     content: `
@@ -71,9 +67,7 @@ export const DEFAULT_LEGAL_CONFIGS = {
   shipping_delivery: {
     page_key: 'shipping_delivery',
     title: 'Shipping and Delivery',
-    badge: 'DISPATCH & LOGISTICS',
-    description: 'Complete guidelines regarding order processing times, courier transit schedules, packaging standards, and pan-India shipping.',
-    version: '1.2.0',
+    version: '1.0.0',
     published: true,
     content: `
       <section class="flyen-support-section">
@@ -158,9 +152,7 @@ export const DEFAULT_LEGAL_CONFIGS = {
   returns_cancellations: {
     page_key: 'returns_cancellations',
     title: 'Returns and Cancellations',
-    badge: 'CUSTOMER PROTECTION',
-    description: 'Comprehensive rules regarding 7-day part replacements, order cancellations, non-returnable bespoke prints, and refund processing.',
-    version: '1.1.0',
+    version: '1.0.0',
     published: true,
     content: `
       <section class="flyen-support-section">
@@ -214,8 +206,6 @@ export const DEFAULT_LEGAL_CONFIGS = {
   personalised_order_policy: {
     page_key: 'personalised_order_policy',
     title: 'Personalised-Order Policy',
-    badge: 'CUSTOM MANUFACTURING',
-    description: 'Engineering terms and technical tolerances for custom CAD slicing, bespoke 3D prints, IP confidentiality, and design approval.',
     version: '1.0.0',
     published: true,
     content: `
@@ -283,8 +273,6 @@ export const DEFAULT_LEGAL_CONFIGS = {
   custom_bulk_enquiries: {
     page_key: 'custom_bulk_enquiries',
     title: 'Custom Printing and Bulk Enquiries',
-    badge: 'INSTITUTIONAL & BATCH',
-    description: 'Guidelines for volume academic procurement, print farm batch scheduling, custom enclosure design, and institutional quotation requests.',
     version: '1.0.0',
     published: true,
     content: `

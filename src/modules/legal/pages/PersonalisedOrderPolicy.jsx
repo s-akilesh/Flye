@@ -31,12 +31,9 @@ export const PersonalisedOrderPolicy = () => {
       <SEO 
         {...seoProps} 
         title={`${pageData?.title || 'Personalised-Order Policy'} | Flyen`}
-        description={pageData?.description || "Guidelines on custom 3D printing tolerances, CAD submissions, intellectual property confidentiality, and non-cancellable bespoke manufacturing."}
       />
       <SupportLayout
-        badge={pageData?.badge || "BESPOKE FABRICATION"}
         title={pageData?.title || "Personalised-Order Policy"}
-        description={pageData?.description || "Essential standards and technical specifications governing custom 3D printing, bespoke hardware builds, CAD submissions, and IP protection."}
         version={pageData?.version || "1.0.0"}
         lastUpdated={formatDate(pageData?.updated_at)}
       >

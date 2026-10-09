@@ -30,9 +30,7 @@ export const PrivacyPolicy = () => {
     <>
       <SEO {...seoProps} page={PageType.PRIVACY} />
       <SupportLayout
-        badge={pageData?.badge || "DATA PRIVACY & SECURITY"}
         title={pageData?.title || "Privacy Policy"}
-        description={pageData?.description || "Our commitment to safeguarding your personal data, payment confidentiality, CAD file intellectual property, and communication records."}
         version={pageData?.version || "1.0.0"}
         lastUpdated={formatDate(pageData?.updated_at)}
       >

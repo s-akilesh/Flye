@@ -8380,46 +8380,13 @@ table td {
   -webkit-backdrop-filter: none !important;
 }
 
-.flyen-support-badge-row {
-  margin-bottom: 12px;
-}
-
-.flyen-support-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  background: rgba(0, 223, 162, 0.12);
-  border: 1px solid rgba(0, 223, 162, 0.3);
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #00dfa2;
-  text-transform: uppercase;
-}
-
-[data-theme='light'] .flyen-support-badge {
-  background: rgba(2, 132, 199, 0.1);
-  border-color: rgba(2, 132, 199, 0.3);
-  color: #0284c7;
-}
-
 .flyen-support-title {
   font-size: clamp(28px, 3.2vw, 40px);
   font-weight: 800;
   color: var(--txt-primary) !important;
-  margin: 0 0 12px 0;
+  margin: 0 0 10px 0;
   letter-spacing: -0.6px;
   line-height: 1.2;
-}
-
-.flyen-support-desc {
-  font-size: 15px;
-  color: var(--txt-secondary);
-  max-width: 780px;
-  line-height: 1.6;
-  margin: 0 0 16px 0;
 }
 
 .flyen-support-meta-bar {

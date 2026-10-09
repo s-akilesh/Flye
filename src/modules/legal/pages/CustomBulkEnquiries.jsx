@@ -31,12 +31,9 @@ export const CustomBulkEnquiries = () => {
       <SEO 
         {...seoProps} 
         title={`${pageData?.title || 'Custom Printing & Bulk Enquiries'} | Flyen`}
-        description={pageData?.description || "Explore volume manufacturing discounts, institutional project kit procurement, B2B turnkey prototyping, and rapid quotation with Flyen."}
       />
       <SupportLayout
-        badge={pageData?.badge || "INSTITUTIONAL & VOLUME ORDERS"}
         title={pageData?.title || "Custom Printing and Bulk Enquiries"}
-        description={pageData?.description || "Comprehensive volume 3D printing, institutional hardware kit supply, batch manufacturing services, and corporate procurement."}
         version={pageData?.version || "1.0.0"}
         lastUpdated={formatDate(pageData?.updated_at)}
       >
