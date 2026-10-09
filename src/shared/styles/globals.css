@@ -8384,7 +8384,7 @@ table td {
   font-size: clamp(28px, 3.2vw, 40px);
   font-weight: 800;
   color: var(--txt-primary) !important;
-  margin: 0 0 10px 0;
+  margin: 28px 0 10px 0;
   letter-spacing: -0.6px;
   line-height: 1.2;
 }
