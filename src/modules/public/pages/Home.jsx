@@ -615,8 +615,7 @@ export const Home = () => {
         <section className="flyen-category-section">
           <div className="flyen-section-container">
             <div className="flyen-category-header-row">
-              <span className="flyen-category-pill-badge">CATEGORIES</span>
-              <h2 className="flyen-category-section-heading">Browse Popular Categories</h2>
+              <h2 className="flyen-category-section-heading">Category</h2>
             </div>
 
             <div className="flyen-categories-grid">
