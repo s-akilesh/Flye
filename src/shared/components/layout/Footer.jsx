@@ -152,7 +152,7 @@ export const Footer = () => {
             <Link to={ROUTES.PROJECTS} className="flyen-footer-link">Project</Link>
             <Link to={ROUTES.PRINTING} className="flyen-footer-link">3D Printing</Link>
             <Link to={ROUTES.PRINTING} className="flyen-footer-link">Custom 3D Printing</Link>
-            <Link to={ROUTES.CONTACT} className="flyen-footer-link">Bulk Orders</Link>
+            <Link to={ROUTES.CUSTOM_BULK_ENQUIRIES || '/custom-printing-and-bulk-enquiries'} className="flyen-footer-link">Bulk Enquiry</Link>
             <Link to={ROUTES.CONTACT} className="flyen-footer-link">Contact</Link>
           </div>
 
@@ -163,7 +163,8 @@ export const Footer = () => {
             <Link to={ROUTES.RETURNS_CANCELLATIONS || '/returns-and-cancellations'} className="flyen-footer-link">Returns and cancellations</Link>
             <Link to={ROUTES.PERSONALISED_ORDER_POLICY || '/personalised-order-policy'} className="flyen-footer-link">Personalised-order policy</Link>
             <Link to={ROUTES.CUSTOM_BULK_ENQUIRIES || '/custom-printing-and-bulk-enquiries'} className="flyen-footer-link">Custom printing and bulk enquiries</Link>
-            <Link to={ROUTES.PRIVACY_POLICY} className="flyen-footer-link">Privacy policy and terms</Link>
+            <Link to={ROUTES.PRIVACY_POLICY} className="flyen-footer-link">Privacy policy</Link>
+            <Link to={ROUTES.TERMS_CONDITIONS} className="flyen-footer-link">Terms and conditions</Link>
           </div>
 
         </div>
