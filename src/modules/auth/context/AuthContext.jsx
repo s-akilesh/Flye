@@ -161,7 +161,7 @@ export const AuthProvider = ({ children }) => {
   // Derived helper booleans
   const isAuthenticated = !!user;
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
-  const isUser = profile?.role === 'user';
+  const isUser = !isAdmin;
 
   const contextValue = useMemo(() => ({
     user,

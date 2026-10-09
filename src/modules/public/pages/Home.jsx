@@ -46,7 +46,6 @@ export const Home = () => {
   const [dbReviews, setDbReviews] = useState([]);
   const [s3SliderFiles, setS3SliderFiles] = useState(null);
   const [failedImages, setFailedImages] = useState(() => new Set());
-  const customMfgImage = '/svc_resin.jpg';
   const [activeHeroCardIdx, setActiveHeroCardIdx] = useState(0);
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
@@ -80,17 +79,17 @@ export const Home = () => {
     ];
   }, []);
 
-  // Background showcase images loaded from Supabase S3 bucket (website-assets/products-banner) with fallback
+  // Background showcase images loaded from Supabase S3 bucket (website-assets/products-banner)
   const s3ProductShowcaseBg = useMemo(() => {
-    return storageService.getPublicUrl('website-assets', 'products-banner/product_showcase_bg.jpg') || '/svc_batch.jpg';
+    return storageService.getPublicUrl('website-assets', 'products-banner/product_showcase_bg.jpg');
   }, []);
 
   const s3ProjectKitsBg = useMemo(() => {
-    return storageService.getPublicUrl('website-assets', 'products-banner/project_kits_bg.jpg') || '/kit_hw.jpg';
+    return storageService.getPublicUrl('website-assets', 'products-banner/project_kits_bg.jpg');
   }, []);
 
   const s3CustomWorkflowBg = useMemo(() => {
-    return storageService.getPublicUrl('website-assets', 'products-banner/custom_workflow_bg.jpg') || '/svc_enclosure.jpg';
+    return storageService.getPublicUrl('website-assets', 'products-banner/custom_workflow_bg.jpg');
   }, []);
 
   const heroCards = useMemo(() => {
@@ -217,14 +216,28 @@ export const Home = () => {
     return () => { isMounted = false; };
   }, []);
 
-  // Background slide rotation interval (every 3 seconds)
+  // Background slide rotation interval (every 3.5 seconds)
   useEffect(() => {
     if (!heroCards || heroCards.length <= 1) return;
     const timer = setInterval(() => {
       setActiveHeroCardIdx((prev) => (prev + 1) % heroCards.length);
-    }, 3000);
+    }, 3500);
     return () => clearInterval(timer);
   }, [heroCards.length]);
+
+  // Preload and hardware-decode hero background slider images to prevent white flashing on mobile
+  useEffect(() => {
+    if (!heroCards || heroCards.length === 0) return;
+    heroCards.forEach(card => {
+      if (card.image) {
+        const preloader = new Image();
+        preloader.src = card.image;
+        if (preloader.decode) {
+          preloader.decode().catch(() => {});
+        }
+      }
+    });
+  }, [heroCards]);
 
   // Newsletter state
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -546,7 +559,8 @@ export const Home = () => {
           maxWidth: '100%',
           minHeight: 'calc(100vh - 120px)',
           boxSizing: 'border-box',
-          overflowX: 'hidden'
+          overflowX: 'hidden',
+          backgroundColor: '#080c14'
         }}
       >
         
@@ -554,41 +568,43 @@ export const Home = () => {
             1. HERO SECTION 2.0 (HIGH IMPACT VISUALS + VALUE PILLARS)
             ======================================================================== */}
         <section className="flyen-dark-section flyen-hero-section-full">
-          {/* Dynamic Full-Bleed Background Image Slider (Rotates every 3 seconds) */}
+          {/* Dynamic Full-Bleed Background Image Slider (Zero-Flicker Cross-Fade Stack) */}
           <div className="flyen-hero-bg-container" aria-hidden="true">
-            <AnimatePresence initial={false} mode="sync">
-              {heroCards && heroCards.length > 0 && (
-                <motion.div
-                  key={`hero-bg-slide-${activeHeroCardIdx % heroCards.length}-${heroCards[activeHeroCardIdx % heroCards.length]?.image}`}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    opacity: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] },
-                    scale: { duration: 3.5, ease: 'easeOut' }
+            {heroCards && heroCards.map((card, idx) => {
+              const isActive = idx === (activeHeroCardIdx % heroCards.length);
+              return (
+                <div
+                  key={card.id || card.image || idx}
+                  className={`flyen-hero-bg-slide ${isActive ? 'active' : ''}`}
+                  style={{
+                    opacity: isActive ? 1 : 0,
+                    zIndex: isActive ? 2 : 1,
+                    transition: 'opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1)',
+                    pointerEvents: 'none'
                   }}
-                  className="flyen-hero-bg-slide"
                 >
                   <img
-                    src={heroCards[activeHeroCardIdx % heroCards.length]?.image}
-                    alt="Flyen 3D Printing & Project Engineering"
+                    src={card.image}
+                    alt={card.title || 'Flyen 3D Printing & Project Engineering'}
                     className="flyen-hero-bg-img"
+                    loading="eager"
+                    decoding="sync"
+                    fetchpriority={idx === 0 ? 'high' : 'auto'}
                     onError={(e) => {
-                      const currentCard = heroCards[activeHeroCardIdx % heroCards.length];
-                      if (currentCard?.fallback && e.target.src !== currentCard.fallback && !e.target.src.endsWith(currentCard.fallback)) {
-                        e.target.src = currentCard.fallback;
-                      } else if (currentCard?.image) {
+                      if (card.fallback && e.target.src !== card.fallback && !e.target.src.endsWith(card.fallback)) {
+                        e.target.src = card.fallback;
+                      } else if (card.image) {
                         setFailedImages(prev => {
                           const next = new Set(prev);
-                          next.add(currentCard.image);
+                          next.add(card.image);
                           return next;
                         });
                       }
                     }}
                   />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
+              );
+            })}
 
             {/* High-End Dark Tech Gradient Overlay */}
             <div className="flyen-hero-bg-overlay" />
@@ -701,6 +717,7 @@ export const Home = () => {
                           alt={cat.title} 
                           className="flyen-category-img" 
                           loading="lazy" 
+                          decoding="async"
                         />
                       ) : (
                         <div className="flyen-category-fallback-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--txt-muted)' }}>

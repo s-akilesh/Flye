@@ -831,7 +831,6 @@ export const ProjectListing = () => {
               </Button>
               <Button
                 variant="primary"
-                className="btn-submit-calc"
                 style={{ flex: 1, height: '42px' }}
                 disabled={isProcessing}
                 onClick={async () => {

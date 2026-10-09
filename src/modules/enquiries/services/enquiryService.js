@@ -2,6 +2,7 @@ import { supabase } from '../../../shared/services/supabaseClient.js';
 import { mapEnquiryToReact, mapEnquiryToDB } from '../../../shared/utils/mapper.js';
 import { activityLogService, ACTIVITY_MODULES, ACTIVITY_ACTIONS, ACTIVITY_STATUS, ACTIVITY_SEVERITY } from '../../../services/activityLogService.js';
 import { notificationService } from '../../../shared/services/notificationService.js';
+import { logger } from '../../../shared/utils/logger.js';
 
 export const enquiryService = {
   /**
@@ -158,7 +159,7 @@ export const enquiryService = {
     if (cleanUserPhone.length < 10) return [];
     const userSuffix = cleanUserPhone.slice(-10);
 
-    console.log(`[enquiryService] Linking guest enquiries suffix ${userSuffix} to user ${authenticatedUserId}`);
+    logger.log(`[enquiryService] Linking guest enquiries suffix ${userSuffix} to user ${authenticatedUserId}`);
     
     // 1. Fetch all guest enquiries (user_id is null)
     const { data: guestEnquiries, error: fetchError } = await supabase
@@ -167,7 +168,7 @@ export const enquiryService = {
       .is('user_id', null);
 
     if (fetchError) {
-      console.error('[enquiryService] Failed to fetch guest enquiries for linking:', fetchError);
+      logger.error('[enquiryService] Failed to fetch guest enquiries for linking:', fetchError);
       throw fetchError;
     }
     if (!guestEnquiries || guestEnquiries.length === 0) return [];

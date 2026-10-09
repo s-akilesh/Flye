@@ -98,7 +98,7 @@ export const userService = {
           department: profileData.department || '',
           year_of_study: profileData.year_of_study || '',
           profile_photo: profileData.profile_photo || '',
-          role: role || 'student',
+          role: role || 'user',
           status: status || 'active',
           email_verified: profileData.email_verified || false
         })

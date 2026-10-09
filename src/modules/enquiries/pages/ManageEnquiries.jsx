@@ -1684,7 +1684,6 @@ export const ManageEnquiries = () => {
               <Button
                 type="submit"
                 variant="primary"
-                className="btn-submit-calc"
                 style={{ flex: 1 }}
                 disabled={isProcessing}
               >

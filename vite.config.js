@@ -14,6 +14,9 @@ export default defineConfig({
   build: {
     target: 'es2022',
     cssTarget: 'chrome80',
+    cssCodeSplit: true,
+    reportCompressedSize: true,
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -36,6 +39,12 @@ export default defineConfig({
             ) {
               return 'vendor-supabase';
             }
+            if (id.includes('framer-motion')) {
+              return 'vendor-motion';
+            }
+            if (id.includes('@emailjs')) {
+              return 'vendor-emailjs';
+            }
             if (
               id.includes('xlsx') || 
               id.includes('adler-32') || 
@@ -49,7 +58,7 @@ export default defineConfig({
             ) {
               return 'vendor-xlsx';
             }
-            return 'vendor-others';
+            return 'vendor-libs';
           }
         }
       }

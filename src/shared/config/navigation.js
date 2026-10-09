@@ -103,6 +103,7 @@ export const HOMEPAGE_NAVIGATION = [
   { id: 'projects', label: 'Projects', path: '/projects' },
   { id: 'printing', label: '3D Printing', path: '/printing' },
   { id: 'enquiries', label: 'My Enquiries', path: '/my-projects' },
+  { id: 'profile', label: 'My Profile', path: '/profile', requiresAuth: true },
   { id: 'contact', label: 'Contact', path: '/contact' },
   { id: 'about', label: 'About', path: '/#about' }
 ];

@@ -26,12 +26,18 @@ export const ProfileForm = ({ onBack, hideBreadcrumbs = false, hideCancel = fals
 
   // Helper to construct initial form values from auth/profile
   const getInitialValues = () => {
+    let designation = 'User';
+    if (isAdmin || profile?.role === 'admin' || profile?.role === 'super_admin') {
+      designation = 'Admin';
+    } else if (profile?.role && profile.role.toLowerCase() !== 'student') {
+      designation = profile.role.replace(/_/g, ' ');
+    }
     return {
       profilePhoto: profile?.profile_photo || '',
       profileName: profile?.full_name || '',
       profileEmail: user?.email || '',
       profilePhone: profile?.phone || '',
-      profileDesignation: profile?.role || '',
+      profileDesignation: designation,
     };
   };
 

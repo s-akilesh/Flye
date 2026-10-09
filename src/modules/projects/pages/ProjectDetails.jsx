@@ -700,7 +700,7 @@ export const ProjectDetails = () => {
                     href={project.videoUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="btn btn-primary btn-submit-calc"
+                    className="btn btn-primary"
                     style={{ padding: '8px 20px', fontSize: '12px', textDecoration: 'none', whiteSpace: 'nowrap' }}
                   >
                     Watch Tutorial
@@ -829,7 +829,6 @@ export const ProjectDetails = () => {
         <Button
           type="button"
           variant="primary"
-          className="btn-submit-calc"
           id="btn-mobile-detail-order"
           onClick={() => {
             document.getElementById('choose-kit-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -1172,7 +1171,6 @@ export const ProjectDetails = () => {
               </Button>
               <Button
                 variant="primary"
-                className="btn-submit-calc"
                 style={{ flex: 1, height: '42px' }}
                 disabled={isProcessing}
                 onClick={async () => {

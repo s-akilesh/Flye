@@ -572,7 +572,7 @@ export const EditProject = () => {
           <Button variant="secondary" onClick={() => handleSaveProject('draft')} disabled={isSaving}>
             {isSaving ? 'Saving...' : 'Save as Draft'}
           </Button>
-          <Button variant="primary" onClick={() => handleSaveProject('active')} className="btn-submit-calc" disabled={isSaving}>
+          <Button variant="primary" onClick={() => handleSaveProject('active')} disabled={isSaving}>
             {isSaving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>

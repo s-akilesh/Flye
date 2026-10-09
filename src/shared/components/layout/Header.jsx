@@ -405,7 +405,7 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
                   {profile?.full_name || user?.email?.split('@')[0] || 'User'}
                 </span>
                 <span style={{ fontSize: '10px', color: 'var(--header-txt-secondary)', textTransform: 'capitalize' }}>
-                  {profile?.role || 'user'}
+                  {isAdmin || profile?.role === 'admin' || profile?.role === 'super_admin' ? 'Admin' : (profile?.role && profile.role.toLowerCase() !== 'student' ? profile.role.replace(/_/g, ' ') : 'User')}
                 </span>
               </div>
 

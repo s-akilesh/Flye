@@ -1273,7 +1273,6 @@ export const ManageProjects = () => {
               </Button>
               <Button 
                 variant="primary" 
-                className="btn-submit-calc"
                 onClick={handleConfirmImport} 
                 style={{ flex: 1 }}
                 disabled={isProcessing || importPreview.valid.length === 0}

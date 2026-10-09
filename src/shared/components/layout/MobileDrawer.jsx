@@ -128,6 +128,14 @@ const DrawerIcon = ({ id }) => {
       </svg>
     );
   }
+  if (id === 'profile') {
+    return (
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="9 18 15 12 9 6" />
@@ -141,8 +149,28 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
   const { user, profile, isAdmin, logout, viewMode, setViewMode } = useAuth();
 
   const getInitials = (name) => {
-    if (!name) return 'S';
-    return name.trim().split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    if (!name) return 'U';
+    const clean = name.trim().replace(/[^a-zA-Z0-9\s]/g, ' ');
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+    return 'U';
+  };
+
+  const getRoleLabel = () => {
+    if (isAdmin || profile?.role === 'admin' || profile?.role === 'super_admin') {
+      return 'Admin';
+    }
+    if (profile?.role) {
+      const r = String(profile.role).trim();
+      if (r.toLowerCase() === 'student') return 'User';
+      return r.charAt(0).toUpperCase() + r.slice(1).replace(/_/g, ' ');
+    }
+    return 'User';
   };
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -158,6 +186,16 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
   const handleLinkClick = (path) => {
     onClose();
     navigate(path);
+  };
+
+  const handleProfileClick = (e) => {
+    if (e) e.preventDefault();
+    onClose();
+    if (isAdmin && viewMode === 'admin') {
+      navigate(ROUTES.ADMIN_PROFILE);
+    } else {
+      navigate(ROUTES.MY_PROFILE);
+    }
   };
 
   const handleLogout = async () => {
@@ -229,48 +267,83 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
 
               {/* Drawer Header Status block */}
               {user && (
-                <div className="drawer-user-card" style={{ background: 'var(--interaction-hover)', padding: '16px', borderRadius: '10px', border: '1px solid var(--sys-border)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                    {profile?.profile_photo || profile?.avatar_url ? (
-                      <img 
-                        src={profile.profile_photo || profile.avatar_url} 
-                        alt="Profile" 
-                        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div style={{ 
-                      width: '40px', 
-                      height: '40px', 
-                      borderRadius: '50%', 
-                      background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))', 
-                      display: profile?.profile_photo || profile?.avatar_url ? 'none' : 'flex', 
+                <div className="drawer-user-card" style={{ background: 'var(--interaction-hover)', padding: '12px', borderRadius: '10px', border: '1px solid var(--sys-border)' }}>
+                  <button 
+                    type="button"
+                    onClick={handleProfileClick}
+                    title="View My Profile"
+                    aria-label="View My Profile"
+                    style={{ 
+                      width: '100%',
+                      display: 'flex', 
                       alignItems: 'center', 
-                      justifyContent: 'center', 
-                      fontWeight: '800', 
-                      color: 'var(--txt-inverse)', 
-                      fontSize: '14px' 
-                    }}>
-                      {getInitials(profile?.full_name || user?.email)}
+                      justifyContent: 'space-between',
+                      marginBottom: isAdmin ? '10px' : '0',
+                      cursor: 'pointer',
+                      padding: '6px',
+                      background: 'none',
+                      border: 'none',
+                      borderRadius: '8px',
+                      textAlign: 'left',
+                      transition: 'background-color 0.15s ease',
+                      outline: 'none',
+                      WebkitTapHighlightColor: 'rgba(0,0,0,0.1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--interaction-selected, rgba(255, 255, 255, 0.06))';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, pointerEvents: 'none' }}>
+                      {profile?.profile_photo || profile?.avatar_url ? (
+                        <img 
+                          src={profile.profile_photo || profile.avatar_url} 
+                          alt="Profile" 
+                          style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} 
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div style={{ 
+                        width: '40px', 
+                        height: '40px', 
+                        borderRadius: '50%', 
+                        background: 'linear-gradient(135deg, var(--brand-accent), var(--brand-primary))', 
+                        display: profile?.profile_photo || profile?.avatar_url ? 'none' : 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        fontWeight: '800', 
+                        color: 'var(--txt-inverse)', 
+                        fontSize: '14px',
+                        flexShrink: 0
+                      }}>
+                        {getInitials(profile?.full_name || user?.user_metadata?.full_name || user?.email)}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
+                        </h4>
+                        <span style={{ fontSize: '11px', color: 'var(--brand-primary)', fontWeight: 'bold', display: 'block' }}>
+                          {getRoleLabel()}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: 'var(--txt-primary)' }}>
-                        {profile?.full_name || user?.email || 'Student'}
-                      </h4>
-                      <span style={{ fontSize: '11px', color: 'var(--brand-primary)', fontWeight: 'bold' }}>
-                        {profile?.role === 'admin' ? 'Flyen Staff' : 'Student'}
-                      </span>
-                    </div>
-                  </div>
+
+                    <span className="material-icons-outlined" style={{ fontSize: '20px', color: 'var(--txt-muted)', marginLeft: '8px', flexShrink: 0, pointerEvents: 'none' }}>
+                      chevron_right
+                    </span>
+                  </button>
 
                   {/* Switch view mode button inside drawer for admins */}
                   {isAdmin && (
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         const nextMode = viewMode === 'admin' ? 'user' : 'admin';
                         setViewMode(nextMode);
                         onClose(); // Close drawer
@@ -499,6 +572,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                       {HOMEPAGE_NAVIGATION.map((item) => {
                         const isNavActive = location.pathname === item.path;
                         if (item.id === 'login' && user) return null; // Hide login if user is logged in
+                        if (item.requiresAuth && !user) return null; // Hide auth-only items if user is not logged in
                         return (
                           <li key={item.id}>
                             <button

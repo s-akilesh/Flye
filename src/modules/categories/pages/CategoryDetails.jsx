@@ -422,7 +422,9 @@ export const CategoryDetails = () => {
                       alt={prod.title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       onError={(e) => {
-                        e.target.src = is3d ? '/svc_batch.jpg' : '/kit_hw.jpg';
+                        e.target.src = is3d
+                          ? storageService.getPublicUrl('website-assets', 'products-banner/product_showcase_bg.jpg')
+                          : storageService.getPublicUrl('website-assets', 'products-banner/project_kits_bg.jpg');
                       }}
                     />
                     <div style={{ position: 'absolute', top: '8px', right: '8px' }}>

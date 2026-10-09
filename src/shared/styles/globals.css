@@ -1025,19 +1025,22 @@ header {
 }
 
 .btn-submit-calc {
-  background: var(--txt-primary);
-  border: none;
-  color: var(--sys-bg);
+  background: var(--brand-primary, #38bdf8);
+  border: 1px solid var(--brand-primary, #38bdf8);
+  color: #ffffff !important;
   font-size: 13px;
-  font-weight: 500;
-  padding: 10px 18px;
+  font-weight: 600;
+  padding: 8px 18px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
 .btn-submit-calc:hover {
-  opacity: 0.9;
+  background: var(--brand-primary-hover, #7dd3fc);
+  border-color: var(--brand-primary-hover, #7dd3fc);
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
 }
 
 /* --- KITS & 3D PRINTING MARKETPLACE DISCOVERY ELEMENTS --- */
@@ -6266,7 +6269,7 @@ table td {
   box-sizing: border-box;
 }
 
-/* Dynamic Full-Bleed Background Slider */
+/* Dynamic Full-Bleed Background Slider (Zero-Flicker GPU Compositing) */
 .flyen-hero-bg-container {
   position: absolute;
   top: 0;
@@ -6278,7 +6281,12 @@ table td {
   overflow: hidden;
   z-index: 0;
   pointer-events: none;
-  background: #080c14;
+  background-color: #080c14 !important;
+  background: #080c14 !important;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .flyen-hero-bg-slide {
@@ -6290,6 +6298,13 @@ table td {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background-color: #080c14 !important;
+  background: #080c14 !important;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: opacity;
 }
 
 .flyen-hero-bg-img {
@@ -6298,6 +6313,12 @@ table td {
   object-fit: cover;
   object-position: center 30%;
   display: block;
+  background-color: #080c14 !important;
+  background: #080c14 !important;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .flyen-hero-bg-overlay {
@@ -6308,7 +6329,7 @@ table td {
   bottom: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
   background: 
     linear-gradient(90deg, rgba(8, 12, 20, 0.96) 0%, rgba(8, 12, 20, 0.88) 40%, rgba(8, 12, 20, 0.55) 75%, rgba(8, 12, 20, 0.7) 100%),
@@ -6321,7 +6342,7 @@ table td {
   flex-direction: column;
   max-width: 740px;
   padding: 0;
-  z-index: 3;
+  z-index: 4;
 }
 
 @media (max-width: 960px) {
