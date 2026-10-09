@@ -4326,11 +4326,13 @@ input[type="radio"]:checked::after {
     padding: 0 !important;
     align-items: center !important;
     justify-content: center !important;
+    color: var(--header-icon, var(--txt-secondary)) !important;
   }
 
   .mobile-drawer-hamburger span,
   .header-notify-bell span {
     font-size: 22px !important;
+    color: inherit !important;
   }
 
   /* Timeline Roadmap Mobile Scaling */

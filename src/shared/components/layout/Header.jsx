@@ -304,8 +304,28 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
           type="button"
           onClick={onToggleDrawer}
           className="btn-header mobile-drawer-hamburger"
-          style={{ padding: '8px', display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer' }}
+          style={{
+            padding: '7px',
+            display: 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
+            border: 'none',
+            color: 'var(--header-icon, var(--txt-secondary))',
+            cursor: 'pointer',
+            borderRadius: '8px',
+            transition: 'color 0.2s, background-color 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--flyen-teal, #00dfa2)';
+            e.currentTarget.style.backgroundColor = 'var(--header-interaction-hover, rgba(255, 255, 255, 0.05))';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--header-icon, var(--txt-secondary))';
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
           title="Open Menu"
+          aria-label="Open Menu"
         >
           <span className="material-icons" style={{ fontSize: '20px' }}>menu</span>
         </button>
