@@ -607,6 +607,7 @@ export const CartDrawer = () => {
       {/* Cart Checkout / Quote Request Modal */}
       <Modal
         isOpen={isCheckoutModalOpen}
+        zIndex={10001}
         onClose={() => !isProcessing && setIsCheckoutModalOpen(false)}
         className="modal-content purple"
         style={{ maxWidth: '560px', width: '92%', maxHeight: '88vh', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}
@@ -616,17 +617,17 @@ export const CartDrawer = () => {
             {/* Modal Header */}
             <div style={{
               padding: '20px 24px 16px 24px',
-              background: 'var(--sys-surface-elevated, #1a202c)',
-              borderBottom: '1px solid var(--sys-divider, rgba(255, 255, 255, 0.1))',
+              background: 'var(--sys-surface-elevated)',
+              borderBottom: '1px solid var(--sys-divider)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
             }}>
               <div>
-                <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary, #ffffff)' }}>
+                <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--txt-primary)' }}>
                   REQUEST ORDER / QUOTE
                 </h4>
-                <p style={{ fontSize: '12px', color: 'var(--txt-muted, #94a3b8)', margin: '4px 0 0 0' }}>
+                <p style={{ fontSize: '12px', color: 'var(--txt-muted)', margin: '4px 0 0 0' }}>
                   {totalItems} items in your order • Subtotal: {formattedSubtotal}
                 </p>
               </div>
@@ -648,8 +649,8 @@ export const CartDrawer = () => {
               <div style={{
                 padding: '12px 14px',
                 borderRadius: '8px',
-                background: 'var(--sys-surface-hover, rgba(255, 255, 255, 0.04))',
-                border: '1px solid var(--sys-divider, rgba(255, 255, 255, 0.08))',
+                background: 'var(--interaction-hover)',
+                border: '1px solid var(--sys-border)',
                 maxHeight: '120px',
                 overflowY: 'auto',
                 display: 'flex',
