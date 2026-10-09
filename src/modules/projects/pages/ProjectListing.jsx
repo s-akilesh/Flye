@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/useProjects';
 import { useFilters } from '../hooks/useFilters';
@@ -20,11 +20,13 @@ import { useAuth } from '../../auth/context/AuthContext';
 import { useToast } from '../../../shared/context/ToastContext';
 import { SEO, PageType, generateSEO } from '../../../shared/seo';
 import { eventTracker } from '../../../shared/analytics/index.js';
-import { useEffect } from 'react';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 
 export const ProjectListing = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
   const { projects, isLoading } = useProjects();
   const { addEnquiry, isProcessing } = useEnquiries();
   const { showToast } = useToast();
@@ -47,6 +49,7 @@ export const ProjectListing = () => {
   const seoProps = generateSEO(PageType.PROJECT_LISTING);
   const {
     activeCategories,
+    setActiveCategories,
     activeDifficulties,
     activeFeatures,
     activeProjectLevels,
@@ -56,6 +59,13 @@ export const ProjectListing = () => {
     toggleProjectLevel,
     resetFilters
   } = useFilters();
+
+  // Sync category param from URL
+  useEffect(() => {
+    if (categoryParam && categoryParam.trim()) {
+      setActiveCategories([categoryParam.trim()]);
+    }
+  }, [categoryParam, setActiveCategories]);
 
   const {
     searchQuery,
@@ -351,6 +361,25 @@ export const ProjectListing = () => {
             
             {/* Mobile Filter & Search Bar (< 768px) */}
             <div className="mobile-filter-bar">
+              <Button
+                type="button"
+                variant="secondary"
+                className="btn-back"
+                onClick={() => navigate(ROUTES.HOME)}
+                style={{
+                  height: '38px',
+                  width: '38px',
+                  minWidth: '38px',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '8px'
+                }}
+                aria-label="Back to home"
+              >
+                <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
+              </Button>
               <div style={{ flex: 1, position: 'relative' }}>
                 <Input
                   type="text"
@@ -367,19 +396,52 @@ export const ProjectListing = () => {
                 type="button"
                 variant="secondary"
                 onClick={() => setIsMobileFiltersOpen(true)}
-                style={{ height: '38px', padding: '0 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                style={{
+                  height: '38px',
+                  width: '38px',
+                  minWidth: '38px',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '8px',
+                  position: 'relative'
+                }}
+                aria-label="Filter"
+                title="Filter"
               >
-                <span className="material-icons-outlined" style={{ fontSize: '18px' }}>tune</span>
-                Filter
-                {isFiltered && <span className="admin-icon-badge" style={{ marginLeft: '4px' }}>•</span>}
+                <span className="material-icons-outlined" style={{ fontSize: '20px' }}>tune</span>
+                {isFiltered && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '6px',
+                      right: '6px',
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: 'var(--brand-primary, #00dfa2)',
+                      boxShadow: '0 0 4px var(--brand-primary, #00dfa2)'
+                    }}
+                  />
+                )}
               </Button>
             </div>
 
             {/* Results Count Bar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div className="results-count-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <div style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '500' }}>
                 Showing <strong style={{ color: 'var(--txt-primary)' }}>{filteredList.length}</strong> {filteredList.length === 1 ? 'project kit' : 'project kits'}
               </div>
+              {aiFilterResult && (
+                <span
+                  className="badge-count ai-active"
+                  onClick={clearAISearch}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Clear AI Search ✕
+                </span>
+              )}
             </div>
 
             {/* Grid / Skeletons / Empty */}

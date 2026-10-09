@@ -1110,6 +1110,15 @@ header {
 }
 
 @media (max-width: 767px) {
+  .marketplace-layout-container {
+    padding: 8px 0 0 0 !important;
+    gap: 0 !important;
+  }
+  .marketplace-main {
+    gap: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
   .marketplace-desktop-sidebar {
     display: none !important;
   }
@@ -1118,7 +1127,10 @@ header {
     gap: 8px;
     align-items: center;
     width: 100%;
-    margin-bottom: 12px;
+    margin-bottom: 8px !important;
+  }
+  .results-count-bar {
+    margin-bottom: 8px !important;
   }
 }
 
@@ -4674,41 +4686,7 @@ header {
 
   #kits-portal .portal-header,
   #printing-portal .portal-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 8px 0 12px 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    margin-top: 0 !important;
-    margin-bottom: 8px !important;
-    background: transparent !important;
-    border-bottom: 1px solid var(--sys-divider) !important;
-  }
-
-  #kits-portal .portal-header .portal-title-area h2,
-  #printing-portal .portal-header .portal-title-area h2 {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    color: var(--txt-primary) !important;
-    margin: 0 !important;
-    line-height: 1.2 !important;
-  }
-
-  #kits-portal .portal-header .btn-back,
-  #printing-portal .portal-header .btn-back {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 8px !important;
-    border: 1px solid var(--sys-border) !important;
-    background: var(--sys-surface-hover, rgba(255, 255, 255, 0.05)) !important;
-    color: var(--txt-primary) !important;
-    cursor: pointer !important;
+    display: none !important;
   }
 
   #kits-portal .portal-content-flex,

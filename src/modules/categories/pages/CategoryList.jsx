@@ -355,6 +355,9 @@ export const CategoryList = () => {
             {filteredCategories.map(cat => {
               const is3d = cat.type === '3d_print_category';
               const productCount = productCounts[cat.id] ?? 0;
+              const storeRoute = is3d
+                ? `${ROUTES.PRINTING}?category=${encodeURIComponent(cat.key || cat.value)}`
+                : `${ROUTES.PROJECTS}?category=${encodeURIComponent(cat.value || cat.key)}`;
 
               return (
                 <Card
@@ -403,6 +406,30 @@ export const CategoryList = () => {
                         image
                       </span>
                     )}
+
+                    {/* Category Type Badge */}
+                    <span style={{
+                      position: 'absolute',
+                      top: '10px',
+                      left: '10px',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '700',
+                      backdropFilter: 'blur(8px)',
+                      background: is3d ? 'rgba(56, 189, 248, 0.9)' : 'rgba(168, 85, 247, 0.9)',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      zIndex: 2,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.25)'
+                    }}>
+                      <span className="material-icons" style={{ fontSize: '13px' }}>
+                        {is3d ? 'view_in_ar' : 'memory'}
+                      </span>
+                      {is3d ? '3D Printing' : 'Project Kit'}
+                    </span>
 
                     {/* Home Showcase Home Icon Badge */}
                     <button
@@ -462,7 +489,40 @@ export const CategoryList = () => {
                         {productCount} {productCount === 1 ? 'Product' : 'Products'}
                       </span>
 
-                      <div style={{ display: 'flex', gap: '6px' }}>
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(storeRoute);
+                          }}
+                          style={{
+                            background: 'none',
+                            border: '1px solid var(--sys-border)',
+                            color: 'var(--txt-secondary)',
+                            padding: '4px 8px',
+                            cursor: 'pointer',
+                            borderRadius: '6px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            fontSize: '11.5px',
+                            fontWeight: '600',
+                            transition: 'all 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = 'var(--brand-primary, #38bdf8)';
+                            e.currentTarget.style.borderColor = 'var(--brand-primary, #38bdf8)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'var(--txt-secondary)';
+                            e.currentTarget.style.borderColor = 'var(--sys-border)';
+                          }}
+                          title={`View ${is3d ? '3D Printing' : 'Project Kits'} screen`}
+                        >
+                          <span className="material-icons" style={{ fontSize: '14px' }}>open_in_new</span>
+                          Store
+                        </button>
                         <Button
                           variant="secondary"
                           onClick={(e) => handleOpenEditModal(cat, e)}
@@ -542,6 +602,90 @@ export const CategoryList = () => {
           </div>
 
           <form onSubmit={handleSaveCategory} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            {/* Category Belongs To (Destination Screen) */}
+            <div style={{ textAlign: 'left' }}>
+              <label style={{ display: 'block', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '8px' }}>
+                Category Belongs To *
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                {/* Option 1: Project Kits */}
+                <div
+                  onClick={() => setFormType('project_category')}
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: formType === 'project_category' ? '2px solid var(--brand-primary, #38bdf8)' : '1px solid var(--sys-border)',
+                    background: formType === 'project_category' ? 'rgba(56, 189, 248, 0.12)' : 'var(--sys-surface-hover)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '6px',
+                    background: formType === 'project_category' ? 'var(--brand-primary, #38bdf8)' : 'var(--sys-surface)',
+                    color: formType === 'project_category' ? '#ffffff' : 'var(--txt-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <span className="material-icons" style={{ fontSize: '18px' }}>memory</span>
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '700', color: formType === 'project_category' ? 'var(--txt-primary)' : 'var(--txt-secondary)' }}>
+                      Project Kits
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '2px' }}>
+                      Navigates to /projects
+                    </div>
+                  </div>
+                </div>
+
+                {/* Option 2: 3D Printing */}
+                <div
+                  onClick={() => setFormType('3d_print_category')}
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: formType === '3d_print_category' ? '2px solid var(--brand-primary, #38bdf8)' : '1px solid var(--sys-border)',
+                    background: formType === '3d_print_category' ? 'rgba(56, 189, 248, 0.12)' : 'var(--sys-surface-hover)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '6px',
+                    background: formType === '3d_print_category' ? 'var(--brand-primary, #38bdf8)' : 'var(--sys-surface)',
+                    color: formType === '3d_print_category' ? '#ffffff' : 'var(--txt-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <span className="material-icons" style={{ fontSize: '18px' }}>view_in_ar</span>
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '700', color: formType === '3d_print_category' ? 'var(--txt-primary)' : 'var(--txt-secondary)' }}>
+                      3D Printing
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '2px' }}>
+                      Navigates to /printing
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Category Name */}
             <div style={{ textAlign: 'left' }}>
               <label style={{ display: 'block', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '8px' }}>

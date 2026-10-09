@@ -7,6 +7,7 @@ import { enquiryService } from '../../enquiries/services/enquiryService';
 import { Button } from '../../../shared/components/ui/Button';
 import { Card } from '../../../shared/components/ui/Card';
 import { Input } from '../../../shared/components/ui/Input';
+import { Modal } from '../../../shared/components/ui/Modal';
 import { ROUTES } from '../../../shared/constants/routes';
 import { ProjectDetailsModal } from '../components/ProjectDetailsModal';
 import { trackEvent } from '../../../shared/analytics/analytics.js';
@@ -114,6 +115,8 @@ export const MyProjects = () => {
   const [dateFilter, setDateFilter] = useState('all'); // 'all' | '7days' | '30days' | '90days' | 'custom'
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const isFiltered = dateFilter !== 'all' || Boolean(startDate) || Boolean(endDate);
 
   useEffect(() => {
     // Track page view event
@@ -338,6 +341,12 @@ export const MyProjects = () => {
         meta={[{ name: 'robots', content: 'noindex,nofollow' }]}
       />
       <style>{`
+        .my-enquiries-mobile-bar {
+          display: none;
+        }
+        .my-enquiries-desktop-card {
+          display: block;
+        }
         @media (max-width: 768px) {
           .portal-section-my-enquiries {
             padding-top: 8px !important;
@@ -346,31 +355,20 @@ export const MyProjects = () => {
             padding-bottom: 80px !important;
           }
           .portal-section-my-enquiries .portal-header {
-            margin-left: -16px !important;
-            margin-right: -16px !important;
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-            padding-top: 8px !important;
-            padding-bottom: 12px !important;
-            margin-bottom: 16px !important;
-          }
-          .portal-section-my-enquiries .portal-title-area h2 {
-            font-size: 18px !important;
-            margin: 0 !important;
-            font-weight: 700 !important;
-          }
-          .portal-section-my-enquiries .portal-title-area p {
             display: none !important;
           }
-          .portal-section-my-enquiries .btn-back {
-            width: 34px !important;
-            height: 34px !important;
-            min-width: 34px !important;
-            padding: 0 !important;
+          .my-enquiries-desktop-card {
+            display: none !important;
+          }
+          .my-enquiries-mobile-bar {
             display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            border-radius: 8px !important;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 8px !important;
+          }
+          .results-count-bar {
+            margin-bottom: 8px !important;
           }
           .portal-section-my-enquiries .card-glass,
           .portal-section-my-enquiries .project-summary-card {
@@ -418,13 +416,105 @@ export const MyProjects = () => {
           </div>
         </div>
 
-        {/* Search & Date Filter Bar */}
-        <Card style={{ padding: '16px 20px', marginBottom: '24px', borderRadius: '12px', border: '1px solid var(--sys-border)', background: 'var(--sys-surface)' }}>
+        {/* Mobile Filter & Search Bar (< 768px) */}
+        <div className="my-enquiries-mobile-bar">
+          <Button
+            type="button"
+            variant="secondary"
+            className="btn-back"
+            onClick={() => navigate(ROUTES.HOME)}
+            style={{
+              height: '38px',
+              width: '38px',
+              minWidth: '38px',
+              padding: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '8px'
+            }}
+            aria-label="Back to home"
+          >
+            <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
+          </Button>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <Input
+              type="text"
+              placeholder="Search enquiries..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ width: '100%', height: '38px', fontSize: '13px', paddingLeft: '34px', paddingRight: searchQuery ? '34px' : '10px' }}
+            />
+            <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--txt-muted)', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+              <span className="material-icons-outlined" style={{ fontSize: '18px' }}>search</span>
+            </span>
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                style={{
+                  position: 'absolute',
+                  right: '8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--txt-muted)',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Clear search"
+              >
+                <span className="material-icons" style={{ fontSize: '16px' }}>close</span>
+              </button>
+            )}
+          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => setIsMobileFiltersOpen(true)}
+            style={{
+              height: '38px',
+              width: '38px',
+              minWidth: '38px',
+              padding: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '8px',
+              position: 'relative'
+            }}
+            aria-label="Filter"
+            title="Filter"
+          >
+            <span className="material-icons-outlined" style={{ fontSize: '20px' }}>tune</span>
+            {isFiltered && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '6px',
+                  right: '6px',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: 'var(--brand-primary, #00dfa2)',
+                  boxShadow: '0 0 4px var(--brand-primary, #00dfa2)'
+                }}
+              />
+            )}
+          </Button>
+        </div>
+
+        {/* Desktop Search & Date Filter Bar (>= 768px) */}
+        <Card className="my-enquiries-desktop-card" style={{ padding: '16px 20px', marginBottom: '16px', borderRadius: '12px', border: '1px solid var(--sys-border)', background: 'var(--sys-surface)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
               
               {/* Live Search Input */}
-              <div style={{ position: 'relative', flex: '1 1 280px', maxWidth: '420px' }}>
+              <div style={{ position: 'relative', flex: '1 1 280px', maxWidth: '420px', width: '100%' }}>
                 <span
                   className="material-icons"
                   style={{
@@ -583,7 +673,7 @@ export const MyProjects = () => {
                   </span>
                 </div>
 
-                {(searchQuery || dateFilter !== 'all' || startDate || endDate) && (
+                {(searchQuery || isFiltered) && (
                   <Button
                     variant="secondary"
                     onClick={() => {
@@ -610,6 +700,26 @@ export const MyProjects = () => {
             </div>
           </div>
         </Card>
+
+        {/* Results Count Bar */}
+        <div className="results-count-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <div style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '500' }}>
+            Showing <strong style={{ color: 'var(--txt-primary)' }}>{filteredEnquiries.length}</strong> {filteredEnquiries.length === 1 ? 'enquiry' : 'enquiries'}
+          </div>
+          {isFiltered && (
+            <span
+              className="badge-count"
+              onClick={() => {
+                setDateFilter('all');
+                setStartDate('');
+                setEndDate('');
+              }}
+              style={{ cursor: 'pointer', fontSize: '12px', color: 'var(--brand-primary)', fontWeight: '600' }}
+            >
+              Clear Date Filter ✕
+            </span>
+          )}
+        </div>
 
         {filteredEnquiries.length > 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
@@ -732,6 +842,109 @@ export const MyProjects = () => {
           </div>
         )}
         </section>
+
+      {/* Mobile Filter & Sort Drawer Modal */}
+      <Modal
+        isOpen={isMobileFiltersOpen}
+        onClose={() => setIsMobileFiltersOpen(false)}
+        className="modal-content purple mobile-filter-modal"
+        style={{ maxWidth: '480px', width: '92%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '20px' }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700' }}>Filter Enquiries</h3>
+          <button
+            type="button"
+            onClick={() => setIsMobileFiltersOpen(false)}
+            style={{ background: 'transparent', border: 'none', color: 'var(--txt-muted)', cursor: 'pointer', padding: '4px' }}
+          >
+            <span className="material-icons">close</span>
+          </button>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Date Filter Range */}
+          <div>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Date Range
+            </label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {[
+                { id: 'all', label: 'All Dates' },
+                { id: '7days', label: 'Last 7 Days' },
+                { id: '30days', label: 'Last 30 Days' },
+                { id: '90days', label: 'Last 3 Months' },
+                { id: 'custom', label: 'Custom Range' }
+              ].map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setDateFilter(opt.id)}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    border: dateFilter === opt.id ? '1px solid var(--brand-primary)' : '1px solid var(--sys-border)',
+                    background: dateFilter === opt.id ? 'rgba(56, 189, 248, 0.15)' : 'var(--sys-surface)',
+                    color: dateFilter === opt.id ? 'var(--brand-primary)' : 'var(--txt-secondary)'
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Custom Date Pickers */}
+          {dateFilter === 'custom' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: '1px solid var(--sys-border)' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '11.5px', color: 'var(--txt-secondary)', marginBottom: '4px' }}>From Date:</label>
+                <Input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="form-input"
+                  style={{ width: '100%', height: '38px', fontSize: '12.5px', background: 'var(--input-bg)' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '11.5px', color: 'var(--txt-secondary)', marginBottom: '4px' }}>To Date:</label>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="form-input"
+                  style={{ width: '100%', height: '38px', fontSize: '12.5px', background: 'var(--input-bg)' }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Modal Footer Buttons */}
+        <div style={{ display: 'flex', gap: '10px', marginTop: '20px', paddingTop: '12px', borderTop: '1px solid var(--sys-divider)' }}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setDateFilter('all');
+              setStartDate('');
+              setEndDate('');
+            }}
+            style={{ flex: 1 }}
+          >
+            Reset
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => setIsMobileFiltersOpen(false)}
+            style={{ flex: 1 }}
+          >
+            Apply Filters
+          </Button>
+        </div>
+      </Modal>
 
       {/* Details View Modal */}
       {selectedEnquiry && (

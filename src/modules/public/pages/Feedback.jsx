@@ -185,24 +185,6 @@ export const Feedback = () => {
             >
               {/* Header Box */}
               <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '6px 14px',
-                  borderRadius: '20px',
-                  background: 'rgba(99, 102, 241, 0.1)',
-                  border: '1px solid rgba(99, 102, 241, 0.25)',
-                  color: 'var(--brand-primary)',
-                  fontSize: '12px',
-                  fontWeight: '700',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.8px',
-                  marginBottom: '14px'
-                }}>
-                  <span className="material-icons" style={{ fontSize: '15px' }}>rate_review</span>
-                  Maker Community Feedback
-                </div>
                 <h1 style={{ fontSize: '28px', fontWeight: '900', margin: '0 0 10px 0', color: 'var(--txt-primary)' }}>
                   Share Your Experience
                 </h1>

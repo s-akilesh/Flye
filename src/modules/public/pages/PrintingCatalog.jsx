@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../../../shared/components/ui/Button';
 import { Modal } from '../../../shared/components/ui/Modal';
@@ -16,6 +16,9 @@ import { AdminToolbar } from '../../../shared/components/ui/AdminToolbar';
 
 export const PrintingCatalog = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
   const { showToast } = useToast();
   const { profile } = useAuth();
 
@@ -32,6 +35,15 @@ export const PrintingCatalog = () => {
   const [activeCategories, setActiveCategories] = useState(['all']);
   const [appliedCategories, setAppliedCategories] = useState(['all']);
   const [sortBy, setSortBy] = useState('popular');
+
+  // Sync category param from URL
+  useEffect(() => {
+    if (categoryParam && categoryParam.trim()) {
+      const catVal = categoryParam.trim();
+      setActiveCategories([catVal]);
+      setAppliedCategories([catVal]);
+    }
+  }, [categoryParam]);
 
   // Load products and categories from DB / Master Data
   useEffect(() => {
@@ -88,7 +100,13 @@ export const PrintingCatalog = () => {
 
   // Client-side Instant Filter
   let filteredCatalog = products.filter(item => {
-    const matchesCategory = appliedCategories.includes('all') || appliedCategories.includes(item.category);
+    const matchesCategory = appliedCategories.includes('all') || 
+      appliedCategories.includes(item.category) ||
+      (item.category && appliedCategories.some(c => {
+        const cClean = c.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const itemClean = item.category.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return c.toLowerCase() === item.category.toLowerCase() || (cClean && itemClean && (cClean === itemClean || itemClean.includes(cClean) || cClean.includes(itemClean)));
+      }));
     const matchesSearch = searchQuery === '' || 
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -265,6 +283,25 @@ export const PrintingCatalog = () => {
             
             {/* Mobile Filter & Search Bar (< 768px) */}
             <div className="mobile-filter-bar">
+              <Button
+                type="button"
+                variant="secondary"
+                className="btn-back"
+                onClick={() => navigate(ROUTES.HOME)}
+                style={{
+                  height: '38px',
+                  width: '38px',
+                  minWidth: '38px',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '8px'
+                }}
+                aria-label="Back to home"
+              >
+                <span className="material-icons" style={{ fontSize: '20px' }}>arrow_back</span>
+              </Button>
               <div style={{ flex: 1, position: 'relative' }}>
                 <Input
                   type="text"
@@ -281,134 +318,337 @@ export const PrintingCatalog = () => {
                 type="button"
                 variant="secondary"
                 onClick={() => setIsMobileFiltersOpen(true)}
-                style={{ height: '38px', padding: '0 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                style={{
+                  height: '38px',
+                  width: '38px',
+                  minWidth: '38px',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '8px',
+                  position: 'relative'
+                }}
+                aria-label="Filter"
+                title="Filter"
               >
-                <span className="material-icons-outlined" style={{ fontSize: '18px' }}>tune</span>
-                Filter
-                {isFiltered && <span className="admin-icon-badge" style={{ marginLeft: '4px' }}>•</span>}
+                <span className="material-icons-outlined" style={{ fontSize: '20px' }}>tune</span>
+                {isFiltered && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '6px',
+                      right: '6px',
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: 'var(--brand-primary, #00dfa2)',
+                      boxShadow: '0 0 4px var(--brand-primary, #00dfa2)'
+                    }}
+                  />
+                )}
               </Button>
             </div>
 
             {/* Results Count Bar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div className="results-count-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <div style={{ fontSize: '13px', color: 'var(--txt-secondary)', fontWeight: '500' }}>
                 Showing <strong style={{ color: 'var(--txt-primary)' }}>{filteredCatalog.length}</strong> {filteredCatalog.length === 1 ? '3D item' : '3D items'}
               </div>
             </div>
 
             {/* Catalog Grid */}
+            <style>{`
+              .catalog-cards {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)) !important;
+                gap: 16px !important;
+                width: 100% !important;
+              }
+
+              .sample-product-card {
+                display: flex;
+                flex-direction: column;
+                border-radius: 14px;
+                background: var(--sys-surface, #12121a);
+                border: 1px solid var(--sys-border, rgba(255, 255, 255, 0.08));
+                overflow: hidden;
+                cursor: pointer;
+                transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+                position: relative;
+                width: 100%;
+                box-sizing: border-box;
+              }
+
+              .sample-product-card:hover {
+                transform: translateY(-3px);
+                border-color: rgba(255, 255, 255, 0.2);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+              }
+
+              .sample-product-card .card-img-wrap {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                background: #14141f;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .sample-product-card .card-img-wrap img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+              }
+
+              .sample-product-card:hover .card-img-wrap img {
+                transform: scale(1.04);
+              }
+
+              .sample-product-card .card-pill-tag {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                z-index: 2;
+                background: rgba(0, 0, 0, 0.75);
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);
+                color: #ffffff;
+                font-size: 9.5px;
+                font-weight: 800;
+                padding: 3px 7px;
+                border-radius: 6px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+              }
+
+              .sample-product-card .card-info-wrap {
+                padding: 10px 10px 12px 10px;
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                justifyContent: space-between;
+                gap: 4px;
+              }
+
+              .sample-product-card .card-title {
+                font-size: 13px;
+                font-weight: 700;
+                margin: 0;
+                color: var(--txt-primary, #ffffff);
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 1.35;
+                min-height: 35px;
+                max-height: 35px;
+              }
+
+              .sample-product-card .card-meta {
+                font-size: 11px;
+                color: var(--txt-muted, #9ca3af);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .sample-product-card .card-bottom-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 6px;
+                margin-top: 6px;
+              }
+
+              .sample-product-card .card-price {
+                font-size: 13.5px;
+                font-weight: 800;
+                color: var(--txt-primary, #ffffff);
+                white-space: nowrap;
+              }
+
+              .sample-product-card .btn-card-plus {
+                width: 30px !important;
+                height: 30px !important;
+                min-width: 30px !important;
+                border-radius: 50% !important;
+                border: 1.5px solid var(--brand-primary, #38bdf8) !important;
+                background: transparent !important;
+                color: var(--brand-primary, #38bdf8) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                cursor: pointer !important;
+                padding: 0 !important;
+                flex-shrink: 0 !important;
+                box-shadow: none !important;
+                transition: all 0.2s ease !important;
+              }
+
+              .sample-product-card .btn-card-plus svg {
+                stroke: var(--brand-primary, #38bdf8) !important;
+                display: block !important;
+              }
+
+              [data-theme='light'] .sample-product-card .btn-card-plus {
+                border: 1.5px solid var(--brand-primary, #0284c7) !important;
+                background: transparent !important;
+                color: var(--brand-primary, #0284c7) !important;
+                box-shadow: none !important;
+              }
+
+              [data-theme='light'] .sample-product-card .btn-card-plus svg {
+                stroke: var(--brand-primary, #0284c7) !important;
+              }
+
+              .sample-product-card .btn-card-plus:hover {
+                background: var(--brand-primary, #38bdf8) !important;
+                border-color: var(--brand-primary, #38bdf8) !important;
+                color: #ffffff !important;
+                transform: scale(1.08) !important;
+              }
+
+              .sample-product-card .btn-card-plus:hover svg {
+                stroke: #ffffff !important;
+              }
+
+              [data-theme='light'] .sample-product-card .btn-card-plus:hover {
+                background: var(--brand-primary, #0284c7) !important;
+                border-color: var(--brand-primary, #0284c7) !important;
+                color: #ffffff !important;
+              }
+
+              [data-theme='light'] .sample-product-card .btn-card-plus:hover svg {
+                stroke: #ffffff !important;
+              }
+
+              /* Mobile Adjustments (<= 767px) */
+              @media (max-width: 767px) {
+                .catalog-cards {
+                  grid-template-columns: repeat(2, 1fr) !important;
+                  gap: 12px !important;
+                }
+                .sample-product-card {
+                  border-radius: 14px !important;
+                }
+                .sample-product-card .card-info-wrap {
+                  padding: 8px 8px 10px 8px !important;
+                }
+                .sample-product-card .card-title {
+                  font-size: 12.5px !important;
+                  line-height: 1.35 !important;
+                  min-height: 34px !important;
+                  max-height: 34px !important;
+                }
+                .sample-product-card .card-meta {
+                  font-size: 10.5px !important;
+                }
+                .sample-product-card .card-price {
+                  font-size: 13px !important;
+                }
+                .sample-product-card .btn-card-plus {
+                  width: 28px !important;
+                  height: 28px !important;
+                  min-width: 28px !important;
+                }
+              }
+            `}</style>
             {isLoading ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
-                {[1, 2, 3, 4].map(i => (
-                  <Card key={i} style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <Skeleton style={{ width: '100%', aspectRatio: '1.2', borderRadius: '8px' }} />
-                    <Skeleton style={{ width: '80%', height: '16px' }} />
-                    <Skeleton style={{ width: '50%', height: '12px' }} />
-                  </Card>
+              <div className="catalog-cards">
+                {[1, 2, 3, 4, 5, 6].map(i => (
+                  <Skeleton key={i} variant="card" style={{ width: '100%', aspectRatio: '0.85', borderRadius: '14px' }} />
                 ))}
               </div>
             ) : filteredCatalog.length > 0 ? (
-              <div className="catalog-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
-                {filteredCatalog.map((item) => (
-                  <div
-                    className="product-card"
-                    key={item.id}
-                    onClick={() => navigate(ROUTES.PRINTING_DETAILS.replace(':id', item.id))}
-                    style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', border: '1px solid var(--sys-border)', borderRadius: '12px', background: 'var(--sys-surface)', overflow: 'hidden', transition: 'all 0.2s ease', position: 'relative' }}
-                  >
-                    {/* Image */}
-                    <div className="product-img" style={{ width: '100%', height: '120px', background: 'rgba(255, 255, 255, 0.02)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
-                      {item.primary_image_url ? (
-                        <img
-                          src={item.primary_image_url}
-                          alt={item.name}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <span className="material-icons-outlined" style={{ fontSize: '32px', color: 'var(--txt-muted)' }}>3d_rotation</span>
-                      )}
-                      
-                      {/* Heart Favorite Overlay */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        style={{
-                          position: 'absolute',
-                          top: '8px',
-                          right: '8px',
-                          width: '28px',
-                          height: '28px',
-                          borderRadius: '50%',
-                          background: 'rgba(255, 255, 255, 0.8)',
-                          border: 'none',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          color: '#1f2937',
-                          zIndex: 2,
-                          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)'
-                        }}
-                      >
-                        <span className="material-icons-outlined" style={{ fontSize: '16px' }}>favorite_border</span>
-                      </button>
-                    </div>
+              <div className="catalog-cards">
+                {filteredCatalog.map((item) => {
+                  const displayPrice = (Number(item.price) || 0).toLocaleString('en-IN');
+                  const badgeText = item.badge === 'best-seller'
+                    ? 'BEST SELLER'
+                    : item.badge === 'new'
+                    ? 'NEW'
+                    : item.is_featured
+                    ? 'FEATURED'
+                    : item.badge
+                    ? String(item.badge).toUpperCase()
+                    : null;
+                  const materialLabel = getLabelForValue(materials, item.material) || item.category || '3D Print';
 
-                    {/* Content */}
-                    <div className="product-details" style={{ padding: '16px 12px 12px 12px', display: 'flex', flexDirection: 'column', flex: 1, gap: '6px' }}>
-                      
-                      <h4 style={{ fontSize: '13.5px', fontWeight: '500', margin: 0, color: 'var(--txt-primary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.4' }}>
-                        {item.name}
-                      </h4>
-
-                      {/* Material & Stock Status info */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--txt-muted)' }}>
-                        <span>{getLabelForValue(materials, item.material) || 'PLA'}</span>
-                        <span>•</span>
-                        <span style={{
-                          fontWeight: '600',
-                          color: item.stock_quantity > 0 ? 'var(--status-success)' : 'var(--status-danger)'
-                        }}>
-                          {item.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
-                        </span>
-                      </div>
-
-                      {/* Pricing block */}
-                      <div style={{ marginTop: 'auto', paddingTop: '4px' }}>
-                        {item.contact_for_price ? (
-                          <span style={{ fontSize: '13px', color: 'var(--brand-primary)', fontWeight: '600', textTransform: 'uppercase' }}>
-                            Price On Request
+                  return (
+                    <div
+                      className="sample-product-card"
+                      key={item.id}
+                      onClick={() => navigate(ROUTES.PRINTING_DETAILS.replace(':id', item.id))}
+                    >
+                      {/* Image Box */}
+                      <div className="card-img-wrap">
+                        {badgeText && (
+                          <span className="card-pill-tag">
+                            {badgeText}
                           </span>
+                        )}
+
+                        {item.primary_image_url ? (
+                          <img
+                            src={item.primary_image_url}
+                            alt={item.name}
+                            loading="lazy"
+                            decoding="async"
+                          />
                         ) : (
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                            <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--txt-primary)' }}>
-                              ₹{item.price}
-                            </span>
-                            <span style={{ fontSize: '11px', color: 'var(--txt-muted)', textDecoration: 'line-through' }}>
-                              ₹{Math.round(item.price * 1.4)}
-                            </span>
-                          </div>
+                          <span className="material-icons-outlined" style={{ fontSize: '32px', color: 'var(--txt-muted)' }}>3d_rotation</span>
                         )}
                       </div>
 
-                      {/* Full-width View Details button */}
-                      <Button
-                        type="button"
-                        variant="primary"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(ROUTES.PRINTING_DETAILS.replace(':id', item.id));
-                        }}
-                        style={{ width: '100%', height: '34px', fontSize: '11.5px', fontWeight: '600', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                      >
-                        <span className="material-icons-outlined" style={{ fontSize: '15px' }}>shopping_cart</span>
-                        View Details
-                      </Button>
+                      {/* Content Details */}
+                      <div className="card-info-wrap">
+                        {/* Row 1: Title (2 lines) */}
+                        <h3 className="card-title" title={item.name}>
+                          {item.name}
+                        </h3>
+
+                        {/* Row 2: Subtitle / Meta from DB */}
+                        <div className="card-meta">
+                          {materialLabel}
+                        </div>
+
+                        {/* Row 3: Price + Plus Circle Button (Right to price) */}
+                        <div className="card-bottom-row">
+                          {item.contact_for_price ? (
+                            <span style={{ fontSize: '10.5px', color: 'var(--brand-primary)', fontWeight: '700', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+                              Price On Request
+                            </span>
+                          ) : (
+                            <span className="card-price">
+                              ₹{displayPrice}
+                            </span>
+                          )}
+
+                          <button
+                            type="button"
+                            className="btn-card-plus"
+                            title="View details & order"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(ROUTES.PRINTING_DETAILS.replace(':id', item.id));
+                            }}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <line x1="12" y1="5" x2="12" y2="19"></line>
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="marketplace-empty-state active" style={{ marginTop: '16px' }}>

@@ -209,15 +209,32 @@ export const CategoryDetails = () => {
                   All Categories
                 </Button>
 
+                {/* Category Type Badge */}
+                <span style={{
+                  fontSize: '10.5px',
+                  fontWeight: '700',
+                  padding: '3px 8px',
+                  borderRadius: '4px',
+                  background: is3d ? 'rgba(56, 189, 248, 0.2)' : 'rgba(168, 85, 247, 0.2)',
+                  color: is3d ? 'var(--accent-blue, #38bdf8)' : '#c084fc',
+                  border: is3d ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(168, 85, 247, 0.4)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <span className="material-icons" style={{ fontSize: '12px' }}>{is3d ? 'view_in_ar' : 'memory'}</span>
+                  {is3d ? '3D Printing Category' : 'Project Kit Category'}
+                </span>
+
                 {category.show_in_home && (
                   <span style={{
                     fontSize: '10.5px',
                     fontWeight: '700',
                     padding: '3px 8px',
                     borderRadius: '4px',
-                    background: 'rgba(56, 189, 248, 0.15)',
-                    color: 'var(--accent-blue, #38bdf8)',
-                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    color: '#34d399',
+                    border: '1px solid rgba(16, 185, 129, 0.35)',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px'
@@ -240,7 +257,21 @@ export const CategoryDetails = () => {
             </div>
 
             {/* Banner Actions */}
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  const storeRoute = is3d
+                    ? `${ROUTES.PRINTING}?category=${encodeURIComponent(category.key || category.value)}`
+                    : `${ROUTES.PROJECTS}?category=${encodeURIComponent(category.value || category.key)}`;
+                  navigate(storeRoute);
+                }}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px', fontSize: '12.5px' }}
+              >
+                <span className="material-icons" style={{ fontSize: '16px' }}>open_in_new</span>
+                View in {is3d ? '3D Catalog' : 'Projects'}
+              </Button>
+
               <Button
                 variant="secondary"
                 onClick={handleOpenEdit}
@@ -489,6 +520,90 @@ export const CategoryDetails = () => {
           </div>
 
           <form onSubmit={handleSaveEdit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            {/* Category Belongs To (Destination Screen) */}
+            <div style={{ textAlign: 'left' }}>
+              <label style={{ display: 'block', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '8px' }}>
+                Category Belongs To *
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                {/* Option 1: Project Kits */}
+                <div
+                  onClick={() => setFormType('project_category')}
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: formType === 'project_category' ? '2px solid var(--brand-primary, #38bdf8)' : '1px solid var(--sys-border)',
+                    background: formType === 'project_category' ? 'rgba(56, 189, 248, 0.12)' : 'var(--sys-surface-hover)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '6px',
+                    background: formType === 'project_category' ? 'var(--brand-primary, #38bdf8)' : 'var(--sys-surface)',
+                    color: formType === 'project_category' ? '#ffffff' : 'var(--txt-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <span className="material-icons" style={{ fontSize: '18px' }}>memory</span>
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '700', color: formType === 'project_category' ? 'var(--txt-primary)' : 'var(--txt-secondary)' }}>
+                      Project Kits
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '2px' }}>
+                      Navigates to /projects
+                    </div>
+                  </div>
+                </div>
+
+                {/* Option 2: 3D Printing */}
+                <div
+                  onClick={() => setFormType('3d_print_category')}
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: formType === '3d_print_category' ? '2px solid var(--brand-primary, #38bdf8)' : '1px solid var(--sys-border)',
+                    background: formType === '3d_print_category' ? 'rgba(56, 189, 248, 0.12)' : 'var(--sys-surface-hover)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '6px',
+                    background: formType === '3d_print_category' ? 'var(--brand-primary, #38bdf8)' : 'var(--sys-surface)',
+                    color: formType === '3d_print_category' ? '#ffffff' : 'var(--txt-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <span className="material-icons" style={{ fontSize: '18px' }}>view_in_ar</span>
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '700', color: formType === '3d_print_category' ? 'var(--txt-primary)' : 'var(--txt-secondary)' }}>
+                      3D Printing
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--txt-muted)', marginTop: '2px' }}>
+                      Navigates to /printing
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Category Name */}
             <div style={{ textAlign: 'left' }}>
               <label style={{ display: 'block', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: 'var(--txt-secondary)', marginBottom: '8px' }}>

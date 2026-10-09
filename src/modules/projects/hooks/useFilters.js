@@ -53,6 +53,7 @@ export const useFilters = () => {
 
   return {
     activeCategories,
+    setActiveCategories,
     activeDifficulties,
     activeFeatures,
     activeProjectLevels,

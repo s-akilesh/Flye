@@ -26,7 +26,13 @@ export const useProjectFilters = (
         const pCats = Array.isArray(p.category) 
           ? p.category.map(c => c.toLowerCase()) 
           : p.category.split(',').map(c => c.trim().toLowerCase());
-        return pCats.some(c => lowercaseActive.includes(c));
+        return pCats.some(c => {
+          const cClean = c.replace(/[^a-z0-9]/g, '');
+          return lowercaseActive.some(act => {
+            const actClean = act.replace(/[^a-z0-9]/g, '');
+            return act === c || (actClean && cClean && (actClean === cClean || cClean.includes(actClean) || actClean.includes(cClean)));
+          });
+        });
       });
     }
 
