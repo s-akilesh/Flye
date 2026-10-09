@@ -672,7 +672,7 @@ export const CartDrawer = () => {
               {/* Name & Contact Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', textAlign: 'left' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '11.5px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
+                  <label style={{ display: 'block', fontSize: '12px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
                     Your Full Name *
                   </label>
                   <Input
@@ -681,23 +681,44 @@ export const CartDrawer = () => {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     required
-                    style={{ width: '100%', height: '38px', fontSize: '13px' }}
+                    className={formErrors.name ? 'error-state' : ''}
+                    style={{ width: '100%', height: '42px', fontSize: '13.5px' }}
                   />
                   {formErrors.name && (
-                    <span style={{ fontSize: '10.5px', color: '#ef4444', marginTop: '2px', display: 'block' }}>Name is required</span>
+                    <span style={{ fontSize: '11px', color: 'var(--status-error)', marginTop: '4px', display: 'block' }}>Name is required</span>
                   )}
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11.5px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
+                  <label style={{ display: 'block', fontSize: '12px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
                     Mobile Number *
                   </label>
-                  <div style={{ display: 'flex', gap: '6px' }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    background: 'var(--input-bg, var(--sys-surface))',
+                    border: formErrors.mobile ? '1px solid var(--status-error)' : '1px solid var(--input-border, var(--sys-border))',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    height: '42px',
+                    transition: 'border-color 0.2s, box-shadow 0.2s'
+                  }}>
                     <select
                       value={customerPrefix}
                       onChange={(e) => setCustomerPrefix(e.target.value)}
-                      className="form-select"
-                      style={{ width: '70px', height: '38px', fontSize: '12.5px', padding: '0 6px' }}
+                      style={{
+                        width: '78px',
+                        height: '100%',
+                        background: 'var(--interaction-hover)',
+                        border: 'none',
+                        borderRight: '1px solid var(--sys-border)',
+                        color: 'var(--txt-primary)',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        padding: '0 8px',
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
                     >
                       <option value="+91">+91</option>
                       <option value="+1">+1</option>
@@ -705,25 +726,35 @@ export const CartDrawer = () => {
                       <option value="+971">+971</option>
                       <option value="+65">+65</option>
                     </select>
-                    <Input
+                    <input
                       type="tel"
-                      placeholder="10-digit number"
+                      placeholder="10-digit mobile number"
                       value={customerMobile}
                       onChange={(e) => setCustomerMobile(e.target.value.replace(/[^\d]/g, ''))}
                       maxLength={10}
                       required
-                      style={{ flex: 1, height: '38px', fontSize: '13px' }}
+                      style={{
+                        flex: 1,
+                        height: '100%',
+                        background: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        color: 'var(--txt-primary)',
+                        fontSize: '13.5px',
+                        padding: '0 12px',
+                        fontFamily: 'inherit'
+                      }}
                     />
                   </div>
                   {formErrors.mobile && (
-                    <span style={{ fontSize: '10.5px', color: '#ef4444', marginTop: '2px', display: 'block' }}>Valid mobile number is required</span>
+                    <span style={{ fontSize: '11px', color: 'var(--status-error)', marginTop: '4px', display: 'block' }}>Valid mobile number is required</span>
                   )}
                 </div>
               </div>
 
               {/* Delivery Address / Location */}
               <div style={{ textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11.5px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
+                <label style={{ display: 'block', fontSize: '12px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
                   Delivery Address / College Campus <span style={{ color: 'var(--txt-muted)', fontWeight: '400' }}>(Optional)</span>
                 </label>
                 <Input
@@ -731,22 +762,22 @@ export const CartDrawer = () => {
                   placeholder="e.g. SRM IST Kattankulathur, Chennai / Full Address"
                   value={deliveryAddress}
                   onChange={(e) => setDeliveryAddress(e.target.value)}
-                  style={{ width: '100%', height: '38px', fontSize: '13px' }}
+                  style={{ width: '100%', height: '42px', fontSize: '13.5px' }}
                 />
               </div>
 
               {/* Custom Instructions */}
               <div style={{ textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11.5px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
+                <label style={{ display: 'block', fontSize: '12px', color: 'var(--txt-secondary)', marginBottom: '6px', fontWeight: '700' }}>
                   Order Notes / Custom Requirements <span style={{ color: 'var(--txt-muted)', fontWeight: '400' }}>(Optional)</span>
                 </label>
                 <textarea
-                  rows={2}
+                  rows={3}
                   className="form-textarea"
                   placeholder="e.g. Need PETG material for drone bracket / urgent delivery before Friday..."
                   value={orderNotes}
                   onChange={(e) => setOrderNotes(e.target.value)}
-                  style={{ width: '100%', fontSize: '12.5px', padding: '8px 12px' }}
+                  style={{ width: '100%', fontSize: '13px', minHeight: '80px', resize: 'vertical' }}
                 />
               </div>
 
