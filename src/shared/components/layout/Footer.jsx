@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { useSettings } from '../../../modules/settings/hooks/useSettings';
 import { masterDataService } from '../../services/masterDataService';
 import { ROUTES } from '../../constants/routes';
+import { BulkEnquiryModal } from '../enquiry/BulkEnquiryModal';
 
 export const Footer = () => {
   const { settings } = useSettings();
   const companyName = settings.companyName || 'Flyen';
 
   const [categories, setCategories] = useState([]);
+  const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -151,8 +153,20 @@ export const Footer = () => {
             <span className="flyen-footer-col-title">SERVICES</span>
             <Link to={ROUTES.PROJECTS} className="flyen-footer-link">Project</Link>
             <Link to={ROUTES.PRINTING} className="flyen-footer-link">3D Printing</Link>
-            <Link to={ROUTES.PRINTING} className="flyen-footer-link">Custom 3D Printing</Link>
-            <Link to={ROUTES.CUSTOM_BULK_ENQUIRIES || '/custom-printing-and-bulk-enquiries'} className="flyen-footer-link">Bulk Enquiry</Link>
+            <button
+              type="button"
+              className="flyen-footer-link"
+              onClick={() => setIsEnquiryModalOpen(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                textAlign: 'left',
+                fontFamily: 'inherit'
+              }}
+            >
+              Bulk Enquiry & Custom products
+            </button>
             <Link to={ROUTES.CONTACT} className="flyen-footer-link">Contact</Link>
           </div>
 
@@ -180,6 +194,12 @@ export const Footer = () => {
         </div>
 
       </div>
+
+      {/* Bulk Enquiry & Custom Products Form Modal */}
+      <BulkEnquiryModal
+        isOpen={isEnquiryModalOpen}
+        onClose={() => setIsEnquiryModalOpen(false)}
+      />
     </footer>
   );
 };
