@@ -30,9 +30,9 @@ export const TermsConditions = () => {
     <>
       <SEO {...seoProps} page={PageType.TERMS} />
       <SupportLayout
-        badge="TERMS OF SERVICE"
+        badge={pageData?.badge || "TERMS OF SERVICE"}
         title={pageData?.title || "Terms and Conditions"}
-        description="Standard legal terms, platform usage rules, intellectual property guidelines, warranties, and service agreements."
+        description={pageData?.description || "Standard legal terms, platform usage rules, intellectual property guidelines, warranties, and service agreements."}
         version={pageData?.version || "1.0.0"}
         lastUpdated={formatDate(pageData?.updated_at)}
       >
@@ -44,40 +44,7 @@ export const TermsConditions = () => {
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(pageData.content) }}
           />
         ) : (
-          <article className="flyen-support-article">
-            {/* Section 1 */}
-            <section className="flyen-support-section">
-              <h2 className="flyen-support-section-title">1. Acceptance of Terms</h2>
-              <p>
-                By accessing Flyen or placing an order for hardware project kits, standard 3D printed components, or custom manufacturing services, you agree to be bound by these Terms and Conditions.
-              </p>
-            </section>
-
-            {/* Section 2 */}
-            <section className="flyen-support-section">
-              <h2 className="flyen-support-section-title">2. Product Specifications & Accuracy</h2>
-              <p>
-                We strive to display electronic component descriptions, pin diagrams, and 3D print specifications with maximum technical precision. Given the nature of electronic prototyping, slight component batch variations may occur while maintaining identical functional performance.
-              </p>
-            </section>
-
-            {/* Section 3 */}
-            <section className="flyen-support-section">
-              <h2 className="flyen-support-section-title">3. User Conduct & Prohibited Designs</h2>
-              <p>
-                Users agree not to submit 3D models or project requests involving restricted weapons, harmful implements, or designs infringing on third-party patents or copyrights.
-              </p>
-            </section>
-
-            {/* Section 4 */}
-            <section className="flyen-support-section">
-              <h2 className="flyen-support-section-title">4. Limitation of Liability</h2>
-              <p>
-                Flyen provides project kits and prototyping components for educational, experimental, and prototype engineering purposes. Flyen is not liable for indirect or consequential damages arising from improper circuit wiring, reverse voltage application, or user modifications.
-              </p>
-            </section>
-
-          </article>
+          <div className="flyen-support-loading">No content currently available.</div>
         )}
       </SupportLayout>
     </>
