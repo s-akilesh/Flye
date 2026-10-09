@@ -576,14 +576,38 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
 
               {/* Login / Logout button */}
               {user ? (
-                <Button 
+                <button 
                   type="button" 
-                  variant="ghost" 
                   onClick={handleLogout} 
-                  style={{ width: '100%', padding: '6px 0', fontSize: '11px', background: 'var(--interaction-hover)', color: 'var(--status-danger)', border: '1px solid var(--status-danger)' }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '8px 0', 
+                    fontSize: '12px', 
+                    fontWeight: '600',
+                    background: 'rgba(239, 68, 68, 0.08)', 
+                    color: '#ef4444', 
+                    border: '1px solid rgba(239, 68, 68, 0.35)',
+                    borderRadius: '6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.18)';
+                    e.currentTarget.style.borderColor = '#ef4444';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.35)';
+                  }}
                 >
-                  Logout (Admin)
-                </Button>
+                  <span className="material-icons-outlined" style={{ fontSize: '16px', color: '#ef4444' }}>logout</span>
+                  <span style={{ color: '#ef4444' }}>Logout {isAdmin && viewMode === 'admin' ? '(Admin)' : ''}</span>
+                </button>
               ) : (
                 <Button 
                   type="button" 

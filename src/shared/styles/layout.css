@@ -198,7 +198,7 @@
 
 @media (max-width: 767px) {
   :root {
-    --page-padding: 40px !important;
+    --page-padding: 16px !important;
     --grid-gap: 12px !important;
   }
 

@@ -32,7 +32,9 @@ export const WebsiteBranding = ({ onBack }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
+  const [isUploadingSlider, setIsUploadingSlider] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
+  const sliderInputRef = useRef(null);
 
   // S3 Storage Files State (direct from website-assets/landingscreen-slider)
   const [s3Files, setS3Files] = useState([]);
@@ -58,6 +60,35 @@ export const WebsiteBranding = ({ onBack }) => {
   useEffect(() => {
     loadS3Files();
   }, []);
+
+  const handleUploadSliderImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedExts = ['png', 'jpg', 'jpeg', 'webp', 'svg'];
+    const fileExt = file.name.split('.').pop().toLowerCase();
+    if (!allowedExts.includes(fileExt)) {
+      alert(`Invalid image type. Allowed: ${allowedExts.join(', ')}`);
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Image size exceeds 10MB limit.');
+      return;
+    }
+
+    setIsUploadingSlider(true);
+    try {
+      await storageService.uploadFile('website-assets', 'landingscreen-slider', file, file.name);
+      await loadS3Files();
+      alert(`Successfully uploaded "${file.name}" to Landing Screen Slider!`);
+    } catch (err) {
+      logger.error('Failed to upload slider image:', err);
+      alert('Failed to upload image: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsUploadingSlider(false);
+      if (sliderInputRef.current) sliderInputRef.current.value = '';
+    }
+  };
 
   const handleDeleteS3File = async (fileName) => {
     if (!window.confirm(`Are you sure you want to permanently delete "${fileName}" from S3 storage? It will immediately disappear from the landing screen slider.`)) {
@@ -282,15 +313,33 @@ export const WebsiteBranding = ({ onBack }) => {
             </span>
           </div>
 
-          <button
-            type="button"
-            className="product-btn"
-            onClick={loadS3Files}
-            disabled={isLoadingS3}
-            style={{ fontSize: '11px', padding: '6px 12px' }}
-          >
-            {isLoadingS3 ? 'Refreshing...' : '🔄 Refresh S3 Images'}
-          </button>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input 
+              type="file" 
+              ref={sliderInputRef} 
+              style={{ display: 'none' }} 
+              onChange={handleUploadSliderImage}
+              accept=".png,.jpg,.jpeg,.webp,.svg"
+            />
+            <button
+              type="button"
+              className="product-btn"
+              onClick={() => sliderInputRef.current?.click()}
+              disabled={isUploadingSlider}
+              style={{ fontSize: '11px', padding: '6px 12px', background: 'var(--flyen-teal, #00dfa2)', color: '#090d16', fontWeight: '700' }}
+            >
+              {isUploadingSlider ? 'Uploading to S3...' : '➕ Upload New Image'}
+            </button>
+            <button
+              type="button"
+              className="product-btn"
+              onClick={loadS3Files}
+              disabled={isLoadingS3}
+              style={{ fontSize: '11px', padding: '6px 12px' }}
+            >
+              {isLoadingS3 ? 'Refreshing...' : '🔄 Refresh S3 Images'}
+            </button>
+          </div>
         </div>
 
         {/* S3 Storage Files Grid */}
@@ -303,7 +352,9 @@ export const WebsiteBranding = ({ onBack }) => {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '14px' }}>
             {s3Files.map((file, idx) => {
-              const publicUrl = storageService.getPublicUrl('website-assets', `landingscreen-slider/${file.name}`);
+              const rawUrl = storageService.getPublicUrl('website-assets', `landingscreen-slider/${file.name}`);
+              const version = file.updated_at ? new Date(file.updated_at).getTime() : Date.now();
+              const publicUrl = rawUrl ? `${rawUrl}?v=${version}` : '';
               const sizeKb = file.metadata?.size 
                 ? (file.metadata.size / 1024).toFixed(0) + ' KB' 
                 : (file.size ? (file.size / 1024).toFixed(0) + ' KB' : 'Image');

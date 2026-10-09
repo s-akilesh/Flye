@@ -57,17 +57,6 @@ const STATIC_QUICK_LINKS = [
   }
 ];
 
-const POPULAR_TAGS = [
-  '3D Printing',
-  'Drone',
-  'Autonomous Rover',
-  'ESP32 IoT',
-  'Solar MPPT',
-  'Custom Enclosure',
-  'PETG',
-  'Robotics'
-];
-
 export const GlobalSearchModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const inputRef = useRef(null);
@@ -726,33 +715,7 @@ export const GlobalSearchModal = ({ isOpen, onClose }) => {
                     </div>
                   )}
 
-                  {/* Popular Topics / Quick Suggestions */}
-                  <div style={{ marginBottom: '16px' }}>
-                    <div style={{ padding: '4px 6px 8px 6px', fontSize: '11px', fontWeight: '700', color: 'var(--txt-muted)', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                      Popular Searches
-                    </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {POPULAR_TAGS.map((tag, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => setQuery(tag)}
-                          style={{
-                            padding: '5px 10px',
-                            borderRadius: '6px',
-                            background: 'rgba(0, 223, 162, 0.06)',
-                            border: '1px solid rgba(0, 223, 162, 0.18)',
-                            color: 'var(--flyen-teal, #00dfa2)',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          {tag}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+
 
                   {/* Quick Navigation Pages */}
                   <div>

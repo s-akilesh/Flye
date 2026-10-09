@@ -283,7 +283,7 @@ export const masterDataService = {
 
       const categories = (data || []).map(cat => ({
         ...cat,
-        image_url: cat.image_url || this.getDefaultCategoryImage(cat.type, cat.key, cat.value),
+        image_url: cat.image_url || '',
         show_in_home: !!cat.show_in_home
       }));
 
@@ -298,13 +298,6 @@ export const masterDataService = {
    * Returns default visual thumbnail for a category if configured, or empty string.
    */
   getDefaultCategoryImage(type, key = '', value = '') {
-    const k = (key || value || '').toLowerCase();
-    if (k.includes('robot')) return '/cat_robotics.jpg';
-    if (k.includes('iot')) return '/cat_iot.jpg';
-    if (k.includes('decor')) return '/cat_decor.jpg';
-    if (k.includes('house') || k.includes('home')) return '/cat_household.jpg';
-    if (k.includes('part') || k.includes('hardware') || k.includes('enclosure')) return '/cat_parts.jpg';
-    if (k.includes('gift') || k.includes('craft')) return '/cat_gifts.jpg';
     return '';
   },
 
@@ -332,7 +325,7 @@ export const masterDataService = {
 
     return {
       ...data,
-      image_url: data.image_url || this.getDefaultCategoryImage(data.type, data.key, data.value),
+      image_url: data.image_url || '',
       show_in_home: !!data.show_in_home
     };
   },
@@ -351,7 +344,7 @@ export const masterDataService = {
       type,
       key: cleanKey,
       value: cleanValue,
-      image_url: imageUrl || this.getDefaultCategoryImage(type, cleanKey, cleanValue),
+      image_url: imageUrl || '',
       show_in_home: !!showInHome,
       display_order: Number(displayOrder) || 0,
       description: description || '',

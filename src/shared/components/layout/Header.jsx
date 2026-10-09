@@ -133,7 +133,9 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
           onClick={handleTriggerSearch}
           className="btn-header header-search-trigger"
           style={{
-            padding: '7px',
+            width: '36px',
+            height: '36px',
+            padding: '0',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -143,7 +145,8 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
             cursor: 'pointer',
             transition: 'color 0.2s, background-color 0.2s',
             borderRadius: '8px',
-            position: 'relative'
+            position: 'relative',
+            flexShrink: 0
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = 'var(--flyen-teal, #00dfa2)';
@@ -156,7 +159,7 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
           title="Global Search (Ctrl+K)"
           aria-label="Global Search"
         >
-          <span className="material-icons-outlined" style={{ fontSize: '20px' }}>search</span>
+          <span className="material-icons-outlined" style={{ fontSize: '24px', lineHeight: 1 }}>search</span>
         </button>
 
         {/* Shopping Cart Trigger (Left of User Profile) */}
@@ -165,7 +168,9 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
           onClick={openCart}
           className="btn-header header-cart-trigger"
           style={{
-            padding: '7px',
+            width: '36px',
+            height: '36px',
+            padding: '0',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -175,7 +180,8 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
             cursor: 'pointer',
             position: 'relative',
             transition: 'color 0.2s, background-color 0.2s',
-            borderRadius: '8px'
+            borderRadius: '8px',
+            flexShrink: 0
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = 'var(--flyen-teal, #00dfa2)';
@@ -188,25 +194,29 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
           title={`Shopping Cart (${totalItems} items)`}
           aria-label="Shopping Cart"
         >
-          <span className="material-icons-outlined" style={{ fontSize: '20px' }}>shopping_bag</span>
+          <span className="material-icons-outlined" style={{ fontSize: '24px', lineHeight: 1 }}>shopping_bag</span>
           {totalItems > 0 && (
             <span
+              className="header-cart-badge"
               style={{
                 position: 'absolute',
-                top: '0px',
-                right: '0px',
+                top: '-3px',
+                right: '-3px',
                 background: 'var(--flyen-teal, #00dfa2)',
                 color: '#000000',
-                borderRadius: '10px',
-                minWidth: '16px',
-                height: '16px',
-                padding: '0 4px',
-                fontSize: '9.5px',
-                fontWeight: '900',
+                borderRadius: '999px',
+                minWidth: '17px',
+                height: '17px',
+                padding: '0 3px',
+                fontSize: '14px',
+                fontWeight: '700',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 8px rgba(0, 223, 162, 0.6)'
+                lineHeight: 1,
+                boxShadow: '0 0 6px rgba(0, 223, 162, 0.4)',
+                pointerEvents: 'none',
+                boxSizing: 'border-box'
               }}
             >
               {totalItems > 99 ? '99+' : totalItems}
@@ -305,7 +315,9 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
           onClick={onToggleDrawer}
           className="btn-header mobile-drawer-hamburger"
           style={{
-            padding: '7px',
+            width: '36px',
+            height: '36px',
+            padding: '0',
             display: 'none',
             alignItems: 'center',
             justifyContent: 'center',
@@ -314,7 +326,8 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
             color: 'var(--header-icon, var(--txt-secondary))',
             cursor: 'pointer',
             borderRadius: '8px',
-            transition: 'color 0.2s, background-color 0.2s'
+            transition: 'color 0.2s, background-color 0.2s',
+            flexShrink: 0
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = 'var(--flyen-teal, #00dfa2)';
@@ -327,7 +340,7 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
           title="Open Menu"
           aria-label="Open Menu"
         >
-          <span className="material-icons" style={{ fontSize: '20px' }}>menu</span>
+          <span className="material-icons-outlined" style={{ fontSize: '24px', lineHeight: 1 }}>menu</span>
         </button>
 
         {/* Profile Dropdown */}

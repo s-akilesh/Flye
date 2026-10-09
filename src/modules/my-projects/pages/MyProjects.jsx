@@ -340,7 +340,41 @@ export const MyProjects = () => {
       <style>{`
         @media (max-width: 768px) {
           .portal-section-my-enquiries {
-            padding-top: 10px !important;
+            padding-top: 8px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            padding-bottom: 80px !important;
+          }
+          .portal-section-my-enquiries .portal-header {
+            margin-left: -16px !important;
+            margin-right: -16px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            padding-top: 8px !important;
+            padding-bottom: 12px !important;
+            margin-bottom: 16px !important;
+          }
+          .portal-section-my-enquiries .portal-title-area h2 {
+            font-size: 18px !important;
+            margin: 0 !important;
+            font-weight: 700 !important;
+          }
+          .portal-section-my-enquiries .portal-title-area p {
+            display: none !important;
+          }
+          .portal-section-my-enquiries .btn-back {
+            width: 34px !important;
+            height: 34px !important;
+            min-width: 34px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 8px !important;
+          }
+          .portal-section-my-enquiries .card-glass,
+          .portal-section-my-enquiries .project-summary-card {
+            padding: 16px !important;
           }
         }
       `}</style>

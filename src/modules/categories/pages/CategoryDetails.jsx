@@ -73,6 +73,13 @@ export const CategoryDetails = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const MAX_IMAGE_SIZE = 600 * 1024; // 600KB
+    if (file.size > MAX_IMAGE_SIZE) {
+      showToast('⚠️ Image size exceeds 600KB limit. Please choose an image under 600KB.', 'error');
+      if (e.target) e.target.value = '';
+      return;
+    }
+
     setIsUploading(true);
     try {
       const uploaded = await storageService.uploadImage('website-assets', 'categories', file);
@@ -103,7 +110,7 @@ export const CategoryDetails = () => {
       await masterDataService.updateCategory(category.id, {
         value: formName,
         type: formType,
-        image_url: formImageUrl || masterDataService.getDefaultCategoryImage(formType, category.key, formName),
+        image_url: formImageUrl || '',
         show_in_home: formShowInHome,
         display_order: Number(formDisplayOrder) || 0,
         description: formDescription
@@ -169,16 +176,25 @@ export const CategoryDetails = () => {
               overflow: 'hidden',
               background: 'var(--sys-surface-hover)',
               border: '2px solid rgba(255, 255, 255, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               flexShrink: 0
             }}>
-              <img
-                src={category.image_url}
-                alt={category.value}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onError={(e) => {
-                  e.target.src = is3d ? '/cat_gifts.jpg' : '/cat_robotics.jpg';
-                }}
-              />
+              {category.image_url ? (
+                <img
+                  src={category.image_url}
+                  alt={category.value}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <span className="material-icons-outlined" style={{ fontSize: '36px', color: 'var(--txt-muted)' }}>
+                  image
+                </span>
+              )}
             </div>
 
             {/* Category Info Header */}
@@ -522,8 +538,8 @@ export const CategoryDetails = () => {
                       src={formImageUrl}
                       alt="Preview"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.target.src = '/cat_gifts.jpg';
+                      onError={() => {
+                        setFormImageUrl('');
                       }}
                     />
                   ) : (
@@ -558,7 +574,7 @@ export const CategoryDetails = () => {
                     />
                   </label>
                   <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
-                    Supports JPG, PNG, WEBP (Max 5MB)
+                    Supports JPG, PNG, WEBP (Max 600KB)
                   </span>
                 </div>
               </div>

@@ -32,6 +32,9 @@
   --status-success: #10b981;
   --status-warning: #f59e0b;
   --status-error: #ef4444;
+  --status-danger: #ef4444;
+  --status-danger-hover: #dc2626;
+  --status-danger-bg: rgba(239, 68, 68, 0.12);
   --status-info: #38bdf8;
 
   /* 5. INTERACTION */

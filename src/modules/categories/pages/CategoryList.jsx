@@ -71,7 +71,7 @@ export const CategoryList = () => {
     setEditingCategory(null);
     setFormName('');
     setFormType('3d_print_category');
-    setFormImageUrl('/cat_gifts.jpg');
+    setFormImageUrl('');
     setFormShowInHome(false);
     setFormDisplayOrder((categories.length + 1) * 10);
     setFormDescription('');
@@ -93,6 +93,13 @@ export const CategoryList = () => {
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const MAX_IMAGE_SIZE = 600 * 1024; // 600KB
+    if (file.size > MAX_IMAGE_SIZE) {
+      showToast('⚠️ Image size exceeds 600KB limit. Please choose an image under 600KB.', 'error');
+      if (e.target) e.target.value = '';
+      return;
+    }
 
     setIsUploading(true);
     try {
@@ -141,7 +148,7 @@ export const CategoryList = () => {
         await masterDataService.updateCategory(editingCategory.id, {
           value: formName,
           type: formType,
-          image_url: formImageUrl || masterDataService.getDefaultCategoryImage(formType, editingCategory.key, formName),
+          image_url: formImageUrl || '',
           show_in_home: formShowInHome,
           display_order: Number(formDisplayOrder) || 0,
           description: formDescription
@@ -372,15 +379,30 @@ export const CategoryList = () => {
                   }}
                 >
                   {/* Category Image Header */}
-                  <div style={{ width: '100%', height: '140px', background: 'var(--sys-surface-hover)', position: 'relative', overflow: 'hidden' }}>
-                    <img
-                      src={cat.image_url}
-                      alt={cat.value}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.target.src = is3d ? '/cat_gifts.jpg' : '/cat_robotics.jpg';
-                      }}
-                    />
+                  <div style={{
+                    width: '100%',
+                    height: '140px',
+                    background: 'var(--sys-surface-hover)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {cat.image_url ? (
+                      <img
+                        src={cat.image_url}
+                        alt={cat.value}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <span className="material-icons-outlined" style={{ fontSize: '40px', color: 'var(--txt-muted)' }}>
+                        image
+                      </span>
+                    )}
 
                     {/* Home Showcase Home Icon Badge */}
                     <button
@@ -569,8 +591,8 @@ export const CategoryList = () => {
                       src={formImageUrl}
                       alt="Preview"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.target.src = '/cat_gifts.jpg';
+                      onError={() => {
+                        setFormImageUrl('');
                       }}
                     />
                   ) : (
@@ -605,7 +627,7 @@ export const CategoryList = () => {
                     />
                   </label>
                   <span style={{ fontSize: '11px', color: 'var(--txt-muted)' }}>
-                    Supports JPG, PNG, WEBP (Max 5MB)
+                    Supports JPG, PNG, WEBP (Max 600KB)
                   </span>
                 </div>
               </div>

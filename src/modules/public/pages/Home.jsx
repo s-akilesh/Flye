@@ -56,27 +56,26 @@ export const Home = () => {
 
   const seoProps = generateSEO(PageType.HOME);
 
-  // Dynamic Background Slider Cards driven directly from S3 Storage (website-assets/landingscreen-slider) & public fallbacks
+  // Dynamic Background Slider Cards driven directly from S3 Storage (website-assets/landingscreen-slider)
   const defaultInitialCards = useMemo(() => {
-    const s3Url = storageService.getPublicUrl('website-assets', 'landingscreen-slider/landing_screen_bg.jpg');
     return [
       {
         id: 'initial-slider-1',
-        title: 'Precision 3D Engineering',
-        tag: '3D Prototyping',
-        image: s3Url || '/landing_screen_bg.jpg'
+        title: 'Educational Tabletop Solar Tracker Kit',
+        tag: 'Precision Engineering',
+        image: storageService.getPublicUrl('website-assets', 'landingscreen-slider/Educational Tabletop Solar Tracker Kit.png')
       },
       {
         id: 'initial-slider-2',
-        title: 'High-Tolerance Custom Parts',
-        tag: 'Industrial Prototyping',
-        image: '/svc_resin.jpg'
+        title: 'Ivory Ganesha on a Walnut Console',
+        tag: 'Custom 3D Prints',
+        image: storageService.getPublicUrl('website-assets', 'landingscreen-slider/Ivory Ganesha on a Walnut Console.png')
       },
       {
         id: 'initial-slider-3',
-        title: 'Hardware & Enclosure Design',
-        tag: 'Custom Enclosures',
-        image: '/svc_enclosure.jpg'
+        title: 'Warm Fairy-Lit Shelf with Navy Monogram',
+        tag: 'Bespoke Creations',
+        image: storageService.getPublicUrl('website-assets', 'landingscreen-slider/Warm fairy-lit shelf with navy monogram.png')
       }
     ];
   }, []);
@@ -97,17 +96,20 @@ export const Home = () => {
   const heroCards = useMemo(() => {
     if (s3SliderFiles && s3SliderFiles.length > 0) {
       const valid = s3SliderFiles
-        .map((file, idx) => {
-          const publicUrl = storageService.getPublicUrl('website-assets', `landingscreen-slider/${file.name}`);
-          const formattedTitle = file.name
-            .replace(/\.[^/.]+$/, '')
-            .replace(/^slider-[\d]+-/, '')
-            .replace(/[_-]+/g, ' ');
+        .map((item, idx) => {
+          const publicUrl = item.image || (item.name ? storageService.getPublicUrl('website-assets', `landingscreen-slider/${item.name}`) : '');
+          const rawName = item.name || (typeof item.image === 'string' ? item.image.split('/').pop().split('?')[0] : '');
+          const formattedTitle = item.title || (rawName
+            ? decodeURIComponent(rawName)
+                .replace(/\.[^/.]+$/, '')
+                .replace(/^slider-[\d]+-/, '')
+                .replace(/[_-]+/g, ' ')
+            : 'Flyen Precision Engineering');
 
           return {
-            id: `s3-slider-${file.id || file.name || idx}`,
+            id: item.id || `s3-slider-${idx}`,
             title: formattedTitle || 'Flyen Precision Engineering',
-            tag: 'Precision Engineering',
+            tag: item.tag || 'Precision Engineering',
             image: publicUrl
           };
         })
@@ -126,23 +128,81 @@ export const Home = () => {
         const printsPromise = printingInventoryService.getPublishedProducts();
         const catsPromise = masterDataService.getCategories();
         const reviewsPromise = reviewService.getAll();
+        const hpAssetsPromise = masterDataService.getValues('homepage_assets').catch(() => []);
         const s3FilesPromise = storageService.listFiles('website-assets', 'landingscreen-slider').catch(() => []);
-        const [prints, cats, reviews, s3Files] = await Promise.all([printsPromise, catsPromise, reviewsPromise, s3FilesPromise]);
+        const [prints, cats, reviews, hpAssets, s3Files] = await Promise.all([
+          printsPromise,
+          catsPromise,
+          reviewsPromise,
+          hpAssetsPromise,
+          s3FilesPromise
+        ]);
 
         if (isMounted) {
           setDbPrintingProducts(prints || []);
           setDbCategories(cats || []);
           setDbReviews(reviews || []);
-          if (Array.isArray(s3Files)) {
-            const validImages = s3Files.filter(f => 
-              f.name && 
-              !f.name.startsWith('.') && 
-              /\.(jpe?g|png|webp|svg|gif|avif)$/i.test(f.name)
-            );
-            setS3SliderFiles(validImages);
-          } else {
-            setS3SliderFiles([]);
+
+          // 1. Direct S3 bucket folder website-assets/landingscreen-slider is the primary live source
+          if (Array.isArray(s3Files) && s3Files.length > 0) {
+            const validImages = s3Files
+              .filter(f => 
+                f.name && 
+                !f.name.startsWith('.') && 
+                /\.(jpe?g|png|webp|svg|gif|avif)$/i.test(f.name)
+              )
+              .map((file, idx) => {
+                const rawUrl = storageService.getPublicUrl('website-assets', `landingscreen-slider/${file.name}`);
+                const version = file.updated_at ? new Date(file.updated_at).getTime() : Date.now();
+                const publicUrl = rawUrl ? `${rawUrl}?v=${version}` : '';
+                const cleanName = file.name
+                  .replace(/\.[^/.]+$/, '')
+                  .replace(/^slider-[\d]+-/, '')
+                  .replace(/[_-]+/g, ' ');
+
+                return {
+                  id: file.id || `s3-slider-${idx}`,
+                  name: file.name,
+                  title: cleanName || 'Flyen Precision Engineering',
+                  image: publicUrl,
+                  tag: 'Precision Engineering'
+                };
+              });
+
+            if (validImages.length > 0) {
+              setS3SliderFiles(validImages);
+              return;
+            }
           }
+
+          // 2. Fallback to master_data homepage_assets if S3 bucket listing returned empty
+          if (Array.isArray(hpAssets) && hpAssets.length > 0) {
+            const activeSliderAssets = hpAssets
+              .filter(a => a.is_active && (a.value || a.image_url))
+              .map((a, idx) => {
+                const imgUrl = a.value || a.image_url;
+                const fileName = typeof imgUrl === 'string' ? imgUrl.split('/').pop().split('?')[0] : '';
+                const formattedTitle = (a.description || fileName)
+                  .replace(/\.[^/.]+$/, '')
+                  .replace(/^slider-[\d]+-/, '')
+                  .replace(/[_-]+/g, ' ');
+
+                return {
+                  id: a.id || `hp-asset-${idx}`,
+                  name: fileName,
+                  title: formattedTitle || 'Flyen Precision Engineering',
+                  image: imgUrl,
+                  tag: 'Precision Engineering'
+                };
+              });
+
+            if (activeSliderAssets.length > 0) {
+              setS3SliderFiles(activeSliderAssets);
+              return;
+            }
+          }
+
+          setS3SliderFiles([]);
         }
       } catch (err) {
         console.error("Failed to load 3D print products, categories, or reviews for Home screen:", err);
@@ -203,7 +263,7 @@ export const Home = () => {
         ? `${ROUTES.PRINTING}?category=${encodeURIComponent(cat.key || cat.value)}`
         : `${ROUTES.PROJECTS}?category=${encodeURIComponent(cat.value || cat.key)}`;
 
-      const img = cat.image_url || masterDataService.getDefaultCategoryImage(cat.type, cat.key, cat.value) || '';
+      const img = cat.image_url || '';
 
       return {
         id: cat.id || cat.key,
@@ -513,12 +573,14 @@ export const Home = () => {
                     src={heroCards[activeHeroCardIdx % heroCards.length]?.image}
                     alt="Flyen 3D Printing & Project Engineering"
                     className="flyen-hero-bg-img"
-                    onError={() => {
-                      const currentImg = heroCards[activeHeroCardIdx % heroCards.length]?.image;
-                      if (currentImg) {
+                    onError={(e) => {
+                      const currentCard = heroCards[activeHeroCardIdx % heroCards.length];
+                      if (currentCard?.fallback && e.target.src !== currentCard.fallback && !e.target.src.endsWith(currentCard.fallback)) {
+                        e.target.src = currentCard.fallback;
+                      } else if (currentCard?.image) {
                         setFailedImages(prev => {
                           const next = new Set(prev);
-                          next.add(currentImg);
+                          next.add(currentCard.image);
                           return next;
                         });
                       }
@@ -753,11 +815,6 @@ export const Home = () => {
 
               <div className="flyen-testi-header-right">
                 <div className="flyen-testi-right-title-wrap">
-                  <div className="flyen-testi-quote-icon-small">
-                    <svg width="24" height="20" viewBox="0 0 48 40" fill="currentColor">
-                      <path d="M13.3333 0C5.97333 0 0 5.97333 0 13.3333C0 20.6933 5.97333 26.6667 13.3333 26.6667C14.4 26.6667 15.44 26.5067 16.4267 26.2133C14.7467 32.1867 9.89333 36.8533 3.65333 38.8533L4.85333 40C15.0133 36.56 22.2133 27.28 22.2133 16C22.2133 7.17333 18.24 0 13.3333 0ZM39.12 0C31.76 0 25.7867 5.97333 25.7867 13.3333C25.7867 20.6933 31.76 26.6667 39.12 26.6667C40.1867 26.6667 41.2267 26.5067 42.2133 26.2133C40.5333 32.1867 35.68 36.8533 29.44 38.8533L30.64 40C40.8 36.56 48 27.28 48 16C48 7.17333 44.0267 0 39.12 0Z" />
-                    </svg>
-                  </div>
                   <span className="flyen-testi-right-sub">What our makers are saying</span>
                 </div>
 
@@ -834,7 +891,7 @@ export const Home = () => {
                       <div className="flyen-testi-author-details">
                         <h4 className="flyen-testi-author-name">{t.name}</h4>
                         {t.project && (
-                          <span className="flyen-testi-author-tag">📦 {t.project}</span>
+                          <span className="flyen-testi-author-tag">{t.project}</span>
                         )}
                       </div>
                     </div>
