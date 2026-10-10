@@ -73,5 +73,13 @@ export const routeMetadata = {
     priority: '0.3',
     changeFreq: 'yearly',
     breadcrumbLabel: 'Terms & Conditions'
+  },
+  [ROUTES.OUR_PROCESS]: {
+    path: ROUTES.OUR_PROCESS,
+    pageType: PageType.ABOUT,
+    inSitemap: true,
+    priority: '0.8',
+    changeFreq: 'monthly',
+    breadcrumbLabel: 'Our Process'
   }
 };

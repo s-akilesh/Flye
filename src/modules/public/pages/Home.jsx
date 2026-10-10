@@ -89,7 +89,7 @@ export const Home = () => {
   }, []);
 
   const s3CustomWorkflowBg = useMemo(() => {
-    return storageService.getPublicUrl('website-assets', 'products-banner/custom_workflow_bg.jpg');
+    return storageService.getPublicUrl('website-assets', 'our-process/hero.jpg');
   }, []);
 
   const heroCards = useMemo(() => {
@@ -475,6 +475,21 @@ export const Home = () => {
     handleOpenFormModal('Choosed Flyen Project', proj);
   };
 
+  const handleScrollToCategories = (e) => {
+    if (e) e.preventDefault();
+    const el = document.getElementById('categories-section');
+    if (el) {
+      const headerOffset = window.innerWidth <= 768 ? 56 : 74;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: Math.max(0, offsetPosition),
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleNewsletterSubmit = (e) => {
     e.preventDefault();
     if (!newsletterEmail.trim() || !newsletterEmail.includes('@')) {
@@ -629,19 +644,21 @@ export const Home = () => {
           <div className="flyen-section-container flyen-hero-main-container">
             <div className="flyen-hero-stage">
               <div className="flyen-hero-text-wrap">
+                <span className="flyen-hero-tag">MADE WITH PURPOSE</span>
+
                 <h1 className="flyen-hero-title-2">
-                  Made with <span className="flyen-hero-teal-text">Purpose.</span>
+                  Good Things Start Here.
                 </h1>
 
                 <p className="flyen-hero-sub-2">
-                  Thoughtfully designed 3D-printed products, custom creations, and practical solutions made for everyday use, learning, making, and more.
+                  From unique 3D-printed products and personalised gifts to ready-made electronics kits and working projects, Flyen brings you useful creations, affordable solutions, and the support to get what you need
                 </p>
 
                 <div className="flyen-hero-cta-row">
                   <button 
                     type="button" 
                     className="flyen-btn-teal"
-                    onClick={() => navigate(ROUTES.PROJECTS)}
+                    onClick={handleScrollToCategories}
                   >
                     Explore Products
                   </button>
@@ -688,7 +705,7 @@ export const Home = () => {
         {/* ========================================================================
             2. POPULAR CATEGORIES (CARD GRID)
             ======================================================================== */}
-        <section className="flyen-category-section">
+        <section className="flyen-category-section" id="categories-section">
           <div className="flyen-section-container">
             <div className="flyen-category-header-row">
               <h2 className="flyen-category-section-heading">Category</h2>
@@ -745,15 +762,15 @@ export const Home = () => {
           <div className="flyen-section-container flyen-fullscreen-showcase-container">
             <div className="flyen-fullscreen-showcase-content">
               <h2 className="flyen-fullscreen-showcase-title">
-                Precision in Every Print.
+                The One You've Been Looking For
               </h2>
               <p className="flyen-fullscreen-showcase-desc">
-                Quality 3D-printed parts, custom pieces, and functional products made with carefully selected materials and precise printing for reliable results.
+                Discover fun collectibles, useful accessories, personalised gifts, and unique creations with custom options to suit your taste.
               </p>
               <div className="flyen-showcase-specs">
-                <span className="flyen-showcase-spec-tag">Multiple Materials</span>
-                <span className="flyen-showcase-spec-tag">Custom Designs</span>
-                <span className="flyen-showcase-spec-tag">Quality Finish</span>
+                <span className="flyen-showcase-spec-tag">Pick your Product</span>
+                <span className="flyen-showcase-spec-tag">Customize your</span>
+                <span className="flyen-showcase-spec-tag">Bulk Order</span>
               </div>
               <div className="flyen-fullscreen-showcase-actions">
                 <button 
@@ -761,14 +778,14 @@ export const Home = () => {
                   className="flyen-btn-teal"
                   onClick={() => navigate(ROUTES.PRINTING)}
                 >
-                  Explore 3D Catalog
+                  Find Your Favourite
                 </button>
                 <button 
                   type="button" 
                   className="flyen-btn-outline"
                   onClick={() => handleOpenFormModal('Custom 3D Printing Quote')}
                 >
-                  Instant Quote
+                  Personalise a Print
                 </button>
               </div>
             </div>
@@ -787,15 +804,17 @@ export const Home = () => {
           <div className="flyen-section-container flyen-fullscreen-showcase-container">
             <div className="flyen-fullscreen-showcase-content">
               <h2 className="flyen-fullscreen-showcase-title">
-                Ready-Made Project Kits & IoT Systems
+                <span>Get your project in your hand,</span>
+                <span className="flyen-showcase-title-line2">From Idea to Working Model, We've Got You Covered.</span>
               </h2>
               <p className="flyen-fullscreen-showcase-desc">
-                Pre-tested hardware packages, sensor suites, and microcontroller bundles with complete schematics, source code, and guides.
+                Explore Customized/ affordable ready-made projects and electronics kits for schools, colleges, and professionals, with project files, helpful guidance, and delivery across India.
               </p>
               <div className="flyen-showcase-specs">
-                <span className="flyen-showcase-spec-tag">Plug & Play</span>
-                <span className="flyen-showcase-spec-tag">Verified Schematics</span>
-                <span className="flyen-showcase-spec-tag">Full Documentation</span>
+                <span className="flyen-showcase-spec-tag">Affordable</span>
+                <span className="flyen-showcase-spec-tag">Ready to Use</span>
+                <span className="flyen-showcase-spec-tag">Project Support</span>
+                <span className="flyen-showcase-spec-tag">Fast Delivery</span>
               </div>
               <div className="flyen-fullscreen-showcase-actions">
                 <button 
@@ -803,14 +822,14 @@ export const Home = () => {
                   className="flyen-btn-teal"
                   onClick={() => navigate(ROUTES.PROJECTS)}
                 >
-                  View Project Kits
+                  Find Your Project
                 </button>
                 <button 
                   type="button" 
                   className="flyen-btn-outline"
                   onClick={() => handleOpenFormModal('Custom Project Kit Quote')}
                 >
-                  Instant Quote
+                  Get a Project Quote
                 </button>
               </div>
             </div>
@@ -941,13 +960,13 @@ export const Home = () => {
           <div className="flyen-workflow-showcase-overlay" />
           <div className="flyen-section-container flyen-workflow-showcase-container">
             <div className="flyen-workflow-header flyen-workflow-header-center">
-              <h2 className="flyen-workflow-title">How Custom Orders Work.</h2>
-              <p className="flyen-workflow-sub">Simple 4-step workflow from your initial 3D model to doorstep delivery</p>
+              <h2 className="flyen-workflow-title">Our Process, From Start to Finish.</h2>
+              <p className="flyen-workflow-sub">Every great result starts with understanding what you need. From research and design to quality checks and doorstep delivery, we keep you informed at every step.</p>
               <div className="flyen-workflow-actions">
                 <button 
                   type="button" 
                   className="flyen-btn-outline"
-                  onClick={() => handleOpenFormModal('Custom Order Workflow')}
+                  onClick={() => navigate(ROUTES.OUR_PROCESS)}
                 >
                   Know More
                 </button>

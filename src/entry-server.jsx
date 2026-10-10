@@ -15,6 +15,7 @@ import { ShippingDelivery } from './modules/legal/pages/ShippingDelivery';
 import { ReturnsCancellations } from './modules/legal/pages/ReturnsCancellations';
 import { PersonalisedOrderPolicy } from './modules/legal/pages/PersonalisedOrderPolicy';
 import { CustomBulkEnquiries } from './modules/legal/pages/CustomBulkEnquiries';
+import { OurProcess } from './modules/public/pages/OurProcess';
 
 // Real context providers
 import { SettingsProvider } from './modules/settings/context/SettingsContext';
@@ -46,6 +47,8 @@ export function render(url, ssrData = {}) {
                         <Route path={ROUTES.FEEDBACK} element={<Feedback />} />
                         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
                         <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
+                        <Route path={ROUTES.OUR_PROCESS} element={<OurProcess />} />
+                        <Route path="/process" element={<OurProcess />} />
                         <Route path={ROUTES.SHIPPING_DELIVERY || '/shipping-and-delivery'} element={<ShippingDelivery />} />
                         <Route path={ROUTES.RETURNS_CANCELLATIONS || '/returns-and-cancellations'} element={<ReturnsCancellations />} />
                         <Route path={ROUTES.PERSONALISED_ORDER_POLICY || '/personalised-order-policy'} element={<PersonalisedOrderPolicy />} />

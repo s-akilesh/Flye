@@ -12,5 +12,6 @@ export const lazyRoutes = {
   PersonalisedOrderPolicy: () => import('../modules/legal/pages/PersonalisedOrderPolicy').then(module => ({ default: module.PersonalisedOrderPolicy })),
   CustomBulkEnquiries: () => import('../modules/legal/pages/CustomBulkEnquiries').then(module => ({ default: module.CustomBulkEnquiries })),
   PrivacyPolicy: () => import('../modules/legal/pages/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })),
-  TermsConditions: () => import('../modules/legal/pages/TermsConditions').then(module => ({ default: module.TermsConditions }))
+  TermsConditions: () => import('../modules/legal/pages/TermsConditions').then(module => ({ default: module.TermsConditions })),
+  OurProcess: () => import('../modules/public/pages/OurProcess').then(module => ({ default: module.OurProcess }))
 };

@@ -117,7 +117,7 @@ export const Header = ({ onToggleDrawer, onOpenSearch }) => {
 
       {/* Desktop Navigation Links */}
       {(!user || viewMode !== 'admin') && !location.pathname.startsWith('/admin') && (
-        <nav className="desktop-nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+        <nav className="desktop-nav-menu">
           <Link to="/projects" onMouseEnter={() => lazyRoutes.ProjectListing()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>Projects</Link>
           <Link to="/printing" onMouseEnter={() => lazyRoutes.PrintingCatalog()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>3D Printing</Link>
           <Link to="/my-projects" onMouseEnter={() => lazyRoutes.MyProjects()} style={{ fontSize: '13px', color: 'var(--header-txt-secondary)', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s' }}>My Enquiries</Link>

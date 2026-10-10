@@ -110,7 +110,8 @@ const routes = [
   { url: '/returns-and-cancellations', pageType: 'TERMS' },
   { url: '/personalised-order-policy', pageType: 'TERMS' },
   { url: '/custom-printing-and-bulk-enquiries', pageType: 'CONTACT' },
-  { url: '/feedback', pageType: 'CONTACT' }
+  { url: '/feedback', pageType: 'CONTACT' },
+  { url: '/our-process', pageType: 'ABOUT' }
 ];
 
 // Add dynamic project detail routes

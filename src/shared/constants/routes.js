@@ -42,5 +42,6 @@ export const ROUTES = {
   MY_PROFILE: '/profile',
   ADMIN_PROFILE: '/admin/profile',
   FEEDBACK: '/feedback',
-  ADMIN_REVIEWS: '/admin/reviews'
+  ADMIN_REVIEWS: '/admin/reviews',
+  OUR_PROCESS: '/our-process'
 };

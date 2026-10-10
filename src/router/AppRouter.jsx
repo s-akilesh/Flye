@@ -19,6 +19,7 @@ const PrintingCatalog = React.lazy(lazyRoutes.PrintingCatalog);
 const LearningHub = React.lazy(lazyRoutes.LearningHub);
 const Contact = React.lazy(lazyRoutes.Contact);
 const Feedback = React.lazy(lazyRoutes.Feedback);
+const OurProcess = React.lazy(lazyRoutes.OurProcess);
 
 // Lazy Load Admin Pages
 const AdminDashboard = React.lazy(() => import('../modules/dashboard/pages/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
@@ -88,6 +89,8 @@ export const AppRouter = () => {
             <Route path={ROUTES.CUSTOM_BULK_ENQUIRIES || '/custom-printing-and-bulk-enquiries'} element={<CustomBulkEnquiries />} />
             <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
             <Route path={ROUTES.TERMS_CONDITIONS} element={<TermsConditions />} />
+            <Route path={ROUTES.OUR_PROCESS} element={<OurProcess />} />
+            <Route path="/process" element={<Navigate to={ROUTES.OUR_PROCESS} replace />} />
             <Route path={ROUTES.MY_PROJECTS} element={<MyProjects />} />
             <Route path={ROUTES.MY_PROFILE} element={<ProtectedRoute requireAdmin={false}><ProfilePage /></ProtectedRoute>} />
             
